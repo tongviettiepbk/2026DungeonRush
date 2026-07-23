@@ -1,0 +1,754 @@
+[
+  {
+    "_name": "1-AutoLootHammerCount",
+    "UpgradeType": 8,
+    "UpgradeType__enum": "AutoLootHammerCount",
+    "UnlockGemCost": 0,
+    "AddedLater": 0,
+    "UpgradeName": "Auto-Loot Speed",
+    "Description": "Increases the number of loot boxes opened simultaneously in Auto Mode.",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "8eee422b58e90414d8aba40300800acd",
+      "type": 2
+    },
+    "ValuePrefix": null,
+    "ValueSuffix": "<sprite=0> ",
+    "ValueSpriteAsset": {
+      "fileID": 11400000,
+      "guid": "84698602950e4d84ab3679ea0cd2fab8",
+      "type": 2
+    },
+    "DefaultValue": 0,
+    "ApplyDefaultBeforeFeatureUnlock": 0,
+    "ApplyDefaultBeforeCardUnlock": 1,
+    "IsValueAdditive": 0,
+    "Levels": [
+      {
+        "GemCost": 0,
+        "Value": 1
+      },
+      {
+        "GemCost": 40,
+        "Value": 2
+      },
+      {
+        "GemCost": 60,
+        "Value": 3
+      },
+      {
+        "GemCost": 120,
+        "Value": 4
+      },
+      {
+        "GemCost": 160,
+        "Value": 5
+      },
+      {
+        "GemCost": 200,
+        "Value": 6
+      },
+      {
+        "GemCost": 300,
+        "Value": 7
+      },
+      {
+        "GemCost": 420,
+        "Value": 8
+      }
+    ]
+  },
+  {
+    "_name": "10-MaxItemLevel",
+    "UpgradeType": 10,
+    "UpgradeType__enum": "ForgeMaxItemLevel",
+    "UnlockGemCost": 150,
+    "AddedLater": 1,
+    "UpgradeName": "Max Item Level",
+    "Description": "Increase Max Level",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "8db92029099147e428bb9607d643c2f8",
+      "type": 2
+    },
+    "ValuePrefix": "+",
+    "ValueSuffix": null,
+    "ValueSpriteAsset": {
+      "fileID": 0
+    },
+    "DefaultValue": 0,
+    "ApplyDefaultBeforeFeatureUnlock": 0,
+    "ApplyDefaultBeforeCardUnlock": 0,
+    "IsValueAdditive": 1,
+    "Levels": [
+      {
+        "GemCost": 60,
+        "Value": 2
+      },
+      {
+        "GemCost": 120,
+        "Value": 4
+      },
+      {
+        "GemCost": 160,
+        "Value": 6
+      },
+      {
+        "GemCost": 200,
+        "Value": 8
+      },
+      {
+        "GemCost": 250,
+        "Value": 10
+      },
+      {
+        "GemCost": 300,
+        "Value": 14
+      },
+      {
+        "GemCost": 350,
+        "Value": 18
+      },
+      {
+        "GemCost": 400,
+        "Value": 22
+      },
+      {
+        "GemCost": 500,
+        "Value": 26
+      },
+      {
+        "GemCost": 600,
+        "Value": 30
+      }
+    ]
+  },
+  {
+    "_name": "11-MaxPickaxe",
+    "UpgradeType": 11,
+    "UpgradeType__enum": "MiningMaxPickaxe",
+    "UnlockGemCost": 120,
+    "AddedLater": 1,
+    "UpgradeName": "Max Item Level",
+    "Description": "Increase Max Level",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "2a233a3f71d03f04f883911e68a3680e",
+      "type": 2
+    },
+    "ValuePrefix": "+",
+    "ValueSuffix": null,
+    "ValueSpriteAsset": {
+      "fileID": 0
+    },
+    "DefaultValue": 0,
+    "ApplyDefaultBeforeFeatureUnlock": 0,
+    "ApplyDefaultBeforeCardUnlock": 0,
+    "IsValueAdditive": 1,
+    "Levels": [
+      {
+        "GemCost": 60,
+        "Value": 1
+      },
+      {
+        "GemCost": 120,
+        "Value": 2
+      },
+      {
+        "GemCost": 160,
+        "Value": 3
+      },
+      {
+        "GemCost": 200,
+        "Value": 4
+      },
+      {
+        "GemCost": 250,
+        "Value": 5
+      },
+      {
+        "GemCost": 300,
+        "Value": 6
+      },
+      {
+        "GemCost": 350,
+        "Value": 8
+      },
+      {
+        "GemCost": 400,
+        "Value": 10
+      },
+      {
+        "GemCost": 500,
+        "Value": 12
+      },
+      {
+        "GemCost": 600,
+        "Value": 15
+      }
+    ]
+  },
+  {
+    "_name": "3-GemOfferChanceIncerease",
+    "UpgradeType": 1,
+    "UpgradeType__enum": "GemOfferChance",
+    "UnlockGemCost": 30,
+    "AddedLater": 0,
+    "UpgradeName": "Offer Gem Chance",
+    "Description": "Increases the probability of finding Gems in Offer Chests.",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "93fbeadadb5cfed45ad0cb39f19cb3c4",
+      "type": 2
+    },
+    "ValuePrefix": "%",
+    "ValueSuffix": null,
+    "ValueSpriteAsset": {
+      "fileID": 0
+    },
+    "DefaultValue": 10,
+    "ApplyDefaultBeforeFeatureUnlock": 1,
+    "ApplyDefaultBeforeCardUnlock": 1,
+    "IsValueAdditive": 0,
+    "Levels": [
+      {
+        "GemCost": 10,
+        "Value": 13
+      },
+      {
+        "GemCost": 20,
+        "Value": 16
+      },
+      {
+        "GemCost": 40,
+        "Value": 19
+      },
+      {
+        "GemCost": 60,
+        "Value": 22
+      },
+      {
+        "GemCost": 90,
+        "Value": 25
+      },
+      {
+        "GemCost": 120,
+        "Value": 28
+      },
+      {
+        "GemCost": 160,
+        "Value": 31
+      },
+      {
+        "GemCost": 200,
+        "Value": 34
+      },
+      {
+        "GemCost": 250,
+        "Value": 37
+      },
+      {
+        "GemCost": 300,
+        "Value": 40
+      },
+      {
+        "GemCost": 360,
+        "Value": 43
+      },
+      {
+        "GemCost": 420,
+        "Value": 46
+      },
+      {
+        "GemCost": 490,
+        "Value": 50
+      }
+    ]
+  },
+  {
+    "_name": "4-AdboostDurationMultiplier",
+    "UpgradeType": 2,
+    "UpgradeType__enum": "AdBoostDuration",
+    "UnlockGemCost": 180,
+    "AddedLater": 0,
+    "UpgradeName": "Extended EXP Boost",
+    "Description": "Extends the active duration of Experience Boost.",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "d0b8470f1a36c6d4bac0043a506ccee0",
+      "type": 2
+    },
+    "ValuePrefix": "+",
+    "ValueSuffix": "s",
+    "ValueSpriteAsset": {
+      "fileID": 0
+    },
+    "DefaultValue": 300,
+    "ApplyDefaultBeforeFeatureUnlock": 1,
+    "ApplyDefaultBeforeCardUnlock": 1,
+    "IsValueAdditive": 0,
+    "Levels": [
+      {
+        "GemCost": 10,
+        "Value": 330
+      },
+      {
+        "GemCost": 20,
+        "Value": 420
+      },
+      {
+        "GemCost": 40,
+        "Value": 510
+      },
+      {
+        "GemCost": 60,
+        "Value": 600
+      },
+      {
+        "GemCost": 90,
+        "Value": 690
+      },
+      {
+        "GemCost": 120,
+        "Value": 780
+      },
+      {
+        "GemCost": 160,
+        "Value": 870
+      },
+      {
+        "GemCost": 200,
+        "Value": 960
+      },
+      {
+        "GemCost": 250,
+        "Value": 1050
+      },
+      {
+        "GemCost": 300,
+        "Value": 1200
+      }
+    ]
+  },
+  {
+    "_name": "5-AdBoostWorthMultiplier",
+    "UpgradeType": 3,
+    "UpgradeType__enum": "AdBoostWorth",
+    "UnlockGemCost": 0,
+    "AddedLater": 0,
+    "UpgradeName": "EXP Boost Multiplier",
+    "Description": "Increases the amount of experience multiplier gained from boosts.",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "e5f5f530cc2c2d943865a5e1932e017f",
+      "type": 2
+    },
+    "ValuePrefix": "x",
+    "ValueSuffix": null,
+    "ValueSpriteAsset": {
+      "fileID": 0
+    },
+    "DefaultValue": 2,
+    "ApplyDefaultBeforeFeatureUnlock": 1,
+    "ApplyDefaultBeforeCardUnlock": 1,
+    "IsValueAdditive": 0,
+    "Levels": [
+      {
+        "GemCost": 10,
+        "Value": 2.1
+      },
+      {
+        "GemCost": 20,
+        "Value": 2.2
+      },
+      {
+        "GemCost": 40,
+        "Value": 2.3
+      },
+      {
+        "GemCost": 60,
+        "Value": 2.4
+      },
+      {
+        "GemCost": 90,
+        "Value": 2.5
+      },
+      {
+        "GemCost": 120,
+        "Value": 2.6
+      },
+      {
+        "GemCost": 160,
+        "Value": 2.7
+      },
+      {
+        "GemCost": 200,
+        "Value": 2.8
+      },
+      {
+        "GemCost": 250,
+        "Value": 2.9
+      },
+      {
+        "GemCost": 300,
+        "Value": 3
+      },
+      {
+        "GemCost": 360,
+        "Value": 3.1
+      },
+      {
+        "GemCost": 420,
+        "Value": 3.2
+      },
+      {
+        "GemCost": 490,
+        "Value": 3.3
+      },
+      {
+        "GemCost": 560,
+        "Value": 3.4
+      },
+      {
+        "GemCost": 640,
+        "Value": 3.5
+      },
+      {
+        "GemCost": 720,
+        "Value": 3.6
+      },
+      {
+        "GemCost": 810,
+        "Value": 3.7
+      },
+      {
+        "GemCost": 900,
+        "Value": 3.8
+      },
+      {
+        "GemCost": 1000,
+        "Value": 3.9
+      },
+      {
+        "GemCost": 1100,
+        "Value": 4
+      }
+    ]
+  },
+  {
+    "_name": "6-MaxOfflineEarningTimeMultiplier",
+    "UpgradeType": 4,
+    "UpgradeType__enum": "MaxOfflineTime",
+    "UnlockGemCost": 90,
+    "AddedLater": 0,
+    "UpgradeName": "Max Offline Time",
+    "Description": "Extends the maximum time you can earn rewards while offline.",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "962eddb8cc16aa342a7d96b8dc5f9f0d",
+      "type": 2
+    },
+    "ValuePrefix": "x",
+    "ValueSuffix": null,
+    "ValueSpriteAsset": {
+      "fileID": 0
+    },
+    "DefaultValue": 1,
+    "ApplyDefaultBeforeFeatureUnlock": 1,
+    "ApplyDefaultBeforeCardUnlock": 1,
+    "IsValueAdditive": 0,
+    "Levels": [
+      {
+        "GemCost": 10,
+        "Value": 1.1
+      },
+      {
+        "GemCost": 20,
+        "Value": 1.2
+      },
+      {
+        "GemCost": 40,
+        "Value": 1.3
+      },
+      {
+        "GemCost": 60,
+        "Value": 1.4
+      },
+      {
+        "GemCost": 90,
+        "Value": 1.5
+      },
+      {
+        "GemCost": 120,
+        "Value": 1.6
+      },
+      {
+        "GemCost": 160,
+        "Value": 1.7
+      },
+      {
+        "GemCost": 200,
+        "Value": 1.8
+      },
+      {
+        "GemCost": 250,
+        "Value": 1.9
+      },
+      {
+        "GemCost": 300,
+        "Value": 2
+      }
+    ]
+  },
+  {
+    "_name": "7-OfflineEarningWorthMultiplier",
+    "UpgradeType": 5,
+    "UpgradeType__enum": "OfflineEarningWorth",
+    "UnlockGemCost": 210,
+    "AddedLater": 0,
+    "UpgradeName": "Offline Earning Rate",
+    "Description": "Increases the speed of resource gathering while offline.",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "25f10c95925a15a4e959719a868f7cf6",
+      "type": 2
+    },
+    "ValuePrefix": "x",
+    "ValueSuffix": null,
+    "ValueSpriteAsset": {
+      "fileID": 0
+    },
+    "DefaultValue": 1,
+    "ApplyDefaultBeforeFeatureUnlock": 1,
+    "ApplyDefaultBeforeCardUnlock": 1,
+    "IsValueAdditive": 0,
+    "Levels": [
+      {
+        "GemCost": 10,
+        "Value": 1.05
+      },
+      {
+        "GemCost": 20,
+        "Value": 1.1
+      },
+      {
+        "GemCost": 40,
+        "Value": 1.15
+      },
+      {
+        "GemCost": 60,
+        "Value": 1.2
+      },
+      {
+        "GemCost": 90,
+        "Value": 1.25
+      },
+      {
+        "GemCost": 120,
+        "Value": 1.3
+      },
+      {
+        "GemCost": 160,
+        "Value": 1.35
+      },
+      {
+        "GemCost": 200,
+        "Value": 1.4
+      },
+      {
+        "GemCost": 250,
+        "Value": 1.5
+      },
+      {
+        "GemCost": 300,
+        "Value": 1.6
+      },
+      {
+        "GemCost": 360,
+        "Value": 1.7
+      },
+      {
+        "GemCost": 420,
+        "Value": 1.8
+      },
+      {
+        "GemCost": 490,
+        "Value": 1.9
+      },
+      {
+        "GemCost": 560,
+        "Value": 2
+      },
+      {
+        "GemCost": 640,
+        "Value": 2.1
+      },
+      {
+        "GemCost": 720,
+        "Value": 2.2
+      },
+      {
+        "GemCost": 810,
+        "Value": 2.3
+      },
+      {
+        "GemCost": 900,
+        "Value": 2.4
+      },
+      {
+        "GemCost": 1000,
+        "Value": 2.5
+      }
+    ]
+  },
+  {
+    "_name": "8-PlayerMovementSpeedMultiplier",
+    "UpgradeType": 6,
+    "UpgradeType__enum": "PlayerMovementSpeed",
+    "UnlockGemCost": 240,
+    "AddedLater": 0,
+    "UpgradeName": "Movement Speed",
+    "Description": "Increases character movement speed.",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "1222175a4371b8946ad572f46d59ceed",
+      "type": 2
+    },
+    "ValuePrefix": "x",
+    "ValueSuffix": null,
+    "ValueSpriteAsset": {
+      "fileID": 0
+    },
+    "DefaultValue": 1,
+    "ApplyDefaultBeforeFeatureUnlock": 1,
+    "ApplyDefaultBeforeCardUnlock": 1,
+    "IsValueAdditive": 0,
+    "Levels": [
+      {
+        "GemCost": 10,
+        "Value": 1.05
+      },
+      {
+        "GemCost": 10,
+        "Value": 1.1
+      },
+      {
+        "GemCost": 20,
+        "Value": 1.15
+      },
+      {
+        "GemCost": 40,
+        "Value": 1.2
+      },
+      {
+        "GemCost": 60,
+        "Value": 1.25
+      },
+      {
+        "GemCost": 90,
+        "Value": 1.3
+      },
+      {
+        "GemCost": 120,
+        "Value": 1.35
+      },
+      {
+        "GemCost": 160,
+        "Value": 1.4
+      },
+      {
+        "GemCost": 200,
+        "Value": 1.45
+      },
+      {
+        "GemCost": 250,
+        "Value": 1.5
+      },
+      {
+        "GemCost": 300,
+        "Value": 1.55
+      },
+      {
+        "GemCost": 360,
+        "Value": 1.6
+      },
+      {
+        "GemCost": 420,
+        "Value": 1.65
+      },
+      {
+        "GemCost": 490,
+        "Value": 1.7
+      },
+      {
+        "GemCost": 560,
+        "Value": 1.75
+      },
+      {
+        "GemCost": 640,
+        "Value": 1.8
+      },
+      {
+        "GemCost": 720,
+        "Value": 1.85
+      },
+      {
+        "GemCost": 810,
+        "Value": 1.9
+      },
+      {
+        "GemCost": 900,
+        "Value": 1.95
+      },
+      {
+        "GemCost": 100,
+        "Value": 2
+      }
+    ]
+  },
+  {
+    "_name": "9-CompanionSummonCountIncrease",
+    "UpgradeType": 7,
+    "UpgradeType__enum": "CompanionSummonCount",
+    "UnlockGemCost": 60,
+    "AddedLater": 0,
+    "UpgradeName": "Summon Capacity",
+    "Description": "Increases the number of companions appearing per summon.",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "0bdae6120192cde4cb351112ead189a4",
+      "type": 2
+    },
+    "ValuePrefix": "+",
+    "ValueSuffix": null,
+    "ValueSpriteAsset": {
+      "fileID": 0
+    },
+    "DefaultValue": 0,
+    "ApplyDefaultBeforeFeatureUnlock": 0,
+    "ApplyDefaultBeforeCardUnlock": 0,
+    "IsValueAdditive": 0,
+    "Levels": [
+      {
+        "GemCost": 60,
+        "Value": 1
+      },
+      {
+        "GemCost": 120,
+        "Value": 2
+      },
+      {
+        "GemCost": 160,
+        "Value": 3
+      },
+      {
+        "GemCost": 200,
+        "Value": 4
+      },
+      {
+        "GemCost": 250,
+        "Value": 5
+      }
+    ]
+  }
+]

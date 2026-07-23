@@ -1,0 +1,34 @@
+Nhóm chính	Tính năng	Nhóm config	Số bảng	Số record	Ghi chú
+A. Chiến đấu trong dungeon	Map / môi trường	MapConfig	1	7	7 environment (grid, camera, obstacle)
+	Tier / độ sâu màn	TierData	1	8
+	Dungeon (định nghĩa)	DungeonData	1	3	CultistDungeon, DragonHorde...
+	Dungeon theme	DungeonThemeData	1	3	Enemy weapon/helmet/gloves theo theme
+	Army Power (công thức)	remote:army_power	1	3	base 500, exp_scaler 3.162, segments 80/200/999999
+	Kinh nghiệm / level	remote:experience_required_per_level	1	100	100 level; base 49, mult 10
+B. Boss modes	Boss Gate	BossGateConfig	1	1	remote toggle boss_gate_enabled=false
+	Boss Rush	BossRushConfig	1	1	Boss definition + behavior
+	Boss Rush league	BossRushLeagueConfig	1	1
+C. Trang bị (Equipment)	Vũ khí	WeaponData	1	72	Melee/Ranged, 10 rarity Common→Eternal
+	Mũ	HelmetData	1	54
+	Găng tay	GlovesData	1	54
+	Nhẫn	RingData	1	30	Catalog ItemId/Rarity (stat runtime)
+	Dây chuyền	NecklaceData	1	30	Catalog ItemId/Rarity (stat runtime)
+	Ba lô	BackpackData	1	20
+	Áo choàng	CapeData + CapeConfig	2	13	Cape rarity XP
+	Cánh	WingData	1	10	Reroll cost theo cấp
+	Forge (tỉ lệ lên bậc)	remote:forge_rarity_probabilities	1	100	100 dòng × 10 rarity, mỗi dòng tổng 100%
+D. Companion	Companion (DPS / Heal)	CompanionData	1	18	Ability: bom, burn, slow, heal nova, clone, bất tử
+E. Đào mỏ (Mining)	Mining	MiningConfig	1	1	8 loại quặng, depth tier, pickaxe/drill/golden, offer
+F. PvP & xã hội	PvP / đấu trường	PvPConfig	1	1	10 league (Iron→…), trophy + Elo K-factor, vé
+	Clan banner	ClanBannerCatalog	1	1
+	Clan / Clan War / Chat	(server DTO)	0	0	Server-authoritative, không có local
+G. Tiến trình / Meta	Mastery upgrade	MasteryUpgradeData + MasteryConfig	2	11	10 nhánh nâng cấp bằng gem
+	Battle Pass	BattlePassConfig	1	1	Free + premium reward, theo level
+	Weapon offer (theo level)	remote:weapon_offer_config	1	5	lv2→Squire Crossbow … lv100→Holy Greatsword
+H. Kinh tế / Shop	Rương	ChestData	1	4	Epic, Legendary, Mythic...
+	Bundle rương	ChestBundleData + ChestConfig	2	5	Gacha bundle
+	Loot box / offer	remote:starting_loot_box_count	1	1	Khởi đầu 240; chest_store_enabled=true
+	IAP / Quảng cáo	(SDK)	0	0	AppLovin, AdMob, Facebook, Unity, Vungle, Mintegral, Pangle
+I. Hệ thống nền	Remote Config (Firebase)	remote_config_live	1	14	config_version 17.0.0 (lấy từ app-cache)
+	Localization	strings (Items/UI/Common/…)	6	1031	10 ngôn ngữ (en, ar, fr, de, ja, ko, pt-br, es, tr, it)
+	Audio	AudioConfig	1	1

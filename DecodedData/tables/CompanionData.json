@@ -1,0 +1,2892 @@
+[
+  {
+    "_name": "Companion_1_Common_DPS_Single",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "e837c5c99a263a44fa814788621f8e17",
+      "type": 2
+    },
+    "CompanionName": "Ember Fist",
+    "LocalizationKey": "Items.Companion.Name.Companion_1_Common_DPS_Single",
+    "DescriptionKey": "Items.Companion.Desc.Companion_1_Common_DPS_Single",
+    "Type": 0,
+    "Type__enum": "DPS",
+    "Rarity": 0,
+    "Rarity__enum": "Common",
+    "Details": "Launches flames that deal <Value> Damage.",
+    "Prefab": {
+      "fileID": 1116856031163603,
+      "guid": "50954bed30939324890fdf73a560a7ef",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 2.9,
+    "EffectDuration": 0.1,
+    "Level": 1,
+    "DamageBase": 90,
+    "DamageScaler": 4.5,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 0,
+    "SlowAmount": 0.9,
+    "ProjectileSpeed": 10,
+    "ProjectilePrefab": {
+      "fileID": 1734841975169137,
+      "guid": "6c98eedd07fdb20489c44a81da395c9d",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "02d049b187c2e794289e5eda82a67c7d",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.3,
+      "g": 0.5,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 10,
+    "OwnAttackScaler": 0.5,
+    "OwnHealthBase": 30,
+    "OwnHealthScaler": 1.5,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Ember Fist",
+    "Desc_en": "Launches flames that deal <Value> Damage."
+  },
+  {
+    "_name": "Companion_1_Common_Heal_Single",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "d1251c80929d9144096e213150f73ecf",
+      "type": 2
+    },
+    "CompanionName": "Magic Wool",
+    "LocalizationKey": "Items.Companion.Name.Companion_1_Common_Heal_Single",
+    "DescriptionKey": "Items.Companion.Desc.Companion_1_Common_Heal_Single",
+    "Type": 1,
+    "Type__enum": "Healer",
+    "Rarity": 0,
+    "Rarity__enum": "Common",
+    "Details": "Fires a healing projectile that restores <Value> Health.",
+    "Prefab": {
+      "fileID": 1655031404059312,
+      "guid": "7b270ac47f2063447b4b7216c819b32a",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 1.9,
+    "EffectDuration": 0.1,
+    "Level": 1,
+    "DamageBase": 50,
+    "DamageScaler": 10,
+    "HealBase": 60,
+    "HealScaler": 3,
+    "SlowDuration": 0,
+    "SlowAmount": 0.9,
+    "ProjectileSpeed": 8,
+    "ProjectilePrefab": {
+      "fileID": 1625797639988451,
+      "guid": "07a6cea59418d6449b82c714020fb2e5",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "15d6788b38f068a4fa9bbb0ebb87851f",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.3,
+      "g": 0.5,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 5,
+    "OwnAttackScaler": 0.25,
+    "OwnHealthBase": 50,
+    "OwnHealthScaler": 2.5,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Magic Wool",
+    "Desc_en": "Fires a healing projectile that restores <Value> Health."
+  },
+  {
+    "_name": "Companion_1_Common_Lightning_Single",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "9d70a208cb0e2774a93c3c5282d4c31c",
+      "type": 2
+    },
+    "CompanionName": "Spark Mouse",
+    "LocalizationKey": "Items.Companion.Name.Companion_1_Common_Lightning_Single",
+    "DescriptionKey": "Items.Companion.Desc.Companion_1_Common_Lightning_Single",
+    "Type": 3,
+    "Type__enum": "Lightning",
+    "Rarity": 0,
+    "Rarity__enum": "Common",
+    "Details": "Fires a lightning arc that deals <Value> Damage every second.",
+    "Prefab": {
+      "fileID": 1508458694426948,
+      "guid": "3cefea24f15049d46a47a2fca20e0a1d",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 2,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 3,
+    "EffectDuration": 1,
+    "Level": 1,
+    "DamageBase": 12,
+    "DamageScaler": 0.6,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 0,
+    "SlowAmount": 0.9,
+    "ProjectileSpeed": 2,
+    "ProjectilePrefab": {
+      "fileID": 0
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 30,
+    "LightningDuration": 1,
+    "LightningTickInterval": 0.2,
+    "ShootSound": {
+      "fileID": 0
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 1,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 8300000,
+      "guid": "14370dac956b0404e9dc28352007a025",
+      "type": 3
+    },
+    "EffectActiveSoundVolume": 0.2,
+    "LoopEffectActiveSound": 1,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9411765,
+      "b": 0.53333336,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.3,
+      "g": 0.5,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 15,
+    "OwnAttackScaler": 0.75,
+    "OwnHealthBase": 20,
+    "OwnHealthScaler": 1,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Spark Mouse",
+    "Desc_en": "Fires a lightning arc that deals <Value> Damage every second."
+  },
+  {
+    "_name": "Companion_2_Uncommon_Bomber_AOE_Bomb",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "c516750714d3d974b8f42eb721177c59",
+      "type": 2
+    },
+    "CompanionName": "Flame Wing",
+    "LocalizationKey": "Items.Companion.Name.Companion_2_Uncommon_Bomber_AOE_Bomb",
+    "DescriptionKey": "Items.Companion.Desc.Companion_2_Uncommon_Bomber_AOE_Bomb",
+    "Type": 5,
+    "Type__enum": "Bomber",
+    "Rarity": 1,
+    "Rarity__enum": "Uncommon",
+    "Details": "Triggers an explosion that deals <Value> Area Damage.",
+    "Prefab": {
+      "fileID": 1770876229175599,
+      "guid": "c37c817c47a530c44996bf7b0ec4bed9",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 7.9,
+    "EffectDuration": 0.1,
+    "Level": 1,
+    "DamageBase": 240,
+    "DamageScaler": 12,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 0,
+    "SlowAmount": 0.9,
+    "ProjectileSpeed": 5,
+    "ProjectilePrefab": {
+      "fileID": 1879411896496759,
+      "guid": "8fc6f3ff720041449b9d33d70d3e5417",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 1890548361507833,
+      "guid": "26ceae3633a4b6d44b6564db5f75b007",
+      "type": 2
+    },
+    "BombExplosionPrefab": {
+      "fileID": 1879756344566093,
+      "guid": "6da21aa16b09a3141ad1a65f9f434ba5",
+      "type": 2
+    },
+    "BombRadius": 2,
+    "BombProjectileSpeed": 7,
+    "BombTravelDuration": 1.25,
+    "BombArcHeight": 2.5,
+    "BombExplosionDuration": 2,
+    "BurnEnabled": 0,
+    "BurnDuration": 2,
+    "BurnTickDamage": 20,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "0e39ffe4234b12c41a61a2dd00cde76e",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 1,
+    "ProjectileImpactSound": {
+      "fileID": 8300000,
+      "guid": "c78de853a5bda564c91970b31943f5e2",
+      "type": 3
+    },
+    "ProjectileImpactVolume": 0.4,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 0.4,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.3,
+      "g": 0.5,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 45,
+    "OwnAttackScaler": 2.25,
+    "OwnHealthBase": 60,
+    "OwnHealthScaler": 3,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Flame Wing",
+    "Desc_en": "Triggers an explosion that deals <Value> Area Damage."
+  },
+  {
+    "_name": "Companion_2_Uncommon_Heal_Chain",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "85bc2455594b67e4ab6d4c8f5fe39684",
+      "type": 2
+    },
+    "CompanionName": "Life Horn",
+    "LocalizationKey": "Items.Companion.Name.Companion_2_Uncommon_Heal_Chain",
+    "DescriptionKey": "Items.Companion.Desc.Companion_2_Uncommon_Heal_Chain",
+    "Type": 4,
+    "Type__enum": "ChainHealer",
+    "Rarity": 1,
+    "Rarity__enum": "Uncommon",
+    "Details": "Fires a continuous healing ray that restores <Value> Health per second.",
+    "Prefab": {
+      "fileID": 1086575161306814,
+      "guid": "5612737f50ba71549ac67232944b79d9",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 1,
+    "Cooldown": 4.9,
+    "EffectDuration": 0.1,
+    "Level": 1,
+    "DamageBase": 50,
+    "DamageScaler": 10,
+    "HealBase": 90,
+    "HealScaler": 4.5,
+    "SlowDuration": 0,
+    "SlowAmount": 0.9,
+    "ProjectileSpeed": 0,
+    "ProjectilePrefab": {
+      "fileID": 0
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 12,
+    "ChainHealDuration": 3,
+    "HealTickInterval": 0.1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 0
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 1,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 8300000,
+      "guid": "f2605cea72412814085d1e142c20f85f",
+      "type": 3
+    },
+    "EffectActiveSoundVolume": 0.2,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.3,
+      "g": 0.5,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 15,
+    "OwnAttackScaler": 0.75,
+    "OwnHealthBase": 150,
+    "OwnHealthScaler": 7.5,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Life Horn",
+    "Desc_en": "Fires a continuous healing ray that restores <Value> Health per second."
+  },
+  {
+    "_name": "Companion_2_Uncommon_Slow_Single",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "655ae4d1d56fad64a9e1ed6003f07b6d",
+      "type": 2
+    },
+    "CompanionName": "Snow Fang",
+    "LocalizationKey": "Items.Companion.Name.Companion_2_Uncommon_Slow_Single",
+    "DescriptionKey": "Items.Companion.Desc.Companion_2_Uncommon_Slow_Single",
+    "Type": 2,
+    "Type__enum": "Slower",
+    "Rarity": 1,
+    "Rarity__enum": "Uncommon",
+    "Details": "Fires an ice ball that deals <Value> Damage and slows the target by <Value>%.",
+    "Prefab": {
+      "fileID": 1459333842442956,
+      "guid": "0bc5728e152cd8944a58b8a20683c676",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 2,
+    "EffectDuration": 2,
+    "Level": 1,
+    "DamageBase": 900,
+    "DamageScaler": 45,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 2,
+    "SlowAmount": 0.5,
+    "ProjectileSpeed": 12,
+    "ProjectilePrefab": {
+      "fileID": 1625469321295645,
+      "guid": "d8e293e3ae716674ab87c0d4d65f5ca0",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "9877e481fc3d8604b9f72920ef274929",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.5647059,
+      "g": 0.6901961,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 30,
+    "OwnAttackScaler": 1.5,
+    "OwnHealthBase": 90,
+    "OwnHealthScaler": 4.5,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Snow Fang",
+    "Desc_en": "Fires an ice ball that deals <Value> Damage and slows the target by <Value>%."
+  },
+  {
+    "_name": "Companion_3_Rare_Bomber_AOE_Burn",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "b56318752216c0240b51431c55a0eb1a",
+      "type": 2
+    },
+    "CompanionName": "Blaze Tail",
+    "LocalizationKey": "Items.Companion.Name.Companion_3_Rare_Bomber_AOE_Burn",
+    "DescriptionKey": "Items.Companion.Desc.Companion_3_Rare_Bomber_AOE_Burn",
+    "Type": 5,
+    "Type__enum": "Bomber",
+    "Rarity": 2,
+    "Rarity__enum": "Rare",
+    "Details": "Triggers an explosion that deals <Value> Area Damage and burns targets for <Value> seconds.",
+    "Prefab": {
+      "fileID": 1896604967697476,
+      "guid": "518817ee8bf910d4399c7992eae4e761",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 7.9,
+    "EffectDuration": 0.1,
+    "Level": 1,
+    "DamageBase": 1800,
+    "DamageScaler": 90,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 0,
+    "SlowAmount": 0.9,
+    "ProjectileSpeed": 5,
+    "ProjectilePrefab": {
+      "fileID": 1879411896496759,
+      "guid": "8fc6f3ff720041449b9d33d70d3e5417",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 1890548361507833,
+      "guid": "26ceae3633a4b6d44b6564db5f75b007",
+      "type": 2
+    },
+    "BombExplosionPrefab": {
+      "fileID": 1879756344566093,
+      "guid": "6da21aa16b09a3141ad1a65f9f434ba5",
+      "type": 2
+    },
+    "BombRadius": 2,
+    "BombProjectileSpeed": 7,
+    "BombTravelDuration": 1.25,
+    "BombArcHeight": 2.5,
+    "BombExplosionDuration": 2,
+    "BurnEnabled": 1,
+    "BurnDuration": 2,
+    "BurnTickDamage": 600,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "0e39ffe4234b12c41a61a2dd00cde76e",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 1,
+    "ProjectileImpactSound": {
+      "fileID": 8300000,
+      "guid": "c78de853a5bda564c91970b31943f5e2",
+      "type": 3
+    },
+    "ProjectileImpactVolume": 0.4,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 0.4,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.3,
+      "g": 0.5,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 450,
+    "OwnAttackScaler": 22.5,
+    "OwnHealthBase": 600,
+    "OwnHealthScaler": 30,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Blaze Tail",
+    "Desc_en": "Triggers an explosion that deals <Value> Area Damage and burns targets for <Value> seconds."
+  },
+  {
+    "_name": "Companion_3_Rare_Lightning_Multi",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "61ef6fab57a3a45448f904749d6d8b4e",
+      "type": 2
+    },
+    "CompanionName": "Storm Eye",
+    "LocalizationKey": "Items.Companion.Name.Companion_3_Rare_Lightning_Multi",
+    "DescriptionKey": "Items.Companion.Desc.Companion_3_Rare_Lightning_Multi",
+    "Type": 3,
+    "Type__enum": "Lightning",
+    "Rarity": 2,
+    "Rarity__enum": "Rare",
+    "Details": "Fires a lightning arc that chains to multiple enemies, dealing <Value> Damage.",
+    "Prefab": {
+      "fileID": 1317702529363629,
+      "guid": "ae3e71fc1fd092b419d8bbecb6627e02",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 2,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 5,
+    "EffectDuration": 2,
+    "Level": 2,
+    "DamageBase": 135,
+    "DamageScaler": 6.75,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 0,
+    "SlowAmount": 0.9,
+    "ProjectileSpeed": 2,
+    "ProjectilePrefab": {
+      "fileID": 0
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 2,
+    "LightningSpeed": 30,
+    "LightningDuration": 2,
+    "LightningTickInterval": 0.2,
+    "ShootSound": {
+      "fileID": 0
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 1,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 8300000,
+      "guid": "14370dac956b0404e9dc28352007a025",
+      "type": 3
+    },
+    "EffectActiveSoundVolume": 0.2,
+    "LoopEffectActiveSound": 1,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9427719,
+      "b": 0.5330188,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.3,
+      "g": 0.5,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 300,
+    "OwnAttackScaler": 15,
+    "OwnHealthBase": 900,
+    "OwnHealthScaler": 45,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Storm Eye",
+    "Desc_en": "Fires a lightning arc that chains to multiple enemies, dealing <Value> Damage."
+  },
+  {
+    "_name": "Companion_3_Rare_Slow_Multi",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "ef97073870e83f64a8a5a9e7729929f2",
+      "type": 2
+    },
+    "CompanionName": "Frost Claw",
+    "LocalizationKey": "Items.Companion.Name.Companion_3_Rare_Slow_Multi",
+    "DescriptionKey": "Items.Companion.Desc.Companion_3_Rare_Slow_Multi",
+    "Type": 6,
+    "Type__enum": "MultiSlower",
+    "Rarity": 2,
+    "Rarity__enum": "Rare",
+    "Details": "Fires an ice ball that splits dealing <Value> Area Damage and slows targets by <Value>%.",
+    "Prefab": {
+      "fileID": 1558525627268490,
+      "guid": "ab2a131e30e660c48b2471812ed21436",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 9.9,
+    "EffectDuration": 0.1,
+    "Level": 1,
+    "DamageBase": 1000,
+    "DamageScaler": 50,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 2,
+    "SlowAmount": 0.5,
+    "ProjectileSpeed": 12,
+    "ProjectilePrefab": {
+      "fileID": 1625469321295645,
+      "guid": "d8e293e3ae716674ab87c0d4d65f5ca0",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 2,
+    "MultiSlowImpactPrefab": {
+      "fileID": 1949804667630993,
+      "guid": "001cd525e73003c4d8e1926da20a018c",
+      "type": 2
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "9877e481fc3d8604b9f72920ef274929",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 8300000,
+      "guid": "c107b0ecca8f9f3438f6b3dd231801be",
+      "type": 3
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.5613208,
+      "g": 0.6887583,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 150,
+    "OwnAttackScaler": 7.5,
+    "OwnHealthBase": 1500,
+    "OwnHealthScaler": 75,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Frost Claw",
+    "Desc_en": "Fires an ice ball that splits dealing <Value> Area Damage and slows targets by <Value>%."
+  },
+  {
+    "_name": "Companion_4_Epic_Beam_Single",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "2aa7de12653177c4197ed5804d9bf099",
+      "type": 2
+    },
+    "CompanionName": "Arcane Paw",
+    "LocalizationKey": "Items.Companion.Name.Companion_4_Epic_Beam_Single",
+    "DescriptionKey": "Items.Companion.Desc.Companion_4_Epic_Beam_Single",
+    "Type": 7,
+    "Type__enum": "Beam",
+    "Rarity": 3,
+    "Rarity__enum": "Epic",
+    "Details": "Fires a continuous magical beam that deals <Value> Damage per second.",
+    "Prefab": {
+      "fileID": 1579710876924080,
+      "guid": "679e5e91f1095d04b83b58517512ed1f",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 2,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 5.9,
+    "EffectDuration": 0.1,
+    "Level": 1,
+    "DamageBase": 4500,
+    "DamageScaler": 225,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 0,
+    "SlowAmount": 0.9,
+    "ProjectileSpeed": 2,
+    "ProjectilePrefab": {
+      "fileID": 0
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 30,
+    "LightningDuration": 1,
+    "LightningTickInterval": 0.2,
+    "ShootSound": {
+      "fileID": 0
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 1,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 8300000,
+      "guid": "dd037122d22dabd4f8f8744edb18c6b3",
+      "type": 3
+    },
+    "EffectActiveSoundVolume": 0.2,
+    "LoopEffectActiveSound": 1,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9411765,
+      "b": 0.53333336,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.3,
+      "g": 0.5,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 60,
+    "BeamDuration": 1.5,
+    "BeamTickInterval": 0.25,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 4500,
+    "OwnAttackScaler": 225,
+    "OwnHealthBase": 6000,
+    "OwnHealthScaler": 300,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Arcane Paw",
+    "Desc_en": "Fires a continuous magical beam that deals <Value> Damage per second."
+  },
+  {
+    "_name": "Companion_4_Epic_Guardian_Single",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "ef5101aca74d7c345aca0372b22101fd",
+      "type": 2
+    },
+    "CompanionName": "Vital Root",
+    "LocalizationKey": "Items.Companion.Name.Companion_4_Epic_Guardian_Single",
+    "DescriptionKey": "Items.Companion.Desc.Companion_4_Epic_Guardian_Single",
+    "Type": 8,
+    "Type__enum": "Guardian",
+    "Rarity": 3,
+    "Rarity__enum": "Epic",
+    "Details": "Creates a healing aura that restores <Value> Health per second and increases Block Chance by 5%.",
+    "Prefab": {
+      "fileID": 1970969016991655,
+      "guid": "776e3fb4383e4af44bfc118f8234654e",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 2,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 4,
+    "EffectDuration": 5,
+    "Level": 1,
+    "DamageBase": 2,
+    "DamageScaler": 0.4,
+    "HealBase": 18000,
+    "HealScaler": 900,
+    "SlowDuration": 0,
+    "SlowAmount": 0.9,
+    "ProjectileSpeed": 2,
+    "ProjectilePrefab": {
+      "fileID": 0
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 30,
+    "LightningDuration": 1,
+    "LightningTickInterval": 0.2,
+    "ShootSound": {
+      "fileID": 0
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 1,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 8300000,
+      "guid": "14370dac956b0404e9dc28352007a025",
+      "type": 3
+    },
+    "EffectActiveSoundVolume": 0.2,
+    "LoopEffectActiveSound": 1,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9411765,
+      "b": 0.53333336,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.3,
+      "g": 0.5,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 60,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 5,
+    "GuardianHealAmount": 18000,
+    "GuardianBlockChance": 5,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 0
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 0
+    },
+    "AoeSlowRadius": 0,
+    "AoeSlowProjectileSpeed": 0,
+    "AoeSlowArcHeight": 0,
+    "AoeSlowExplosionDuration": 0,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 1500,
+    "OwnAttackScaler": 75,
+    "OwnHealthBase": 15000,
+    "OwnHealthScaler": 750,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Vital Root",
+    "Desc_en": "Creates a healing aura that restores <Value> Health per second and increases Block Chance by <Value>%."
+  },
+  {
+    "_name": "Companion_4_Epic_Slow_AOE",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "77ce14a2f987fac44bf75ed8e825c2f6",
+      "type": 2
+    },
+    "CompanionName": "Glacier Fist",
+    "LocalizationKey": "Items.Companion.Name.Companion_4_Epic_Slow_AOE",
+    "DescriptionKey": "Items.Companion.Desc.Companion_4_Epic_Slow_AOE",
+    "Type": 9,
+    "Type__enum": "AoeSlower",
+    "Rarity": 3,
+    "Rarity__enum": "Epic",
+    "Details": "Fires an exploding snowball that deals <Value> Area Damage and slows targets by 50%.",
+    "Prefab": {
+      "fileID": 1766109069589726,
+      "guid": "0d330ebd0a1a1c84eb29407aeed9987c",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 3,
+    "EffectDuration": 4,
+    "Level": 1,
+    "DamageBase": 9000,
+    "DamageScaler": 450,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 2,
+    "SlowAmount": 0.5,
+    "ProjectileSpeed": 12,
+    "ProjectilePrefab": {
+      "fileID": 1625469321295645,
+      "guid": "d8e293e3ae716674ab87c0d4d65f5ca0",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "9877e481fc3d8604b9f72920ef274929",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 8300000,
+      "guid": "c107b0ecca8f9f3438f6b3dd231801be",
+      "type": 3
+    },
+    "ProjectileImpactVolume": 0.4,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.5647059,
+      "g": 0.6901961,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 1198726937991238,
+      "guid": "cc485c65097a973438d9817a96a2312f",
+      "type": 2
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 1765956627875825,
+      "guid": "4000f6b26693fdf44bf264fb1963fba4",
+      "type": 2
+    },
+    "AoeSlowRadius": 2,
+    "AoeSlowProjectileSpeed": 4.25,
+    "AoeSlowArcHeight": 2.5,
+    "AoeSlowExplosionDuration": 2.5,
+    "BlasterRange": 0,
+    "BlasterFireDuration": 0,
+    "BlasterWaveCount": 0,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 3000,
+    "OwnAttackScaler": 150,
+    "OwnHealthBase": 9000,
+    "OwnHealthScaler": 450,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Glacier Fist",
+    "Desc_en": "Fires an exploding snowball that deals <Value> Area Damage and slows targets by <Value>%."
+  },
+  {
+    "_name": "Companion_5_Legendary_Blaster",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "557493ee28b86fd4184a7de07b4b7838",
+      "type": 2
+    },
+    "CompanionName": "Echo Wing",
+    "LocalizationKey": "Items.Companion.Name.Companion_5_Legendary_Blaster",
+    "DescriptionKey": "Items.Companion.Desc.Companion_5_Legendary_Blaster",
+    "Type": 10,
+    "Type__enum": "Blaster",
+    "Rarity": 4,
+    "Rarity__enum": "Legendary",
+    "Details": "Releases sonic waves that deal <Value> Area Damage.",
+    "Prefab": {
+      "fileID": 1554061693881327,
+      "guid": "8b95f1289cbaf354d8d8073cd4d87f60",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 5,
+    "EffectDuration": 2,
+    "Level": 1,
+    "DamageBase": 52500,
+    "DamageScaler": 2625,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 2,
+    "SlowAmount": 0.648,
+    "ProjectileSpeed": 12,
+    "ProjectilePrefab": {
+      "fileID": 1625469321295645,
+      "guid": "d8e293e3ae716674ab87c0d4d65f5ca0",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "28ba36d128188fd4ab8b1f840d1abde9",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.5647059,
+      "g": 0.6901961,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 1198726937991238,
+      "guid": "cc485c65097a973438d9817a96a2312f",
+      "type": 2
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 1765956627875825,
+      "guid": "4000f6b26693fdf44bf264fb1963fba4",
+      "type": 2
+    },
+    "AoeSlowRadius": 2,
+    "AoeSlowProjectileSpeed": 4.25,
+    "AoeSlowArcHeight": 2.5,
+    "AoeSlowExplosionDuration": 2.5,
+    "BlasterRange": 6,
+    "BlasterFireDuration": 1.75,
+    "BlasterWaveCount": 4,
+    "BlasterConeAngle": 55,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 45000,
+    "OwnAttackScaler": 2250,
+    "OwnHealthBase": 60000,
+    "OwnHealthScaler": 3000,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Echo Wing",
+    "Desc_en": "Releases sonic waves that deal <Value> Area Damage."
+  },
+  {
+    "_name": "Companion_5_Legendary_HealDamage",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "3af24dc3441ac5e4daf69576f3bd31c6",
+      "type": 2
+    },
+    "CompanionName": "Phantom Gaze",
+    "LocalizationKey": "Items.Companion.Name.Companion_5_Legendary_HealDamage",
+    "DescriptionKey": "Items.Companion.Desc.Companion_5_Legendary_HealDamage",
+    "Type": 12,
+    "Type__enum": "Siphon",
+    "Rarity": 4,
+    "Rarity__enum": "Legendary",
+    "Details": "Fires a spectral projectile that deals <Value> Damage and returns to restore <Value> Health.",
+    "Prefab": {
+      "fileID": 1321505477569575,
+      "guid": "f4e8c8f2a294b22409114abaad3eb473",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 5.9,
+    "EffectDuration": 0.1,
+    "Level": 1,
+    "DamageBase": 270000,
+    "DamageScaler": 13500,
+    "HealBase": 202500,
+    "HealScaler": 10125,
+    "SlowDuration": 2,
+    "SlowAmount": 0.648,
+    "ProjectileSpeed": 12,
+    "ProjectilePrefab": {
+      "fileID": 1625469321295645,
+      "guid": "d8e293e3ae716674ab87c0d4d65f5ca0",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 1890548361507833,
+      "guid": "26ceae3633a4b6d44b6564db5f75b007",
+      "type": 2
+    },
+    "BombExplosionPrefab": {
+      "fileID": 1879756344566093,
+      "guid": "6da21aa16b09a3141ad1a65f9f434ba5",
+      "type": 2
+    },
+    "BombRadius": 2,
+    "BombProjectileSpeed": 7,
+    "BombTravelDuration": 1.25,
+    "BombArcHeight": 2.5,
+    "BombExplosionDuration": 1,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "07f10a6496568c540bb20910d270ef23",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 8300000,
+      "guid": "df5585e7dca00e34289bbc5d4f2695e0",
+      "type": 3
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.5647059,
+      "g": 0.6901961,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 1198726937991238,
+      "guid": "cc485c65097a973438d9817a96a2312f",
+      "type": 2
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 1765956627875825,
+      "guid": "4000f6b26693fdf44bf264fb1963fba4",
+      "type": 2
+    },
+    "AoeSlowRadius": 2,
+    "AoeSlowProjectileSpeed": 4.25,
+    "AoeSlowArcHeight": 2.5,
+    "AoeSlowExplosionDuration": 2.5,
+    "BlasterRange": 7,
+    "BlasterFireDuration": 2.5,
+    "BlasterWaveCount": 4,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 1987440075660377,
+      "guid": "9bfc4f3890dd0a544afac2320546bed0",
+      "type": 2
+    },
+    "SiphonProjectileSpeed": 4.5,
+    "SiphonSineAmplitude": 0.75,
+    "SiphonSineFrequency": 5,
+    "OwnAttackBase": 30000,
+    "OwnAttackScaler": 1500,
+    "OwnHealthBase": 90000,
+    "OwnHealthScaler": 4500,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Phantom Gaze",
+    "Desc_en": "Fires a spectral projectile that deals <Value> Damage and returns to restore <Value> Health."
+  },
+  {
+    "_name": "Companion_5_Legendary_Meteor",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "5fce88a7aa5291d4db197990206dd59e",
+      "type": 2
+    },
+    "CompanionName": "Star Feather",
+    "LocalizationKey": "Items.Companion.Name.Companion_5_Legendary_Meteor",
+    "DescriptionKey": "Items.Companion.Desc.Companion_5_Legendary_Meteor",
+    "Type": 11,
+    "Type__enum": "Meteor",
+    "Rarity": 4,
+    "Rarity__enum": "Legendary",
+    "Details": "Summons meteors from the sky that deal <Value> Area Damage.",
+    "Prefab": {
+      "fileID": 1297067082876336,
+      "guid": "ce28daab441c5e84b8edb7b26e10bf51",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 6,
+    "EffectDuration": 4,
+    "Level": 1,
+    "DamageBase": 60000,
+    "DamageScaler": 3000,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 2,
+    "SlowAmount": 0.648,
+    "ProjectileSpeed": 12,
+    "ProjectilePrefab": {
+      "fileID": 1625469321295645,
+      "guid": "d8e293e3ae716674ab87c0d4d65f5ca0",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 1890548361507833,
+      "guid": "26ceae3633a4b6d44b6564db5f75b007",
+      "type": 2
+    },
+    "BombExplosionPrefab": {
+      "fileID": 1879756344566093,
+      "guid": "6da21aa16b09a3141ad1a65f9f434ba5",
+      "type": 2
+    },
+    "BombRadius": 2,
+    "BombProjectileSpeed": 8,
+    "BombTravelDuration": 1.25,
+    "BombArcHeight": 2.5,
+    "BombExplosionDuration": 1,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "0e39ffe4234b12c41a61a2dd00cde76e",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 8300000,
+      "guid": "c78de853a5bda564c91970b31943f5e2",
+      "type": 3
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.5647059,
+      "g": 0.6901961,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 1198726937991238,
+      "guid": "cc485c65097a973438d9817a96a2312f",
+      "type": 2
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 1765956627875825,
+      "guid": "4000f6b26693fdf44bf264fb1963fba4",
+      "type": 2
+    },
+    "AoeSlowRadius": 2,
+    "AoeSlowProjectileSpeed": 4.25,
+    "AoeSlowArcHeight": 2.5,
+    "AoeSlowExplosionDuration": 2.5,
+    "BlasterRange": 7,
+    "BlasterFireDuration": 2.5,
+    "BlasterWaveCount": 4,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 6,
+    "MeteorOffsetRange": 1,
+    "MeteorBombDelay": 0.7,
+    "MeteorDropHeight": 8,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 15000,
+    "OwnAttackScaler": 750,
+    "OwnHealthBase": 150000,
+    "OwnHealthScaler": 7500,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Star Feather",
+    "Desc_en": "Summons meteors from the sky that deal <Value> Area Damage."
+  },
+  {
+    "_name": "Companion_6_Divine_Clone",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "fc8277feb9e2f044bbb0ef55920903ca",
+      "type": 2
+    },
+    "CompanionName": "Halo Hare",
+    "LocalizationKey": "Items.Companion.Name.Companion_6_Divine_Clone",
+    "DescriptionKey": "Items.Companion.Desc.Companion_6_Divine_Clone",
+    "Type": 14,
+    "Type__enum": "MirrorClone",
+    "Rarity": 5,
+    "Rarity__enum": "Mythic",
+    "Details": "Summons a spectral clone possessing  <Value> % of your Health that fights alongside you for <Value> seconds.",
+    "Prefab": {
+      "fileID": 1421918910984905,
+      "guid": "a7730dd470e93804784c427744cab49d",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 6,
+    "EffectDuration": 3,
+    "Level": 1,
+    "DamageBase": 270000,
+    "DamageScaler": 13500,
+    "HealBase": 202500,
+    "HealScaler": 10125,
+    "SlowDuration": 2,
+    "SlowAmount": 0.648,
+    "ProjectileSpeed": 12,
+    "ProjectilePrefab": {
+      "fileID": 1150375511145366,
+      "guid": "6bf8094e5f1297f4382b6ed6253ff8a8",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 1890548361507833,
+      "guid": "26ceae3633a4b6d44b6564db5f75b007",
+      "type": 2
+    },
+    "BombExplosionPrefab": {
+      "fileID": 1879756344566093,
+      "guid": "6da21aa16b09a3141ad1a65f9f434ba5",
+      "type": 2
+    },
+    "BombRadius": 2,
+    "BombProjectileSpeed": 7,
+    "BombTravelDuration": 1.25,
+    "BombArcHeight": 2.5,
+    "BombExplosionDuration": 1,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "fc58220ccf89d9f4c8b3c97ce08820ba",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 8300000,
+      "guid": "df5585e7dca00e34289bbc5d4f2695e0",
+      "type": 3
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.5647059,
+      "g": 0.6901961,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 1198726937991238,
+      "guid": "cc485c65097a973438d9817a96a2312f",
+      "type": 2
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 1765956627875825,
+      "guid": "4000f6b26693fdf44bf264fb1963fba4",
+      "type": 2
+    },
+    "AoeSlowRadius": 2,
+    "AoeSlowProjectileSpeed": 4.25,
+    "AoeSlowArcHeight": 2.5,
+    "AoeSlowExplosionDuration": 2.5,
+    "BlasterRange": 7,
+    "BlasterFireDuration": 2.5,
+    "BlasterWaveCount": 4,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 1987440075660377,
+      "guid": "9bfc4f3890dd0a544afac2320546bed0",
+      "type": 2
+    },
+    "SiphonProjectileSpeed": 4.5,
+    "SiphonSineAmplitude": 0.75,
+    "SiphonSineFrequency": 5,
+    "OwnAttackBase": 90000,
+    "OwnAttackScaler": 4500,
+    "OwnHealthBase": 270000,
+    "OwnHealthScaler": 13500,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 30,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 6,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 0.9811321,
+      "g": 0.7769481,
+      "b": 0.254539,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.263,
+    "CloneBrightness": 2.49,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Halo Hare",
+    "Desc_en": "Summons a spectral clone possessing  <Value> % of your Health that fights alongside you for <Value> seconds."
+  },
+  {
+    "_name": "Companion_6_Divine_HealNova",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "16792e1ae151916448206ee9933f5314",
+      "type": 2
+    },
+    "CompanionName": "Radiant Talon",
+    "LocalizationKey": "Items.Companion.Name.Companion_6_Divine_HealNova",
+    "DescriptionKey": "Items.Companion.Desc.Companion_6_Divine_HealNova",
+    "Type": 13,
+    "Type__enum": "HealNova",
+    "Rarity": 5,
+    "Rarity__enum": "Mythic",
+    "Details": "Creates a radiant circle that restores <Value> Health per second and deals <Value> Area Damage to nearby enemies.",
+    "Prefab": {
+      "fileID": 1016790666554217,
+      "guid": "fabe348825cf4974cab7de7a4a79e411",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 0,
+    "Cooldown": 3,
+    "EffectDuration": 1,
+    "Level": 1,
+    "DamageBase": 52500,
+    "DamageScaler": 2625,
+    "HealBase": 607500,
+    "HealScaler": 30375,
+    "SlowDuration": 2,
+    "SlowAmount": 0.648,
+    "ProjectileSpeed": 12,
+    "ProjectilePrefab": {
+      "fileID": 1150375511145366,
+      "guid": "6bf8094e5f1297f4382b6ed6253ff8a8",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 0
+    },
+    "BombExplosionPrefab": {
+      "fileID": 0
+    },
+    "BombRadius": 0,
+    "BombProjectileSpeed": 0,
+    "BombTravelDuration": 0,
+    "BombArcHeight": 0,
+    "BombExplosionDuration": 0,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "4783895324c913d41a7fed85a2ed37b7",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 0
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.5647059,
+      "g": 0.6901961,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 1198726937991238,
+      "guid": "cc485c65097a973438d9817a96a2312f",
+      "type": 2
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 1765956627875825,
+      "guid": "4000f6b26693fdf44bf264fb1963fba4",
+      "type": 2
+    },
+    "AoeSlowRadius": 2,
+    "AoeSlowProjectileSpeed": 4.25,
+    "AoeSlowArcHeight": 2.5,
+    "AoeSlowExplosionDuration": 2.5,
+    "BlasterRange": 6,
+    "BlasterFireDuration": 1.75,
+    "BlasterWaveCount": 4,
+    "BlasterConeAngle": 55,
+    "MeteorBombCount": 0,
+    "MeteorOffsetRange": 0,
+    "MeteorBombDelay": 0,
+    "MeteorDropHeight": 0,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 45000,
+    "OwnAttackScaler": 2250,
+    "OwnHealthBase": 450000,
+    "OwnHealthScaler": 22500,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 1.5,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 270000,
+    "HealNovaDamageScaler": 13500,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 5,
+    "ImmortalityDurationScaler": 0.2,
+    "Name_en": "Radiant Talon",
+    "Desc_en": "Creates a radiant circle that restores <Value> Health per second and deals <Value> Area Damage to nearby enemies."
+  },
+  {
+    "_name": "Companion_6_Divine_Immortal",
+    "Icon": {
+      "fileID": 21300000,
+      "guid": "97cb3076028629a479cae40898dfe5eb",
+      "type": 2
+    },
+    "CompanionName": "Celestial Mind",
+    "LocalizationKey": "Items.Companion.Name.Companion_6_Divine_Immortal",
+    "DescriptionKey": "Items.Companion.Desc.Companion_6_Divine_Immortal",
+    "Type": 15,
+    "Type__enum": "Immortality",
+    "Rarity": 5,
+    "Rarity__enum": "Mythic",
+    "Details": "Blesses you with immortality, preventing your Health from dropping below 1 for <Value> seconds.",
+    "Prefab": {
+      "fileID": 1318047642589681,
+      "guid": "839e08759e38a9149bda1dd2d08aa3ee",
+      "type": 2
+    },
+    "MoveSpeed": 2,
+    "FollowDistance": 3,
+    "MinDistance": 1.2,
+    "InitialDelay": 1,
+    "Cooldown": 12,
+    "EffectDuration": 5,
+    "Level": 1,
+    "DamageBase": 60000,
+    "DamageScaler": 3000,
+    "HealBase": 10,
+    "HealScaler": 5,
+    "SlowDuration": 2,
+    "SlowAmount": 0.648,
+    "ProjectileSpeed": 12,
+    "ProjectilePrefab": {
+      "fileID": 1625469321295645,
+      "guid": "d8e293e3ae716674ab87c0d4d65f5ca0",
+      "type": 2
+    },
+    "BombPrefab": {
+      "fileID": 1890548361507833,
+      "guid": "26ceae3633a4b6d44b6564db5f75b007",
+      "type": 2
+    },
+    "BombExplosionPrefab": {
+      "fileID": 1879756344566093,
+      "guid": "6da21aa16b09a3141ad1a65f9f434ba5",
+      "type": 2
+    },
+    "BombRadius": 2,
+    "BombProjectileSpeed": 8,
+    "BombTravelDuration": 1.25,
+    "BombArcHeight": 2.5,
+    "BombExplosionDuration": 1,
+    "BurnEnabled": 0,
+    "BurnDuration": 0,
+    "BurnTickDamage": 0,
+    "MultiSlowChainCount": 0,
+    "MultiSlowImpactPrefab": {
+      "fileID": 0
+    },
+    "ChainHealSpeed": 0,
+    "ChainHealDuration": 0,
+    "HealTickInterval": 1,
+    "LightningChainCount": 0,
+    "LightningSpeed": 0,
+    "LightningDuration": 0,
+    "LightningTickInterval": 0,
+    "ShootSound": {
+      "fileID": 8300000,
+      "guid": "a14962924f812d746b28cf1a1dbcb568",
+      "type": 3
+    },
+    "ShootVolume": 0.4,
+    "ProjectileHitSound": {
+      "fileID": 0
+    },
+    "ProjectileHitVolume": 0.4,
+    "ProjectileImpactSound": {
+      "fileID": 8300000,
+      "guid": "c78de853a5bda564c91970b31943f5e2",
+      "type": 3
+    },
+    "ProjectileImpactVolume": 1,
+    "EffectActiveSound": {
+      "fileID": 0
+    },
+    "EffectActiveSoundVolume": 1,
+    "LoopEffectActiveSound": 0,
+    "LightningFlashColor": {
+      "r": 1,
+      "g": 0.9,
+      "b": 0.2,
+      "a": 1
+    },
+    "SlowFlashColor": {
+      "r": 0.5647059,
+      "g": 0.6901961,
+      "b": 1,
+      "a": 1
+    },
+    "BeamSpeed": 0,
+    "BeamDuration": 0,
+    "BeamTickInterval": 0,
+    "GuardianActiveDuration": 0,
+    "GuardianHealAmount": 0,
+    "GuardianBlockChance": 0,
+    "AoeSlowProjectilePrefab": {
+      "fileID": 1198726937991238,
+      "guid": "cc485c65097a973438d9817a96a2312f",
+      "type": 2
+    },
+    "AoeSlowExplosionPrefab": {
+      "fileID": 1765956627875825,
+      "guid": "4000f6b26693fdf44bf264fb1963fba4",
+      "type": 2
+    },
+    "AoeSlowRadius": 2,
+    "AoeSlowProjectileSpeed": 4.25,
+    "AoeSlowArcHeight": 2.5,
+    "AoeSlowExplosionDuration": 2.5,
+    "BlasterRange": 7,
+    "BlasterFireDuration": 2.5,
+    "BlasterWaveCount": 4,
+    "BlasterConeAngle": 90,
+    "MeteorBombCount": 6,
+    "MeteorOffsetRange": 1,
+    "MeteorBombDelay": 0.7,
+    "MeteorDropHeight": 8,
+    "SiphonProjectilePrefab": {
+      "fileID": 0
+    },
+    "SiphonProjectileSpeed": 0,
+    "SiphonSineAmplitude": 0,
+    "SiphonSineFrequency": 0,
+    "OwnAttackBase": 135000,
+    "OwnAttackScaler": 6750,
+    "OwnHealthBase": 180000,
+    "OwnHealthScaler": 9000,
+    "HealNovaParticlePrefab": {
+      "fileID": 0
+    },
+    "HealNovaStartRadius": 0.5,
+    "HealNovaEndRadius": 5,
+    "HealNovaDuration": 2,
+    "HealNovaTickInterval": 0.1,
+    "HealNovaDamageBase": 100,
+    "HealNovaDamageScaler": 10,
+    "CloneHealthPercent": 5,
+    "CloneHealthPercentScaler": 0.5,
+    "CloneLifetime": 10,
+    "CloneGridSearchCount": 8,
+    "CloneWalkDuration": 0.6,
+    "CloneTintColor": {
+      "r": 1,
+      "g": 0.84,
+      "b": 0.2,
+      "a": 1
+    },
+    "CloneTintAmount": 1,
+    "CloneAlpha": 0.7,
+    "CloneBrightness": 1.3,
+    "ImmortalityDuration": 2,
+    "ImmortalityDurationScaler": 0.02,
+    "Name_en": "Celestial Mind",
+    "Desc_en": "Blesses you with immortality, preventing your Health from dropping below 1 for <Value> seconds."
+  }
+]
