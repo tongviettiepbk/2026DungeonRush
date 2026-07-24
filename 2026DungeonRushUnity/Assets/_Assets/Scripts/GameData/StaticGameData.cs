@@ -7,10 +7,12 @@ public class StaticGameData
 {
     public StaticItemData items;
     public StaticCampaignData campaign;
+    public StaticWeaponData weapons;
 
     public void Load()
     {
         if (items == null) items = new StaticItemData();
         if (campaign == null) campaign = new StaticCampaignData();
+        if (weapons == null) weapons = new StaticWeaponData();
     }
 }
