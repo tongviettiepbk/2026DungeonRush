@@ -8,11 +8,19 @@ public class StaticGameData
     public StaticItemData items;
     public StaticCampaignData campaign;
     public StaticWeaponData weapons;
+    public StaticGearItemData gears;
+    public StaticCapeData capes;
+    public StaticWingData wings;
+    public StaticForgeData forge;
 
     public void Load()
     {
         if (items == null) items = new StaticItemData();
         if (campaign == null) campaign = new StaticCampaignData();
         if (weapons == null) weapons = new StaticWeaponData();
+        if (gears == null) gears = new StaticGearItemData();
+        if (capes == null) capes = new StaticCapeData();
+        if (wings == null) wings = new StaticWingData();
+        if (forge == null) forge = new StaticForgeData();
     }
 }
