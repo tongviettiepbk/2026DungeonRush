@@ -7,6 +7,7 @@ public class StaticGameData
 {
     public StaticItemData items;
     public StaticCampaignData campaign;
+    public StaticMapData map;
     public StaticWeaponData weapons;
     public StaticGearItemData gears;
     public StaticCapeData capes;
@@ -18,6 +19,7 @@ public class StaticGameData
     {
         if (items == null) items = new StaticItemData();
         if (campaign == null) campaign = new StaticCampaignData();
+        if (map == null) map = new StaticMapData();
         if (weapons == null) weapons = new StaticWeaponData();
         if (gears == null) gears = new StaticGearItemData();
         if (capes == null) capes = new StaticCapeData();

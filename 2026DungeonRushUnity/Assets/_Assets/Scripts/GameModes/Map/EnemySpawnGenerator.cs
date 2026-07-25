@@ -1,0 +1,114 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+// Sinh enemy cho 1 màn campaign.
+//
+// LƯU Ý QUAN TRỌNG: DungeonRush KHÔNG có bảng "enemy level theo màn". Enemy dùng stat tuyệt đối
+// (Health/AttackPower...) và scale theo tiến trình người chơi. Công thức scale gốc bị strip il2cpp,
+// nên phần scaling dưới đây là PLACEHOLDER hợp lý — neo trên các hằng số thật đọc từ remote config
+// (army_power_level_scaler, army_power_exponential_scaler). Thay bằng công thức thật khi có.
+// Chi tiết: DecodedData/MAP_AND_SPAWN_MODEL.md — mục 5.
+public static class EnemySpawnGenerator
+{
+    // Hằng số thật từ remote_config_live.json.
+    private const float ARMY_POWER_LEVEL_SCALER = 20f;
+    private const float ARMY_POWER_EXP_SCALER = 3.16227766f;   // ≈ √10
+    private const int POWER_SEGMENT = 20;                       // army_power_segments: bậc nhỏ nhất
+
+    // Số enemy cơ bản + tăng theo tiến trình (placeholder).
+    private const int BASE_ENEMY_COUNT = 3;
+    private const int ENEMY_COUNT_PER_CHAPTER = 1;
+    private const int MAX_ENEMY_COUNT = 8;
+
+    // Cứ mỗi STAGES_PER_BOSS màn thì màn cuối chương là boss.
+    public struct EnemySpawnInfo
+    {
+        public Vector2Int cell;
+        public int level;
+        public float health;
+        public float attackPower;
+        public float attackSpeed;
+        public float moveSpeed;
+        public bool isBoss;
+    }
+
+    // stageId theo convention campaign (101, 102... 201...). map = kết quả MapGenerator.
+    public static List<EnemySpawnInfo> Generate(int stageId, MapGenerator.GeneratedMap map, DungeonType dungeon = DungeonType.ZombieHorde)
+    {
+        var result = new List<EnemySpawnInfo>();
+
+        var campaign = GameData.staticData.campaign;
+        int chapter = campaign.GetChapter(stageId);
+        int stageIndex = campaign.GetStageIndex(stageId);
+        int globalStage = (chapter - 1) * StaticCampaignData.STAGES_PER_CHAPTER + stageIndex; // 1,2,3...
+
+        // "Level" enemy suy từ số màn đã đi — dùng làm tham số scale.
+        int level = Mathf.Max(1, globalStage);
+
+        // Màn cuối mỗi chương = boss.
+        bool isBossStage = stageIndex >= StaticCampaignData.STAGES_PER_CHAPTER;
+
+        // Ô spawn enemy khả dụng (hàng trên cùng, không phải box/cửa).
+        var spawnCells = GetEnemySpawnCells(map);
+        if (spawnCells.Count == 0) return result;
+
+        int count = isBossStage
+            ? 1
+            : Mathf.Clamp(BASE_ENEMY_COUNT + (chapter - 1) * ENEMY_COUNT_PER_CHAPTER, 1, MAX_ENEMY_COUNT);
+        count = Mathf.Min(count, spawnCells.Count);
+
+        float power = EnemyPower(level);
+
+        for (int i = 0; i < count; i++)
+        {
+            // Boss dùng ô cửa (giữa), thường phân bố đều trên các ô spawn.
+            Vector2Int cell = isBossStage ? map.enemySpawnCell : spawnCells[i * spawnCells.Count / count];
+
+            float unitPower = isBossStage ? power * 6f : power;   // boss mạnh gấp ~6 lần lính thường
+
+            result.Add(new EnemySpawnInfo
+            {
+                cell = cell,
+                level = level,
+                health = unitPower * 10f,                          // ~70% ngân sách power dồn vào máu
+                attackPower = unitPower,
+                attackSpeed = 1f,
+                moveSpeed = ThemeMoveSpeed(dungeon),
+                isBoss = isBossStage,
+            });
+        }
+
+        return result;
+    }
+
+    // power(level) = LEVEL_SCALER * level * EXP_SCALER^(level / SEGMENT).
+    // Neo trên army_power_level_scaler & army_power_exponential_scaler thật (placeholder tổng thể).
+    private static float EnemyPower(int level)
+    {
+        float segmentBoost = Mathf.Pow(ARMY_POWER_EXP_SCALER, (level - 1) / (float)POWER_SEGMENT);
+        return ARMY_POWER_LEVEL_SCALER * level * segmentBoost;
+    }
+
+    // DragonBoss theme: enemy đứng yên (EnemyCanMove=0 trong DungeonThemeData gốc).
+    private static float ThemeMoveSpeed(DungeonType dungeon)
+    {
+        return dungeon == DungeonType.DragonBoss ? 0f : 2f;
+    }
+
+    private static List<Vector2Int> GetEnemySpawnCells(MapGenerator.GeneratedMap map)
+    {
+        var cells = new List<Vector2Int>();
+        for (int y = map.height - StaticMapData.ENEMY_SPAWN_ROWS; y < map.height; y++)
+        {
+            for (int x = 0; x < map.width; x++)
+            {
+                var type = map.Get(x, y);
+                if (type == MapCellType.EnemySpawn || type == MapCellType.Empty)
+                {
+                    cells.Add(new Vector2Int(x, y));
+                }
+            }
+        }
+        return cells;
+    }
+}

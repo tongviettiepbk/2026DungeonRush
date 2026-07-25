@@ -46,6 +46,40 @@ public class GameDataTester : MonoBehaviour
         DebugCustom.Log("[Tester] curStageId=" + campaign.curStageId + ", passed=" + campaign.passedStageId);
     }
 
+    [ContextMenu("Test/Generate Current Campaign Level")]
+    private void TestGenerateLevel()
+    {
+        int stageId = GameData.userData.campaign.curStageId;
+        CampaignLevelBuilder.CampaignLevel level = CampaignLevelBuilder.Build(stageId);
+
+        MapGenerator.GeneratedMap m = level.map;
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"[Map] stage={stageId} env={level.environment} obstacles={m.obstacles.Count} enemies={level.enemies.Count} attempts={m.usedAttempts}");
+        for (int y = m.height - 1; y >= 0; y--)
+        {
+            string row = "";
+            for (int x = 0; x < m.width; x++)
+            {
+                switch (m.Get(x, y))
+                {
+                    case MapCellType.Obstacle: row += "#"; break;
+                    case MapCellType.PlayerSpawn: row += "."; break;
+                    case MapCellType.EnemySpawn: row += "E"; break;
+                    case MapCellType.Door: row += "D"; break;
+                    default: row += " "; break;
+                }
+            }
+            sb.AppendLine("|" + row + "|");
+        }
+        DebugCustom.Log(sb.ToString());
+
+        for (int i = 0; i < level.enemies.Count; i++)
+        {
+            EnemySpawnGenerator.EnemySpawnInfo e = level.enemies[i];
+            DebugCustom.Log($"[Enemy {i}] cell={e.cell} lv={e.level} hp={e.health:0} atk={e.attackPower:0} boss={e.isBoss}");
+        }
+    }
+
     [ContextMenu("Cheat/Clear All Save")]
     private void CheatClearSave()
     {
