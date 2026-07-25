@@ -12,6 +12,7 @@ public class StaticGameData
     public StaticCapeData capes;
     public StaticWingData wings;
     public StaticForgeData forge;
+    public StaticCompanionData companions;
 
     public void Load()
     {
@@ -22,5 +23,6 @@ public class StaticGameData
         if (capes == null) capes = new StaticCapeData();
         if (wings == null) wings = new StaticWingData();
         if (forge == null) forge = new StaticForgeData();
+        if (companions == null) companions = new StaticCompanionData();
     }
 }
