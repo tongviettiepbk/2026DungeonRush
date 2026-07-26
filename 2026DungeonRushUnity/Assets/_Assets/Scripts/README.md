@@ -7,7 +7,7 @@ Base được bóc từ 2026StickIdle, cắt Firebase/Analytics/MasterInfo. Lộ
 | 1 | Scene flow (Root → Login → Lobby) | ⬜ |
 | 2 | **Data (GameData / StaticGameData / UserData)** | ✅ phần này |
 | 3 | GameConfig + feature flags | ⬜ |
-| 4 | Gameplay & combat (Units, BattleMechanic) | ⬜ |
+| 4 | Gameplay & combat (Units, BattleMechanic) | 🟡 grid+spawn xong; battle mechanic sau |
 | 5 | UI (UIManager, BaseUI, Popup) | ⬜ |
 | 6 | Patterns (Singleton, Observer/EventDispatcher, ObjectPooling) | ⬜ |
 
