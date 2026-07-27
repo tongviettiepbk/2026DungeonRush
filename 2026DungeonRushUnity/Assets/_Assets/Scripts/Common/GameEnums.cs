@@ -8,7 +8,7 @@ public enum ItemType
 }
 
 // Loại môi trường map. Giá trị = EnvironmentType trong MapConfig gốc của DungeonRush.
-public enum MapEnvironmentType
+public enum ModeType
 {
     DefaultLevel = 0,        // MainMap — màn campaign thường
     BossRush = 1,
@@ -35,6 +35,15 @@ public enum MapCellType
     PlayerSpawn = 2,    // ô spawn quân người chơi (hàng dưới)
     EnemySpawn = 3,     // ô spawn enemy (hàng trên)
     Door = 4,           // cửa thoát màn
+}
+
+// Trạng thái hiển thị trên CombatText (Effects). Port từ StickIdle.
+public enum TextDamageStatus
+{
+    Miss,
+    Block,
+    Immune,
+    Evade,
 }
 
 // 10 bậc rarity của DungeonRush (client). Dùng chung cho mọi loại gear (Vũ khí, Mũ, Găng...).

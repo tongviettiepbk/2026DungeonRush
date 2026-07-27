@@ -4,11 +4,12 @@ Base được bóc từ 2026StickIdle, cắt Firebase/Analytics/MasterInfo. Lộ
 
 | # | Phần | Trạng thái |
 |---|------|-----------|
-| 1 | Scene flow (Root → Login → Lobby) | ⬜ |
+| 1 | Scene flow (Root → Login → Lobby) | ✅ bản rút gọn (không Firebase/UIManager) |
 | 2 | **Data (GameData / StaticGameData / UserData)** | ✅ phần này |
 | 3 | GameConfig + feature flags | ⬜ |
-| 4 | Gameplay & combat (Units, BattleMechanic) | 🟡 grid+spawn xong; battle mechanic sau |
+| 4 | Gameplay & combat (Units, BattleMechanic) | 🟡 grid+spawn + foundation combat (BaseUnit + BattleMechanic) xong; managers còn slim/stub |
 | 5 | UI (UIManager, BaseUI, Popup) | ⬜ |
+| + | Localize (LocalizeManager, LocalizeText, 15 ngôn ngữ) | ✅ port + data JSON |
 | 6 | Patterns (Singleton, Observer/EventDispatcher, ObjectPooling) | ⬜ |
 
 ## Kiến trúc Data
@@ -55,3 +56,21 @@ Chuột phải component → Cheat/Add 1000 Gold, Pass Stage, Clear Save.
 - `UserData.Load()` dùng generic `LoadModule<T>()` thay vì ~30 hàm `LoadXxx()` lặp code.
 - Thời gian dùng `GameUtils.GetTimeNow()` (giờ máy) — sau này có server time chỉ sửa 1 chỗ.
 - Chưa post event (NewDay, ItemChanged...) — chờ phần 6 EventDispatcher, đã đánh dấu TODO.
+
+## Combat foundation (port từ StickIdle — "gọn + adapt")
+
+Bám kiến trúc StickIdle nhưng cắt xuống mức tối thiểu để compile + làm nền cho combat.
+
+**Port thật (giữ nguyên logic):**
+- `Stats/` — Stats, StatModifier (bỏ UI-string ext + Firebase), StatUtils (bỏ HandNavigationType), BaseStats.
+- `BattleMechanic/` — 13 file: CC, DamageOverTime, Shield, Buff/Debuff, AttackData/TakeDamage/ProcessedAttack. (`TextDamageStatus` dùng lại bản ở `Common/GameEnums.cs`.)
+- `Unit/BaseUnit.cs` — cắt: bỏ check UIGamePlay/UIManager trong sfx; `PostEvent` dùng extension `this.PostEvent`.
+
+**Slim/stub (chỉ đủ bề mặt, đánh dấu `TODO(follow-stick)`):**
+- `Unit/AnimationController.cs` — thay bản Spine 533 dòng, hầu hết no-op.
+- `Unit/HealthBar.cs`, `Unit/CameraController.cs`, `Unit/AudioManager.cs`, `Unit/BaseBullet.cs`.
+- `Unit/GameController.cs` — registry unit + `CombatMode`/`CombatMap` (ClampPointInMap = identity).
+
+**Đã có sẵn, tái dùng:** `Effects/FxController` (đủ fx CC/heal + ShowDamage/ShowStatus), `Effects/BaseFx`, `Utilities/Yielder`, `Utilities/DebugCustom`, DOTween, Spine.
+
+**Cần làm khi tiếp tục:** nối `EnemyUnit` (GameModes/Combat) kế thừa `BaseUnit`; dựng AnimationController Spine thật; nối GameController vào vòng lặp/spawn procedural; thêm tag `TeamA`/`TeamB` trong Unity. Compile-check: `dotnet build Assembly-CSharp.csproj`.

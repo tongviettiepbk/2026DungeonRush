@@ -12,7 +12,7 @@ public class LevelRuntimeBuilder : MonoBehaviour
     [Header("Màn")]
     [Tooltip("0 = dùng curStageId của người chơi; >0 = ép build stage này.")]
     public int overrideStageId = 0;
-    public MapEnvironmentType environment = MapEnvironmentType.DefaultLevel;
+    public ModeType environment = ModeType.DefaultLevel;
     public bool buildOnStart = true;
 
     [Header("Lưới")]

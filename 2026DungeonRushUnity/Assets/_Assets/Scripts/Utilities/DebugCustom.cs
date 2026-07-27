@@ -89,4 +89,37 @@ public class DebugCustom
             Debug.LogWarning(message, context);
         }
     }
+
+    public static void LogWarning(Object context, string format, params object[] args)
+    {
+        if (IsEnableLog())
+        {
+            Debug.LogWarning(string.Format(format, args), context);
+        }
+    }
+
+    // Assert: ném exception nếu condition = false. Port từ StickIdle (dùng bởi EventDispatcher).
+    public static void Assert(bool condition)
+    {
+        if (!condition)
+        {
+            throw new UnityException();
+        }
+    }
+
+    public static void Assert(bool condition, string message)
+    {
+        if (!condition)
+        {
+            throw new UnityException(message);
+        }
+    }
+
+    public static void Assert(bool condition, string format, params object[] args)
+    {
+        if (!condition)
+        {
+            throw new UnityException(string.Format(format, args));
+        }
+    }
 }

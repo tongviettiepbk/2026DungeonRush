@@ -9,12 +9,12 @@ public static class CampaignLevelBuilder
     public class CampaignLevel
     {
         public int stageId;
-        public MapEnvironmentType environment;
+        public ModeType environment;
         public MapGenerator.GeneratedMap map;
         public List<EnemySpawnGenerator.EnemySpawnInfo> enemies;
     }
 
-    public static CampaignLevel Build(int stageId, MapEnvironmentType environment = MapEnvironmentType.DefaultLevel)
+    public static CampaignLevel Build(int stageId, ModeType environment = ModeType.DefaultLevel)
     {
         StaticMapData.MapConfig cfg = GameData.staticData.map.GetConfig(environment);
 
