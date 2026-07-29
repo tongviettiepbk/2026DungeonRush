@@ -1,22 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Entry CHẠY TRẬN của MainMap (RPG action). Dựng màn từ stageId rồi spawn 3 loại unit thật
-// (Hero/Pet/Enemy trên BaseUnit) + nạp wall vào CombatMap để unit di chuyển né wall.
+// Mode CAMPAIGN (MainMap — màn thường). HẤP THỤ toàn bộ logic dựng màn của CombatDirector cũ
+// vào khung vòng đời BaseMode: CreateMap dựng level+lưới+wall, CreateTeamA spawn Hero+Pet,
+// CreateTeamB spawn Enemy. CombatDirector (thừa) đã bị bỏ.
 //
-// Khác LevelRuntimeBuilder (chỉ preview map bằng marker): director này tạo unit combat có
-// rig, gán team/battleId/stat, để GameController.Update() điều khiển AI.
+// Kế thừa BaseMode nên tự có: RoutineTimer, EndGame, Pause/Resume, OnUnitDie→thắng/thua,
+// cheat Editor W/L. Phần riêng của campaign nằm ở đây (prefab, chỉ số placeholder, curStageId).
 //
-// YÊU CẦU PREFAB: heroPrefab/petPrefab/enemyPrefab phải có cấu trúc rig BaseUnit
-// (con "Body" Collider2D, "FlipPoints" gồm "CenterBody"/"FirePoint"/"health-bar",
-//  Rigidbody2D + AudioSource + AnimationController ở root) — PreviewCharacter là mẫu.
-// YÊU CẦU TAG: khai báo 2 tag "TeamA"/"TeamB" trong Unity (Tags & Layers).
-public class CombatDirector : MonoBehaviour
+// YÊU CẦU PREFAB: heroPrefab/petPrefab/enemyPrefab phải có rig BaseUnit (con "Body" Collider2D,
+// "FlipPoints"/"CenterBody"/"FirePoint"/"health-bar", Rigidbody2D+AudioSource+AnimationController
+// ở root) — PreviewCharacter là mẫu. YÊU CẦU TAG: khai báo "TeamA"/"TeamB" trong Unity.
+public class CampaignMode : BaseMode
 {
     [Header("Màn")]
     [Tooltip("0 = dùng curStageId của người chơi; >0 = ép build stage này.")]
     public int overrideStageId = 0;
-    public ModeType environment = ModeType.DefaultLevel;
     public bool buildOnStart = true;
 
     [Header("Lưới")]
@@ -55,6 +54,12 @@ public class CombatDirector : MonoBehaviour
     public CampaignLevelBuilder.CampaignLevel CurrentLevel => currentLevel;
     public HeroUnit Hero => hero;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        type = ModeType.DefaultLevel;
+    }
+
     private void Start()
     {
         if (buildOnStart)
@@ -63,14 +68,23 @@ public class CombatDirector : MonoBehaviour
         }
     }
 
+    // Dựng lại màn từ đầu (Reset dọn màn cũ → Initialize chạy vòng đời BaseMode).
     [ContextMenu("Rebuild")]
     public void Build()
     {
+        Reset();
+        Initialize();
+    }
+
+    // ===== VÒNG ĐỜI (override hook BaseMode) =====
+
+    // Dựng level + lưới + nạp wall vào CombatMap + environment/obstacle.
+    protected override void CreateMap()
+    {
         EnsureGameDataLoaded();
-        Clear();
 
         int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.curStageId;
-        currentLevel = CampaignLevelBuilder.Build(stageId, environment);
+        currentLevel = CampaignLevelBuilder.Build(stageId, type);
         MapGenerator.GeneratedMap map = currentLevel.map;
 
         grid = new GridSpace(transform.position, cellSize, map.width, map.height, centerHorizontally);
@@ -84,15 +98,27 @@ public class CombatDirector : MonoBehaviour
 
         SpawnEnvironment(map);
         SpawnObstacles(map);
-        SpawnHeroAndPets(map);
+    }
+
+    protected override void CreateTeamA()
+    {
+        SpawnHeroAndPets(currentLevel.map);
+    }
+
+    protected override void CreateTeamB()
+    {
         SpawnEnemies(currentLevel.enemies);
     }
 
+    // Dọn màn cũ trước khi dựng lại.
     [ContextMenu("Clear")]
-    public void Clear()
+    public override void Reset()
     {
+        base.Reset();
+
         GameController.Instance.ResetBattle();
         hero = null;
+        isEndMode = false;
 
         if (container != null)
         {
@@ -100,6 +126,8 @@ public class CombatDirector : MonoBehaviour
             container = null;
         }
     }
+
+    // ===== SPAWN (port từ CombatDirector) =====
 
     private void SpawnEnvironment(MapGenerator.GeneratedMap map)
     {
@@ -127,7 +155,7 @@ public class CombatDirector : MonoBehaviour
     {
         if (heroPrefab == null)
         {
-            DebugCustom.LogWarning("[CombatDirector] Chưa gán heroPrefab — bỏ qua spawn Hero/Pet.");
+            DebugCustom.LogWarning("[CampaignMode] Chưa gán heroPrefab — bỏ qua spawn Hero/Pet.");
             return;
         }
 
@@ -162,7 +190,7 @@ public class CombatDirector : MonoBehaviour
     {
         if (enemyPrefab == null)
         {
-            DebugCustom.LogWarning("[CombatDirector] Chưa gán enemyPrefab — bỏ qua spawn Enemy.");
+            DebugCustom.LogWarning("[CampaignMode] Chưa gán enemyPrefab — bỏ qua spawn Enemy.");
             return;
         }
 
@@ -181,7 +209,7 @@ public class CombatDirector : MonoBehaviour
         }
     }
 
-    // ---- helpers ----
+    // ===== helpers =====
 
     private T SpawnUnit<T>(GameObject prefab, Vector3 pos, Transform parent) where T : BaseUnit
     {

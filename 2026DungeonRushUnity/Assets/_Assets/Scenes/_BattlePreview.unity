@@ -172,6 +172,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &341265733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 341265735}
+  - component: {fileID: 341265734}
+  m_Layer: 0
+  m_Name: GameController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &341265734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341265733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3fdc9e8662e20840bf7ad1d78b6b843, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameController
+  gameSpeed: 1
+--- !u!4 &341265735
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341265733}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &898064846
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -261,6 +306,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f5f4f06833217a474a46b2fe73edf87, type: 3}
+--- !u!1 &1240528291
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1240528293}
+  - component: {fileID: 1240528292}
+  m_Layer: 0
+  m_Name: CampaignMode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1240528292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240528291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 860108608fb07224b89768e5586eec48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CampaignMode
+  type: 0
+  bgm: {fileID: 0}
+  defaultBattleTime: 0
+  delayEndGame: 1.5
+  overrideStageId: 101
+  buildOnStart: 1
+  cellSize: 1
+  centerHorizontally: 1
+  mapPrefab: {fileID: 1191446148262546, guid: 3cfed0fe9dcb86a1dd4e5630dbc7b1b3, type: 3}
+  obstaclePrefab: {fileID: 1319133848938338, guid: 75185248282ea5d422e6f27eb4734804, type: 3}
+  heroPrefab: {fileID: 3403766416944055713, guid: 6064135f06d2db646a620667854dd70c, type: 3}
+  petPrefab: {fileID: 1016365020410656, guid: 9f5f4f06833217a474a46b2fe73edf87, type: 3}
+  enemyPrefab: {fileID: 6565169790765346800, guid: 42a3cb40180020546bca7b27dda42a76, type: 3}
+  heroMaxHp: 1000
+  heroAttack: 50
+  heroAttackSpeed: 1.2
+  heroAttackRange: 1.4
+  heroMoveSpeed: 3
+  petCount: 1
+  petMaxHp: 400
+  petAttack: 25
+  petAttackSpeed: 1
+  petAttackRange: 1.3
+  petMoveSpeed: 3.2
+--- !u!4 &1240528293
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240528291}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1752488497
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,7 +692,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6565169790765346800, guid: 42a3cb40180020546bca7b27dda42a76, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -657,3 +770,5 @@ SceneRoots:
   - {fileID: 898064846}
   - {fileID: 6174489220545225097}
   - {fileID: 9216973972068212530}
+  - {fileID: 1240528293}
+  - {fileID: 341265735}
