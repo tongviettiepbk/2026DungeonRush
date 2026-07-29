@@ -126,10 +126,8 @@ public class LevelRuntimeBuilder : MonoBehaviour
                 go = CreatePlaceholder(PrimitiveType.Sphere, pos, parent, color, scale);
             }
 
-            EnemyUnit unit = go.GetComponent<EnemyUnit>();
-            if (unit == null) unit = go.AddComponent<EnemyUnit>();
-            unit.Init(info);
-
+            // Đây là PREVIEW map (chỉ marker vị trí). Combat thật (EnemyUnit:BaseUnit) do
+            // CombatDirector spawn từ prefab có rig — không gắn ở đây để tránh vỡ placeholder.
             go.name = (info.isBoss ? "Boss_" : "Enemy_") + i + "_lv" + info.level;
         }
     }

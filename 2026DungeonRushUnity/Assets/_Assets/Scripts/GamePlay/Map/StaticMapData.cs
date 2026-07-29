@@ -9,8 +9,9 @@ using UnityEngine;
 // trong GameplayScene gốc — chi tiết ở DecodedData/MAP_AND_SPAWN_MODEL.md.
 public class StaticMapData
 {
-    // Kích thước lưới logic (MapConfig ghi 9×12; cột thứ 9 là viền/cửa, vùng chơi thực 8×12).
-    public const int GRID_WIDTH = 8;
+    // Kích thước lưới chơi thực: 9×12, TẤT CẢ ô đều đi được (wall nằm trong đó).
+    // (Chốt gameplay 2026-07-29: vùng chơi 9×12 đầy đủ, không trừ cột viền.)
+    public const int GRID_WIDTH = 9;
     public const int GRID_HEIGHT = 12;
 
     // Khoảng số obstacle random mỗi màn (LevelGenerator: Min=10, Max=15).

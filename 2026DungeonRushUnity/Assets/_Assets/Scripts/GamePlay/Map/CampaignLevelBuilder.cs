@@ -20,8 +20,8 @@ public static class CampaignLevelBuilder
 
         var genParams = new MapGenerator.GenParams
         {
-            // Vùng chơi = gridWidth-1 (bỏ cột viền), gridHeight nguyên.
-            width = (cfg != null ? cfg.gridWidth - 1 : StaticMapData.GRID_WIDTH),
+            // Vùng chơi = toàn bộ lưới 9×12 (chốt 2026-07-29, không trừ cột viền).
+            width = (cfg != null ? cfg.gridWidth : StaticMapData.GRID_WIDTH),
             height = (cfg != null ? cfg.gridHeight : StaticMapData.GRID_HEIGHT),
             // Seed suy từ stageId → cùng màn luôn ra cùng layout.
             seed = SeedFromStage(stageId),

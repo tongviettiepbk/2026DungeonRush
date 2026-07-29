@@ -69,8 +69,10 @@ Bám kiến trúc StickIdle nhưng cắt xuống mức tối thiểu để compi
 **Slim/stub (chỉ đủ bề mặt, đánh dấu `TODO(follow-stick)`):**
 - `Unit/AnimationController.cs` — thay bản Spine 533 dòng, hầu hết no-op.
 - `Unit/HealthBar.cs`, `Unit/CameraController.cs`, `Unit/AudioManager.cs`, `Unit/BaseBullet.cs`.
-- `Unit/GameController.cs` — registry unit + `CombatMode`/`CombatMap` (ClampPointInMap = identity).
+- `Unit/GameController.cs` — registry unit + vòng lặp tick AI (`Update`→`UpdateBehavior`) + `CombatMode`/`CombatMap` (biên + wall, né wall).
 
 **Đã có sẵn, tái dùng:** `Effects/FxController` (đủ fx CC/heal + ShowDamage/ShowStatus), `Effects/BaseFx`, `Utilities/Yielder`, `Utilities/DebugCustom`, DOTween, Spine.
 
-**Cần làm khi tiếp tục:** nối `EnemyUnit` (GameModes/Combat) kế thừa `BaseUnit`; dựng AnimationController Spine thật; nối GameController vào vòng lặp/spawn procedural; thêm tag `TeamA`/`TeamB` trong Unity. Compile-check: `dotnet build Assembly-CSharp.csproj`.
+**MainMap gameplay (2026-07-29):** map 9×12 đầy đủ; di chuyển liên tục né wall (`BaseUnit.Moving`+`CombatMap.ResolveMove`); 3 unit trên `BaseUnit`: `HeroUnit` (chủ động tìm enemy gần nhất), `EnemyUnit` (thụ động, chỉ đánh trong `aggroRange`), `PetUnit` (đi theo hero + đánh trong `engageRange`). Phần chung (nạp stat từ baseStats, SpawnInBattle, đánh tạm ở OnAttackEnd, helper tìm enemy) gộp trong `BaseUnit` (region "Map unit"). Entry chạy trận: `CombatDirector` (spawn từ prefab có rig, nạp wall). Unity compile 0 lỗi; tag TeamA/TeamB đã thêm. **CHƯA chạy play-mode.**
+
+**Cần làm khi tiếp tục:** khai báo tag `TeamA`/`TeamB` trong Unity; gán prefab unit có rig BaseUnit vào `CombatDirector`; AnimationController Spine thật; Hero mặc gear hiển thị (Spine slot); verify LIVE Unity. Compile-check: `dotnet build Assembly-CSharp.csproj`.

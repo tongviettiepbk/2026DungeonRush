@@ -19,13 +19,6 @@ public enum BattleState
     Die,
     KnockUp,
     Fear,
-
-    // hero
-    moveToTarget,
-    dashToTarget,
-    moveNextWave,
-    waitBossIntro,
-
 }
 
 public class BaseUnit : MonoBehaviour
@@ -39,6 +32,12 @@ public class BaseUnit : MonoBehaviour
     protected Rigidbody2D rigid;
     protected AudioSource audioSource;
     protected List<StatModifier> modifiers = new List<StatModifier>();
+
+    // Đích di chuyển hiện tại (world). Move state cập nhật mỗi tick; Moving() đi tới đây (né wall).
+    protected Vector3 moveDestination;
+
+    // Chỉ số gốc (server/scale set vào khi spawn) — CalculateCurrentStats đổ sang stats runtime.
+    protected BaseStats baseStats = new BaseStats();
 
     public int slotIndex { get; set; } = -1;
     public Transform Transform { get; protected set; }
@@ -256,7 +255,72 @@ public class BaseUnit : MonoBehaviour
         shieldController?.RemainModifiers();
     }
 
-    protected virtual void CalculateCurrentStats() { }
+    // Đổ giá trị tuyệt đối từ baseStats vào stats runtime.
+    // (Buff/modifier chưa áp — thêm khi làm hệ buff sâu; xem BattleMechanic.)
+    protected virtual void CalculateCurrentStats()
+    {
+        stats.attack = baseStats.attack;
+        stats.attackSpeed = baseStats.attackPerSecond;
+        stats.attackRange = baseStats.attackRange;
+        stats.maxHp = baseStats.maxHp;
+        stats.moveSpeed = baseStats.moveSpeed;
+    }
+
+    #region Map unit (DungeonRush) — spawn + targeting chung cho Hero/Pet/Enemy
+    // Vào trận: gán stat + team + battleId rồi kích hoạt tại vị trí world.
+    public virtual void SpawnInBattle(BaseStats newBaseStats, string teamTag, Vector3 position)
+    {
+        baseStats = newBaseStats ?? new BaseStats();
+        gameObject.tag = teamTag;
+        battleId = GameController.Instance.NextBattleId();
+
+        ReloadStats();          // đổ baseStats -> stats (qua CalculateCurrentStats)
+        Active(position);       // Initialize + Renew(hp=maxHp) + AddUnit + set vị trí
+        OnBeginBattle();
+    }
+
+    protected BaseUnit FindNearestEnemyAmong(List<BaseUnit> candidates, float maxRange = -1f)
+    {
+        return FindNearestEnemyFrom(Transform.position, candidates, maxRange);
+    }
+
+    // Enemy gần nhất so với 'center', trong 'maxRange' (maxRange < 0 = không giới hạn).
+    // KHÔNG lọc theo biên camera (map top-down của DungeonRush).
+    protected BaseUnit FindNearestEnemyFrom(Vector3 center, List<BaseUnit> candidates, float maxRange = -1f)
+    {
+        if (candidates == null)
+        {
+            return null;
+        }
+
+        BaseUnit nearest = null;
+        float nearestSqr = float.MaxValue;
+        float maxSqr = maxRange * maxRange;
+
+        for (int i = 0; i < candidates.Count; i++)
+        {
+            BaseUnit c = candidates[i];
+            if (c == null || !c.isTargetable || c.battleId == battleId)
+            {
+                continue;
+            }
+
+            float sqr = VectorUtils.SqrDistance(center, c.Transform.position);
+            if (maxRange >= 0f && sqr > maxSqr)
+            {
+                continue;
+            }
+
+            if (sqr < nearestSqr)
+            {
+                nearestSqr = sqr;
+                nearest = c;
+            }
+        }
+
+        return nearest;
+    }
+    #endregion
 
     public virtual void AddModifier(StatModifier input)
     {
@@ -467,6 +531,9 @@ public class BaseUnit : MonoBehaviour
 
         if (IsTargetAvailable())
         {
+            // Bám mục tiêu: cập nhật đích để Moving() đi theo.
+            moveDestination = target.Transform.position;
+
             if (IsTargetInAttackRange())
             {
                 ChangeState(BattleState.Attack);
@@ -489,22 +556,38 @@ public class BaseUnit : MonoBehaviour
         isMoving = false;
     }
 
-    protected virtual void Moving() { }
-
-
-    //wait boss intro
-    public virtual void UpdateWaitBossIntro()
+    // Di chuyển liên tục tới moveDestination, né ô wall qua CombatMap.ResolveMove.
+    // Chạy trong FixedUpdate (physics). moveSpeed=0 (VD boss DragonBoss) → đứng yên.
+    protected virtual void Moving()
     {
-        if (stateCurrent != BattleState.waitBossIntro)
+        if (!isMoving || !isEnableMove || isAttacking)
         {
             return;
         }
-    }
 
-    public virtual void BeginWaitBossIntro()
-    {
-        animationController.PlayAnimIdle();
-        stateCurrent = BattleState.waitBossIntro;
+        float speed = stats.moveSpeed * GameController.Instance.gameSpeed;
+        if (speed <= 0f)
+        {
+            return;
+        }
+
+        Vector3 pos = Transform.position;
+        Vector3 to = moveDestination - pos;
+        to.z = 0f;
+
+        float dist = to.magnitude;
+        if (dist <= 0.001f)
+        {
+            return;
+        }
+
+        Vector3 dir = to / dist;
+        float step = Mathf.Min(speed * Time.fixedDeltaTime, dist);
+        Vector3 next = GameController.Instance.mode.map.ResolveMove(pos, dir, step);
+
+        rigid.MovePosition(next);
+        Face(moveDestination);
+        animationController.SetTimeScaleAnimMoveBySpeed();
     }
 
     public virtual void EndWaitBossAppear()
@@ -566,10 +649,26 @@ public class BaseUnit : MonoBehaviour
         return null;
     }
 
-    protected virtual void OnAttackEnd() { }
+    // Áp sát thương ở CUỐI mỗi nhịp đánh. Lý do: AnimationController hiện là stub → Spine
+    // anim-event không bắn → sát thương gốc (ReleaseNormalAttack) không chạy. EndAttack gọi
+    // OnAttackEnd chắc chắn mỗi nhịp → dùng làm điểm ra đòn tạm. (Thay bằng anim-event thật khi port Spine.)
+    protected virtual void OnAttackEnd()
+    {
+        if (target != null && target.isTargetable && IsTargetInAttackRange())
+        {
+            target.TakeAttack(GetBasicAttackData(), impactAttack);
+        }
+    }
 
     public virtual bool IsInBattleScreen()
     {
+        // Map top-down của DungeonRush không giới hạn theo biên camera ngang như StickIdle.
+        // Chưa gán biên camera → coi như luôn trong "màn" (mọi unit đều target được).
+        if (CameraController.Instance.left == null || CameraController.Instance.right == null)
+        {
+            return true;
+        }
+
         float minX = CameraController.Instance.left.transform.position.x - 0.5f;
         float maxX = CameraController.Instance.right.transform.position.x + 0.5f;
 

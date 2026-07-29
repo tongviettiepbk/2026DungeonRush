@@ -187,10 +187,16 @@ public class FxController : Singleton<FxController>
 
     private CombatText GetText()
     {
-        CombatText textDamage = PoolingController.Instance.poolTextDamage.New();
+        CombatText textDamage = PoolingController.Instance.poolTextDamage?.New();
 
         if (textDamage == null)
         {
+            // Chưa gán prefab text damage → bỏ qua hiển thị (không Instantiate(null) gây crash).
+            if (prefabTextDamage == null)
+            {
+                return null;
+            }
+
             textDamage = Instantiate(prefabTextDamage);
             textDamage.Initialize();
         }
