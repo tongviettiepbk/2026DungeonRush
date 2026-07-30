@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -52,22 +53,21 @@ public class GameDataTester : MonoBehaviour
         int stageId = GameData.userData.campaign.curStageId;
         CampaignLevelBuilder.CampaignLevel level = CampaignLevelBuilder.Build(stageId);
 
-        MapGenerator.GeneratedMap m = level.map;
+        MapConfig cfg = level.config;
+        var playerSpawns = new HashSet<Vector2Int>(level.playerSpawnCells);
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine($"[Map] stage={stageId} env={level.environment} obstacles={m.obstacles.Count} enemies={level.enemies.Count} attempts={m.usedAttempts}");
-        for (int y = m.height - 1; y >= 0; y--)
+        sb.AppendLine($"[Map] stage={stageId} env={level.environment} walls={level.obstacles.Count} enemies={level.enemies.Count}");
+        // In từ hàng trên xuống. # = wall(1), . = spawn quân, D = cửa, khoảng trắng = trống(0).
+        for (int y = cfg.rows - 1; y >= 0; y--)
         {
             string row = "";
-            for (int x = 0; x < m.width; x++)
+            for (int x = 0; x < cfg.cols; x++)
             {
-                switch (m.Get(x, y))
-                {
-                    case MapCellType.Obstacle: row += "#"; break;
-                    case MapCellType.PlayerSpawn: row += "."; break;
-                    case MapCellType.EnemySpawn: row += "E"; break;
-                    case MapCellType.Door: row += "D"; break;
-                    default: row += " "; break;
-                }
+                var c = new Vector2Int(x, y);
+                if (level.grid[x, y] == 1) row += "#";
+                else if (c == level.doorCell) row += "D";
+                else if (playerSpawns.Contains(c)) row += ".";
+                else row += " ";
             }
             sb.AppendLine("|" + row + "|");
         }

@@ -11,9 +11,9 @@ using UnityEngine;
 // hiện nằm ở CombatDirector — override CreateMap/CreateTeamA/CreateTeamB. Bước "chỉ base" này
 // CHƯA đụng CombatDirector; CreateMap/CreateTeamA/CreateTeamB để trống cho mode con điền sau.
 //
-// Lưu ý naming: GameController.mode ở DungeonRush là CombatMode (state trận: teamA/teamB/map),
-// KHÁC StickIdle (ở Stick mode == BaseMode). Base này ĐỌC state qua GameController.Instance.mode,
-// không chiếm chỗ đó — tránh ripple vào BaseUnit.
+// State trận (isPause + teamA/teamB) do CHÍNH BaseMode giữ — đã gộp CombatMode cũ vào đây.
+// GameController.mode trỏ về mode đang chơi (mode tự đăng ký ở Awake). Map/wall/di chuyển
+// tách hẳn sang MapController.Instance.
 public class BaseMode : MonoBehaviour
 {
     [Header("Định danh mode")]
@@ -34,13 +34,18 @@ public class BaseMode : MonoBehaviour
     // Có bỏ qua tick AI/hành vi không (đang pause hoặc trận đã kết thúc).
     public bool isSkipUpdateBehaviour => isPause || isEndMode;
 
-    // Truy cập nhanh 2 team qua state trận (CombatMode). KHÔNG tự giữ list để tránh lệch nguồn.
-    public List<BaseUnit> teamA => GameController.Instance.mode.teamA;
-    public List<BaseUnit> teamB => GameController.Instance.mode.teamB;
+    // 2 team của trận — BaseMode tự giữ (GameController.mode == mode này nên GameController đọc trực tiếp).
+    public List<BaseUnit> teamA { get; } = new List<BaseUnit>();
+    public List<BaseUnit> teamB { get; } = new List<BaseUnit>();
 
     protected int remainingEnemies;
 
-    protected virtual void Awake() { }
+    protected GameController GameController;
+
+    public virtual void Init(GameController controller, ModeType typeModeInput = ModeType.DefaultLevel)
+    {
+        this.GameController = controller;
+    }
 
     protected virtual void OnEnable()
     {
@@ -103,7 +108,6 @@ public class BaseMode : MonoBehaviour
         ReloadTeamStats(teamB);
 
         isPause = false;
-        GameController.Instance.mode.isPause = false;
     }
 
     private void ReloadTeamStats(List<BaseUnit> units)
@@ -172,7 +176,6 @@ public class BaseMode : MonoBehaviour
         isEndMode = true;
         this.isWin = isWin;
         isPause = true;
-        GameController.Instance.mode.isPause = true;
         ActiveBattleTimer(false);
 
         DebugCustom.LogFormat("[EndGame] Win={0}", isWin);
@@ -206,7 +209,6 @@ public class BaseMode : MonoBehaviour
     public virtual void Pause()
     {
         isPause = true;
-        GameController.Instance.mode.isPause = true;
         ActiveBattleTimer(false);
         PauseUnits();
     }
@@ -214,7 +216,6 @@ public class BaseMode : MonoBehaviour
     public virtual void Resume()
     {
         isPause = false;
-        GameController.Instance.mode.isPause = false;
         ActiveBattleTimer(true);
         ResumeUnits();
     }

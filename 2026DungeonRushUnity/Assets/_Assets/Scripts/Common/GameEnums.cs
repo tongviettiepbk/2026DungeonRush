@@ -27,16 +27,6 @@ public enum DungeonType
     Cultist = 2,
 }
 
-// Nội dung 1 ô lưới sau khi sinh map. Tương ứng "brush" của grid painter gốc.
-public enum MapCellType
-{
-    Empty = 0,
-    Obstacle = 1,       // box/chướng ngại
-    PlayerSpawn = 2,    // ô spawn quân người chơi (hàng dưới)
-    EnemySpawn = 3,     // ô spawn enemy (hàng trên)
-    Door = 4,           // cửa thoát màn
-}
-
 // Trạng thái hiển thị trên CombatText (Effects). Port từ StickIdle.
 public enum TextDamageStatus
 {

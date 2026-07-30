@@ -48,15 +48,18 @@ public class LevelRuntimeBuilder : MonoBehaviour
         int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.curStageId;
         currentLevel = CampaignLevelBuilder.Build(stageId, environment);
 
-        MapGenerator.GeneratedMap map = currentLevel.map;
-        grid = new GridSpace(transform.position, cellSize, map.width, map.height, centerHorizontally);
+        MapConfig config = currentLevel.config;
+        grid = new GridSpace(transform.position, cellSize, config.cols, config.rows, centerHorizontally);
+
+        // Nạp map cho pathfinding A* (để test FindPath ngay trong preview).
+        MapController.Instance.SetMap(config, currentLevel.grid, transform.position, centerHorizontally);
 
         container = new GameObject("_Level").transform;
         container.SetParent(transform, false);
 
-        SpawnEnvironment(map);
-        SpawnObstacles(map);
-        SpawnPlayerMarkers(map);
+        SpawnEnvironment(config);
+        SpawnObstacles(currentLevel.obstacles);
+        SpawnPlayerMarkers(currentLevel.playerSpawnCells);
         SpawnEnemies(currentLevel.enemies);
     }
 
@@ -70,34 +73,34 @@ public class LevelRuntimeBuilder : MonoBehaviour
         }
     }
 
-    private void SpawnEnvironment(MapGenerator.GeneratedMap map)
+    private void SpawnEnvironment(MapConfig config)
     {
         if (mapPrefab == null) return;
         // Đặt nền ở tâm lưới (đã canh giữa X quanh origin; giữa theo Y).
-        Vector3 center = grid.CellToWorld((map.width - 1) / 2, (map.height - 1) / 2);
+        Vector3 center = grid.CellToWorld((config.cols - 1) / 2, (config.rows - 1) / 2);
         GameObject env = Instantiate(mapPrefab, center, Quaternion.identity, container);
         env.name = "Environment";
     }
 
-    private void SpawnObstacles(MapGenerator.GeneratedMap map)
+    private void SpawnObstacles(List<Vector2Int> obstacles)
     {
         Transform parent = NewGroup("Obstacles");
-        for (int i = 0; i < map.obstacles.Count; i++)
+        for (int i = 0; i < obstacles.Count; i++)
         {
-            Vector3 pos = grid.CellToWorld(map.obstacles[i]);
+            Vector3 pos = grid.CellToWorld(obstacles[i]);
             GameObject go = obstaclePrefab != null
                 ? Instantiate(obstaclePrefab, pos, Quaternion.identity, parent)
                 : CreatePlaceholder(PrimitiveType.Cube, pos, parent, new Color(0.55f, 0.35f, 0.2f), 0.9f);
-            go.name = "Obstacle_" + map.obstacles[i].x + "_" + map.obstacles[i].y;
+            go.name = "Obstacle_" + obstacles[i].x + "_" + obstacles[i].y;
         }
     }
 
-    private void SpawnPlayerMarkers(MapGenerator.GeneratedMap map)
+    private void SpawnPlayerMarkers(List<Vector2Int> playerSpawnCells)
     {
         Transform parent = NewGroup("PlayerSpawns");
-        for (int i = 0; i < map.playerSpawnCells.Count; i++)
+        for (int i = 0; i < playerSpawnCells.Count; i++)
         {
-            Vector3 pos = grid.CellToWorld(map.playerSpawnCells[i]);
+            Vector3 pos = grid.CellToWorld(playerSpawnCells[i]);
             GameObject go = playerSpawnMarkerPrefab != null
                 ? Instantiate(playerSpawnMarkerPrefab, pos, Quaternion.identity, parent)
                 : CreatePlaceholder(PrimitiveType.Quad, pos, parent, new Color(0.2f, 0.6f, 1f, 1f), 0.85f);
@@ -180,19 +183,19 @@ public class LevelRuntimeBuilder : MonoBehaviour
     // Vẽ lưới + cửa trong Scene view để kiểm tra layout.
     private void OnDrawGizmosSelected()
     {
-        if (currentLevel == null || currentLevel.map == null) return;
-        MapGenerator.GeneratedMap map = currentLevel.map;
-        var g = new GridSpace(transform.position, cellSize, map.width, map.height, centerHorizontally);
+        if (currentLevel == null || currentLevel.config == null) return;
+        MapConfig config = currentLevel.config;
+        var g = new GridSpace(transform.position, cellSize, config.cols, config.rows, centerHorizontally);
 
         Gizmos.color = new Color(1f, 1f, 1f, 0.15f);
-        for (int x = 0; x < map.width; x++)
+        for (int x = 0; x < config.cols; x++)
         {
-            for (int y = 0; y < map.height; y++)
+            for (int y = 0; y < config.rows; y++)
             {
                 Gizmos.DrawWireCube(g.CellToWorld(x, y), Vector3.one * cellSize);
             }
         }
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(g.CellToWorld(map.doorCell), cellSize * 0.4f);
+        Gizmos.DrawWireSphere(g.CellToWorld(currentLevel.doorCell), cellSize * 0.4f);
     }
 }

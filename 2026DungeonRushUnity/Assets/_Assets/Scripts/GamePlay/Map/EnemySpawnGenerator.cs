@@ -32,8 +32,9 @@ public static class EnemySpawnGenerator
         public bool isBoss;
     }
 
-    // stageId theo convention campaign (101, 102... 201...). map = kết quả MapGenerator.
-    public static List<EnemySpawnInfo> Generate(int stageId, MapGenerator.GeneratedMap map, DungeonType dungeon = DungeonType.ZombieHorde)
+    // stageId theo convention campaign (101, 102... 201...).
+    // enemySpawnCells = ô hàng trên đã trừ wall; bossCell = ô cửa (giữa hàng trên).
+    public static List<EnemySpawnInfo> Generate(int stageId, List<Vector2Int> enemySpawnCells, Vector2Int bossCell, DungeonType dungeon = DungeonType.ZombieHorde)
     {
         var result = new List<EnemySpawnInfo>();
 
@@ -49,8 +50,8 @@ public static class EnemySpawnGenerator
         bool isBossStage = stageIndex >= StaticCampaignData.STAGES_PER_CHAPTER;
 
         // Ô spawn enemy khả dụng (hàng trên cùng, không phải box/cửa).
-        var spawnCells = GetEnemySpawnCells(map);
-        if (spawnCells.Count == 0) return result;
+        var spawnCells = enemySpawnCells;
+        if (spawnCells == null || spawnCells.Count == 0) return result;
 
         int count = isBossStage
             ? 1
@@ -62,7 +63,7 @@ public static class EnemySpawnGenerator
         for (int i = 0; i < count; i++)
         {
             // Boss dùng ô cửa (giữa), thường phân bố đều trên các ô spawn.
-            Vector2Int cell = isBossStage ? map.enemySpawnCell : spawnCells[i * spawnCells.Count / count];
+            Vector2Int cell = isBossStage ? bossCell : spawnCells[i * spawnCells.Count / count];
 
             float unitPower = isBossStage ? power * 6f : power;   // boss mạnh gấp ~6 lần lính thường
 
@@ -93,22 +94,5 @@ public static class EnemySpawnGenerator
     private static float ThemeMoveSpeed(DungeonType dungeon)
     {
         return dungeon == DungeonType.DragonBoss ? 0f : 2f;
-    }
-
-    private static List<Vector2Int> GetEnemySpawnCells(MapGenerator.GeneratedMap map)
-    {
-        var cells = new List<Vector2Int>();
-        for (int y = map.height - StaticMapData.ENEMY_SPAWN_ROWS; y < map.height; y++)
-        {
-            for (int x = 0; x < map.width; x++)
-            {
-                var type = map.Get(x, y);
-                if (type == MapCellType.EnemySpawn || type == MapCellType.Empty)
-                {
-                    cells.Add(new Vector2Int(x, y));
-                }
-            }
-        }
-        return cells;
     }
 }

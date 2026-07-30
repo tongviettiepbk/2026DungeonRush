@@ -36,6 +36,12 @@ public class BaseUnit : MonoBehaviour
     // Đích di chuyển hiện tại (world). Move state cập nhật mỗi tick; Moving() đi tới đây (né wall).
     protected Vector3 moveDestination;
 
+    // Đường A* đang bám (chuỗi ô tới đích). Chỉ tính lại khi ô đích đổi hoặc unit lệch khỏi tuyến;
+    // giữa các lần đó Moving() dùng ResolveMove để trôi mượt theo waypoint kế tiếp của path này.
+    private readonly List<Vector2Int> movePath = new List<Vector2Int>();
+    private int movePathIndex;
+    private Vector2Int movePathGoalCell = new Vector2Int(int.MinValue, int.MinValue);
+
     // Chỉ số gốc (server/scale set vào khi spawn) — CalculateCurrentStats đổ sang stats runtime.
     protected BaseStats baseStats = new BaseStats();
 
@@ -637,7 +643,7 @@ public class BaseUnit : MonoBehaviour
         isMoving = false;
     }
 
-    // Di chuyển liên tục tới moveDestination, né ô wall qua CombatMap.ResolveMove.
+    // Di chuyển liên tục tới moveDestination, né ô wall qua MapController.ResolveMove.
     // Chạy trong FixedUpdate (physics). moveSpeed=0 (VD boss DragonBoss) → đứng yên.
     protected virtual void Moving()
     {
@@ -653,7 +659,8 @@ public class BaseUnit : MonoBehaviour
         }
 
         Vector3 pos = Transform.position;
-        Vector3 to = moveDestination - pos;
+        Vector3 aim = NextMovePoint(pos);      // waypoint kế tiếp theo A* (hoặc thẳng đích nếu không có path)
+        Vector3 to = aim - pos;
         to.z = 0f;
 
         float dist = to.magnitude;
@@ -664,11 +671,78 @@ public class BaseUnit : MonoBehaviour
 
         Vector3 dir = to / dist;
         float step = Mathf.Min(speed * Time.fixedDeltaTime, dist);
-        Vector3 next = GameController.Instance.mode.map.ResolveMove(pos, dir, step);
+        Vector3 next = MapController.Instance.ResolveMove(pos, dir, step);
 
         rigid.MovePosition(next);
         Face(moveDestination);
         animationController.SetTimeScaleAnimMoveBySpeed();
+    }
+
+    // Điểm world unit nên nhắm tới bước này (tầng định tuyến của di chuyển lai A* + steering):
+    //   - map chưa sẵn sàng, cùng ô với đích, hoặc không có đường → nhắm thẳng moveDestination (hành vi cũ);
+    //   - còn lại → bám waypoint kế tiếp của path A*, chỉ tính lại đường khi ô đích đổi hoặc unit lệch tuyến.
+    private Vector3 NextMovePoint(Vector3 pos)
+    {
+        var map = MapController.Instance;
+        if (map == null || !map.IsReady)
+        {
+            return moveDestination;
+        }
+
+        Vector2Int selfCell = map.WorldToCell(pos);
+        Vector2Int goalCell = map.WorldToCell(moveDestination);
+        if (selfCell == goalCell)
+        {
+            return moveDestination;   // đã cùng ô đích → đi thẳng cho mượt, không cần A*
+        }
+
+        if (goalCell != movePathGoalCell)
+        {
+            RebuildMovePath(selfCell, goalCell);          // đích đổi ô → tính lại đường
+        }
+        else if (movePath.Count > 0 && !SyncMovePathIndex(selfCell))
+        {
+            RebuildMovePath(selfCell, goalCell);          // cùng đích nhưng đã lệch khỏi tuyến → tính lại
+        }
+
+        // Hết waypoint (không có đường) hoặc chỉ còn ô đích → nhắm thẳng đích thật cho mượt.
+        if (movePathIndex >= movePath.Count - 1)
+        {
+            return moveDestination;
+        }
+
+        return map.CellToWorld(movePath[movePathIndex]);
+    }
+
+    // Tính lại path A* từ ô hiện tại tới ô đích, rồi trỏ waypoint kế tiếp (bỏ ô xuất phát).
+    private void RebuildMovePath(Vector2Int selfCell, Vector2Int goalCell)
+    {
+        movePathGoalCell = goalCell;
+        movePath.Clear();
+        List<Vector2Int> path = MapController.Instance.FindPath(selfCell, goalCell);
+        if (path != null)
+        {
+            movePath.AddRange(path);
+        }
+        movePathIndex = 0;
+        SyncMovePathIndex(selfCell);
+    }
+
+    // Tiến chỉ số waypoint theo ô hiện tại của unit (bỏ các ô đã đi qua).
+    // Trả false nếu unit không còn đứng trên tuyến (đã bị đẩy sang ô lạ) → cần tính lại đường.
+    private bool SyncMovePathIndex(Vector2Int selfCell)
+    {
+        if (movePath.Count == 0)
+        {
+            return false;
+        }
+
+        while (movePathIndex < movePath.Count && movePath[movePathIndex] == selfCell)
+        {
+            movePathIndex++;
+        }
+
+        return movePathIndex > 0 && movePath[movePathIndex - 1] == selfCell;
     }
 
     public virtual void EndWaitBossAppear()
@@ -1332,7 +1406,7 @@ public class BaseUnit : MonoBehaviour
             point = Transform.position.GetRandomPointAround(2f, 3f);
         }
 
-        crowdController.fearMovePoint = GameController.Instance.mode.map.ClampPointInMap(point);
+        crowdController.fearMovePoint = MapController.Instance.ClampPointInMap(point);
         Face(crowdController.fearMovePoint);
         stateCurrent = BattleState.Fear;
     }
@@ -1393,7 +1467,7 @@ public class BaseUnit : MonoBehaviour
         animationController.PlayAnimIdle();
 
         Vector3 backPos = Transform.position + direction * range;
-        backPos = GameController.Instance.mode.map.ClampPointInMap(backPos);
+        backPos = MapController.Instance.ClampPointInMap(backPos);
         rigid.DOMove(backPos, duration).OnComplete(() =>
         {
             ResetAction(isClearTarget: false);

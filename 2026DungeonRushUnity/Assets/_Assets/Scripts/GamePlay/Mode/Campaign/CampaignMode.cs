@@ -16,7 +16,6 @@ public class CampaignMode : BaseMode
     [Header("Màn")]
     [Tooltip("0 = dùng curStageId của người chơi; >0 = ép build stage này.")]
     public int overrideStageId = 0;
-    public bool buildOnStart = true;
 
     [Header("Lưới")]
     public float cellSize = 1f;
@@ -54,18 +53,10 @@ public class CampaignMode : BaseMode
     public CampaignLevelBuilder.CampaignLevel CurrentLevel => currentLevel;
     public HeroUnit Hero => hero;
 
-    protected override void Awake()
+    public override void Init(GameController controller, ModeType typeModeInput = ModeType.DefaultLevel)
     {
-        base.Awake();
-        type = ModeType.DefaultLevel;
-    }
-
-    private void Start()
-    {
-        if (buildOnStart)
-        {
-            Build();
-        }
+        base.Init(controller, typeModeInput);
+        Build();
     }
 
     // Dựng lại màn từ đầu (Reset dọn màn cũ → Initialize chạy vòng đời BaseMode).
@@ -85,24 +76,25 @@ public class CampaignMode : BaseMode
 
         int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.curStageId;
         currentLevel = CampaignLevelBuilder.Build(stageId, type);
-        MapGenerator.GeneratedMap map = currentLevel.map;
+        MapConfig config = currentLevel.config;
 
-        grid = new GridSpace(transform.position, cellSize, map.width, map.height, centerHorizontally);
+        grid = new GridSpace(transform.position, cellSize, config.cols, config.rows, centerHorizontally);
 
-        // Nạp biên + wall để unit di chuyển né wall.
-        GameController.Instance.mode.map.Setup(grid, map);
-        GameController.Instance.mode.isPause = false;
+        // Nạp map cho MapController: vừa để pathfinding A*, vừa để di chuyển liên tục né wall
+        // (IsWalkable/ClampPointInMap/ResolveMove) — 1 nguồn sự thật cho map.
+        MapController.Instance.SetMap(config, currentLevel.grid, transform.position, centerHorizontally);
+        isPause = false;
 
         container = new GameObject("_Combat").transform;
         container.SetParent(transform, false);
 
-        SpawnEnvironment(map);
-        SpawnObstacles(map);
+        SpawnEnvironment(config);
+        SpawnObstacles(currentLevel.obstacles);
     }
 
     protected override void CreateTeamA()
     {
-        SpawnHeroAndPets(currentLevel.map);
+        SpawnHeroAndPets(currentLevel.config);
     }
 
     protected override void CreateTeamB()
@@ -129,29 +121,29 @@ public class CampaignMode : BaseMode
 
     // ===== SPAWN (port từ CombatDirector) =====
 
-    private void SpawnEnvironment(MapGenerator.GeneratedMap map)
+    private void SpawnEnvironment(MapConfig config)
     {
         if (mapPrefab == null) return;
-        Vector3 center = grid.CellToWorld((map.width - 1) / 2, (map.height - 1) / 2);
+        Vector3 center = grid.CellToWorld((config.cols - 1) / 2, (config.rows - 1) / 2);
         GameObject env = Instantiate(mapPrefab, center, Quaternion.identity, container);
         env.name = "Environment";
     }
 
     // Wall chỉ cần hiển thị (chặn di chuyển là logic trong CombatMap, không cần collider).
-    private void SpawnObstacles(MapGenerator.GeneratedMap map)
+    private void SpawnObstacles(List<Vector2Int> obstacles)
     {
         if (obstaclePrefab == null) return;
 
         Transform parent = NewGroup("Walls");
-        for (int i = 0; i < map.obstacles.Count; i++)
+        for (int i = 0; i < obstacles.Count; i++)
         {
-            Vector3 pos = grid.CellToWorld(map.obstacles[i]);
+            Vector3 pos = grid.CellToWorld(obstacles[i]);
             GameObject go = Instantiate(obstaclePrefab, pos, Quaternion.identity, parent);
-            go.name = "Wall_" + map.obstacles[i].x + "_" + map.obstacles[i].y;
+            go.name = "Wall_" + obstacles[i].x + "_" + obstacles[i].y;
         }
     }
 
-    private void SpawnHeroAndPets(MapGenerator.GeneratedMap map)
+    private void SpawnHeroAndPets(MapConfig config)
     {
         if (heroPrefab == null)
         {
@@ -160,7 +152,7 @@ public class CampaignMode : BaseMode
         }
 
         // Hero đứng giữa hàng spawn dưới cùng.
-        Vector2Int heroCell = new Vector2Int(map.width / 2, 0);
+        Vector2Int heroCell = new Vector2Int(config.cols / 2, 0);
         Vector3 heroPos = grid.CellToWorld(heroCell);
 
         Transform parent = NewGroup("Allies");
@@ -178,7 +170,7 @@ public class CampaignMode : BaseMode
             // Rải pet quanh hero.
             float angle = (360f / petCount) * i * Mathf.Deg2Rad;
             Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 0.8f;
-            Vector3 petPos = GameController.Instance.mode.map.ClampPointInMap(heroPos + offset);
+            Vector3 petPos = MapController.Instance.ClampPointInMap(heroPos + offset);
 
             PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, parent);
             pet.owner = hero;

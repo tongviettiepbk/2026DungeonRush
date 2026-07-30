@@ -3,165 +3,102 @@ using UnityEngine;
 
 // Sinh map procedural — tái tạo thuật toán LevelGenerator gốc của DungeonRush.
 //
-// Quy trình (suy ra từ field + tên method của LevelGenerator.cs, body bị strip il2cpp):
-//   1. Random số box trong [MinObstacleCount, MaxObstacleCount].
-//   2. Rải box vào các ô trống, tránh KeepClearZones (cổng spawn, cửa) + hàng spawn.
-//   3. BFS kiểm tra còn đường từ hàng spawn quân (dưới) tới cửa (trên).
-//   4. Nếu bị chặn → thử lại, tối đa MaxGenerationAttempts lần.
+// KẾT QUẢ: ma trận 2 chiều int[cols, rows] với 0 = ô trống (đi được), 1 = ô có wall.
+// Bảo đảm luôn có đường đi từ ô start tới ô goal (BFS + thử lại, fallback giảm số wall).
 // Cùng seed → cùng layout (deterministic). Xem DecodedData/MAP_AND_SPAWN_MODEL.md.
+//
+// Generator CHỈ lo wall. Spawn quân / cổng enemy / cửa nằm ở StaticMapData (layout helper),
+// không nhét vào ma trận này nữa.
 public static class MapGenerator
 {
-    // Vùng chữ nhật giữ trống, mirror KeepClearZone gốc (BottomLeft/TopRight, bao gồm cả 2 biên).
-    public struct KeepClearZone
+    public class Params
     {
-        public Vector2Int bottomLeft;
-        public Vector2Int topRight;
-
-        public KeepClearZone(Vector2Int bottomLeft, Vector2Int topRight)
-        {
-            this.bottomLeft = bottomLeft;
-            this.topRight = topRight;
-        }
-
-        public bool Contains(Vector2Int cell)
-        {
-            return cell.x >= bottomLeft.x && cell.x <= topRight.x
-                && cell.y >= bottomLeft.y && cell.y <= topRight.y;
-        }
-    }
-
-    public class GenParams
-    {
-        public int width = StaticMapData.GRID_WIDTH;
-        public int height = StaticMapData.GRID_HEIGHT;
-        public int minObstacleCount = StaticMapData.MIN_OBSTACLE_COUNT;
-        public int maxObstacleCount = StaticMapData.MAX_OBSTACLE_COUNT;
-        public int maxGenerationAttempts = StaticMapData.MAX_GENERATION_ATTEMPTS;
+        public MapConfig config;
         public int seed;
-        public List<KeepClearZone> keepClearZones = new List<KeepClearZone>();
+        public int minWalls = StaticMapData.MIN_OBSTACLE_COUNT;
+        public int maxWalls = StaticMapData.MAX_OBSTACLE_COUNT;
+        public int maxAttempts = StaticMapData.MAX_GENERATION_ATTEMPTS;
+        public Vector2Int start;                  // ô đầu (luôn giữ trống, phải tới được goal)
+        public Vector2Int goal;                   // ô cuối (luôn giữ trống)
+        public IEnumerable<Vector2Int> keepClear; // ô không được đặt wall (hàng spawn, cửa...)
     }
 
-    public class GeneratedMap
+    // Trả int[cols, rows]: 0 = trống, 1 = wall.
+    public static int[,] Generate(Params p)
     {
-        public int width;
-        public int height;
-        public MapCellType[,] cells;            // cells[x, y]
-        public List<Vector2Int> obstacles = new List<Vector2Int>();
-        public Vector2Int doorCell;
-        public Vector2Int enemySpawnCell;       // cổng enemy (giữa hàng trên)
-        public List<Vector2Int> playerSpawnCells = new List<Vector2Int>();
-        public int usedAttempts;
-
-        public MapCellType Get(int x, int y)
-        {
-            return (x >= 0 && x < width && y >= 0 && y < height) ? cells[x, y] : MapCellType.Obstacle;
-        }
-    }
-
-    public static GeneratedMap Generate(GenParams p)
-    {
-        int w = p.width;
-        int h = p.height;
+        MapConfig cfg = p.config;
+        int cols = cfg.cols;
+        int rows = cfg.rows;
         var rng = new System.Random(p.seed);
 
-        // Ô cố định: cửa + cổng enemy ở giữa hàng trên, quân người chơi ở hàng dưới cùng.
-        int midX = w / 2;
-        var doorCell = new Vector2Int(midX, h - 1);
-        var enemySpawnCell = new Vector2Int(midX, h - 1);
-
-        var playerSpawnCells = new List<Vector2Int>();
-        for (int y = 0; y < StaticMapData.PLAYER_SPAWN_ROWS; y++)
+        // Ô cấm đặt wall: start + goal + keepClear.
+        var blocked = new HashSet<Vector2Int> { p.start, p.goal };
+        if (p.keepClear != null)
         {
-            for (int x = 0; x < w; x++)
-            {
-                playerSpawnCells.Add(new Vector2Int(x, y));
-            }
+            foreach (var c in p.keepClear) blocked.Add(c);
         }
 
-        // Ô cấm đặt box: KeepClearZones + hàng spawn quân + hàng spawn enemy/cửa.
-        var blocked = new HashSet<Vector2Int>(playerSpawnCells);
-        for (int y = h - StaticMapData.ENEMY_SPAWN_ROWS; y < h; y++)
-        {
-            for (int x = 0; x < w; x++)
-            {
-                blocked.Add(new Vector2Int(x, y));
-            }
-        }
-        for (int x = 0; x < w; x++)
-        {
-            for (int y = 0; y < h; y++)
-            {
-                var c = new Vector2Int(x, y);
-                for (int z = 0; z < p.keepClearZones.Count; z++)
-                {
-                    if (p.keepClearZones[z].Contains(c)) { blocked.Add(c); break; }
-                }
-            }
-        }
-
-        // Danh sách ô ứng viên đặt box.
+        // Ứng viên đặt wall = mọi ô trong lưới trừ ô cấm.
         var candidates = new List<Vector2Int>();
-        for (int x = 0; x < w; x++)
+        for (int x = 0; x < cols; x++)
         {
-            for (int y = 0; y < h; y++)
+            for (int y = 0; y < rows; y++)
             {
                 var c = new Vector2Int(x, y);
                 if (!blocked.Contains(c)) candidates.Add(c);
             }
         }
 
-        int targetCount = rng.Next(p.minObstacleCount, p.maxObstacleCount + 1);
-        targetCount = Mathf.Min(targetCount, candidates.Count);
+        int target = rng.Next(p.minWalls, p.maxWalls + 1);
+        target = Mathf.Min(target, candidates.Count);
 
+        // Thử tối đa maxAttempts lần để ra layout còn thông start→goal.
         List<Vector2Int> chosen = null;
-        int attempt = 0;
-        for (; attempt < Mathf.Max(1, p.maxGenerationAttempts); attempt++)
+        int attempts = Mathf.Max(1, p.maxAttempts);
+        for (int a = 0; a < attempts; a++)
         {
-            var pick = PickRandom(candidates, targetCount, rng);
-            if (IsConnected(w, h, pick, playerSpawnCells, doorCell))
+            var pick = PickRandom(candidates, target, rng);
+            if (IsConnected(cfg, pick, p.start, p.goal))
             {
                 chosen = pick;
                 break;
             }
         }
 
-        // Fallback: không tìm được layout hợp lệ → giảm dần số box cho tới khi thông.
+        // Fallback: giảm dần số wall cho tới khi thông (cùng lắm = 0 wall).
         if (chosen == null)
         {
-            for (int count = targetCount - 1; count >= 0 && chosen == null; count--)
+            for (int count = target - 1; count >= 0 && chosen == null; count--)
             {
                 var pick = PickRandom(candidates, count, rng);
-                if (IsConnected(w, h, pick, playerSpawnCells, doorCell)) chosen = pick;
+                if (IsConnected(cfg, pick, p.start, p.goal)) chosen = pick;
             }
             chosen = chosen ?? new List<Vector2Int>();
         }
 
-        // Dựng lưới kết quả.
-        var map = new GeneratedMap
-        {
-            width = w,
-            height = h,
-            cells = new MapCellType[w, h],
-            doorCell = doorCell,
-            enemySpawnCell = enemySpawnCell,
-            playerSpawnCells = playerSpawnCells,
-            usedAttempts = attempt + 1,
-        };
+        var grid = new int[cols, rows];
         for (int i = 0; i < chosen.Count; i++)
         {
-            map.cells[chosen[i].x, chosen[i].y] = MapCellType.Obstacle;
-            map.obstacles.Add(chosen[i]);
+            grid[chosen[i].x, chosen[i].y] = 1;
         }
-        for (int i = 0; i < playerSpawnCells.Count; i++)
-        {
-            map.cells[playerSpawnCells[i].x, playerSpawnCells[i].y] = MapCellType.PlayerSpawn;
-        }
-        map.cells[enemySpawnCell.x, enemySpawnCell.y] = MapCellType.EnemySpawn;
-        map.cells[doorCell.x, doorCell.y] = MapCellType.Door;
-        return map;
+        return grid;
     }
 
-    // Chọn ngẫu nhiên count ô khác nhau từ pool (Fisher–Yates một phần).
+    // Gom danh sách ô wall (grid==1) — tiện cho tầng spawn Instantiate prefab.
+    public static List<Vector2Int> CollectWalls(int[,] grid, MapConfig cfg)
+    {
+        var walls = new List<Vector2Int>();
+        for (int x = 0; x < cfg.cols; x++)
+        {
+            for (int y = 0; y < cfg.rows; y++)
+            {
+                if (grid[x, y] == 1) walls.Add(new Vector2Int(x, y));
+            }
+        }
+        return walls;
+    }
+
+    // Chọn ngẫu nhiên count ô khác nhau từ pool (Fisher–Yates một phần, deterministic theo rng).
     private static List<Vector2Int> PickRandom(List<Vector2Int> pool, int count, System.Random rng)
     {
         var copy = new List<Vector2Int>(pool);
@@ -174,35 +111,34 @@ public static class MapGenerator
         return copy.GetRange(0, count);
     }
 
-    // BFS: từ bất kỳ ô spawn quân nào có tới được ô cửa mà không đi qua box không?
-    private static bool IsConnected(int w, int h, List<Vector2Int> obstacles, List<Vector2Int> starts, Vector2Int goal)
+    // BFS 4 hướng: từ start có tới được goal mà không đi qua ô wall không?
+    private static bool IsConnected(MapConfig cfg, List<Vector2Int> walls, Vector2Int start, Vector2Int goal)
     {
-        var blocked = new HashSet<Vector2Int>(obstacles);
-        if (blocked.Contains(goal)) return false;
+        var blocked = new HashSet<Vector2Int>(walls);
+        if (blocked.Contains(goal) || blocked.Contains(start)) return false;
+        if (start == goal) return true;
 
-        var visited = new HashSet<Vector2Int>();
+        var visited = new HashSet<Vector2Int> { start };
         var queue = new Queue<Vector2Int>();
-        for (int i = 0; i < starts.Count; i++)
-        {
-            if (!blocked.Contains(starts[i]) && visited.Add(starts[i]))
-            {
-                queue.Enqueue(starts[i]);
-            }
-        }
+        queue.Enqueue(start);
 
-        var dirs = new[] { new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, -1) };
         while (queue.Count > 0)
         {
             var cur = queue.Dequeue();
-            if (cur == goal) return true;
-            for (int d = 0; d < dirs.Length; d++)
+            for (int d = 0; d < Dirs.Length; d++)
             {
-                var nxt = cur + dirs[d];
-                if (nxt.x < 0 || nxt.x >= w || nxt.y < 0 || nxt.y >= h) continue;
-                if (blocked.Contains(nxt) || !visited.Add(nxt)) continue;
+                var nxt = cur + Dirs[d];
+                if (nxt == goal) return true;
+                if (!cfg.InBounds(nxt) || blocked.Contains(nxt) || !visited.Add(nxt)) continue;
                 queue.Enqueue(nxt);
             }
         }
         return false;
     }
+
+    private static readonly Vector2Int[] Dirs =
+    {
+        new Vector2Int(1, 0), new Vector2Int(-1, 0),
+        new Vector2Int(0, 1), new Vector2Int(0, -1),
+    };
 }
