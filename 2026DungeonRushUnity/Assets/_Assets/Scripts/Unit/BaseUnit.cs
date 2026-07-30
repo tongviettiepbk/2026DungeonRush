@@ -89,19 +89,100 @@ public class BaseUnit : MonoBehaviour
     protected virtual void Awake()
     {
         Transform = GetComponent<Transform>();
+
+        // BASIC-COMBAT (chưa port Spine/rig): prefab thật (rig "Soldier" rip) KHÔNG có rig contract
+        // của BaseUnit (Rigidbody2D ở root, con "Body"/"FlipPoints"/"CenterBody"/"FirePoint"/"health-bar").
+        // Ở đây tự resolve/tạo runtime cho đủ để action (move/target/attack) chạy. Khi dựng prefab
+        // combat-ready thật thì các node có sẵn sẽ được tái dùng, không tạo thêm.
+        // TODO(follow-stick): thay bằng rig thật + Spine anim + health-bar.
+        SetupRig();
+    }
+
+    private void SetupRig()
+    {
+        // Rigidbody2D để di chuyển: đặt trên ROOT (cùng transform với logic vị trí). Prefab rip để
+        // Rigidbody2D ở con "Soldier" -> nếu chỉ dùng nó thì art tách khỏi root khi MovePosition.
         rigid = GetComponent<Rigidbody2D>();
+        if (rigid == null)
+        {
+            rigid = gameObject.AddComponent<Rigidbody2D>();
+            rigid.bodyType = RigidbodyType2D.Kinematic;
+            rigid.gravityScale = 0f;
+            rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
+        // Vô hiệu hoá mọi Rigidbody2D ở con (VD trên "Soldier") để art đi theo root thay vì tự
+        // mô phỏng vật lý riêng (đứng yên khi root di chuyển).
+        Rigidbody2D[] childBodies = GetComponentsInChildren<Rigidbody2D>(true);
+        for (int i = 0; i < childBodies.Length; i++)
+        {
+            if (childBodies[i] != rigid)
+            {
+                childBodies[i].simulated = false;
+            }
+        }
+
         audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+        }
+
+        // AnimationController hiện là stub no-op -> thêm runtime để mọi lời gọi animationController.*
+        // an toàn mà không cần null-check rải khắp.
         animationController = GetComponent<AnimationController>();
-        bodyCollider = transform.Find("Body").GetComponent<Collider2D>();
-        flipPoints = transform.Find("FlipPoints");
-        centerBodyPoint = flipPoints.Find("CenterBody");
-        firePoint = flipPoints.Find("FirePoint");
+        if (animationController == null)
+        {
+            animationController = gameObject.AddComponent<AnimationController>();
+        }
+
+        bodyCollider = ResolveBodyCollider();
+        flipPoints = ResolveRigNode("FlipPoints", Transform, Vector3.zero);
+        centerBodyPoint = ResolveRigNode("CenterBody", flipPoints, new Vector3(0f, 0.5f, 0f));
+        firePoint = ResolveRigNode("FirePoint", flipPoints, new Vector3(0f, 0.5f, 0f));
+
         Transform hpBarTransform = flipPoints.Find("health-bar");
         if (hpBarTransform)
         {
             hpBar = hpBarTransform.GetComponent<HealthBar>();
             hpBar.Init(this);
         }
+    }
+
+    // Lấy collider dùng làm hitbox/target: ưu tiên con "Body" (rig contract), rồi collider bất kỳ
+    // trong children (rig rip để collider trên "Soldier"), cuối cùng tạo tạm nếu không có.
+    private Collider2D ResolveBodyCollider()
+    {
+        Transform body = transform.Find("Body");
+        if (body != null)
+        {
+            Collider2D col = body.GetComponent<Collider2D>();
+            if (col != null) return col;
+        }
+
+        Collider2D anyCol = GetComponentInChildren<Collider2D>(true);
+        if (anyCol != null) return anyCol;
+
+        var placeholder = new GameObject("Body");
+        placeholder.transform.SetParent(Transform, false);
+        var circle = placeholder.AddComponent<CircleCollider2D>();
+        circle.radius = 0.4f;
+        circle.isTrigger = true;
+        return circle;
+    }
+
+    // Node rig theo tên; thiếu thì tạo mới dưới parent tại localPos (rig rip chưa có các node này).
+    private Transform ResolveRigNode(string nodeName, Transform parent, Vector3 localPos)
+    {
+        Transform node = parent.Find(nodeName);
+        if (node == null)
+        {
+            node = new GameObject(nodeName).transform;
+            node.SetParent(parent, false);
+            node.localPosition = localPos;
+        }
+        return node;
     }
 
     protected virtual void FixedUpdate()
