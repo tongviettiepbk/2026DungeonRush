@@ -58,8 +58,8 @@ public class GameDataTester : MonoBehaviour
         var playerSpawns = new HashSet<Vector2Int>(level.playerSpawnCells);
         var sb = new System.Text.StringBuilder();
         sb.AppendLine($"[Map] stage={stageId} env={level.environment} walls={level.obstacles.Count} enemies={level.enemies.Count}");
-        // In từ hàng trên (row 0) xuống. # = wall(1), . = spawn quân, D = cửa, khoảng trắng = trống(0).
-        for (int row = 0; row < rows; row++)
+        // In từ hàng TRÊN (row rows-1) xuống row 0. # = wall(1), . = spawn quân, D = cửa, khoảng trắng = trống(0).
+        for (int row = rows - 1; row >= 0; row--)
         {
             string line = "";
             for (int col = 0; col < cols; col++)

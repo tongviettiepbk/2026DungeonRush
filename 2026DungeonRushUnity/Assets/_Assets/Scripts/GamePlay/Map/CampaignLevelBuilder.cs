@@ -33,7 +33,7 @@ public static class CampaignLevelBuilder
         int rows = envCfg != null ? envCfg.gridHeight : StaticMapData.GRID_HEIGHT;
 
         var door = StaticMapData.GetDoorCell(cols, rows);
-        var start = new Vector2Int(rows - 1, cols / 2);   // giữa hàng spawn quân DƯỚI cùng (row = rows-1)
+        var start = new Vector2Int(0, cols / 2);          // giữa hàng spawn quân DƯỚI cùng (row = 0)
 
         int minWalls = StaticMapData.MIN_OBSTACLE_COUNT;
         int maxWalls = StaticMapData.MAX_OBSTACLE_COUNT;

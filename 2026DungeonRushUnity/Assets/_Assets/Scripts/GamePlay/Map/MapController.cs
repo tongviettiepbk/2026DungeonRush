@@ -9,7 +9,7 @@ using UnityEngine;
 // (Đã hợp nhất CombatMap cũ vào đây — 1 nguồn sự thật cho map.)
 public class MapController : Singleton<MapController>
 {
-    public Transform pointStart;                  // Mốc gốc lưới: ô (0,0) neo ĐÚNG tại đây (góc TRÊN-TRÁI). Null → dùng fallbackOrigin.
+    public Transform pointStart;                  // Mốc gốc lưới: ô (0,0) neo ĐÚNG tại đây (góc DƯỚI-TRÁI). Null → dùng fallbackOrigin.
     public int[,] Grid { get; private set; }      // Grid[row, col]: 0 = trống, 1 = wall
     public int Rows => Grid != null ? Grid.GetLength(0) : 0;
     public int Cols => Grid != null ? Grid.GetLength(1) : 0;
@@ -17,10 +17,10 @@ public class MapController : Singleton<MapController>
 
     // Quy ước ô lưới (theo thói quen mảng 2 chiều a[row][col]):
     //   - cell = Vector2Int(x = ROW, y = COL); truy cập Grid[cell.x, cell.y] = Grid[row, col].
-    //   - (0,0) = góc TRÊN-TRÁI (tại PointStart); row tăng → đi XUỐNG, col tăng → sang PHẢI.
-    //   - world: col → +X (phải), row → -Y (xuống); cạnh 1 ô = 1 world unit.
+    //   - (0,0) = góc DƯỚI-TRÁI (tại PointStart); row tăng → đi LÊN, col tăng → sang PHẢI.
+    //   - world: col → +X (phải), row → +Y (lên); cạnh 1 ô = 1 world unit.
     private const float CELL_SIZE = 1f;           // cạnh 1 ô (world unit)
-    private Vector3 gridOrigin;                   // world của ô (0,0) — góc trên-trái
+    private Vector3 gridOrigin;                   // world của ô (0,0) — góc dưới-trái
     private bool centerHorizontally;              // canh giữa map theo trục X quanh gridOrigin (tắt khi dùng PointStart)
     private Vector3 minWorld;                     // biên dưới-trái vùng đi được (componentwise min 2 góc)
     private Vector3 maxWorld;                     // biên trên-phải vùng đi được (componentwise max 2 góc)
@@ -36,7 +36,7 @@ public class MapController : Singleton<MapController>
     }
 
     // Nạp map đã sinh sẵn (VD từ CampaignLevelBuilder).
-    // pointStart gán (Inspector) → dùng nó làm gốc (0,0) góc trên-trái, KHÔNG canh giữa.
+    // pointStart gán (Inspector) → dùng nó làm gốc (0,0) góc dưới-trái, KHÔNG canh giữa.
     // Ngược lại → dùng fallbackOrigin + cờ centerHorizontally (hành vi cũ).
     public void SetMap(int[,] grid, Vector3 fallbackOrigin, bool centerHorizontally = true)
     {
@@ -88,12 +88,12 @@ public class MapController : Singleton<MapController>
     public bool IsWalkable(Vector2Int c) => IsWalkable(c.x, c.y);
 
     // ===== Chuyển đổi toạ độ ô lưới ↔ world =====
-    // col → trục X (sang phải), row → trục -Y (đi xuống) tính từ gốc trên-trái.
+    // col → trục X (sang phải), row → trục +Y (đi lên) tính từ gốc dưới-trái.
 
     public Vector3 CellToWorld(int row, int col)
     {
         float offsetX = centerHorizontally ? -(Cols - 1) * 0.5f * CELL_SIZE : 0f;
-        return gridOrigin + new Vector3(offsetX + col * CELL_SIZE, -row * CELL_SIZE, 0f);
+        return gridOrigin + new Vector3(offsetX + col * CELL_SIZE, row * CELL_SIZE, 0f);
     }
 
     public Vector3 CellToWorld(Vector2Int c) => CellToWorld(c.x, c.y);
@@ -103,7 +103,7 @@ public class MapController : Singleton<MapController>
         float offsetX = centerHorizontally ? -(Cols - 1) * 0.5f * CELL_SIZE : 0f;
         Vector3 local = world - gridOrigin;
         int col = Mathf.RoundToInt((local.x - offsetX) / CELL_SIZE);
-        int row = Mathf.RoundToInt(-local.y / CELL_SIZE);
+        int row = Mathf.RoundToInt(local.y / CELL_SIZE);
         return new Vector2Int(row, col);
     }
 

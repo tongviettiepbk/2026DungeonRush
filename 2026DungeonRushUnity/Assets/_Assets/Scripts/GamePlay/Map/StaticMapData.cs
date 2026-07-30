@@ -67,10 +67,10 @@ public class StaticMapData
 
     // ===== Layout spawn/cửa (suy từ kích thước lưới — KHÔNG nằm trong ma trận wall) =====
 
-    // Cửa (cũng là cổng enemy): giữa hàng TRÊN cùng (row 0).
+    // Cửa (cũng là cổng enemy): giữa hàng TRÊN cùng (row = rows-1, vì row tăng đi lên).
     public static Vector2Int GetDoorCell(int cols, int rows)
     {
-        return new Vector2Int(0, cols / 2);
+        return new Vector2Int(rows - 1, cols / 2);
     }
 
     // Ô spawn quân người chơi: PLAYER_SPAWN_ROWS hàng dưới cùng.
@@ -100,22 +100,22 @@ public class StaticMapData
         return set;
     }
 
-    // Ô của rowCount hàng DƯỚI cùng (row = rows-rowCount .. rows-1).
+    // Ô của rowCount hàng DƯỚI cùng (row = 0 .. rowCount-1, vì row tăng đi lên).
     private static List<Vector2Int> BottomRows(int cols, int rows, int rowCount)
     {
         var cells = new List<Vector2Int>();
-        for (int row = Mathf.Max(0, rows - rowCount); row < rows; row++)
+        for (int row = 0; row < rowCount && row < rows; row++)
         {
             for (int col = 0; col < cols; col++) cells.Add(new Vector2Int(row, col));
         }
         return cells;
     }
 
-    // Ô của rowCount hàng TRÊN cùng (row = 0 .. rowCount-1).
+    // Ô của rowCount hàng TRÊN cùng (row = rows-rowCount .. rows-1).
     private static List<Vector2Int> TopRows(int cols, int rows, int rowCount)
     {
         var cells = new List<Vector2Int>();
-        for (int row = 0; row < rowCount && row < rows; row++)
+        for (int row = Mathf.Max(0, rows - rowCount); row < rows; row++)
         {
             for (int col = 0; col < cols; col++) cells.Add(new Vector2Int(row, col));
         }

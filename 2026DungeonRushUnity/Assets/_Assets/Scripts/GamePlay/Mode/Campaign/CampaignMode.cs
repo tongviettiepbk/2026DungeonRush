@@ -60,8 +60,8 @@ public class CampaignMode : BaseMode
             return;
         }
 
-        // Hero đứng giữa hàng spawn DƯỚI cùng (row = Rows-1).
-        Vector2Int heroCell = new Vector2Int(MapController.Instance.Rows - 1, MapController.Instance.Cols / 2);
+        // Hero đứng giữa hàng spawn DƯỚI cùng (row = 0).
+        Vector2Int heroCell = new Vector2Int(0, MapController.Instance.Cols / 2);
         Vector3 heroPos = MapController.Instance.CellToWorld(heroCell);
 
         Transform parent = NewGroup("Allies");
