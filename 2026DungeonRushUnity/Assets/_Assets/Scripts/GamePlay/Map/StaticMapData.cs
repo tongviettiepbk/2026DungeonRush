@@ -26,7 +26,6 @@ public class StaticMapData
     public const int ENEMY_SPAWN_ROWS = 2;
 
     // 1 cấu hình map theo môi trường (tương ứng 1 dòng MapConfig gốc): kích thước + camera + cờ.
-    // KHÁC với MapConfig (top-level) vốn chỉ là rows/cols/cellSize dùng cho sinh lưới.
     public class MapEnvironmentConfig
     {
         public ModeType environment;
@@ -69,49 +68,57 @@ public class StaticMapData
     // ===== Layout spawn/cửa (suy từ kích thước lưới — KHÔNG nằm trong ma trận wall) =====
 
     // Cửa (cũng là cổng enemy): giữa hàng trên cùng.
-    public static Vector2Int GetDoorCell(MapConfig cfg)
+    public static Vector2Int GetDoorCell(int cols, int rows)
     {
-        return new Vector2Int(cfg.cols / 2, cfg.rows - 1);
+        return new Vector2Int(cols / 2, rows - 1);
     }
 
     // Ô spawn quân người chơi: PLAYER_SPAWN_ROWS hàng dưới cùng.
-    public static List<Vector2Int> GetPlayerSpawnCells(MapConfig cfg)
+    public static List<Vector2Int> GetPlayerSpawnCells(int cols, int rows)
     {
-        var cells = new List<Vector2Int>();
-        for (int y = 0; y < PLAYER_SPAWN_ROWS && y < cfg.rows; y++)
-        {
-            for (int x = 0; x < cfg.cols; x++) cells.Add(new Vector2Int(x, y));
-        }
-        return cells;
+        return BottomRows(cols, rows, PLAYER_SPAWN_ROWS);
     }
 
     // Ô spawn enemy khả dụng: ENEMY_SPAWN_ROWS hàng trên cùng, trừ ô wall (grid==1).
-    public static List<Vector2Int> GetEnemySpawnCells(MapConfig cfg, int[,] grid)
+    public static List<Vector2Int> GetEnemySpawnCells(int cols, int rows, int[,] grid)
     {
         var cells = new List<Vector2Int>();
-        for (int y = Mathf.Max(0, cfg.rows - ENEMY_SPAWN_ROWS); y < cfg.rows; y++)
+        foreach (var cell in TopRows(cols, rows, ENEMY_SPAWN_ROWS))
         {
-            for (int x = 0; x < cfg.cols; x++)
-            {
-                if (grid == null || grid[x, y] == 0) cells.Add(new Vector2Int(x, y));
-            }
+            if (grid == null || grid[cell.x, cell.y] == 0) cells.Add(cell);
         }
         return cells;
     }
 
     // Ô cấm đặt wall = hàng spawn quân + hàng spawn enemy + cửa (để map luôn có lối vào/ra).
-    public static HashSet<Vector2Int> GetKeepClearCells(MapConfig cfg)
+    public static HashSet<Vector2Int> GetKeepClearCells(int cols, int rows)
     {
         var set = new HashSet<Vector2Int>();
-        for (int y = 0; y < PLAYER_SPAWN_ROWS && y < cfg.rows; y++)
-        {
-            for (int x = 0; x < cfg.cols; x++) set.Add(new Vector2Int(x, y));
-        }
-        for (int y = Mathf.Max(0, cfg.rows - ENEMY_SPAWN_ROWS); y < cfg.rows; y++)
-        {
-            for (int x = 0; x < cfg.cols; x++) set.Add(new Vector2Int(x, y));
-        }
-        set.Add(GetDoorCell(cfg));
+        foreach (var cell in BottomRows(cols, rows, PLAYER_SPAWN_ROWS)) set.Add(cell);
+        foreach (var cell in TopRows(cols, rows, ENEMY_SPAWN_ROWS)) set.Add(cell);
+        set.Add(GetDoorCell(cols, rows));
         return set;
+    }
+
+    // Ô của rowCount hàng dưới cùng (y = 0 .. rowCount-1).
+    private static List<Vector2Int> BottomRows(int cols, int rows, int rowCount)
+    {
+        var cells = new List<Vector2Int>();
+        for (int y = 0; y < rowCount && y < rows; y++)
+        {
+            for (int x = 0; x < cols; x++) cells.Add(new Vector2Int(x, y));
+        }
+        return cells;
+    }
+
+    // Ô của rowCount hàng trên cùng (y = rows-rowCount .. rows-1).
+    private static List<Vector2Int> TopRows(int cols, int rows, int rowCount)
+    {
+        var cells = new List<Vector2Int>();
+        for (int y = Mathf.Max(0, rows - rowCount); y < rows; y++)
+        {
+            for (int x = 0; x < cols; x++) cells.Add(new Vector2Int(x, y));
+        }
+        return cells;
     }
 }

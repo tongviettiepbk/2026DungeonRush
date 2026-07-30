@@ -53,15 +53,16 @@ public class GameDataTester : MonoBehaviour
         int stageId = GameData.userData.campaign.curStageId;
         CampaignLevelBuilder.CampaignLevel level = CampaignLevelBuilder.Build(stageId);
 
-        MapConfig cfg = level.config;
+        int cols = level.grid.GetLength(0);
+        int rows = level.grid.GetLength(1);
         var playerSpawns = new HashSet<Vector2Int>(level.playerSpawnCells);
         var sb = new System.Text.StringBuilder();
         sb.AppendLine($"[Map] stage={stageId} env={level.environment} walls={level.obstacles.Count} enemies={level.enemies.Count}");
         // In từ hàng trên xuống. # = wall(1), . = spawn quân, D = cửa, khoảng trắng = trống(0).
-        for (int y = cfg.rows - 1; y >= 0; y--)
+        for (int y = rows - 1; y >= 0; y--)
         {
             string row = "";
-            for (int x = 0; x < cfg.cols; x++)
+            for (int x = 0; x < cols; x++)
             {
                 var c = new Vector2Int(x, y);
                 if (level.grid[x, y] == 1) row += "#";

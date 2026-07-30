@@ -20,7 +20,7 @@ public static class EnemySpawnGenerator
     private const int ENEMY_COUNT_PER_CHAPTER = 1;
     private const int MAX_ENEMY_COUNT = 8;
 
-    // Cứ mỗi STAGES_PER_BOSS màn thì màn cuối chương là boss.
+    // Thông tin 1 enemy được sinh ra: ô đứng, level (để scale), và stat đã tính sẵn.
     public struct EnemySpawnInfo
     {
         public Vector2Int cell;
@@ -34,6 +34,8 @@ public static class EnemySpawnGenerator
 
     // stageId theo convention campaign (101, 102... 201...).
     // enemySpawnCells = ô hàng trên đã trừ wall; bossCell = ô cửa (giữa hàng trên).
+    // dungeon: CHƯA DÙNG thực sự — hiện chỉ chi phối tốc độ di chuyển theo theme (ThemeMoveSpeed);
+    // caller đang để mặc định. Chừa sẵn cho lúc mỗi dungeon có bảng enemy riêng.
     public static List<EnemySpawnInfo> Generate(int stageId, List<Vector2Int> enemySpawnCells, Vector2Int bossCell, DungeonType dungeon = DungeonType.ZombieHorde)
     {
         var result = new List<EnemySpawnInfo>();
@@ -50,20 +52,19 @@ public static class EnemySpawnGenerator
         bool isBossStage = stageIndex >= StaticCampaignData.STAGES_PER_CHAPTER;
 
         // Ô spawn enemy khả dụng (hàng trên cùng, không phải box/cửa).
-        var spawnCells = enemySpawnCells;
-        if (spawnCells == null || spawnCells.Count == 0) return result;
+        if (enemySpawnCells == null || enemySpawnCells.Count == 0) return result;
 
         int count = isBossStage
             ? 1
             : Mathf.Clamp(BASE_ENEMY_COUNT + (chapter - 1) * ENEMY_COUNT_PER_CHAPTER, 1, MAX_ENEMY_COUNT);
-        count = Mathf.Min(count, spawnCells.Count);
+        count = Mathf.Min(count, enemySpawnCells.Count);
 
         float power = EnemyPower(level);
 
         for (int i = 0; i < count; i++)
         {
             // Boss dùng ô cửa (giữa), thường phân bố đều trên các ô spawn.
-            Vector2Int cell = isBossStage ? bossCell : spawnCells[i * spawnCells.Count / count];
+            Vector2Int cell = isBossStage ? bossCell : enemySpawnCells[i * enemySpawnCells.Count / count];
 
             float unitPower = isBossStage ? power * 6f : power;   // boss mạnh gấp ~6 lần lính thường
 
@@ -71,7 +72,7 @@ public static class EnemySpawnGenerator
             {
                 cell = cell,
                 level = level,
-                health = unitPower * 10f,                          // ~70% ngân sách power dồn vào máu
+                health = unitPower * 10f,                          // máu = 10× sát thương (đủ trâu để đấu vài nhịp)
                 attackPower = unitPower,
                 attackSpeed = 1f,
                 moveSpeed = ThemeMoveSpeed(dungeon),

@@ -24,6 +24,37 @@ public class BaseMode : MonoBehaviour
     public int defaultBattleTime;
     public float delayEndGame = 1.5f;
 
+    [Header("Màn")]
+    [Tooltip("0 = dùng curStageId của người chơi; >0 = ép build stage này.")]
+    public int overrideStageId = 0;
+
+    [Header("Lưới")]
+    public bool centerHorizontally = true;
+
+    [Header("Prefab môi trường (optional)")]
+    public GameObject mapPrefab;
+    public GameObject obstaclePrefab;
+
+    [Header("Prefab unit (BẮT BUỘC có rig BaseUnit)")]
+    public GameObject heroPrefab;
+    public GameObject petPrefab;
+    public GameObject enemyPrefab;
+
+    [Header("Chỉ số Hero (placeholder — sau lấy từ gear/companion)")]
+    public float heroMaxHp = 1000f;
+    public float heroAttack = 50f;
+    public float heroAttackSpeed = 1.2f;
+    public float heroAttackRange = 1.4f;
+    public float heroMoveSpeed = 3f;
+
+    [Header("Pet")]
+    public int petCount = 1;
+    public float petMaxHp = 400f;
+    public float petAttack = 25f;
+    public float petAttackSpeed = 1f;
+    public float petAttackRange = 1.3f;
+    public float petMoveSpeed = 3.2f;
+
     // ----- Trạng thái trận -----
     public bool isEndMode { get; protected set; }
     public bool isPause { get; set; }
@@ -41,6 +72,12 @@ public class BaseMode : MonoBehaviour
     protected int remainingEnemies;
 
     protected GameController GameController;
+
+    // Level đang dựng (map procedural + enemy) + gốc chứa object đã spawn — dùng chung cho spawn team.
+    protected CampaignLevelBuilder.CampaignLevel currentLevel;
+    protected Transform container;
+
+    public CampaignLevelBuilder.CampaignLevel CurrentLevel => currentLevel;
 
     public virtual void Init(GameController controller, ModeType typeModeInput = ModeType.DefaultLevel)
     {
@@ -91,9 +128,49 @@ public class BaseMode : MonoBehaviour
     // Nạp file/config enemy riêng của mode (nếu có). Mode con override.
     protected virtual void LoadEnemyFiles() { }
 
-    // Dựng màn: build level + grid + nạp wall vào CombatMap + environment/obstacle.
-    // TODO(follow-stick): mode con (CampaignMode) HẤP THỤ logic Build của CombatDirector vào đây.
-    protected virtual void CreateMap() { }
+    // Dựng màn: build level procedural từ stageId → nạp map (wall/A*/toạ độ ô↔world) vào
+    // MapController → dựng environment + obstacle. Mode con thường KHÔNG cần override (chỉ khác ở team).
+    protected virtual void CreateMap()
+    {
+        EnsureGameDataLoaded();
+
+        int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.curStageId;
+        currentLevel = CampaignLevelBuilder.Build(stageId, type);
+
+        // 1 nguồn sự thật cho map: pathfinding A* + di chuyển né wall + chuyển đổi ô↔world.
+        MapController.Instance.SetMap(currentLevel.grid, transform.position, centerHorizontally);
+        isPause = false;
+
+        container = new GameObject("_Combat").transform;
+        container.SetParent(transform, false);
+
+        SpawnEnvironment();
+        SpawnObstacles(currentLevel.obstacles);
+    }
+
+    // Đặt nền ở tâm lưới (đã canh giữa X quanh origin).
+    protected void SpawnEnvironment()
+    {
+        if (mapPrefab == null) return;
+        var map = MapController.Instance;
+        Vector3 center = map.CellToWorld((map.Cols - 1) / 2, (map.Rows - 1) / 2);
+        GameObject env = Instantiate(mapPrefab, center, Quaternion.identity, container);
+        env.name = "Environment";
+    }
+
+    // Wall chỉ cần hiển thị (chặn di chuyển là logic MapController, không cần collider).
+    protected void SpawnObstacles(List<Vector2Int> obstacles)
+    {
+        if (obstaclePrefab == null) return;
+
+        Transform parent = NewGroup("Walls");
+        for (int i = 0; i < obstacles.Count; i++)
+        {
+            Vector3 pos = MapController.Instance.CellToWorld(obstacles[i]);
+            GameObject go = Instantiate(obstaclePrefab, pos, Quaternion.identity, parent);
+            go.name = "Wall_" + obstacles[i].x + "_" + obstacles[i].y;
+        }
+    }
 
     // Spawn quân người chơi (Hero + Pet) — team A. Mode con điền.
     protected virtual void CreateTeamA() { }
@@ -189,10 +266,16 @@ public class BaseMode : MonoBehaviour
 
     protected virtual void CalculateResult(bool isWin) { }
 
-    // Dọn trạng thái mode để dựng lại. Mode con hủy object đã spawn của mình.
+    // Dọn trạng thái mode để dựng lại: dừng coroutine + huỷ mọi object đã spawn (container).
     public virtual void Reset()
     {
         StopAllCoroutines();
+
+        if (container != null)
+        {
+            DestroyChild(container.gameObject);
+            container = null;
+        }
     }
 
     protected virtual void OnResetMode(object obj)
@@ -304,6 +387,29 @@ public class BaseMode : MonoBehaviour
             }
         }
         return count;
+    }
+
+    // ===== HELPER DỰNG MÀN =====
+
+    protected void EnsureGameDataLoaded()
+    {
+        if (GameData.staticData == null || GameData.staticData.map == null)
+        {
+            GameData.Init();
+        }
+    }
+
+    protected Transform NewGroup(string name)
+    {
+        var go = new GameObject(name);
+        go.transform.SetParent(container, false);
+        return go.transform;
+    }
+
+    protected void DestroyChild(Object obj)
+    {
+        if (Application.isPlaying) Destroy(obj);
+        else DestroyImmediate(obj);
     }
 
     // ===== ÂM THANH =====

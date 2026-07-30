@@ -157,6 +157,7 @@ MonoBehaviour:
   obstaclePrefab: {fileID: 1319133848938338, guid: 75185248282ea5d422e6f27eb4734804, type: 3}
   enemyPrefab: {fileID: 1016365020410656, guid: 9f5f4f06833217a474a46b2fe73edf87, type: 3}
   playerSpawnMarkerPrefab: {fileID: 0}
+  container: {fileID: 0}
 --- !u!4 &143810477
 Transform:
   m_ObjectHideFlags: 0
@@ -186,7 +187,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1191446148262546, guid: 3cfed0fe9dcb86a1dd4e5630dbc7b1b3, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4916395158317844, guid: 3cfed0fe9dcb86a1dd4e5630dbc7b1b3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -318,7 +319,6 @@ MonoBehaviour:
   defaultBattleTime: 0
   delayEndGame: 1.5
   overrideStageId: 101
-  cellSize: 1
   centerHorizontally: 1
   mapPrefab: {fileID: 1191446148262546, guid: 3cfed0fe9dcb86a1dd4e5630dbc7b1b3, type: 3}
   obstaclePrefab: {fileID: 1040410299825679, guid: 14a913fe35ee88011c1b0a64130e5229, type: 3}

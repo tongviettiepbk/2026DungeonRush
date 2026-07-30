@@ -6,7 +6,7 @@ using UnityEngine;
 // vì DungeonRush sinh procedural — xem DecodedData/MAP_AND_SPAWN_MODEL.md).
 //
 // MapGenerator chỉ trả ma trận wall 0/1; spawn/cửa được suy từ StaticMapData và gói vào
-// CampaignLevel để tầng scene (CampaignMode/LevelRuntimeBuilder) dùng.
+// CampaignLevel để tầng scene (BaseMode/CampaignMode) dùng.
 public static class CampaignLevelBuilder
 {
     public class CampaignLevel
@@ -14,14 +14,12 @@ public static class CampaignLevelBuilder
         public int stageId;
         public ModeType environment;
 
-        public MapConfig config;
         public int[,] grid;                          // 0 = trống, 1 = wall
         public List<Vector2Int> obstacles;           // ô grid==1 (tiện spawn prefab)
 
         public List<Vector2Int> playerSpawnCells;    // hàng dưới
         public List<Vector2Int> enemySpawnCells;     // hàng trên (đã trừ wall)
-        public Vector2Int doorCell;                  // cửa = cổng enemy (giữa hàng trên)
-        public Vector2Int enemySpawnCell;            // alias doorCell (boss dùng)
+        public Vector2Int doorCell;                  // cửa = cổng enemy (giữa hàng trên); boss spawn tại đây
 
         public List<EnemySpawnGenerator.EnemySpawnInfo> enemies;
     }
@@ -33,9 +31,8 @@ public static class CampaignLevelBuilder
         // Vùng chơi = toàn bộ lưới 9×12 (chốt 2026-07-29, không trừ cột viền).
         int cols = envCfg != null ? envCfg.gridWidth : StaticMapData.GRID_WIDTH;
         int rows = envCfg != null ? envCfg.gridHeight : StaticMapData.GRID_HEIGHT;
-        var config = new MapConfig(rows, cols, 1f);
 
-        var door = StaticMapData.GetDoorCell(config);
+        var door = StaticMapData.GetDoorCell(cols, rows);
         var start = new Vector2Int(cols / 2, 0);     // giữa hàng spawn quân dưới cùng
 
         int minWalls = StaticMapData.MIN_OBSTACLE_COUNT;
@@ -49,28 +46,27 @@ public static class CampaignLevelBuilder
 
         int[,] grid = MapGenerator.Generate(new MapGenerator.Params
         {
-            config = config,
+            cols = cols,
+            rows = rows,
             seed = SeedFromStage(stageId),   // cùng màn → cùng layout
             minWalls = minWalls,
             maxWalls = maxWalls,
             start = start,
             goal = door,
-            keepClear = StaticMapData.GetKeepClearCells(config),
+            keepClear = StaticMapData.GetKeepClearCells(cols, rows),
         });
 
         var level = new CampaignLevel
         {
             stageId = stageId,
             environment = environment,
-            config = config,
             grid = grid,
-            obstacles = MapGenerator.CollectWalls(grid, config),
-            playerSpawnCells = StaticMapData.GetPlayerSpawnCells(config),
-            enemySpawnCells = StaticMapData.GetEnemySpawnCells(config, grid),
+            obstacles = MapGenerator.CollectWalls(grid),
+            playerSpawnCells = StaticMapData.GetPlayerSpawnCells(cols, rows),
+            enemySpawnCells = StaticMapData.GetEnemySpawnCells(cols, rows, grid),
             doorCell = door,
-            enemySpawnCell = door,
         };
-        level.enemies = EnemySpawnGenerator.Generate(stageId, level.enemySpawnCells, level.enemySpawnCell);
+        level.enemies = EnemySpawnGenerator.Generate(stageId, level.enemySpawnCells, level.doorCell);
         return level;
     }
 
