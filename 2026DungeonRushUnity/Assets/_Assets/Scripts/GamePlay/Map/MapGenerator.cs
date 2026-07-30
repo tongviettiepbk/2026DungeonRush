@@ -3,7 +3,8 @@ using UnityEngine;
 
 // Sinh map procedural — tái tạo thuật toán LevelGenerator gốc của DungeonRush.
 //
-// KẾT QUẢ: ma trận 2 chiều int[cols, rows] với 0 = ô trống (đi được), 1 = ô có wall.
+// KẾT QUẢ: ma trận 2 chiều int[rows, cols] với 0 = ô trống (đi được), 1 = ô có wall.
+// Ô = Vector2Int(x = row, y = col), (0,0) góc trên-trái; truy cập grid[cell.x, cell.y] = grid[row, col].
 // Bảo đảm luôn có đường đi từ ô start tới ô goal (BFS + thử lại, fallback giảm số wall).
 // Cùng seed → cùng layout (deterministic). Xem DecodedData/MAP_AND_SPAWN_MODEL.md.
 //
@@ -24,7 +25,7 @@ public static class MapGenerator
         public IEnumerable<Vector2Int> keepClear; // ô không được đặt wall (hàng spawn, cửa...)
     }
 
-    // Trả int[cols, rows]: 0 = trống, 1 = wall.
+    // Trả int[rows, cols]: 0 = trống, 1 = wall.
     public static int[,] Generate(Params parameters)
     {
         int cols = parameters.cols;
@@ -40,11 +41,11 @@ public static class MapGenerator
 
         // Ứng viên đặt wall = mọi ô trong lưới trừ ô cấm.
         var candidates = new List<Vector2Int>();
-        for (int x = 0; x < cols; x++)
+        for (int row = 0; row < rows; row++)
         {
-            for (int y = 0; y < rows; y++)
+            for (int col = 0; col < cols; col++)
             {
-                var cell = new Vector2Int(x, y);
+                var cell = new Vector2Int(row, col);
                 if (!blocked.Contains(cell)) candidates.Add(cell);
             }
         }
@@ -76,7 +77,7 @@ public static class MapGenerator
             chosenWalls = chosenWalls ?? new List<Vector2Int>();
         }
 
-        var grid = new int[cols, rows];
+        var grid = new int[rows, cols];
         for (int i = 0; i < chosenWalls.Count; i++)
         {
             grid[chosenWalls[i].x, chosenWalls[i].y] = 1;
@@ -88,13 +89,13 @@ public static class MapGenerator
     public static List<Vector2Int> CollectWalls(int[,] grid)
     {
         var walls = new List<Vector2Int>();
-        int cols = grid.GetLength(0);
-        int rows = grid.GetLength(1);
-        for (int x = 0; x < cols; x++)
+        int rows = grid.GetLength(0);
+        int cols = grid.GetLength(1);
+        for (int row = 0; row < rows; row++)
         {
-            for (int y = 0; y < rows; y++)
+            for (int col = 0; col < cols; col++)
             {
-                if (grid[x, y] == 1) walls.Add(new Vector2Int(x, y));
+                if (grid[row, col] == 1) walls.Add(new Vector2Int(row, col));
             }
         }
         return walls;
@@ -131,7 +132,7 @@ public static class MapGenerator
             {
                 var next = current + Dirs[dirIndex];
                 if (next == goal) return true;
-                if (next.x < 0 || next.x >= cols || next.y < 0 || next.y >= rows
+                if (next.x < 0 || next.x >= rows || next.y < 0 || next.y >= cols
                     || blocked.Contains(next) || !visited.Add(next)) continue;
                 queue.Enqueue(next);
             }
@@ -139,6 +140,7 @@ public static class MapGenerator
         return false;
     }
 
+    // 4 hướng lân cận theo (row, col).
     private static readonly Vector2Int[] Dirs =
     {
         new Vector2Int(1, 0), new Vector2Int(-1, 0),

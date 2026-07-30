@@ -9,34 +9,55 @@ using UnityEngine;
 // (Đã hợp nhất CombatMap cũ vào đây — 1 nguồn sự thật cho map.)
 public class MapController : Singleton<MapController>
 {
-    public Transform pointStart;                  // CHƯA DÙNG — chừa để wire mốc gốc lưới từ Inspector sau
-    public int[,] Grid { get; private set; }      // grid[x, y]: 0 = trống, 1 = wall
-    public int Cols => Grid != null ? Grid.GetLength(0) : 0;
-    public int Rows => Grid != null ? Grid.GetLength(1) : 0;
+    public Transform pointStart;                  // Mốc gốc lưới: ô (0,0) neo ĐÚNG tại đây (góc TRÊN-TRÁI). Null → dùng fallbackOrigin.
+    public int[,] Grid { get; private set; }      // Grid[row, col]: 0 = trống, 1 = wall
+    public int Rows => Grid != null ? Grid.GetLength(0) : 0;
+    public int Cols => Grid != null ? Grid.GetLength(1) : 0;
     public bool IsReady { get; private set; }
 
-    // Neo lưới trong world (mirror CellSize/GridOrigin của LevelGenerator gốc: cellSize=1,
-    // gốc ở góc dưới, ô (x,y) x sang phải / y đi lên tới cửa).
+    // Quy ước ô lưới (theo thói quen mảng 2 chiều a[row][col]):
+    //   - cell = Vector2Int(x = ROW, y = COL); truy cập Grid[cell.x, cell.y] = Grid[row, col].
+    //   - (0,0) = góc TRÊN-TRÁI (tại PointStart); row tăng → đi XUỐNG, col tăng → sang PHẢI.
+    //   - world: col → +X (phải), row → -Y (xuống); cạnh 1 ô = 1 world unit.
     private const float CELL_SIZE = 1f;           // cạnh 1 ô (world unit)
-    private Vector3 gridOrigin;
-    private bool centerHorizontally;              // canh giữa map theo trục X quanh gridOrigin
-    private Vector3 minWorld;                     // tâm ô (0,0) — biên dưới-trái vùng đi được
-    private Vector3 maxWorld;                     // tâm ô (cols-1, rows-1) — biên trên-phải
+    private Vector3 gridOrigin;                   // world của ô (0,0) — góc trên-trái
+    private bool centerHorizontally;              // canh giữa map theo trục X quanh gridOrigin (tắt khi dùng PointStart)
+    private Vector3 minWorld;                     // biên dưới-trái vùng đi được (componentwise min 2 góc)
+    private Vector3 maxWorld;                     // biên trên-phải vùng đi được (componentwise max 2 góc)
 
     // Các hướng thử "lách" khi hướng thẳng bị wall chặn (độ, ± quanh hướng gốc).
     private static readonly float[] SteerAngles = { 25f, -25f, 50f, -50f, 75f, -75f, 90f, -90f };
 
+    // MapController nằm TRÊN mapPrefab → khi prefab được Instantiate, tự nhận mình là Singleton Instance
+    // (bảo đảm Instance là bản CÓ PointStart, không phải bản rỗng do Singleton auto-tạo).
+    protected virtual void Awake()
+    {
+        instance = this;
+    }
+
     // Nạp map đã sinh sẵn (VD từ CampaignLevelBuilder).
-    public void SetMap(int[,] grid, Vector3 origin, bool centerHorizontally = true)
+    // pointStart gán (Inspector) → dùng nó làm gốc (0,0) góc trên-trái, KHÔNG canh giữa.
+    // Ngược lại → dùng fallbackOrigin + cờ centerHorizontally (hành vi cũ).
+    public void SetMap(int[,] grid, Vector3 fallbackOrigin, bool centerHorizontally = true)
     {
         Grid = grid;
-        gridOrigin = origin;
-        this.centerHorizontally = centerHorizontally;
+        if (pointStart != null)
+        {
+            gridOrigin = pointStart.position;
+            this.centerHorizontally = false;
+        }
+        else
+        {
+            gridOrigin = fallbackOrigin;
+            this.centerHorizontally = centerHorizontally;
+        }
         IsReady = grid != null;
         if (IsReady)
         {
-            minWorld = CellToWorld(0, 0);
-            maxWorld = CellToWorld(Cols - 1, Rows - 1);
+            Vector3 topLeft = CellToWorld(0, 0);
+            Vector3 bottomRight = CellToWorld(Rows - 1, Cols - 1);
+            minWorld = Vector3.Min(topLeft, bottomRight);
+            maxWorld = Vector3.Max(topLeft, bottomRight);
         }
     }
 
@@ -54,24 +75,25 @@ public class MapController : Singleton<MapController>
         Grid = null;
     }
 
-    // ===== Truy vấn ô =====
+    // ===== Truy vấn ô (row, col) =====
 
-    public bool InBounds(int x, int y) => x >= 0 && x < Cols && y >= 0 && y < Rows;
+    public bool InBounds(int row, int col) => row >= 0 && row < Rows && col >= 0 && col < Cols;
     public bool InBounds(Vector2Int c) => InBounds(c.x, c.y);
 
-    public bool IsWall(int x, int y) => IsReady && InBounds(x, y) && Grid[x, y] == 1;
+    public bool IsWall(int row, int col) => IsReady && InBounds(row, col) && Grid[row, col] == 1;
     public bool IsWall(Vector2Int c) => IsWall(c.x, c.y);
 
     // Ô đi được: trong biên và không phải wall.
-    public bool IsWalkable(int x, int y) => InBounds(x, y) && (!IsReady || Grid[x, y] == 0);
+    public bool IsWalkable(int row, int col) => InBounds(row, col) && (!IsReady || Grid[row, col] == 0);
     public bool IsWalkable(Vector2Int c) => IsWalkable(c.x, c.y);
 
     // ===== Chuyển đổi toạ độ ô lưới ↔ world =====
+    // col → trục X (sang phải), row → trục -Y (đi xuống) tính từ gốc trên-trái.
 
-    public Vector3 CellToWorld(int x, int y)
+    public Vector3 CellToWorld(int row, int col)
     {
         float offsetX = centerHorizontally ? -(Cols - 1) * 0.5f * CELL_SIZE : 0f;
-        return gridOrigin + new Vector3(offsetX + x * CELL_SIZE, y * CELL_SIZE, 0f);
+        return gridOrigin + new Vector3(offsetX + col * CELL_SIZE, -row * CELL_SIZE, 0f);
     }
 
     public Vector3 CellToWorld(Vector2Int c) => CellToWorld(c.x, c.y);
@@ -80,9 +102,9 @@ public class MapController : Singleton<MapController>
     {
         float offsetX = centerHorizontally ? -(Cols - 1) * 0.5f * CELL_SIZE : 0f;
         Vector3 local = world - gridOrigin;
-        int x = Mathf.RoundToInt((local.x - offsetX) / CELL_SIZE);
-        int y = Mathf.RoundToInt(local.y / CELL_SIZE);
-        return new Vector2Int(x, y);
+        int col = Mathf.RoundToInt((local.x - offsetX) / CELL_SIZE);
+        int row = Mathf.RoundToInt(-local.y / CELL_SIZE);
+        return new Vector2Int(row, col);
     }
 
     // ===== Di chuyển liên tục (né wall, trong biên) =====
@@ -199,6 +221,7 @@ public class MapController : Singleton<MapController>
         return path;
     }
 
+    // 4 hướng lân cận theo (row, col): xuống (+row), lên (-row), phải (+col), trái (-col).
     private static readonly Vector2Int[] Dirs =
     {
         new Vector2Int(1, 0), new Vector2Int(-1, 0),

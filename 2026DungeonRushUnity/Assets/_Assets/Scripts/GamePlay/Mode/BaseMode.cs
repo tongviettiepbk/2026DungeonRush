@@ -137,36 +137,43 @@ public class BaseMode : MonoBehaviour
         int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.curStageId;
         currentLevel = CampaignLevelBuilder.Build(stageId, type);
 
-        // 1 nguồn sự thật cho map: pathfinding A* + di chuyển né wall + chuyển đổi ô↔world.
-        MapController.Instance.SetMap(currentLevel.grid, transform.position, centerHorizontally);
-        isPause = false;
-
         container = new GameObject("_Combat").transform;
         container.SetParent(transform, false);
 
-        SpawnEnvironment();
-        SpawnObstacles(currentLevel.obstacles);
+        // MapController nằm TRÊN mapPrefab → dựng environment TRƯỚC để có MapController + PointStart
+        // (PointStart định nghĩa gốc ô (0,0)), rồi mới nạp grid vào chính bản đó.
+        MapController map = SpawnEnvironment();
+
+        // 1 nguồn sự thật cho map: pathfinding A* + di chuyển né wall + chuyển đổi ô↔world (gốc = PointStart).
+        map.SetMap(currentLevel.grid, transform.position, centerHorizontally);
+        isPause = false;
+
+        SpawnObstacles(map, currentLevel.obstacles);
     }
 
-    // Đặt nền ở tâm lưới (đã canh giữa X quanh origin).
-    protected void SpawnEnvironment()
+    // Dựng environment (mapPrefab mang MapController + PointStart). Đặt prefab tại transform.position;
+    // gốc ô (0,0) do PointStart trong prefab quyết định. Trả về MapController của bản vừa dựng.
+    // mapPrefab null → fallback MapController.Instance (không có PointStart → canh giữa như cũ).
+    protected MapController SpawnEnvironment()
     {
-        if (mapPrefab == null) return;
-        var map = MapController.Instance;
-        Vector3 center = map.CellToWorld((map.Cols - 1) / 2, (map.Rows - 1) / 2);
-        GameObject env = Instantiate(mapPrefab, center, Quaternion.identity, container);
+        if (mapPrefab == null) return MapController.Instance;
+
+        GameObject env = Instantiate(mapPrefab, transform.position, Quaternion.identity, container);
         env.name = "Environment";
+
+        MapController map = env.GetComponentInChildren<MapController>();
+        return map != null ? map : MapController.Instance;
     }
 
     // Wall chỉ cần hiển thị (chặn di chuyển là logic MapController, không cần collider).
-    protected void SpawnObstacles(List<Vector2Int> obstacles)
+    protected void SpawnObstacles(MapController map, List<Vector2Int> obstacles)
     {
         if (obstaclePrefab == null) return;
 
         Transform parent = NewGroup("Walls");
         for (int i = 0; i < obstacles.Count; i++)
         {
-            Vector3 pos = MapController.Instance.CellToWorld(obstacles[i]);
+            Vector3 pos = map.CellToWorld(obstacles[i]);
             GameObject go = Instantiate(obstaclePrefab, pos, Quaternion.identity, parent);
             go.name = "Wall_" + obstacles[i].x + "_" + obstacles[i].y;
         }

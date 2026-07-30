@@ -53,24 +53,24 @@ public class GameDataTester : MonoBehaviour
         int stageId = GameData.userData.campaign.curStageId;
         CampaignLevelBuilder.CampaignLevel level = CampaignLevelBuilder.Build(stageId);
 
-        int cols = level.grid.GetLength(0);
-        int rows = level.grid.GetLength(1);
+        int rows = level.grid.GetLength(0);
+        int cols = level.grid.GetLength(1);
         var playerSpawns = new HashSet<Vector2Int>(level.playerSpawnCells);
         var sb = new System.Text.StringBuilder();
         sb.AppendLine($"[Map] stage={stageId} env={level.environment} walls={level.obstacles.Count} enemies={level.enemies.Count}");
-        // In từ hàng trên xuống. # = wall(1), . = spawn quân, D = cửa, khoảng trắng = trống(0).
-        for (int y = rows - 1; y >= 0; y--)
+        // In từ hàng trên (row 0) xuống. # = wall(1), . = spawn quân, D = cửa, khoảng trắng = trống(0).
+        for (int row = 0; row < rows; row++)
         {
-            string row = "";
-            for (int x = 0; x < cols; x++)
+            string line = "";
+            for (int col = 0; col < cols; col++)
             {
-                var c = new Vector2Int(x, y);
-                if (level.grid[x, y] == 1) row += "#";
-                else if (c == level.doorCell) row += "D";
-                else if (playerSpawns.Contains(c)) row += ".";
-                else row += " ";
+                var c = new Vector2Int(row, col);
+                if (level.grid[row, col] == 1) line += "#";
+                else if (c == level.doorCell) line += "D";
+                else if (playerSpawns.Contains(c)) line += ".";
+                else line += " ";
             }
-            sb.AppendLine("|" + row + "|");
+            sb.AppendLine("|" + line + "|");
         }
         DebugCustom.Log(sb.ToString());
 
