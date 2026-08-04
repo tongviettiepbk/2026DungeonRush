@@ -51,3 +51,16 @@ public enum Rarity
     Immortal = 8,
     Divine = 9,
 }
+
+public enum TypeEquipment
+{
+    None =0,
+    Weapon=1,
+    Helmet=2,
+    Gloves=3,
+    Ring=4,
+    Necklace=5,
+    Backpack=6,
+    Cape=7,
+    Wings=8,
+}

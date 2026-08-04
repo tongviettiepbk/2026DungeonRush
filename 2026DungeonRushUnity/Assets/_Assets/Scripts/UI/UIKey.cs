@@ -1,0 +1,6 @@
+// Danh sách key prefab UI (Resources/UI/<key>). Bản gốc StickIdle liệt kê ~120 màn hình
+// theo feature (Gear/Relic/Hero/Shop/Event...). DungOnRush port dần — thêm key khi có màn tương ứng.
+public class UIKey
+{
+    // TODO(follow-stick): bổ sung key theo từng feature khi port UI màn hình.
+}

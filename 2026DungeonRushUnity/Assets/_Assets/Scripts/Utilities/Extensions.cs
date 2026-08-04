@@ -39,6 +39,22 @@ public static class Extensions
         if (callBack != null)
             callBack();
     }
+
+    public static void StartActionEndOfFrame(this MonoBehaviour mono, Action callback)
+    {
+        if (mono.gameObject.activeInHierarchy)
+        {
+            mono.StartCoroutine(EndOfFrame(callback));
+        }
+    }
+
+    private static IEnumerator EndOfFrame(Action callback)
+    {
+        yield return StaticValue.waitEndFrame;
+
+        if (callback != null)
+            callback();
+    }
     #endregion
 
     #region Vector (port từ StickIdle)
