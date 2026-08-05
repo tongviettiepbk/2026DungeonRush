@@ -1,11 +1,12 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using UnityEngine;
 
 // C9 Forge — bảng xác suất ra rarity theo cấp forge (0..99). Mỗi dòng là 10 cột xác suất
 // (tổng = 100). Cột theo THỨ TỰ forge (khác tên hệ rarity item):
 //   0 Common,1 Uncommon,2 Rare,3 Epic,4 Legendary,5 Mythic,6 Divine,7 Celestial,8 Immortal,9 Eternal
-// Lưu dạng ma trận positional (JSON trong Resources) — theo pattern JSON-in-Resources của StickIdle.
+// Data load từ ScriptableObject (Resources/Scriptable Objects/Forge/ForgeData). Data gốc JSON
+// (Resources/Json/forge_rarity_probabilities.txt) được giữ lại làm nguồn để regenerate asset
+// qua menu Tools > DungOnRush > Forge > Rebuild ForgeData Asset.
 // Giá trị APK và Remote Config live TRÙNG NHAU 100%.
 public class StaticForgeData
 {
@@ -15,8 +16,12 @@ public class StaticForgeData
 
     public StaticForgeData()
     {
-        TextAsset file = Resources.Load<TextAsset>("Json/forge_rarity_probabilities");
-        probabilities = JsonConvert.DeserializeObject<List<List<float>>>(file.text);
+        ForgeData so = Resources.Load<ForgeData>("Scriptable Objects/Forge/ForgeData");
+        probabilities = new List<List<float>>(so.rows.Count);
+        for (int i = 0; i < so.rows.Count; i++)
+        {
+            probabilities.Add(new List<float>(so.rows[i].probabilities));
+        }
     }
 
     public int MaxForgeLevel => probabilities.Count - 1;

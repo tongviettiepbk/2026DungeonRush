@@ -15,6 +15,9 @@ public class WeaponData : ScriptableObject
     public Rarity rarity;
     public Sprite icon;
 
+    // Ảnh gắn LÊN NGƯỜI khi cầm vũ khí (khác icon inventory). Chưa gán → hệ mặc tạm dùng icon.
+    public Sprite bodySprite;
+
     [Header("Tấn công")]
     public WeaponType weaponType;
     public float attackSpeed = 1f;      // Nhịp đánh (config gốc đều = 1).

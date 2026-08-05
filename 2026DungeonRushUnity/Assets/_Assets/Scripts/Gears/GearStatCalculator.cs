@@ -36,7 +36,7 @@ public static class GearStatCalculator
     }
 
     // Roll toàn bộ substat cho 1 trang bị mới rơi ra: số dòng theo rarity, loại random theo weight
-    // (không trùng), giá trị random trong (0 .. maxValue].
+    // (không trùng), giá trị random trong [1 .. maxValue] theo phân bố chuẩn cắt (xem RollSubStatValue).
     public static List<GearSubStat> RollSubStats(GearStatConfigData config, Rarity rarity)
     {
         List<GearSubStat> result = new List<GearSubStat>();
@@ -53,17 +53,41 @@ public static class GearStatCalculator
         {
             SubStatPoolEntry picked = PickWeighted(remaining);
             remaining.Remove(picked);
-            result.Add(new GearSubStat(picked.type, RollSubStatValue(picked.maxValue)));
+            result.Add(new GearSubStat(picked.type, RollSubStatValue(picked.maxValue, config.subStatDistributionSpread)));
         }
 
         return result;
     }
 
-    // Random giá trị 1 substat. LƯU Ý: phân bố chính xác của game gốc (SubStatDistributionSpread)
-    // chưa reverse hoàn toàn; tạm dùng uniform (0 .. maxValue]. Substat của đồ đã có thì đọc thẳng save.
-    public static float RollSubStatValue(float maxValue)
+    // Random giá trị 1 dòng substat. Port ĐÚNG hàm GameResources.jhh(1, maxValue) của game gốc
+    // (reverse từ libil2cpp v41): phân bố CHUẨN CẮT (truncated normal) trên [1 .. maxValue].
+    //   mean = (1 + maxValue) / 2 ;  sigma = (maxValue - 1) * spread   (spread = SubStatDistributionSpread = 0.25)
+    //   x = mean + sigma * Z (Z chuẩn N(0,1)); roll lại tới khi x nằm trong [1, maxValue]; làm tròn 2 số lẻ.
+    // → giá trị dồn về giữa khoảng, hiếm khi chạm biên (biên = ±2σ). KHÔNG còn uniform như trước.
+    public static float RollSubStatValue(float maxValue, float spread)
     {
-        return Mathf.Clamp(Random.value, 0.0001f, 1f) * maxValue;
+        const float min = 1f;
+        float mean = (min + maxValue) * 0.5f;
+        float sigma = (maxValue - min) * spread;
+
+        float x;
+        do
+        {
+            x = mean + sigma * NextStandardNormal();
+        }
+        while (x < min || x > maxValue);
+
+        // jhh làm tròn ở "không gian ×100" rồi chia lại → 2 chữ số thập phân (banker's rounding).
+        return Mathf.Round(x * 100f) / 100f;
+    }
+
+    // Số ngẫu nhiên phân phối chuẩn N(0,1) — Box-Muller, đúng như GameResources.jhi() game gốc:
+    //   Z = sqrt(-2 * ln(U1)) * cos(2π * U2),  U1,U2 = Random.Range(0.0001, 1).
+    private static float NextStandardNormal()
+    {
+        float u1 = Random.Range(0.0001f, 1f);
+        float u2 = Random.Range(0.0001f, 1f);
+        return Mathf.Sqrt(-2f * Mathf.Log(u1)) * Mathf.Cos(2f * Mathf.PI * u2);
     }
 
     private static SubStatPoolEntry PickWeighted(List<SubStatPoolEntry> pool)

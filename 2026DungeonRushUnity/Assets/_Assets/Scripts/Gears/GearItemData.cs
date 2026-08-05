@@ -14,4 +14,8 @@ public class GearItemData : ScriptableObject
     public Rarity rarity;
     public string localizationKey;  // Lưu tường minh (gốc: Necklace dùng key khác tên asset "Neckle").
     public Sprite icon;
+
+    // Ảnh gắn LÊN NGƯỜI khi mặc (khác icon inventory). Chưa gán → hệ mặc tạm dùng icon (xem
+    // EquipVisualResolver). Gán art thật dần ở bước sau.
+    public Sprite bodySprite;
 }

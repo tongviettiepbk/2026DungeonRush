@@ -14,6 +14,9 @@ public class WingData : ScriptableObject
     public string localizationKey;
     public Sprite icon;
 
+    // Ảnh gắn LÊN NGƯỜI khi mặc cánh (khác icon inventory). Chưa gán → hệ mặc tạm dùng icon.
+    public Sprite bodySprite;
+
     [Header("Stat gốc + scaler")]
     public float healthBase;
     public float damageBase;

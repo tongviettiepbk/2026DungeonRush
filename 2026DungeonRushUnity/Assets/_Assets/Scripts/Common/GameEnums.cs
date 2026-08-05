@@ -37,7 +37,7 @@ public enum TextDamageStatus
 }
 
 // 10 bậc rarity của DungeonRush (client). Dùng chung cho mọi loại gear (Vũ khí, Mũ, Găng...).
-// Giá trị = bậc trong config gốc (0..9).
+// Giá trị = bậc trong config gốc (0..10, enum CharacterRarity trong libil2cpp).
 public enum Rarity
 {
     Common = 0,
@@ -50,6 +50,7 @@ public enum Rarity
     Ancient = 7,
     Immortal = 8,
     Divine = 9,
+    Ultimate = 10,
 }
 
 public enum TypeEquipment

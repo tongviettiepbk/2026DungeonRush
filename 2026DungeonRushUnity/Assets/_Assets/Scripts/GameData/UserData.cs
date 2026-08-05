@@ -16,11 +16,13 @@ public class UserData
     public const string DATA_KEY_CAMPAIGN = "key_user_campaign";
     public const string DATA_KEY_ITEMS = "key_user_items";
     public const string DATA_KEY_SETTING = "key_user_settings";
+    public const string DATA_KEY_EQUIPMENT = "key_user_equipment";
 
     public UserProfileData profile { get; set; } = new UserProfileData();
     public UserCampaignData campaign { get; set; } = new UserCampaignData();
     public UserItemData items { get; set; } = new UserItemData();
     public UserSettingData settings { get; set; } = new UserSettingData();
+    public UserEquipmentData equipment { get; set; } = new UserEquipmentData();
 
     private List<BaseUserData> listData;
     private float lastTimeSaveData;
@@ -45,6 +47,7 @@ public class UserData
         campaign = LoadModule<UserCampaignData>(DATA_KEY_CAMPAIGN, out _);
         items = LoadModule<UserItemData>(DATA_KEY_ITEMS, out _);
         settings = LoadModule<UserSettingData>(DATA_KEY_SETTING, out _);
+        equipment = LoadModule<UserEquipmentData>(DATA_KEY_EQUIPMENT, out _);
 
         LoadDone();
     }
@@ -103,6 +106,7 @@ public class UserData
             listData.Add(campaign);
             listData.Add(items);
             listData.Add(settings);
+            listData.Add(equipment);
         }
 
         for (int i = 0; i < listData.Count; i++)
