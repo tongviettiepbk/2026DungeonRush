@@ -10,7 +10,7 @@ public static class EquipVisualResolver
     // Sprite gắn lên người cho (slot, id). Trả null nếu không tra được (slot chưa hỗ trợ, id sai...).
     public static Sprite GetBodySprite(EquipSlot slot, string id)
     {
-        if (string.IsNullOrEmpty(id))
+        if (string.IsNullOrEmpty(id) || GameData.staticData == null)
         {
             return null;
         }
@@ -19,6 +19,7 @@ public static class EquipVisualResolver
         {
             case EquipSlot.Weapon:
             {
+                if (GameData.staticData.weapons == null) return null;
                 WeaponData w = GameData.staticData.weapons.GetData(id);
                 return w != null ? (w.bodySprite != null ? w.bodySprite : w.icon) : null;
             }
@@ -27,13 +28,14 @@ public static class EquipVisualResolver
             case EquipSlot.Gloves:
             case EquipSlot.Backpack:
             {
+                if (GameData.staticData.gears == null) return null;
                 GearItemData g = GameData.staticData.gears.GetData(id);
                 return g != null ? (g.bodySprite != null ? g.bodySprite : g.icon) : null;
             }
 
             case EquipSlot.Wing:
             {
-                if (int.TryParse(id, out int wingId))
+                if (GameData.staticData.wings != null && int.TryParse(id, out int wingId))
                 {
                     WingData wing = GameData.staticData.wings.GetData(wingId);
                     return wing != null ? (wing.bodySprite != null ? wing.bodySprite : wing.icon) : null;
