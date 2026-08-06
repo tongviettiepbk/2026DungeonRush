@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Config 1 vũ khí (C1) — tạo asset qua menu: Create > DungOnRush > Weapon Data.
-// Đặt asset trong Resources/Scriptable Objects/Weapons để StaticWeaponData load được.
+// Đặt asset trong Resources/Scriptable Objects/Gears/Weapons để StaticWeaponData load được.
 //
 // LƯU Ý (theo GDD): config KHÔNG chứa sát thương. Damage sinh runtime theo rarity + level
 // (server-driven). Client chỉ giữ kiểu tấn công, tầm đánh, đạn và thông tin hiển thị.

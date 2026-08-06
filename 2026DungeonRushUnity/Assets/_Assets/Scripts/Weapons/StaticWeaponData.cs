@@ -14,7 +14,7 @@ public class StaticWeaponData
 
     public StaticWeaponData()
     {
-        weapons = Resources.LoadAll<WeaponData>("Scriptable Objects/Weapons")
+        weapons = Resources.LoadAll<WeaponData>("Scriptable Objects/Gears/Weapons")
             .OrderBy(x => x.assetName).ToList();
 
         poolByRarity = new Dictionary<Rarity, List<WeaponData>>();
