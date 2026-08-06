@@ -10,4 +10,8 @@ public class ElementEquipmentUILobby : MonoBehaviour
     public TMP_Text txtLevelEquipment;
     public Image imgEquipment;
 
+    public void SetLayout(LootResult result)
+    {
+
+    }
 }

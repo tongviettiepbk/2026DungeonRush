@@ -48,6 +48,15 @@ public class UIMainLobby : BaseUI
         if (result == null)
             return; // LootService đã log lỗi cụ thể.
 
+
+        for(int i = 0; i < listElementEquipment.Count; i++)
+        {
+            if(listElementEquipment[i].typeEquipment == result.gearSlot)
+            {
+                listElementEquipment[i].SetLayout(result);
+            }
+        }
+
         UIManager.Instance.ShowNotice(
             content: BuildInfo(result),
             isLocalizeContent: false,
@@ -57,9 +66,8 @@ public class UIMainLobby : BaseUI
             labelYes: "OK");
     }
 
-    #region MyRegion
+    #region Info gear
 
-    #endregion
     // Format chuỗi mô tả đầy đủ 1 item loot được (thuần hiển thị, không đụng logic).
     private string BuildInfo(LootResult r)
     {
@@ -130,4 +138,8 @@ public class UIMainLobby : BaseUI
             default: return type.ToString();
         }
     }
+
+    #endregion
+
+
 }
