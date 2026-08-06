@@ -43,9 +43,21 @@ public static class EquipVisualResolver
                 return null;
             }
 
-            // Cape (Spine skin) làm ở bước sau.
+            // Cape KHÔNG dùng sprite — là Spine skin, xem GetCapeData / HeroVisual.WearCape.
             default:
                 return null;
         }
+    }
+
+    // Cape mặc lên người bằng Spine (skeletonData + skin), không phải sprite. Trả CapeData
+    // để HeroVisual gán trực tiếp. id = capeId dạng string.
+    public static CapeData GetCapeData(string id)
+    {
+        if (string.IsNullOrEmpty(id) || GameData.staticData == null || GameData.staticData.capes == null)
+        {
+            return null;
+        }
+
+        return int.TryParse(id, out int capeId) ? GameData.staticData.capes.GetData(capeId) : null;
     }
 }

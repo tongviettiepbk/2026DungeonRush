@@ -1,32 +1,30 @@
+using UnityEngine;
+
 // Hero (quân người chơi, TeamA). Hành vi CHỦ ĐỘNG đúng spec:
 //   tự tìm enemy GẦN NHẤT trong map → đi tới vùng đánh → attack.
 // Toàn bộ state machine (Idle→Move→Attack) đã có ở BaseUnit; Hero chỉ chỉnh cách chọn mục
 // tiêu để không giới hạn tầm (luôn tìm khắp map) và không lọc theo biên camera.
 //
-// Hình ảnh trang bị (mặc đồ): 5 slot dùng SpriteRenderer đã wiring qua HeroEquipmentVisual.
-// Cape (Spine skin) làm ở bước sau.
-
+// Hình ảnh trang bị (mặc đồ) do HeroVisual xử lý — ref các node đã gán sẵn trong prefab.
 public class HeroUnit : BaseUnit
 {
-    private HeroEquipmentVisual equipmentVisual;
+    [SerializeField] private HeroVisual heroVisual;
 
     protected override void Awake()
     {
         base.Awake();
 
-        equipmentVisual = GetComponent<HeroEquipmentVisual>();
-        if (equipmentVisual == null)
+        if (heroVisual == null)
         {
-            equipmentVisual = gameObject.AddComponent<HeroEquipmentVisual>();
+            heroVisual = GetComponentInChildren<HeroVisual>();
         }
-        equipmentVisual.Bind(Transform);
-        equipmentVisual.RefreshAll();
+        heroVisual?.RefreshAll();
     }
 
     // Dựng lại hình trang bị từ save — gọi sau khi người chơi đổi đồ ở menu.
     public void RefreshEquipment()
     {
-        equipmentVisual?.RefreshAll();
+        heroVisual?.RefreshAll();
     }
 
     protected override void FindNearestTarget()

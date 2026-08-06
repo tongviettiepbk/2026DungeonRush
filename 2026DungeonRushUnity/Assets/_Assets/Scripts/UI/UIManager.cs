@@ -269,7 +269,7 @@ public class UIManager : Singleton<UIManager>
         // TODO(follow-stick): thêm SFX lỗi khi hệ audio nhận SoundType (hiện AudioManager chỉ nhận AudioClip).
         ShowToastMessage(content, isLocalize: isLocalize);
     }
-    #endregion
+    #endregion.
 
     #region Waiting
     public void ShowWaiting(bool isOn, bool isTimeOut = true)
