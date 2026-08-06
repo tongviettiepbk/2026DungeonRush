@@ -51,7 +51,7 @@ public class UIMainLobby : BaseUI
 
         for(int i = 0; i < listElementEquipment.Count; i++)
         {
-            if(listElementEquipment[i].typeEquipment == result.gearSlot)
+            if(listElementEquipment[i].typeEquipment == result.EquipSlot)
             {
                 listElementEquipment[i].SetLayout(result);
             }

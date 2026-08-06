@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 // Phân loại item loot được: gear (C2..C6) hay vũ khí (C1).
 public enum LootItemKind
@@ -16,11 +17,21 @@ public class LootResult
     public Rarity rarity;
     public int level;
 
+    // Icon inventory (lấy từ GearItemData.icon / WeaponData.icon) để UI gắn thẳng vào slot.
+    public Sprite icon;
+
     // Chỉ dùng khi kind == Gear.
     public GearSlotType gearSlot;
 
     // Chỉ dùng khi kind == Weapon.
     public WeaponType weaponType;
+
+    // Slot MẶC ĐỒ tương ứng để UI tìm đúng ElementEquipmentUILobby: vũ khí (C1) về slot WEAPON,
+    // còn lại lấy theo gearSlot. Tránh việc weapon có gearSlot = NONE nên không khớp element nào.
+    public GearSlotType EquipSlot
+    {
+        get { return kind == LootItemKind.Weapon ? GearSlotType.WEAPON : gearSlot; }
+    }
 
     // Chỉ số chính (vũ khí luôn là Damage).
     public GearMainStatKind mainStatKind;
