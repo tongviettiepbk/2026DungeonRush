@@ -3,7 +3,7 @@ using System.Collections.Generic;
 // Save "người chơi đang mặc món gì ở mỗi slot". Bước 1: CHỈ lưu định danh món mặc, CHƯA
 // tính/áp chỉ số (stats làm ở bước sau).
 //
-// Key dict = (int)EquipSlot dạng string để serialize JSON ổn định (như UserItemData).
+// Key dict = (int)GearSlotType dạng string để serialize JSON ổn định (như UserItemData).
 // Value = định danh món:
 //   - Weapon/Helmet/Gloves/Backpack: assetName (VD "Helmet_1_1")
 //   - Wing: wingId dạng string (WingData tra theo int)
@@ -18,7 +18,7 @@ public class UserEquipmentData : BaseUserData
     }
 
     // Mặc 1 món vào slot (ghi đè món cũ nếu có). id rỗng coi như cởi.
-    public void Equip(EquipSlot slot, string id)
+    public void Equip(GearSlotType slot, string id)
     {
         if (string.IsNullOrEmpty(id))
         {
@@ -33,7 +33,7 @@ public class UserEquipmentData : BaseUserData
     }
 
     // Cởi món ở slot.
-    public void Unequip(EquipSlot slot)
+    public void Unequip(GearSlotType slot)
     {
         if (equipped.Remove(Key(slot)))
         {
@@ -42,17 +42,17 @@ public class UserEquipmentData : BaseUserData
     }
 
     // Định danh món đang mặc ở slot (null nếu trống).
-    public string GetEquipped(EquipSlot slot)
+    public string GetEquipped(GearSlotType slot)
     {
         return equipped.TryGetValue(Key(slot), out string id) ? id : null;
     }
 
-    public bool IsEquipped(EquipSlot slot)
+    public bool IsEquipped(GearSlotType slot)
     {
         return string.IsNullOrEmpty(GetEquipped(slot)) == false;
     }
 
-    private static string Key(EquipSlot slot)
+    private static string Key(GearSlotType slot)
     {
         return ((int)slot).ToString();
     }

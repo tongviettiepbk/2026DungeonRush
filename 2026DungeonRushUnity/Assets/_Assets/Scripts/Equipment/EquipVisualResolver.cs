@@ -8,7 +8,7 @@ using UnityEngine;
 public static class EquipVisualResolver
 {
     // Sprite gắn lên người cho (slot, id). Trả null nếu không tra được (slot chưa hỗ trợ, id sai...).
-    public static Sprite GetBodySprite(EquipSlot slot, string id)
+    public static Sprite GetBodySprite(GearSlotType slot, string id)
     {
         if (string.IsNullOrEmpty(id) || GameData.staticData == null)
         {
@@ -17,23 +17,23 @@ public static class EquipVisualResolver
 
         switch (slot)
         {
-            case EquipSlot.Weapon:
+            case GearSlotType.WEAPON:
             {
                 if (GameData.staticData.weapons == null) return null;
                 WeaponData w = GameData.staticData.weapons.GetData(id);
                 return w != null ? (w.bodySprite != null ? w.bodySprite : w.icon) : null;
             }
 
-            case EquipSlot.Helmet:
-            case EquipSlot.Gloves:
-            case EquipSlot.Backpack:
+            case GearSlotType.HELMET:
+            case GearSlotType.GLOVES:
+            case GearSlotType.BACKPACK:
             {
                 if (GameData.staticData.gears == null) return null;
                 GearItemData g = GameData.staticData.gears.GetData(id);
                 return g != null ? (g.bodySprite != null ? g.bodySprite : g.icon) : null;
             }
 
-            case EquipSlot.Wing:
+            case GearSlotType.WING:
             {
                 if (GameData.staticData.wings != null && int.TryParse(id, out int wingId))
                 {

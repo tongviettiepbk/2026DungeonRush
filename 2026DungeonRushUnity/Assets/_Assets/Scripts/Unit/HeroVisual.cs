@@ -43,18 +43,18 @@ public class HeroVisual : MonoBehaviour
             return;
         }
 
-        WearEquipment(EquipSlot.Weapon, data.GetEquipped(EquipSlot.Weapon));
-        WearEquipment(EquipSlot.Helmet, data.GetEquipped(EquipSlot.Helmet));
-        WearEquipment(EquipSlot.Gloves, data.GetEquipped(EquipSlot.Gloves));
-        WearEquipment(EquipSlot.Backpack, data.GetEquipped(EquipSlot.Backpack));
-        WearEquipment(EquipSlot.Wing, data.GetEquipped(EquipSlot.Wing));
-        WearEquipment(EquipSlot.Cape, data.GetEquipped(EquipSlot.Cape));
+        WearEquipment(GearSlotType.WEAPON, data.GetEquipped(GearSlotType.WEAPON));
+        WearEquipment(GearSlotType.HELMET, data.GetEquipped(GearSlotType.HELMET));
+        WearEquipment(GearSlotType.GLOVES, data.GetEquipped(GearSlotType.GLOVES));
+        WearEquipment(GearSlotType.BACKPACK, data.GetEquipped(GearSlotType.BACKPACK));
+        WearEquipment(GearSlotType.WING, data.GetEquipped(GearSlotType.WING));
+        WearEquipment(GearSlotType.CAPE, data.GetEquipped(GearSlotType.CAPE));
     }
 
     // Mặc 1 slot. id rỗng = cởi (ẩn object, riêng găng thì trả sprite mặc định).
-    public void WearEquipment(EquipSlot slot, string id)
+    public void WearEquipment(GearSlotType slot, string id)
     {
-        if (slot == EquipSlot.Cape)
+        if (slot == GearSlotType.CAPE)
         {
             WearCape(id);
             return;
@@ -63,19 +63,19 @@ public class HeroVisual : MonoBehaviour
         Sprite sprite = EquipVisualResolver.GetBodySprite(slot, id);
         switch (slot)
         {
-            case EquipSlot.Weapon:
+            case GearSlotType.WEAPON:
                 ApplySlot(weapon, sprite);
                 break;
-            case EquipSlot.Helmet:
+            case GearSlotType.HELMET:
                 ApplySlot(helmet, sprite);
                 break;
-            case EquipSlot.Gloves:
+            case GearSlotType.GLOVES:
                 ApplyGloves(sprite);
                 break;
-            case EquipSlot.Backpack:
+            case GearSlotType.BACKPACK:
                 ApplySlot(backPack, sprite);
                 break;
-            case EquipSlot.Wing:
+            case GearSlotType.WING:
                 ApplySlot(wing1, sprite);
                 ApplySlot(wing2, sprite);
                 break;
@@ -177,19 +177,19 @@ public class HeroVisual : MonoBehaviour
             return;
         }
 
-        TestApplySprite(EquipSlot.Weapon, FirstWeaponId());
-        TestApplySprite(EquipSlot.Helmet, FirstGearId(GearSlotType.HELMET));
-        TestApplySprite(EquipSlot.Gloves, FirstGearId(GearSlotType.GLOVES));
-        TestApplySprite(EquipSlot.Backpack, FirstGearId(GearSlotType.BACKPACK));
-        TestApplySprite(EquipSlot.Wing, FirstWingId());
+        TestApplySprite(GearSlotType.WEAPON, FirstWeaponId());
+        TestApplySprite(GearSlotType.HELMET, FirstGearId(GearSlotType.HELMET));
+        TestApplySprite(GearSlotType.GLOVES, FirstGearId(GearSlotType.GLOVES));
+        TestApplySprite(GearSlotType.BACKPACK, FirstGearId(GearSlotType.BACKPACK));
+        TestApplySprite(GearSlotType.WING, FirstWingId());
 
         string capeId = FirstCapeId();
-        WearEquipment(EquipSlot.Cape, capeId);
+        WearEquipment(GearSlotType.CAPE, capeId);
         Debug.Log($"[HeroVisual] TEST Cape: capeId='{capeId}' (spine).");
     }
 
     // Áp hình test cho 1 slot sprite: ưu tiên art trong data, thiếu thì dùng debugSprite.
-    private void TestApplySprite(EquipSlot slot, string id)
+    private void TestApplySprite(GearSlotType slot, string id)
     {
         Sprite fromData = EquipVisualResolver.GetBodySprite(slot, id);
         Sprite s = fromData != null ? fromData : debugSprite;
@@ -198,24 +198,24 @@ public class HeroVisual : MonoBehaviour
                    : s != null ? "data CHƯA có art → dùng debugSprite"
                    : "data CHƯA có art & debugSprite TRỐNG → object sẽ ẩn"));
 
-        if (slot == EquipSlot.Gloves)
+        if (slot == GearSlotType.GLOVES)
         {
             ApplyGloves(s);
         }
-        else if (slot == EquipSlot.Wing)
+        else if (slot == GearSlotType.WING)
         {
             ApplySlot(wing1, s);
             ApplySlot(wing2, s);
         }
-        else if (slot == EquipSlot.Weapon)
+        else if (slot == GearSlotType.WEAPON)
         {
             ApplySlot(weapon, s);
         }
-        else if (slot == EquipSlot.Helmet)
+        else if (slot == GearSlotType.HELMET)
         {
             ApplySlot(helmet, s);
         }
-        else if (slot == EquipSlot.Backpack)
+        else if (slot == GearSlotType.BACKPACK)
         {
             ApplySlot(backPack, s);
         }
@@ -225,12 +225,12 @@ public class HeroVisual : MonoBehaviour
     [ContextMenu("TEST: Cởi hết")]
     public void TestUnwearAll()
     {
-        WearEquipment(EquipSlot.Weapon, null);
-        WearEquipment(EquipSlot.Helmet, null);
-        WearEquipment(EquipSlot.Gloves, null);
-        WearEquipment(EquipSlot.Backpack, null);
-        WearEquipment(EquipSlot.Wing, null);
-        WearEquipment(EquipSlot.Cape, null);
+        WearEquipment(GearSlotType.WEAPON, null);
+        WearEquipment(GearSlotType.HELMET, null);
+        WearEquipment(GearSlotType.GLOVES, null);
+        WearEquipment(GearSlotType.BACKPACK, null);
+        WearEquipment(GearSlotType.WING, null);
+        WearEquipment(GearSlotType.CAPE, null);
         Debug.Log("[HeroVisual] TEST: đã cởi hết.");
     }
 
