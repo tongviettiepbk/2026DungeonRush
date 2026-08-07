@@ -5,7 +5,7 @@ public class StaticValue
 {
     public const string SCENE_ROOT = "Root";
     public const string SCENE_LOGIN = "Login";
-    public const string SCENE_LOBBY = "Lobby";
+    public const string SCENE_MAINGAME = "MainGame";
 
     public const string SORTING_LAYER_UI = "UI";
 

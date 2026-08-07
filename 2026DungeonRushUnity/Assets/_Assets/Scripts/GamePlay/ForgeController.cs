@@ -9,11 +9,11 @@ using UnityEngine;
 //
 // CHƯA làm ở đây (cần model trang bị + UI + save đang thiếu trong project):
 //   sinh item đầy đủ (slot/level/substat), equip-vs-sell, auto-forge filter, cost/economy.
-public class ForgeController : MonoBehaviour
+public static class ForgeController
 {
     // Roll 1 bậc rarity theo Forge Level hiện tại.
     // forgeLevel được clamp trong [0, MaxForgeLevel] bởi StaticForgeData.
-    public Rarity RollRarity(int forgeLevel)
+    public static Rarity RollRarity(int forgeLevel)
     {
         List<float> probs = GameData.staticData.forge.GetProbabilities(forgeLevel);
 

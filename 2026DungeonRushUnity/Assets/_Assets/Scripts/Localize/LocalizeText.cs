@@ -21,7 +21,7 @@ public class LocalizeText : MonoBehaviour
 
     private void OnEnable()
     {
-        if (SceneManager.GetActiveScene().name == StaticValue.SCENE_LOBBY)
+        if (SceneManager.GetActiveScene().name == StaticValue.SCENE_MAINGAME)
         {
             EventDispatcher.Instance.RegisterListener(EventID.ChangeLanguage, OnChangeLanguage);
         }
@@ -33,7 +33,7 @@ public class LocalizeText : MonoBehaviour
     {
         try
         {
-            if (SceneManager.GetActiveScene().name == StaticValue.SCENE_LOBBY)
+            if (SceneManager.GetActiveScene().name == StaticValue.SCENE_MAINGAME)
             {
                 EventDispatcher.Instance.RemoveListener(EventID.ChangeLanguage, OnChangeLanguage);
             }

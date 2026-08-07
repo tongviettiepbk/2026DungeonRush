@@ -83,6 +83,9 @@ public class HeroVisual : MonoBehaviour
             return;
         }
 
+
+        DebugCustom.Log("wear:" + slot);
+
         Sprite sprite = EquipVisualResolver.GetBodySprite(slot, id);
         switch (slot)
         {
@@ -117,12 +120,17 @@ public class HeroVisual : MonoBehaviour
     {
         if (sr == null)
         {
+            DebugCustom.LogWarning("ApplySlot: SpriteRenderer is null.");
             return;
         }
 
         if (sprite != null)
         {
             sr.sprite = sprite;
+        }
+        else
+        {
+            DebugCustom.LogWarning($"ApplySlot: sprite is null for {sr.gameObject.name}. Object will be deactivated.");
         }
         sr.gameObject.SetActive(sprite != null);
     }

@@ -8,6 +8,11 @@ public class AudioManager : Singleton<AudioManager>
 
     [SerializeField] private AudioSource sfxSource;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void PlaySfx(AudioClip clip)
     {
         if (isMuteSfx || clip == null || sfxSource == null)

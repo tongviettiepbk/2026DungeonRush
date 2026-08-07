@@ -40,14 +40,27 @@ public class UIMainLobby : BaseUI
 
     }
 
-    // ---- LOOT: bấm Btn_Loot -> gọi LootService random 1 item (C1..C6), UI chỉ format & hiển thị ----
+    // ---- LOOT: bấm Btn_Loot -> tiêu 1 LOOT_TICKET -> LootService random 1 item theo forgeLevel
+    // (rarity roll từ ForgeData), UI chỉ format & hiển thị ----
 
     private void OnClickLoot()
     {
-        LootResult result = LootService.RollOne();
+        if (GameData.userData.items.IsEnough(ItemType.LOOT_TICKET, 1) == false)
+        {
+            UIManager.Instance.ShowNotice(
+                content: "Không đủ vé loot.",
+                isLocalizeContent: false,
+                popupType: PopupNoticeType.Yes,
+                title: "LOOT",
+                labelYes: "OK");
+            return;
+        }
+
+        LootResult result = LootService.RollOne(GameData.userData.campaign.forgeLevel);
         if (result == null)
             return; // LootService đã log lỗi cụ thể.
 
+        GameData.userData.items.Consume(ItemType.LOOT_TICKET, 1);
 
         for(int i = 0; i < listElementEquipment.Count; i++)
         {

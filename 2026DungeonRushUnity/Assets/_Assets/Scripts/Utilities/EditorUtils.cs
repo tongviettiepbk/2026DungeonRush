@@ -19,22 +19,10 @@ public class EditorUtils : MonoBehaviour
         OpenScene(StaticValue.SCENE_LOGIN);
     }
 
-    [MenuItem("Editor Utils/Open Scene/Lobby &3")]
-    public static void OpenSceneLobby()
+    [MenuItem("Editor Utils/Open Scene/MainGame &3")]
+    public static void OpenSceneMainGame()
     {
-        OpenScene(StaticValue.SCENE_LOBBY);
-    }
-
-    [MenuItem("Editor Utils/Open Scene/BattlePreview &4")]
-    public static void OpenSceneBattlePreview()
-    {
-        OpenScene("_BattlePreview");
-    }
-
-    [MenuItem("Editor Utils/Open Scene/MapPreview &5")]
-    public static void OpenSceneMapPreview()
-    {
-        OpenScene("_MapPreview");
+        OpenScene(StaticValue.SCENE_MAINGAME);
     }
 
     private static void OpenScene(string sceneName)

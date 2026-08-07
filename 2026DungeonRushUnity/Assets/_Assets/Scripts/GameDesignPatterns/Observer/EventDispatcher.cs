@@ -49,6 +49,7 @@ public class EventDispatcher : MonoBehaviour
         {
             // set instance
             s_instance = this as EventDispatcher;
+            DontDestroyOnLoad(gameObject);
         }
     }
 

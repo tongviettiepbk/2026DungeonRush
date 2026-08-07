@@ -13,8 +13,9 @@ public static class LootService
     // Bảng công thức chỉ số, cache 1 lần từ Resources (asset Gears/GearStatConfig).
     private static GearStatConfigData gearStatConfig;
 
-    // Random 1 item. Trả null nếu thiếu config hoặc cả 2 pool đều rỗng (đã log lỗi bên trong).
-    public static LootResult RollOne()
+    // Random 1 item đúng bậc rarity roll từ ForgeData (theo forgeLevel truyền vào, xem
+    // ForgeController.RollRarity). Trả null nếu thiếu config hoặc không còn asset nào để lấy.
+    public static LootResult RollOne(int forgeLevel)
     {
         // Đảm bảo data tĩnh đã nạp (gears + weapons pool + config công thức).
         if (GameData.staticData.gears == null || GameData.staticData.weapons == null)
@@ -43,19 +44,63 @@ public static class LootService
             }
         }
 
-        int gearCount = gearPool != null ? gearPool.Count : 0;
-        if (gearCount == 0 && weaponPool.Count == 0)
+        if ((gearPool == null || gearPool.Count == 0) && weaponPool.Count == 0)
         {
             DebugCustom.LogError("[Loot] Cả gear pool lẫn weapon pool đều rỗng.");
             return null;
         }
 
-        // Random đều tay trên toàn bộ (gear + vũ khí) để tỉ lệ ra vũ khí đúng theo số lượng asset.
-        bool lootWeapon = weaponPool.Count > 0 && (gearCount == 0 || Random.Range(0, gearCount + weaponPool.Count) >= gearCount);
+        // Roll rarity trước theo bảng ForgeData, rồi mới lọc pool theo đúng rarity đó.
+        Rarity rarity = ForgeController.RollRarity(forgeLevel);
+        List<GearItemData> gearMatches = FilterByRarity(gearPool, rarity);
+        List<WeaponData> weaponMatches = FilterByRarity(weaponPool, rarity);
+
+        // Rarity roll ra chưa có asset nào (thiếu content) -> lùi dần xuống rarity thấp hơn.
+        while (gearMatches.Count == 0 && weaponMatches.Count == 0 && rarity > Rarity.Common)
+        {
+            rarity--;
+            gearMatches = FilterByRarity(gearPool, rarity);
+            weaponMatches = FilterByRarity(weaponPool, rarity);
+        }
+
+        if (gearMatches.Count == 0 && weaponMatches.Count == 0)
+        {
+            DebugCustom.LogError("[Loot] Không có asset nào cho rarity đã roll.");
+            return null;
+        }
+
+        // Random đều tay trên tập đã lọc để tỉ lệ ra vũ khí đúng theo số lượng asset cùng rarity.
+        bool lootWeapon = weaponMatches.Count > 0 && (gearMatches.Count == 0 || Random.Range(0, gearMatches.Count + weaponMatches.Count) >= gearMatches.Count);
 
         return lootWeapon
-            ? BuildWeaponResult(weaponPool[Random.Range(0, weaponPool.Count)])
-            : BuildGearResult(gearPool[Random.Range(0, gearCount)]);
+            ? BuildWeaponResult(weaponMatches[Random.Range(0, weaponMatches.Count)])
+            : BuildGearResult(gearMatches[Random.Range(0, gearMatches.Count)]);
+    }
+
+    private static List<GearItemData> FilterByRarity(List<GearItemData> pool, Rarity rarity)
+    {
+        List<GearItemData> result = new List<GearItemData>();
+        if (pool == null) return result;
+
+        for (int i = 0; i < pool.Count; i++)
+        {
+            if (pool[i].rarity == rarity)
+                result.Add(pool[i]);
+        }
+        return result;
+    }
+
+    private static List<WeaponData> FilterByRarity(List<WeaponData> pool, Rarity rarity)
+    {
+        List<WeaponData> result = new List<WeaponData>();
+        if (pool == null) return result;
+
+        for (int i = 0; i < pool.Count; i++)
+        {
+            if (pool[i].rarity == rarity)
+                result.Add(pool[i]);
+        }
+        return result;
     }
 
     // Dựng LootResult cho 1 gear (C2..C6).

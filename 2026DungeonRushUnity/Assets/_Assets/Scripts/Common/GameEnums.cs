@@ -5,6 +5,7 @@ public enum ItemType
     GOLD = 1,
     GEM = 2,
     ENERGY = 3,
+    LOOT_TICKET = 4,
 }
 
 // Loại môi trường map. Giá trị = EnvironmentType trong MapConfig gốc của DungeonRush.
