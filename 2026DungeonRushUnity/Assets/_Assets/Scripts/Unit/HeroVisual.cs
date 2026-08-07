@@ -32,6 +32,29 @@ public class HeroVisual : MonoBehaviour
     private Sprite defaultHandRight;
     private bool defaultsCached;
 
+    private void OnEnable()
+    {
+        EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnEquipmentChanged);
+    }
+
+    private void OnDisable()
+    {
+        EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnEquipmentChanged);
+    }
+
+    // Người chơi đổi đồ (VD vừa loot ra) → mặc lại đúng slot đó từ save. param = GearSlotType.
+    private void OnEquipmentChanged(object param)
+    {
+        if (param is GearSlotType slot)
+        {
+            UserEquipmentData data = GameData.userData != null ? GameData.userData.equipment : null;
+            if (data != null)
+            {
+                WearEquipment(slot, data.GetEquipped(slot));
+            }
+        }
+    }
+
     // Dựng lại toàn bộ hình từ save. Gọi lúc Hero khởi tạo và sau khi người chơi đổi đồ.
     public void RefreshAll()
     {
@@ -78,6 +101,10 @@ public class HeroVisual : MonoBehaviour
             case GearSlotType.WING:
                 ApplySlot(wing1, sprite);
                 ApplySlot(wing2, sprite);
+                break;
+            case GearSlotType.RING:
+            case GearSlotType.NECKLACE:
+                // Nhẫn/Dây chuyền có mặc & cộng chỉ số nhưng KHÔNG có hình gắn lên người → bỏ qua.
                 break;
             default:
                 Debug.LogWarning($"Unsupported equip slot: {slot}");

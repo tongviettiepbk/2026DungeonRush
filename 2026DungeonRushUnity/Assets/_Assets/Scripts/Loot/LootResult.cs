@@ -20,6 +20,10 @@ public class LootResult
     // Icon inventory (lấy từ GearItemData.icon / WeaponData.icon) để UI gắn thẳng vào slot.
     public Sprite icon;
 
+    // Định danh món để MẶC (lưu vào UserEquipmentData + tra art gắn lên người). Gear/vũ khí đều
+    // là assetName. Loot không ra Wing/Cape nên không cần dạng id số.
+    public string equipId;
+
     // Chỉ dùng khi kind == Gear.
     public GearSlotType gearSlot;
 

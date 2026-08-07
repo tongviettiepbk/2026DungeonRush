@@ -57,6 +57,11 @@ public class UIMainLobby : BaseUI
             }
         }
 
+        // Ghép loot -> mặc đồ: lưu món vào save rồi báo Hero mặc lại đúng slot (live nếu hero
+        // đang trong scene; nếu không, hero sẽ đọc save khi spawn ở trận).
+        GameData.userData.equipment.Equip(result.EquipSlot, result.equipId);
+        this.PostEvent(EventID.EquipmentChanged, result.EquipSlot);
+
         UIManager.Instance.ShowNotice(
             content: BuildInfo(result),
             isLocalizeContent: false,
