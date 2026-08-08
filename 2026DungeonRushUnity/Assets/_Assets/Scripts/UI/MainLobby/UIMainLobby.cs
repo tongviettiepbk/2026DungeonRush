@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,10 +30,36 @@ public class UIMainLobby : BaseUI
     public Button btLoot;
     public Button btBoost;
 
+    [Space(20)]
+    public TMP_Text txtLootTicket;
+
     private void Start()
     {
         if (btLoot != null)
             btLoot.onClick.AddListener(OnClickLoot);
+
+        UpdateLootTicketText();
+    }
+
+    private void Update()
+    {
+
+#if UNITY_EDITOR
+        // add more loot ticket for test
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            GameData.userData.items.Receive(ItemType.LOOT_TICKET, 100);
+            UpdateLootTicketText();
+        }
+
+#endif
+
+    }
+
+    private void UpdateLootTicketText()
+    {
+        if (txtLootTicket != null)
+            txtLootTicket.text = GameData.userData.items.GetQuantityHave(ItemType.LOOT_TICKET).ToString("0");
     }
 
     private void ClickTooglePet()
@@ -61,10 +88,11 @@ public class UIMainLobby : BaseUI
             return; // LootService đã log lỗi cụ thể.
 
         GameData.userData.items.Consume(ItemType.LOOT_TICKET, 1);
+        UpdateLootTicketText();
 
-        for(int i = 0; i < listElementEquipment.Count; i++)
+        for (int i = 0; i < listElementEquipment.Count; i++)
         {
-            if(listElementEquipment[i].typeEquipment == result.EquipSlot)
+            if (listElementEquipment[i].typeEquipment == result.EquipSlot)
             {
                 listElementEquipment[i].SetLayout(result);
             }
