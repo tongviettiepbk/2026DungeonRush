@@ -23,6 +23,9 @@ public class BaseUserData
         {
             PlayerPrefs.SetString(GetDataKey(), JsonConvert.SerializeObject(this));
             isDataChanged = false;
+
+            DebugCustom.Log("save_" + GetDataKey());
+
             return true;
         }
         else
