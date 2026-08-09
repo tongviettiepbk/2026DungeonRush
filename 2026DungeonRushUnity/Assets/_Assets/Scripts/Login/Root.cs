@@ -25,6 +25,7 @@ public class Root : MonoBehaviour
         // Chạm .Instance để tạo sớm và persist qua Login -> MainGame.
         _ = EventDispatcher.Instance;
         _ = AudioManager.Instance;
+        _ = AutoSaveManager.Instance;
     }
 
     private void Start()
