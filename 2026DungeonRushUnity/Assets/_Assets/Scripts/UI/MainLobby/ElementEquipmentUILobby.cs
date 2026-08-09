@@ -10,13 +10,20 @@ public class ElementEquipmentUILobby : MonoBehaviour
     public TMP_Text txtLevelEquipment;
     public Image imgEquipment;
 
+    private LootResult dataGear;
+
+    private void Start()
+    {
+        btEquipment.onClick.AddListener(ClickBtInfoGear);
+    }
+
     // Gắn item vừa loot vào slot: icon + level. Null-guard từng ref vì prefab có thể chưa wire hết.
     public void SetLayout(LootResult result)
     {
+        this.dataGear = result;
+
         if (result == null)
             return;
-
-       
 
         if (imgEquipment != null)
         {
@@ -31,5 +38,17 @@ public class ElementEquipmentUILobby : MonoBehaviour
             txtLevel.text = levelText;
         if (txtLevelEquipment != null)
             txtLevelEquipment.text = levelText;
+    }
+
+    private void ClickBtInfoGear()
+    {
+        if (this.dataGear == null)
+        {
+            UIManager.Instance.ShowToastMessage("Chưa có trang bị", isLocalize: false);
+        }
+        else
+        {
+            UIManager.Instance.ShowGearInfo(this.dataGear);
+        }
     }
 }

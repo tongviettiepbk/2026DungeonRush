@@ -18,6 +18,8 @@ public class Login : MonoBehaviour
 
     private void Awake()
     {
+        GameData.Init();
+
         if (btTapToPlay != null)
         {
             btTapToPlay.onClick.AddListener(ClickBtTapToPlay);

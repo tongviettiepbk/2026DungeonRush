@@ -8,7 +8,7 @@ public class GameDataTester : MonoBehaviour
 {
     private void Awake()
     {
-        GameData.Init();
+        //GameData.Init();
 
         DebugCustom.Log("[Tester] isNewUser=" + GameData.userData.isNewUser);
         DebugCustom.Log("[Tester] Profile=" + JsonConvert.SerializeObject(GameData.userData.profile));

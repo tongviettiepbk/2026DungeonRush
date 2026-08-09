@@ -149,7 +149,7 @@ public class UIMainLobby : BaseUI
         return sb.ToString();
     }
 
-    private string SlotName(GearSlotType slot)
+    public static string SlotName(GearSlotType slot)
     {
         switch (slot)
         {
@@ -164,7 +164,7 @@ public class UIMainLobby : BaseUI
         }
     }
 
-    private string SubStatName(SubStatType type)
+    public static string SubStatName(SubStatType type)
     {
         switch (type)
         {
