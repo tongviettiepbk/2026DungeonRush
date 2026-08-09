@@ -26,7 +26,6 @@ public class UIManager : Singleton<UIManager>
     public PopupToastMessage toast;
     public Tooltips tooltips;
     public PopupWaiting waiting;
-    public UIGearInfo gearInfo;
     public GameObject shieldUI;
     public Image imgFade;
     public RectTransform groupScreenOverlayUI;
@@ -271,13 +270,6 @@ public class UIManager : Singleton<UIManager>
         ShowToastMessage(content, isLocalize: isLocalize);
     }
     #endregion.
-
-    #region Gear Info
-    public void ShowGearInfo(LootResult result)
-    {
-        gearInfo.Show(result);
-    }
-    #endregion
 
     #region Waiting
     public void ShowWaiting(bool isOn, bool isTimeOut = true)

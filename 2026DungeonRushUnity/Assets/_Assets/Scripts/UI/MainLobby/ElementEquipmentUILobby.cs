@@ -48,7 +48,9 @@ public class ElementEquipmentUILobby : MonoBehaviour
         }
         else
         {
-            UIManager.Instance.ShowGearInfo(this.dataGear);
+            UIGearInfo uiGearInfo = UIManager.Instance.LoadUI(UIKey.InfoGear) as UIGearInfo;
+            if (uiGearInfo != null)
+                uiGearInfo.Show(this.dataGear);
         }
     }
 }

@@ -2,5 +2,7 @@
 // theo feature (Gear/Relic/Hero/Shop/Event...). DungOnRush port dần — thêm key khi có màn tương ứng.
 public class UIKey
 {
+    public const string InfoGear = "UiInfoGer";
+
     // TODO(follow-stick): bổ sung key theo từng feature khi port UI màn hình.
 }

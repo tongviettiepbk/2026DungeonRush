@@ -356,7 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcbb5bf1fef7ae643bc80644307807c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  UI_PREFAB_PATH: UI/
+  UI_PREFAB_PATH: Prefabs/UI/
   notice: {fileID: 779264605611565255}
   toast: {fileID: 4633714404586416126}
   tooltips: {fileID: 9034113618868034719}
@@ -1278,6 +1278,9 @@ GameObject:
   - component: {fileID: 8312309870918601803}
   - component: {fileID: 4385863550409420380}
   - component: {fileID: 4756082628356100652}
+  - component: {fileID: 4854506647847056204}
+  - component: {fileID: 9067349152496113918}
+  - component: {fileID: 6783370435085754657}
   m_Layer: 0
   m_Name: BG
   m_TagString: Untagged
@@ -1343,6 +1346,46 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &4854506647847056204
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611811061051611270}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 29956557be01448b8c225cd4f1b2c451, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 29956557be01448b8c225cd4f1b2c451, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!225 &9067349152496113918
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611811061051611270}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &6783370435085754657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611811061051611270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb50ceccdef54d589b35b1583f10b1fa, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ToastMsgAnimation
 --- !u!1 &4620750959753243164
 GameObject:
   m_ObjectHideFlags: 0
