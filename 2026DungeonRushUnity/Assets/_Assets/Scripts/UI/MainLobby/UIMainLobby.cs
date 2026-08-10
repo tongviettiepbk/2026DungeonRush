@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -90,64 +89,37 @@ public class UIMainLobby : BaseUI
         GameData.userData.items.Consume(ItemType.LOOT_TICKET, 1);
         UpdateLootTicketText();
 
+        ElementEquipmentUILobby targetElement = null;
         for (int i = 0; i < listElementEquipment.Count; i++)
         {
             if (listElementEquipment[i].typeEquipment == result.EquipSlot)
             {
-                listElementEquipment[i].SetLayout(result);
+                targetElement = listElementEquipment[i];
+                break;
             }
         }
 
-        // Ghép loot -> mặc đồ: lưu món vào save rồi báo Hero mặc lại đúng slot (live nếu hero
-        // đang trong scene; nếu không, hero sẽ đọc save khi spawn ở trận).
-        GameData.userData.equipment.Equip(result.EquipSlot, result.equipId);
-        this.PostEvent(EventID.EquipmentChanged, result.EquipSlot);
+        LootResult oldResult = targetElement != null ? targetElement.GetDataGear() : null;
 
-        UIManager.Instance.ShowNotice(
-            content: BuildInfo(result),
-            isLocalizeContent: false,
-            popupType: PopupNoticeType.Yes,
-            textAnchor: TMPro.TextAlignmentOptions.TopLeft,
-            title: "LOOT",
-            labelYes: "OK");
+        UILootGearInfo uiLootGearInfo = UIManager.Instance.LoadUI(UIKey.LootGearInfo) as UILootGearInfo;
+        if (uiLootGearInfo != null)
+        {
+            uiLootGearInfo.Show(result, oldResult,
+                onEquip: () =>
+                {
+                    if (targetElement != null)
+                        targetElement.SetLayout(result);
+
+                    // Ghép loot -> mặc đồ: lưu món vào save rồi báo Hero mặc lại đúng slot (live nếu
+                    // hero đang trong scene; nếu không, hero sẽ đọc save khi spawn ở trận).
+                    GameData.userData.equipment.Equip(result.EquipSlot, result.equipId);
+                    this.PostEvent(EventID.EquipmentChanged, result.EquipSlot);
+                },
+                onSell: null);
+        }
     }
 
     #region Info gear
-
-    // Format chuỗi mô tả đầy đủ 1 item loot được (thuần hiển thị, không đụng logic).
-    private string BuildInfo(LootResult r)
-    {
-        string typeLabel = r.kind == LootItemKind.Weapon
-            ? "Vũ khí (" + (r.weaponType == WeaponType.Melee ? "Cận chiến" : "Bắn xa") + ")"
-            : SlotName(r.gearSlot);
-        string mainLabel = r.mainStatKind == GearMainStatKind.Health ? "Máu" : "Sát thương";
-
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine("Tên: " + r.displayName);
-        sb.AppendLine("Độ hiếm: " + r.rarity);
-        sb.AppendLine("Loại: " + typeLabel);
-        sb.AppendLine("Level: " + r.level);
-        sb.AppendLine();
-        sb.AppendLine("Chỉ số chính:");
-        sb.AppendLine("  " + mainLabel + ": " + r.mainStat.ToString("0.##"));
-
-        sb.AppendLine();
-        List<GearSubStat> subStats = r.subStats;
-        if (subStats.Count == 0)
-        {
-            sb.AppendLine("Chỉ số phụ: (không có)");
-        }
-        else
-        {
-            sb.AppendLine("Chỉ số phụ:");
-            for (int i = 0; i < subStats.Count; i++)
-            {
-                sb.AppendLine("  " + SubStatName(subStats[i].type) + ": +" + subStats[i].value.ToString("0.##") + "%");
-            }
-        }
-
-        return sb.ToString();
-    }
 
     public static string SlotName(GearSlotType slot)
     {

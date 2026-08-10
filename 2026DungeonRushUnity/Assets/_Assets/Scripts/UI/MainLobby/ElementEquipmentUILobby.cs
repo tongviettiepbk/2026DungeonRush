@@ -12,6 +12,12 @@ public class ElementEquipmentUILobby : MonoBehaviour
 
     private LootResult dataGear;
 
+    // Đồ đang mặc ở slot này (null nếu chưa được set layout trong phiên chơi này).
+    public LootResult GetDataGear()
+    {
+        return dataGear;
+    }
+
     private void Start()
     {
         btEquipment.onClick.AddListener(ClickBtInfoGear);
