@@ -1,0 +1,22 @@
+- [Nói tiếng Việt](user-language-vietnamese.md) — trao đổi với user bằng tiếng Việt; comment code cũng tiếng Việt
+- [Dung Rush config format](dungeonrush-config-format.md) — game dùng Unity ScriptableObject YAML, KHÔNG phải 2def binary; extractor ở DecodedData/extract.py
+- [DecodedData là reference bất biến](dungonrush-decodeddata-is-reference.md) — DecodedData/ giữ nguyên làm data gốc; KHÔNG sửa docs theo refactor code
+- [Google Drive/Sheets method](google-drive-sheets-method.md) — ghi sheet của user bằng Sheets API v4 + OAuth token có sẵn (KHÔNG browser/clipboard); bẫy classifier & cp1252
+- [AssetRipper export không có .meta](assetripper-export-no-meta.md) — khôi phục guid bằng UnityPy từ xapk; đã copy texture+FX vào _Assets
+- [Kiến trúc 2026StickIdle](stickidle-architecture.md) — idle RPG base: GameData static/user split, feature-folder, Firebase, UI prefix conventions
+- [CHỈ THỊ: DungeonRush follow StickIdle](dungonrush-follow-stickidle.md) — quy tắc cố định: phát triển DungeonRush bám sát kiến trúc StickIdle, 6 phần, từng bước lấy core base
+- [Rebuild DungOnRush progress](dungonrush-rebuild-progress.md) — 6 phần theo StickIdle; Data ✅; project 2026DungeonRushUnity; compile-check bằng dotnet
+- [Map grid background](dungonrush-map-grid-background.md) — nền map = grid procedural (Custom/GridShader viết lại cho URP) + material Inner/Outer, không phải bitmap; shader gốc rip bị dummy
+- [Map & spawn procedural](dungonrush-map-spawn-procedural.md) — KHÔNG có data toạ độ box/enemy; map sinh procedural (LevelGenerator seed 31577), enemy scale theo Tier+progression; doc ở MAP_AND_SPAWN_MODEL.md
+- [Cấu trúc Map/Mode hiện tại](dungonrush-map-mode-structure.md) — implementation: generator int[,] 0/1→MapController(Singleton, A*+move, Cols/Rows từ grid); MapConfig ĐÃ XÓA; BaseMode giữ state trận; doc ở MAP_MODE_STRUCTURE.md
+- [Quy ước toạ độ map: GỐC vs MỚI](dungonrush-map-coord-convention.md) — bảng đối chiếu old(col-major) ↔ new(row-major grid[row,col],gốc DƯỚI-trái tại PointStart,row đi LÊN); khác gốc chỉ ở index order; chốt 2026-07-30
+- [Thể loại: RPG action](dungonrush-genre-rpg-action.md) — DungeonRush là RPG ACTION, KHÔNG phải game rắn; battle loop snake đã bị revert, đừng dựng lại
+- [Di chuyển tự code A*](dungonrush-movement-custom-astar.md) — game gốc TỰ CODE A* trên grid, KHÔNG dùng Unity NavMesh; DLL Astar/NavMesh bundle nhưng gameplay không gọi
+- [MainMap gameplay spec](dungonrush-mainmap-gameplay-spec.md) — cách chơi: map 9x12+wall, 3 unit Hero/Enemy/Pet trên BaseUnit, AI từng loại; đối chiếu code (nhiều phần chưa làm)
+- [Hệ mặc đồ Hero](dungonrush-equipment-system.md) — bước 1 xong; slot enum GỘP về GearSlotType (WEAPON=8), UserEquipmentData + HeroVisual resolve node; Cape/stats/UI hoãn
+- [Nguồn chỉ số item mặc](dungonrush-item-stats-source.md) — buff item lấy từ SAVE (PlayerPrefs current_user) trên emulator, KHÔNG phải APK/Firebase; substat lưu sẵn, Health tính runtime; kèm enum SubStatType 0-12 + ItemType slot
+- [BLOCKER: BaseUnit rig mismatch](dungonrush-baseunit-rig-mismatch.md) — BaseUnit (StickIdle) đòi rig FlipPoints/health-bar KHÔNG khớp prefab thật (rig Soldier); chặn mọi verify combat/mode LIVE; 2 hướng A/B chờ user chọn
+- [Trạng thái data Gears](dungonrush-gears-data-status.md) — base stat per-slot ở GearStatConfig (KHÔNG per-item, user chốt), Weapons gộp vào Gears/, Cape/Wing nhúng riêng, substat roll reverse xong
+- [Reverse native il2cpp](dungonrush-reverse-native-il2cpp.md) — pipeline lấy THÂN HÀM (công thức) từ libil2cpp.so khi AssetRipper stub rỗng: xapk→Il2CppDumper→capstone disasm ARM64; đồ nghề đã chạy được
+- [Thiết kế Loot/Forge](dungonrush-loot-forge-design.md) — tỉ lệ rarity = ForgeData 100-level (đã có, chưa nối vào LootService); trigger = tiêu item quantityLoop, KHÔNG phải giết quái; chốt 2026-08-07
+- [Đồng bộ bộ nhớ 2 nơi](sync-memory-two-locations.md) — ghi/sửa memory làm ở CẢ 2 nơi (gốc + zMemory\); đầu phiên phải check lệch & nạp lại; không tự git push
