@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 0e211f56-ee06-4373-a11a-8dcaaa638111
-  modified: 2026-08-23T10:40:23.963Z
+  modified: 2026-08-23T10:42:59.701Z
 ---
 
 Mỗi khi ghi mới hoặc cập nhật một file memory nào cho project DungOnRush, phải ghi đồng thời ở CẢ HAI nơi (nội dung giống hệt nhau):
@@ -29,3 +29,5 @@ Vì user đổi qua lại giữa 2 máy (nhà/công ty), đầu mỗi phiên là
 5. Không tự ý `git add/commit/push` thư mục zMemory — chỉ nhắc user commit/push khi có thay đổi, vì đó là hành động cần xác nhận (đẩy lên remote).
 
 Không cần làm bước này nếu phiên làm việc chỉ hỏi đáp ngắn, không đụng tới code/memory — chỉ áp dụng khi bắt đầu một phiên làm việc thực sự (task đầu tiên có ý nghĩa trong phiên).
+
+**Tần suất:** Chỉ chạy check này TỐI ĐA 1 LẦN MỖI NGÀY (theo ngày dương lịch hiện tại), hoặc khi user chủ động yêu cầu (vd: "check/nạp lại bộ nhớ"). Nếu trong ngày đã check rồi (dù ở phiên trước đó), không cần check lại ở các phiên sau trong cùng ngày trừ khi user yêu cầu.
