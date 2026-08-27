@@ -159,5 +159,29 @@ public class UIMainLobby : BaseUI
 
     #endregion
 
+    #region Load all Info Gear current
+    public void Refresh()
+    {
+        ReloadInfoGear();
+    }
 
+    private void ReloadInfoGear()
+    {
+        // Mở lobby: đọc save "đang mặc gì ở mỗi slot" rồi dựng lại LootResult cho từng ô trang bị.
+        // Slot trống -> SetLayout(null) để ô về trạng thái chưa có đồ.
+        if (listElementEquipment == null)
+            return;
+
+        for (int i = 0; i < listElementEquipment.Count; i++)
+        {
+            ElementEquipmentUILobby element = listElementEquipment[i];
+            if (element == null)
+                continue;
+
+            string equipId = GameData.userData.equipment.GetEquipped(element.typeEquipment);
+            LootResult result = LootService.BuildFromEquipId(element.typeEquipment, equipId);
+            element.SetLayout(result);
+        }
+    }
+    #endregion
 }

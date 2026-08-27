@@ -36,6 +36,11 @@ public class UserData
     {
         isNewUser = false;
 
+        // Load tạo lại các object module mới -> phải reset listData để ValidateData()
+        // build lại danh sách trỏ đúng object hiện hành. Nếu không, Save() sẽ ghi các
+        // object CŨ từ lần load trước, khiến mọi thay đổi (equip, gold...) không được lưu.
+        listData = null;
+
         // Profile load riêng vì cần đánh dấu isNewUser + đặt tên mới
         profile = LoadModule<UserProfileData>(DATA_KEY_PROFILE, out bool isFirstTime);
         if (isFirstTime)

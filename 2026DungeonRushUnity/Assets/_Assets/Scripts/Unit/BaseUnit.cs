@@ -42,6 +42,12 @@ public class BaseUnit : MonoBehaviour
     private int movePathIndex;
     private Vector2Int movePathGoalCell = new Vector2Int(int.MinValue, int.MinValue);
 
+    // Tìm mục tiêu (quét toàn bộ unit + cấp list) tốn kém nếu chạy mỗi frame cho từng unit -> giật.
+    // Giới hạn ~0.2s/lần, giữ target cũ giữa các nhịp; nextFindTargetTime lệch pha mỗi unit (Renew)
+    // để các unit không cùng quét trong 1 frame (tránh spike định kỳ).
+    private const float FIND_TARGET_INTERVAL = 0.2f;
+    private float nextFindTargetTime;
+
     // Chỉ số gốc (server/scale set vào khi spawn) — CalculateCurrentStats đổ sang stats runtime.
     protected BaseStats baseStats = new BaseStats();
 
@@ -247,6 +253,9 @@ public class BaseUnit : MonoBehaviour
 
     protected virtual void Renew()
     {
+        // Lệch pha thời điểm quét mục tiêu để các unit không dồn quét vào cùng 1 frame.
+        nextFindTargetTime = Time.time + Random.value * FIND_TARGET_INTERVAL;
+
         ResetControllers();
         hp = stats.maxHp;
         //rigid.DOKill();
@@ -1638,6 +1647,13 @@ public class BaseUnit : MonoBehaviour
 
     public virtual void FindNextTarget()
     {
+        // Throttle: chỉ quét lại mục tiêu mỗi FIND_TARGET_INTERVAL, giữ target hiện tại giữa các nhịp.
+        if (Time.time < nextFindTargetTime)
+        {
+            return;
+        }
+        nextFindTargetTime = Time.time + FIND_TARGET_INTERVAL;
+
         FindNearestTarget();
     }
 

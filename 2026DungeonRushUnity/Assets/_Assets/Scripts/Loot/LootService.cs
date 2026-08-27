@@ -17,18 +17,8 @@ public static class LootService
     // ForgeController.RollRarity). Trả null nếu thiếu config hoặc không còn asset nào để lấy.
     public static LootResult RollOne(int forgeLevel)
     {
-        // Đảm bảo data tĩnh đã nạp (gears + weapons pool + config công thức).
-        if (GameData.staticData.gears == null || GameData.staticData.weapons == null)
-            GameData.staticData.Load();
-
-        if (gearStatConfig == null)
-            gearStatConfig = Resources.Load<GearStatConfigData>("Scriptable Objects/Gears/GearStatConfig");
-
-        if (gearStatConfig == null)
-        {
-            DebugCustom.LogError("[Loot] Thiếu GearStatConfig.");
+        if (EnsureStaticLoaded() == false)
             return null;
-        }
 
         List<GearItemData> gearPool = GameData.staticData.gears.all;
 
@@ -141,6 +131,79 @@ public static class LootService
             mainStatKind = GearMainStatKind.Damage,
             mainStat = mainStat,
             subStats = GearStatCalculator.RollSubStats(gearStatConfig, weapon.rarity),
+        };
+    }
+
+    // Nạp data tĩnh (gears + weapons pool) và config công thức. false nếu thiếu config.
+    private static bool EnsureStaticLoaded()
+    {
+        if (GameData.staticData.gears == null || GameData.staticData.weapons == null)
+            GameData.staticData.Load();
+
+        if (gearStatConfig == null)
+            gearStatConfig = Resources.Load<GearStatConfigData>("Scriptable Objects/Gears/GearStatConfig");
+
+        if (gearStatConfig == null)
+        {
+            DebugCustom.LogError("[Loot] Thiếu GearStatConfig.");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Dựng lại LootResult của món ĐANG MẶC từ save (UserEquipmentData chỉ lưu equipId). Dùng cho
+    // UI lobby hiển thị lại trang bị hiện tại khi mở màn. Chỉ số chính tính deterministic theo
+    // (slot, rarity, level); chỉ số phụ KHÔNG khôi phục được (save bước này chưa lưu roll) -> để rỗng.
+    // Trả null nếu equipId rỗng hoặc không tra được asset (VD slot Wing/Cape chưa nằm trong pool loot).
+    public static LootResult BuildFromEquipId(GearSlotType slot, string equipId)
+    {
+        if (string.IsNullOrEmpty(equipId))
+            return null;
+
+        if (EnsureStaticLoaded() == false)
+            return null;
+
+        if (slot == GearSlotType.WEAPON)
+        {
+            WeaponData weapon = GameData.staticData.weapons.GetData(equipId);
+            if (weapon == null)
+                return null;
+
+            double mainStat = GearStatCalculator.GetWeaponMainStat(gearStatConfig, weapon.weaponType, weapon.rarity, LOOT_LEVEL);
+            return new LootResult
+            {
+                kind = LootItemKind.Weapon,
+                displayName = weapon.displayName,
+                rarity = weapon.rarity,
+                level = LOOT_LEVEL,
+                icon = weapon.icon,
+                equipId = weapon.assetName,
+                weaponType = weapon.weaponType,
+                mainStatKind = GearMainStatKind.Damage,
+                mainStat = mainStat,
+                subStats = new List<GearSubStat>(),
+            };
+        }
+
+        GearItemData gear = GameData.staticData.gears.GetData(equipId);
+        if (gear == null)
+            return null;
+
+        GearMainStatKind mainKind;
+        double gearMainStat = GearStatCalculator.GetGearMainStat(gearStatConfig, gear.slot, gear.rarity, LOOT_LEVEL, out mainKind);
+        return new LootResult
+        {
+            kind = LootItemKind.Gear,
+            displayName = gear.displayName,
+            rarity = gear.rarity,
+            level = LOOT_LEVEL,
+            icon = gear.icon,
+            equipId = gear.assetName,
+            gearSlot = gear.slot,
+            mainStatKind = mainKind,
+            mainStat = gearMainStat,
+            subStats = new List<GearSubStat>(),
         };
     }
 }

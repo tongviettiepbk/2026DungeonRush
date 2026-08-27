@@ -7,6 +7,7 @@ using UnityEngine;
 public class GameController : Singleton<GameController>
 {
     public float gameSpeed = 1f;
+    public UIMainLobby uiLobby;
 
     public ModeType modeType;
     // Mode đang chơi (BaseMode giữ luôn state trận: isPause + teamA/teamB). Do chính mode
@@ -15,6 +16,8 @@ public class GameController : Singleton<GameController>
 
     // battleId -> unit đang hoạt động trong trận.
     public Dictionary<int, BaseUnit> activeUnits { get; private set; } = new Dictionary<int, BaseUnit>();
+
+
 
     // Cấp battleId duy nhất cho từng unit khi vào trận.
     private int battleIdCounter;
@@ -37,6 +40,7 @@ public class GameController : Singleton<GameController>
     public void InitGame()
     {
         mode.Init(this, modeType);
+        uiLobby.Refresh();
     }
 
     public int NextBattleId()
@@ -135,9 +139,16 @@ public class GameController : Singleton<GameController>
         return null;
     }
 
+    // Buffer tái sử dụng cho GetAliveUnits, tách theo team để 1 unit có thể lấy đồng thời
+    // list đồng minh (team mình) và list kẻ địch (team kia) mà không đè lên nhau.
+    // Hàm này bị gọi mỗi frame cho từng unit khi tìm mục tiêu -> tránh new List() gây rác GC.
+    private readonly List<BaseUnit> aliveTeamABuffer = new List<BaseUnit>();
+    private readonly List<BaseUnit> aliveTeamBBuffer = new List<BaseUnit>();
+
     public List<BaseUnit> GetAliveUnits(bool isTeamA)
     {
-        List<BaseUnit> result = new List<BaseUnit>();
+        List<BaseUnit> result = isTeamA ? aliveTeamABuffer : aliveTeamBBuffer;
+        result.Clear();
         var e = activeUnits.GetEnumerator();
         while (e.MoveNext())
         {
