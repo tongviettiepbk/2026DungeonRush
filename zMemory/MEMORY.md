@@ -20,3 +20,4 @@
 - [Reverse native il2cpp](dungonrush-reverse-native-il2cpp.md) — pipeline lấy THÂN HÀM (công thức) từ libil2cpp.so khi AssetRipper stub rỗng: xapk→Il2CppDumper→capstone disasm ARM64; đồ nghề đã chạy được
 - [Thiết kế Loot/Forge](dungonrush-loot-forge-design.md) — tỉ lệ rarity = ForgeData 100-level (đã có, chưa nối vào LootService); trigger = tiêu item quantityLoop, KHÔNG phải giết quái; chốt 2026-08-07
 - [Đồng bộ bộ nhớ 2 nơi](sync-memory-two-locations.md) — ghi/sửa memory làm ở CẢ 2 nơi (gốc + zMemory\); đầu phiên phải check lệch & nạp lại; không tự git push
+- [Hệ bullet/projectile](dungonrush-bullet-system.md) — code port StickIdle xong (compile sạch); prefab+FX đã import; 30 prefab còn missing-script chờ wiring

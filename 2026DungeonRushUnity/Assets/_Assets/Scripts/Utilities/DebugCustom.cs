@@ -74,6 +74,23 @@ public class DebugCustom
         }
     }
 
+    // Log gắn tiền tố dễ lọc — port từ StickIdle (dùng nhiều trong hệ đạn/skill).
+    public static void ShowLog(object content)
+    {
+        if (IsEnableLog())
+        {
+            Debug.Log("__####___" + content);
+        }
+    }
+
+    public static void ShowLog(object content, object content2)
+    {
+        if (IsEnableLog())
+        {
+            Debug.Log("__####___" + content + "__" + content2);
+        }
+    }
+
     public static void LogWarning(object content)
     {
         if (IsEnableLog())

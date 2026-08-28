@@ -105,4 +105,14 @@ public static class Extensions
         return result;
     }
     #endregion
+
+    #region Transform
+    // Quay trục UP (Y) của transform về phía một điểm — dùng cho đạn hướng đầu về mục tiêu. Port từ StickIdle.
+    public static void FaceUpAxisToPoint(this Transform transform, Vector3 endPoint)
+    {
+        Vector3 dir = (endPoint - transform.position).normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
+    }
+    #endregion
 }
