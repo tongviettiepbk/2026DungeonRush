@@ -284,7 +284,11 @@ public class HeroVisual : MonoBehaviour
     {
         if (GameData.staticData.gears == null) return null;
         var list = GameData.staticData.gears.GetBySlot(slot);
-        return list.Count > 0 ? list[0].assetName : null;
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i].isMonsterGear == false) return list[i].assetName;
+        }
+        return null;
     }
 
     private static string FirstWingId()

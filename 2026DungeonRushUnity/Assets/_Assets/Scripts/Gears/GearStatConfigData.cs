@@ -21,6 +21,20 @@ public class GearStatConfigData : ScriptableObject
     public float weaponBaseMelee = 9f;       // ItemStatBaseMeleeWeapon
     public float weaponBaseRange = 7f;       // ItemStatBaseRangedWeapon
 
+    // Chỉ số NỀN của hero (có sẵn dù CHƯA mặc đồ) — trích từ GameResources.PlayerBase* (libil2cpp v41).
+    // Chỉ số cuối = PlayerBase(nền) + Σ(main stat món đang mặc); slot trống góp 0.
+    // Hero trần (chưa đồ): Damage = 6+4+0 = 10 ; Health = 30+20+0 = 50 (khớp in-game).
+    [Header("Chỉ số nền hero (PlayerBase* — không cần đồ)")]
+    public float playerBaseWeaponDamage = 6f;    // PlayerBaseWeaponDamage
+    public float playerBaseGlovesDamage = 4f;    // PlayerBaseGlovesDamage
+    public float playerBaseRingDamage = 0f;      // PlayerBaseRingDamage
+    public float playerBaseHelmetHealth = 30f;   // PlayerBaseHelmetHealth
+    public float playerBaseBackpackHealth = 20f; // PlayerBaseBackpackHealth
+    public float playerBaseNecklaceHealth = 0f;  // PlayerBaseNecklaceHealth
+    public float playerBaseAttackSpeed = 1f;     // PlayerBaseAttackSpeed
+    public float playerBaseMoveSpeed = 2f;       // PlayerBaseMoveSpeed
+    public float playerBaseAttackDistance = 1.5f;// PlayerBaseAttackDistance
+
     [Header("Base 5 slot trang bị (C2..C6)")]
     public List<GearBaseStatEntry> gearBaseStats = new List<GearBaseStatEntry>
     {
@@ -61,6 +75,20 @@ public class GearStatConfigData : ScriptableObject
     };
 
     // ---- Lookup ----
+
+    // Chỉ số NỀN hero khi CHƯA mặc đồ (gộp 3 nguồn Damage → attack, 3 nguồn Health → maxHp).
+    // Mặc đồ vào sẽ cộng thêm main stat mỗi món (làm ở bước hệ trang bị đầy đủ).
+    public BaseStats GetPlayerBaseStats()
+    {
+        return new BaseStats
+        {
+            attack = playerBaseWeaponDamage + playerBaseGlovesDamage + playerBaseRingDamage,
+            maxHp = playerBaseHelmetHealth + playerBaseBackpackHealth + playerBaseNecklaceHealth,
+            attackPerSecond = playerBaseAttackSpeed,
+            attackRange = playerBaseAttackDistance,
+            moveSpeed = playerBaseMoveSpeed,
+        };
+    }
 
     public GearBaseStatEntry GetGearBase(GearSlotType slot)
     {

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: ab283ab1-bd0b-430e-a508-37718fbf9cc1
-  modified: 2026-08-07T04:03:59.678Z
+  modified: 2026-09-01T07:39:44.821Z
 ---
 
 User chốt (2026-08-07), 4 điểm về hệ thống Loot:
@@ -35,3 +35,9 @@ User chốt (2026-08-07), 4 điểm về hệ thống Loot:
 - `LootService.RollOne(int forgeLevel)` — đổi chữ ký (trước là không tham số), giờ roll rarity trước bằng `ForgeController.RollRarity(forgeLevel)` rồi lọc gearPool/weaponPool theo đúng rarity đó mới random item; có fallback lùi dần rarity nếu thiếu asset ở bậc đó.
 - `UIMainLobby.OnClickLoot()` — check `UserItemData.IsEnough(LOOT_TICKET, 1)` trước khi roll, `Consume` sau khi roll thành công. Build qua `dotnet build Assembly-CSharp.csproj` sạch, 0 lỗi.
 - Điểm 3 (mô tả sau) và điểm 4 (UI/hình ảnh) CHƯA làm, chờ user.
+
+**Cập nhật 2026-09-01 — tách đồ enemy khỏi loot:**
+- Vấn đề phát hiện: `LootService.RollOne` chỉ lọc weapon (`isMonsterWeapon`), KHÔNG lọc gear → đồ quái (Cultist/Dragon/Ogre/Witch/Lych/Zombie Glove+Helmet) rơi được cho hero.
+- User chốt cách xử lý: **tách vật lý** đồ enemy sang thư mục riêng `Resources/Scriptable Objects/GearsEnemy/{Gloves,Helmets,Weapons}` (41 asset: 14 glove + 14 helmet + 13 weapon), **KHÔNG nạp** vào runtime. `Resources.LoadAll("Scriptable Objects/Gears")` / `".../Gears/Weapons"` chỉ nạp path `Gears` nên đồ enemy tự động ngoài pool → không loot được. `Gears/` giờ chỉ còn đồ HERO (Gloves 40, Helmets 40, Necklaces 30, Rings 30, Weapons 59). GearStatConfig/ForgeData vẫn ở `Gears/`.
+- Đồ enemy hiện là **data độc lập** (không prefab/scene nào ref guid; chỉ hero mới GetData) nên tách an toàn, không vỡ gì. Nếu sau này visual quái cần dùng → phải thêm loader riêng cho GearsEnemy.
+- Vẫn GIỮ cờ `GearItemData.isMonsterGear` + filter ở `StaticGearItemData`/`LootService`/`HeroVisual.FirstGearId` làm **lưới an toàn** (phòng đặt nhầm asset enemy dưới Gears), dù giờ là no-op vì đồ enemy không còn được nạp. 28 asset gear enemy đã gắn `isMonsterGear: 1`. Có thể gỡ nếu muốn tối giản. Xem [[dungonrush-gear-icon-extract]].

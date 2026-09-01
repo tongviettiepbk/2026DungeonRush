@@ -20,7 +20,17 @@ public static class LootService
         if (EnsureStaticLoaded() == false)
             return null;
 
-        List<GearItemData> gearPool = GameData.staticData.gears.all;
+        // Gear rơi cho người chơi: loại bỏ trang bị quái/boss (giống filter vũ khí bên dưới).
+        List<GearItemData> gearPool = new List<GearItemData>();
+        List<GearItemData> allGears = GameData.staticData.gears.all;
+        if (allGears != null)
+        {
+            for (int i = 0; i < allGears.Count; i++)
+            {
+                if (allGears[i].isMonsterGear == false)
+                    gearPool.Add(allGears[i]);
+            }
+        }
 
         // Vũ khí rơi cho người chơi: loại bỏ vũ khí quái/boss.
         List<WeaponData> weaponPool = new List<WeaponData>();

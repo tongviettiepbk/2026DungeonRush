@@ -28,6 +28,10 @@ public class StaticGearItemData
                 bySlot[g.slot] = new List<GearItemData>();
             bySlot[g.slot].Add(g);
 
+            // Pool random rơi đồ chỉ gồm đồ hero — bỏ trang bị quái/boss (bySlot/all giữ đủ
+            // để EquipVisualResolver còn tra được visual đồ enemy theo assetName).
+            if (g.isMonsterGear) continue;
+
             if (poolBySlotRarity.ContainsKey(g.slot) == false)
                 poolBySlotRarity[g.slot] = new Dictionary<Rarity, List<GearItemData>>();
             if (poolBySlotRarity[g.slot].ContainsKey(g.rarity) == false)

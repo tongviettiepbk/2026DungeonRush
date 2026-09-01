@@ -40,12 +40,8 @@ public class BaseMode : MonoBehaviour
     public GameObject petPrefab;
     public GameObject enemyPrefab;
 
-    [Header("Chỉ số Hero (placeholder — sau lấy từ gear/companion)")]
-    public float heroMaxHp = 1000f;
-    public float heroAttack = 50f;
-    public float heroAttackSpeed = 1.2f;
-    public float heroAttackRange = 1.4f;
-    public float heroMoveSpeed = 3f;
+    // Chỉ số Hero giờ lấy từ tầng nền PlayerBase* trong GearStatConfig (xem CampaignMode.BuildHeroStats),
+    // không còn placeholder ở đây.
 
     [Header("Pet")]
     public int petCount = 1;

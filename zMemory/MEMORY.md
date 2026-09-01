@@ -15,9 +15,11 @@
 - [MainMap gameplay spec](dungonrush-mainmap-gameplay-spec.md) — cách chơi: map 9x12+wall, 3 unit Hero/Enemy/Pet trên BaseUnit, AI từng loại; đối chiếu code (nhiều phần chưa làm)
 - [Hệ mặc đồ Hero](dungonrush-equipment-system.md) — bước 1 xong; slot enum GỘP về GearSlotType (WEAPON=8), UserEquipmentData + HeroVisual resolve node; Cape/stats/UI hoãn
 - [Nguồn chỉ số item mặc](dungonrush-item-stats-source.md) — buff item lấy từ SAVE (PlayerPrefs current_user) trên emulator, KHÔNG phải APK/Firebase; substat lưu sẵn, Health tính runtime; kèm enum SubStatType 0-12 + ItemType slot
-- [BLOCKER: BaseUnit rig mismatch](dungonrush-baseunit-rig-mismatch.md) — BaseUnit (StickIdle) đòi rig FlipPoints/health-bar KHÔNG khớp prefab thật (rig Soldier); chặn mọi verify combat/mode LIVE; 2 hướng A/B chờ user chọn
+- [BaseUnit rig: HP bar/damage XONG](dungonrush-baseunit-rig-mismatch.md) — rig Soldier thiếu FlipPoints/health-bar; HP bar + show damage + FlipPoints ĐÃ làm (chọn hướng A runtime) & BAKE health-bar vào prefab Hero/Enemy (2026-09-01); còn lại Spine anim/rig thật + Pet chưa bake
 - [Trạng thái data Gears](dungonrush-gears-data-status.md) — base stat per-slot ở GearStatConfig (KHÔNG per-item, user chốt), Weapons gộp vào Gears/, Cape/Wing nhúng riêng, substat roll reverse xong
 - [Reverse native il2cpp](dungonrush-reverse-native-il2cpp.md) — pipeline lấy THÂN HÀM (công thức) từ libil2cpp.so khi AssetRipper stub rỗng: xapk→Il2CppDumper→capstone disasm ARM64; đồ nghề đã chạy được
 - [Thiết kế Loot/Forge](dungonrush-loot-forge-design.md) — tỉ lệ rarity = ForgeData 100-level (đã có, chưa nối vào LootService); trigger = tiêu item quantityLoop, KHÔNG phải giết quái; chốt 2026-08-07
 - [Đồng bộ bộ nhớ 2 nơi](sync-memory-two-locations.md) — ghi/sửa memory làm ở CẢ 2 nơi (gốc + zMemory\); đầu phiên phải check lệch & nạp lại; không tự git push
 - [Hệ bullet/projectile](dungonrush-bullet-system.md) — code port StickIdle xong (compile sạch); prefab+FX đã import; 30 prefab còn missing-script chờ wiring
+- [Trích icon gear thiếu](dungonrush-gear-icon-extract.md) — item SO ở sharedassets0 (split), typetree strip → parse raw MB lấy Icon PPtr; mapping enemy gloves (Dragon=wing)
+- [Chỉ số nền hero](dungonrush-hero-base-stats.md) — mới vào chưa đồ = Damage 10/HP 50 (PlayerBase* GameResources native); ĐÃ wire vào GearStatConfig+CampaignMode, MoveSpeed gốc=2.0

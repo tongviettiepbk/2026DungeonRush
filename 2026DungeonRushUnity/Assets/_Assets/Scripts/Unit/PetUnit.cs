@@ -11,6 +11,15 @@ public class PetUnit : BaseUnit
     public float followDistance = 1.5f;  // khoảng cách đứng cạnh hero
     public float followSlack = 0.4f;     // vùng đệm để khỏi rung khi đã đủ gần
 
+    [Tooltip("Vũ khí của pet (cận chiến/bắn xa + tầm đánh). Trống = cận chiến tay không.")]
+    [SerializeField] private WeaponData weaponData;
+
+    // Pet dùng vũ khí gán sẵn trên prefab cho basic attack (melee/ranged).
+    protected override WeaponData GetCombatWeapon()
+    {
+        return weaponData;
+    }
+
     // Chọn enemy gần nhất trong engageRange tính từ vị trí HERO (giữ pet quanh hero).
     protected override void FindNearestTarget()
     {

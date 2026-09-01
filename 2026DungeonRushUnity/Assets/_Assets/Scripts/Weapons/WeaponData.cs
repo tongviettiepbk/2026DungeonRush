@@ -23,7 +23,8 @@ public class WeaponData : ScriptableObject
     public float attackSpeed = 1f;      // Nhịp đánh (config gốc đều = 1).
     public float attackDistance = 1.5f; // Tầm đánh (ô): melee 1.5, ranged 3.5, boss ~100.
     public float projectileSpeed;       // Tốc độ đạn; 0 nếu không có projectile.
-    public bool hasProjectile;
+    public bool hasProjectile;          // true = bắn xa (nhả bullet); false = cận chiến (đánh thẳng).
+    public BaseBullet bulletPrefab;     // Prefab đạn khi hasProjectile = true (Melee để trống).
 
     [Header("Nguồn")]
     public bool isMonsterWeapon;        // true = vũ khí quái/boss, không rơi cho người chơi.

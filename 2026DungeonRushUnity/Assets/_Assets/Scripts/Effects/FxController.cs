@@ -41,6 +41,13 @@ public class FxController : Singleton<FxController>
     {
         DontDestroyOnLoad(this);
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        // FxController là Singleton tạo runtime (không có scene gán prefab) -> tự nạp prefab
+        // text damage từ Resources nếu chưa gán trên Inspector.
+        if (prefabTextDamage == null)
+        {
+            prefabTextDamage = Resources.Load<CombatText>("Prefabs/combat-text");
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

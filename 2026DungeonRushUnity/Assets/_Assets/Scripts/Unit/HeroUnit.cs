@@ -31,4 +31,24 @@ public class HeroUnit : BaseUnit
     {
         target = FindNearestEnemyAmong(GetAliveEnemies());
     }
+
+    // Combat theo vũ khí ĐANG MẶC (từ save). Vũ khí quyết định tầm đánh & có đạn hay không —
+    // Hero không tự quyết tầm đánh. Damage vẫn tính chung từ stats (server-driven).
+    protected override WeaponData GetCombatWeapon()
+    {
+        return ResolveEquippedWeapon();
+    }
+
+    // Vũ khí ở slot WEAPON (từ save) → WeaponData tĩnh. Null nếu chưa mặc / không tra được.
+    private WeaponData ResolveEquippedWeapon()
+    {
+        UserEquipmentData equip = GameData.userData != null ? GameData.userData.equipment : null;
+        if (equip == null || GameData.staticData == null || GameData.staticData.weapons == null)
+        {
+            return null;
+        }
+
+        string id = equip.GetEquipped(GearSlotType.WEAPON);
+        return string.IsNullOrEmpty(id) ? null : GameData.staticData.weapons.GetData(id);
+    }
 }

@@ -7,7 +7,9 @@ using UnityEngine;
 public class StatUtils
 {
     public const float DEFAULT_HERO_ATTACK_SPEED = 0f;
-    public const float DEFAULT_MOVEMENT_SPEED = 2.5f;
+    // Gốc DungeonRush: PlayerBaseMoveSpeed = 2.0 (GameResources native). (Trước là 2.5 kế thừa StickIdle.)
+    // LƯU Ý: CalculateMovementSpeed bên dưới còn nhân ×2 kiểu StickIdle — cần rà lại khi wire path modifier.
+    public const float DEFAULT_MOVEMENT_SPEED = 2.0f;
     public const float DEFAULT_ATTACK_RANGE = 2f;
     public const float DEFAULT_CRIT_DAMAGE = 1.2f;
     public const float MAX_EVASION_RATE = 0.85f;

@@ -18,4 +18,9 @@ public class GearItemData : ScriptableObject
     // Ảnh gắn LÊN NGƯỜI khi mặc (khác icon inventory). Chưa gán → hệ mặc tạm dùng icon (xem
     // EquipVisualResolver). Gán art thật dần ở bước sau.
     public Sprite bodySprite;
+
+    // true = trang bị của quái/boss (VD DragonHelmetData), KHÔNG rơi cho người chơi. Đồ enemy
+    // đã tách sang Resources/Scriptable Objects/GearsEnemy nên vốn không được nạp vào pool loot;
+    // cờ này giữ lại làm lưới an toàn (nếu lỡ đặt 1 asset enemy dưới Gears thì vẫn bị loại loot).
+    public bool isMonsterGear;
 }

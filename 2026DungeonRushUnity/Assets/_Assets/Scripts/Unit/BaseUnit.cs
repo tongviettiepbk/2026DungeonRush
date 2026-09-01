@@ -27,6 +27,11 @@ public class BaseUnit : MonoBehaviour
     public BaseFx impactAttack;
     public AudioClip sfxAttack;
 
+    // Vũ khí đang cầm quyết định CÁCH ra đòn: có đạn (bắn xa) hay đánh thẳng (cận chiến).
+    // Mặc định không đạn → enemy/pet giữ nguyên hành vi cũ. Hero nạp từ đồ đang mặc (OnBeginBattle).
+    protected bool hasProjectile;
+    protected BaseBullet bulletPrefab;
+
     protected Transform flipPoints;
     protected Collider2D bodyCollider;
     protected Rigidbody2D rigid;
@@ -154,13 +159,31 @@ public class BaseUnit : MonoBehaviour
         centerBodyPoint = ResolveRigNode("CenterBody", flipPoints, new Vector3(0f, 0.5f, 0f));
         firePoint = ResolveRigNode("FirePoint", flipPoints, new Vector3(0f, 0.5f, 0f));
 
+        // Thanh máu: dùng node "health-bar" có sẵn trên rig nếu prefab đã dựng; nếu không (rig rip
+        // hiện tại chưa có) thì instantiate prefab health-bar từ Resources rồi gắn dưới FlipPoints.
         Transform hpBarTransform = flipPoints.Find("health-bar");
+        if (hpBarTransform == null)
+        {
+            HealthBar hpPrefab = Resources.Load<HealthBar>("Prefabs/health-bar");
+            if (hpPrefab != null)
+            {
+                HealthBar hpInstance = Instantiate(hpPrefab, flipPoints, false);
+                hpInstance.name = "health-bar";
+                hpInstance.transform.localPosition = HP_BAR_LOCAL_OFFSET;
+                hpInstance.transform.localScale = Vector3.one;
+                hpBarTransform = hpInstance.transform;
+            }
+        }
+
         if (hpBarTransform)
         {
             hpBar = hpBarTransform.GetComponent<HealthBar>();
             hpBar.Init(this);
         }
     }
+
+    // Vị trí thanh máu so với gốc unit (trên đầu). Chỉnh theo chiều cao art thật khi có rig chuẩn.
+    private static readonly Vector3 HP_BAR_LOCAL_OFFSET = new Vector3(0f, 1.1f, 0f);
 
     // Lấy collider dùng làm hitbox/target: ưu tiên con "Body" (rig contract), rồi collider bất kỳ
     // trong children (rig rip để collider trên "Soldier"), cuối cùng tạo tạm nếu không có.
@@ -320,8 +343,29 @@ public class BaseUnit : MonoBehaviour
     {
         ReloadStats();
         hp = stats.maxHp;
+        ApplyWeapon(GetCombatWeapon());   // vũ khí ghi đè attackRange & quyết định nhánh đạn
         CheckUniqueSkill();
         //UpdateHealthBar();
+    }
+
+    // Vũ khí quyết định CÁCH ra đòn của unit này (null = cận chiến tay không, giữ stat mặc định).
+    // Hero lấy từ đồ đang mặc (save); Enemy/Pet gán sẵn trên prefab — xem override ở lớp con.
+    protected virtual WeaponData GetCombatWeapon()
+    {
+        return null;
+    }
+
+    // Nạp cấu hình chiến đấu từ vũ khí: có đạn hay không, prefab đạn, và tầm đánh.
+    protected void ApplyWeapon(WeaponData weapon)
+    {
+        if (weapon == null)
+        {
+            return;
+        }
+
+        hasProjectile = weapon.hasProjectile;
+        bulletPrefab = weapon.bulletPrefab;
+        stats.attackRange = weapon.attackDistance;
     }
 
     public virtual void OnResetMode()
@@ -818,9 +862,28 @@ public class BaseUnit : MonoBehaviour
     // OnAttackEnd chắc chắn mỗi nhịp → dùng làm điểm ra đòn tạm. (Thay bằng anim-event thật khi port Spine.)
     protected virtual void OnAttackEnd()
     {
-        if (target != null && target.isTargetable && IsTargetInAttackRange())
+        ReleaseAttack();
+    }
+
+    // Ra đòn 1 nhịp: vũ khí có đạn thì nhả bullet (bắn xa) mang theo AttackData, không thì đánh
+    // thẳng (cận chiến). Damage tính CHUNG qua GetBasicAttackData() (server-driven) — nhánh chỉ khác
+    // CÁCH truyền sát thương tới target, không đổi công thức damage.
+    protected virtual void ReleaseAttack()
+    {
+        if (target == null || !target.isTargetable || !IsTargetInAttackRange())
         {
-            target.TakeAttack(GetBasicAttackData(), impactAttack);
+            return;
+        }
+
+        AttackData data = GetBasicAttackData();
+        if (hasProjectile && bulletPrefab != null)
+        {
+            BaseBullet bullet = PoolingController.Instance.GetBullet(bulletPrefab);
+            bullet.Active(firePoint, this, target, data);
+        }
+        else
+        {
+            target.TakeAttack(data, impactAttack);
         }
     }
 

@@ -75,18 +75,18 @@ public class CampaignMode : BaseMode
             return;
         }
 
-        BaseStats petStats = BuildPetStats();
-        for (int i = 0; i < petCount; i++)
-        {
-            // Rải pet quanh hero.
-            float angle = (360f / petCount) * i * Mathf.Deg2Rad;
-            Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 0.8f;
-            Vector3 petPos = MapController.Instance.ClampPointInMap(heroPos + offset);
+        //BaseStats petStats = BuildPetStats();
+        //for (int i = 0; i < petCount; i++)
+        //{
+        //    // Rải pet quanh hero.
+        //    float angle = (360f / petCount) * i * Mathf.Deg2Rad;
+        //    Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 0.8f;
+        //    Vector3 petPos = MapController.Instance.ClampPointInMap(heroPos + offset);
 
-            PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, parent);
-            pet.owner = hero;
-            pet.SpawnInBattle(petStats, StaticValue.TAG_TEAM_A, petPos);
-        }
+        //    PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, parent);
+        //    pet.owner = hero;
+        //    pet.SpawnInBattle(petStats, StaticValue.TAG_TEAM_A, petPos);
+        //}
     }
 
     private void SpawnEnemies(List<EnemySpawnGenerator.EnemySpawnInfo> enemies)
@@ -125,16 +125,24 @@ public class CampaignMode : BaseMode
         return unit;
     }
 
+    // Chỉ số hero = tầng NỀN gốc (PlayerBase*) từ GearStatConfig. Hero trần (chưa đồ) = Damage 10/HP 50.
+    // (Cộng dồn main stat đồ đang mặc để ở bước hệ trang bị đầy đủ.)
+    private static GearStatConfigData gearStatConfig;
+
     private BaseStats BuildHeroStats()
     {
-        return new BaseStats
+        if (gearStatConfig == null)
         {
-            attack = heroAttack,
-            attackPerSecond = heroAttackSpeed,
-            attackRange = heroAttackRange,
-            maxHp = heroMaxHp,
-            moveSpeed = heroMoveSpeed,
-        };
+            gearStatConfig = Resources.Load<GearStatConfigData>("Scriptable Objects/Gears/GearStatConfig");
+        }
+
+        if (gearStatConfig == null)
+        {
+            DebugCustom.LogError("[CampaignMode] Thiếu GearStatConfig — dùng BaseStats rỗng cho Hero.");
+            return new BaseStats();
+        }
+
+        return gearStatConfig.GetPlayerBaseStats();
     }
 
     private BaseStats BuildPetStats()
