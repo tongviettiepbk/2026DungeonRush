@@ -235,7 +235,7 @@ public class BaseUnit : MonoBehaviour
         EventDispatcher.Instance.RegisterListener(EventID.EndGame, OnEndGame);
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         EventDispatcher.Instance.RemoveListener(EventID.EndGame, OnEndGame);
     }

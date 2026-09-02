@@ -110,9 +110,9 @@ public class UIMainLobby : BaseUI
                     if (targetElement != null)
                         targetElement.SetLayout(result);
 
-                    // Ghép loot -> mặc đồ: lưu món vào save rồi báo Hero mặc lại đúng slot (live nếu
-                    // hero đang trong scene; nếu không, hero sẽ đọc save khi spawn ở trận).
-                    GameData.userData.equipment.Equip(result.EquipSlot, result.equipId);
+                    // Ghép loot -> mặc đồ: lưu món (kèm rarity/level/substat đã roll) vào save rồi báo
+                    // Hero mặc lại đúng slot (live nếu hero đang trong scene; nếu không, hero đọc save khi spawn).
+                    GameData.userData.equipment.Equip(result.EquipSlot, result.equipId, result.rarity, result.level, result.subStats);
                     this.PostEvent(EventID.EquipmentChanged, result.EquipSlot);
                 },
                 onSell: null);

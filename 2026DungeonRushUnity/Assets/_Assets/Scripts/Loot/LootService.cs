@@ -162,9 +162,10 @@ public static class LootService
         return true;
     }
 
-    // Dựng lại LootResult của món ĐANG MẶC từ save (UserEquipmentData chỉ lưu equipId). Dùng cho
-    // UI lobby hiển thị lại trang bị hiện tại khi mở màn. Chỉ số chính tính deterministic theo
-    // (slot, rarity, level); chỉ số phụ KHÔNG khôi phục được (save bước này chưa lưu roll) -> để rỗng.
+    // Dựng lại LootResult của món ĐANG MẶC từ save. Dùng cho UI lobby hiển thị lại trang bị hiện tại.
+    // Chỉ số chính tính deterministic theo (slot, rarity, level); rarity/level/substat lấy từ bản ghi
+    // save (EquippedItemData) nếu có — substat là giá trị đã roll, khôi phục ĐÚNG. Không có bản ghi
+    // (VD gọi ngoài save) thì lùi về rarity catalog + LOOT_LEVEL + substat rỗng.
     // Trả null nếu equipId rỗng hoặc không tra được asset (VD slot Wing/Cape chưa nằm trong pool loot).
     public static LootResult BuildFromEquipId(GearSlotType slot, string equipId)
     {
@@ -174,25 +175,32 @@ public static class LootService
         if (EnsureStaticLoaded() == false)
             return null;
 
+        EquippedItemData rec = GameData.userData != null && GameData.userData.equipment != null
+            ? GameData.userData.equipment.GetRecord(slot)
+            : null;
+        List<GearSubStat> subStats = rec != null ? rec.subStats : new List<GearSubStat>();
+
         if (slot == GearSlotType.WEAPON)
         {
             WeaponData weapon = GameData.staticData.weapons.GetData(equipId);
             if (weapon == null)
                 return null;
 
-            double mainStat = GearStatCalculator.GetWeaponMainStat(gearStatConfig, weapon.weaponType, weapon.rarity, LOOT_LEVEL);
+            Rarity rarity = rec != null ? rec.rarity : weapon.rarity;
+            int level = rec != null ? rec.level : LOOT_LEVEL;
+            double mainStat = GearStatCalculator.GetWeaponMainStat(gearStatConfig, weapon.weaponType, rarity, level);
             return new LootResult
             {
                 kind = LootItemKind.Weapon,
                 displayName = weapon.displayName,
-                rarity = weapon.rarity,
-                level = LOOT_LEVEL,
+                rarity = rarity,
+                level = level,
                 icon = weapon.icon,
                 equipId = weapon.assetName,
                 weaponType = weapon.weaponType,
                 mainStatKind = GearMainStatKind.Damage,
                 mainStat = mainStat,
-                subStats = new List<GearSubStat>(),
+                subStats = subStats,
             };
         }
 
@@ -200,20 +208,22 @@ public static class LootService
         if (gear == null)
             return null;
 
+        Rarity gearRarity = rec != null ? rec.rarity : gear.rarity;
+        int gearLevel = rec != null ? rec.level : LOOT_LEVEL;
         GearMainStatKind mainKind;
-        double gearMainStat = GearStatCalculator.GetGearMainStat(gearStatConfig, gear.slot, gear.rarity, LOOT_LEVEL, out mainKind);
+        double gearMainStat = GearStatCalculator.GetGearMainStat(gearStatConfig, gear.slot, gearRarity, gearLevel, out mainKind);
         return new LootResult
         {
             kind = LootItemKind.Gear,
             displayName = gear.displayName,
-            rarity = gear.rarity,
-            level = LOOT_LEVEL,
+            rarity = gearRarity,
+            level = gearLevel,
             icon = gear.icon,
             equipId = gear.assetName,
             gearSlot = gear.slot,
             mainStatKind = mainKind,
             mainStat = gearMainStat,
-            subStats = new List<GearSubStat>(),
+            subStats = subStats,
         };
     }
 }
