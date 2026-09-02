@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -41,17 +42,9 @@ public class UIGearInfo : BaseUI
         if (txtMainStats != null)
             txtMainStats.text = mainLabel + ": " + result.mainStat.ToString("0.##");
 
-        List<GearSubStat> subStats = result.subStats;
-        for (int i = 0; i < listTxtSubStats.Count; i++)
-        {
-            if (listTxtSubStats[i] == null)
-                continue;
+        DebugCustom.ShowLog("subStats:", JsonConvert.SerializeObject(result.subStats));
 
-            bool hasSubStat = i < subStats.Count;
-            listTxtSubStats[i].gameObject.SetActive(hasSubStat);
-            if (hasSubStat)
-                listTxtSubStats[i].text = UIMainLobby.SubStatName(subStats[i].type) + ": +" + subStats[i].value.ToString("0.##") + "%";
-        }
+        UIMainLobby.FillSubStats(result.subStats, listTxtSubStats);
 
         gameObject.SetActive(true);
     }

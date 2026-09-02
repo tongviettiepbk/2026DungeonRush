@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -86,6 +87,9 @@ public class UIMainLobby : BaseUI
         if (result == null)
             return; // LootService đã log lỗi cụ thể.
 
+
+        DebugCustom.ShowLog("subStats:", JsonConvert.SerializeObject(result.subStats));
+
         GameData.userData.items.Consume(ItemType.LOOT_TICKET, 1);
         UpdateLootTicketText();
 
@@ -154,6 +158,27 @@ public class UIMainLobby : BaseUI
             case SubStatType.CompanionCooldown: return "Hồi chiêu pet";
             case SubStatType.CompanionDamage: return "Sát thương pet";
             default: return type.ToString();
+        }
+    }
+
+    // Đổ danh sách dòng substat vào các ô text: ô thứ i hiện "Tên: +giá trị%" nếu có, thừa thì ẩn.
+    // Dùng chung cho UIGearInfo/UILootGearInfo. Null-guard cả subStats lẫn danh sách text (prefab có
+    // thể chưa wire hết), gear rarity thấp có thể 0 dòng.
+    public static void FillSubStats(List<GearSubStat> subStats, List<TMP_Text> texts)
+    {
+        if (texts == null)
+            return;
+
+        int count = subStats != null ? subStats.Count : 0;
+        for (int i = 0; i < texts.Count; i++)
+        {
+            if (texts[i] == null)
+                continue;
+
+            bool hasSubStat = i < count;
+            texts[i].gameObject.SetActive(hasSubStat);
+            if (hasSubStat)
+                texts[i].text = SubStatName(subStats[i].type) + ": +" + subStats[i].value.ToString("0.##") + "%";
         }
     }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 // Phân loại item loot được: gear (C2..C6) hay vũ khí (C1).
@@ -18,7 +19,9 @@ public class LootResult
     public int level;
 
     // Icon inventory (lấy từ GearItemData.icon / WeaponData.icon) để UI gắn thẳng vào slot.
-    public Sprite icon;
+    // [JsonIgnore]: Sprite là UnityEngine.Object — Newtonsoft bò vào bounds/Vector3.normalized gây
+    // self-reference loop (vỡ khi JsonConvert.SerializeObject cả LootResult, VD log debug).
+    [JsonIgnore] public Sprite icon;
 
     // Định danh món để MẶC (lưu vào UserEquipmentData + tra art gắn lên người). Gear/vũ khí đều
     // là assetName. Loot không ra Wing/Cape nên không cần dạng id số.
