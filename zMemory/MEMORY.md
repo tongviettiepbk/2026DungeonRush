@@ -22,4 +22,5 @@
 - [Đồng bộ bộ nhớ 2 nơi](sync-memory-two-locations.md) — ghi/sửa memory làm ở CẢ 2 nơi (gốc + zMemory\); đầu phiên phải check lệch & nạp lại; không tự git push
 - [Hệ bullet/projectile](dungonrush-bullet-system.md) — code port StickIdle xong (compile sạch); prefab+FX đã import; 30 prefab còn missing-script chờ wiring
 - [Trích icon gear thiếu](dungonrush-gear-icon-extract.md) — item SO ở sharedassets0 (split), typetree strip → parse raw MB lấy Icon PPtr; mapping enemy gloves (Dragon=wing)
+- [Rewire prefab UI ripped](dungonrush-ripped-prefab-rewire.md) — làm prefab AssetRipper (mất meta) HIỆN ảnh: parse thô m_Sprite + tree-align UnityPy, crop atlas, guid mới type:3; đã làm 6 prefab pet
 - [Chỉ số nền hero](dungonrush-hero-base-stats.md) — mới vào chưa đồ = Damage 10/HP 50 (PlayerBase* GameResources native); ĐÃ wire vào GearStatConfig+CampaignMode, MoveSpeed gốc=2.0

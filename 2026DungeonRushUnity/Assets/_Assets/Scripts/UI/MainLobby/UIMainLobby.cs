@@ -32,6 +32,19 @@ public class UIMainLobby : BaseUI
     [Space(20)]
     public TMP_Text txtLootTicket;
 
+    [Space(20)]
+    public TMP_Text txtQuantityName;
+    public TMP_Text txtQuantityPower;
+    public TMP_Text txtQuantityGem;
+
+
+#if UNITY_EDITOR
+    [Space(20)]
+    [Header("DEBUG - chỉ dùng test")]
+    // Nhập forgeLevel để test bảng rarity. -1 = dùng giá trị thật trong save (campaign.forgeLevel).
+    [SerializeField] private int debugForgeLevel = -1;
+#endif
+
     private void Start()
     {
         if (btLoot != null)
@@ -50,6 +63,12 @@ public class UIMainLobby : BaseUI
             GameData.userData.items.Receive(ItemType.LOOT_TICKET, 100);
             UpdateLootTicketText();
         }
+
+        // chỉnh nhanh debugForgeLevel khi đang chơi: mũi tên lên/xuống
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+            DebugCustom.Log($"[Forge] debugForgeLevel = {++debugForgeLevel}");
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+            DebugCustom.Log($"[Forge] debugForgeLevel = {--debugForgeLevel}");
 
 #endif
 
@@ -82,7 +101,14 @@ public class UIMainLobby : BaseUI
             return;
         }
 
-        LootResult result = LootService.RollOne(GameData.userData.campaign.forgeLevel);
+        int forgeLevel = GameData.userData.campaign.forgeLevel;
+#if UNITY_EDITOR
+        // Test: nếu có nhập debugForgeLevel (>=0) thì override level dùng để roll rarity.
+        if (debugForgeLevel >= 0)
+            forgeLevel = debugForgeLevel;
+#endif
+
+        LootResult result = LootService.RollOne(forgeLevel);
         if (result == null)
             return; // LootService đã log lỗi cụ thể.
 
