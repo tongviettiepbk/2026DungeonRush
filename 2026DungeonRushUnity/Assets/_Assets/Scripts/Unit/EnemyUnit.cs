@@ -17,15 +17,13 @@ public class EnemyUnit : BaseUnit
     [Tooltip("Vũ khí khi là boss (VD boss dragon bắn đạn). Trống → dùng weaponData.")]
     [SerializeField] private WeaponData bossWeaponData;
 
-    private const float DEFAULT_ATTACK_RANGE = 1.2f;
-
     // Boss ưu tiên vũ khí boss (đạn Dragon...); quái thường dùng weaponData.
     protected override WeaponData GetCombatWeapon()
     {
         return (isBoss && bossWeaponData != null) ? bossWeaponData : weaponData;
     }
 
-    // Spawn từ dữ liệu EnemySpawnGenerator (health/attack tuyệt đối + isBoss).
+    // Spawn từ dữ liệu EnemySpawnGenerator (health/attack tuyệt đối + role + isBoss).
     public void SpawnEnemy(EnemySpawnGenerator.EnemySpawnInfo info, Vector3 position)
     {
         isBoss = info.isBoss;
@@ -35,7 +33,7 @@ public class EnemyUnit : BaseUnit
         {
             attack = info.attackPower,
             attackPerSecond = info.attackSpeed,
-            attackRange = DEFAULT_ATTACK_RANGE,
+            attackRange = info.attackRange,   // melee 1.5 / ranged 3.0 (EnemyBase*AttackDistance gốc)
             maxHp = info.health,
             moveSpeed = info.moveSpeed,
         };

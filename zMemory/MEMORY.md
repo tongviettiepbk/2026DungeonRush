@@ -24,3 +24,6 @@
 - [Trích icon gear thiếu](dungonrush-gear-icon-extract.md) — item SO ở sharedassets0 (split), typetree strip → parse raw MB lấy Icon PPtr; mapping enemy gloves (Dragon=wing)
 - [Rewire prefab UI ripped](dungonrush-ripped-prefab-rewire.md) — làm prefab AssetRipper (mất meta) HIỆN ảnh: parse thô m_Sprite + tree-align UnityPy, crop atlas, guid mới type:3; đã làm 6 prefab pet
 - [Chỉ số nền hero](dungonrush-hero-base-stats.md) — mới vào chưa đồ = Damage 10/HP 50 (PlayerBase* GameResources native); ĐÃ wire vào GearStatConfig+CampaignMode, MoveSpeed gốc=2.0
+- [LevelPopup prefab gốc](dungonrush-levelpopup-prefab.md) — popup Rarity Table = LevelPopup.prefab (rip), đã rewire vào project + sprite chính xác; controller đã strip
+- [Pipeline sprite il2cpp](dungonrush-il2cpp-sprite-pipeline.md) — đọc CHÍNH XÁC sprite/field prefab ripped từ xapk (UnityPy+TypeTreeGenerator+DummyDll); Python 3.12 đã cài user-scope
+- [Công thức chỉ số enemy GỐC](dungonrush-enemy-stats-formula.md) — reverse il2cpp: Lancaster power split (500×10^hck / unitCount^Lanc → √); doc ở DecodedData/ENEMY_STATS_MODEL.md
