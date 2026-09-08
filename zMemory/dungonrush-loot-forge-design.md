@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: ab283ab1-bd0b-430e-a508-37718fbf9cc1
-  modified: 2026-09-01T07:39:44.821Z
+  modified: 2026-09-06T19:31:15.625Z
 ---
 
 User chốt (2026-08-07), 4 điểm về hệ thống Loot:
@@ -24,8 +24,10 @@ User chốt (2026-08-07), 4 điểm về hệ thống Loot:
 
 **How to apply:** khi code tiếp phần loot — KHÔNG gắn trigger vào enemy-kill/battle-end. Thứ tự hợp lý: (1) thêm ItemType mới cho quantityLoop + field progression level 0–99 trong playerData, (2) nối ForgeController vào LootService.RollOne() (roll rarity trước, lọc pool sau), (3) mới tới UI tiêu thụ quantityLoop để trigger loot. Phần 3 (điểm 3 ở trên) chưa biết nội dung — hỏi lại user trước khi code phần đó.
 
-**Quyết định cụ thể (2026-08-07):**
-- Progression level 0–99 (tên field `forgeLevel`) là field RIÊNG trong `UserCampaignData`, tăng ĐỘC LẬP với `curStageId`/`passedStageId` — không suy ra từ stage. Cơ chế tăng forgeLevel cụ thể chưa định nghĩa, chờ user.
+**⚠️ CẬP NHẬT 2026-09-07 — forgeLevel BỊ THAY THẾ:** cơ chế tăng level đã định nghĩa rõ + field đã đổi. Bảng rarity KHÔNG còn bám `forgeLevel` nữa mà bám `playerLevel` (hệ exp): thắng campaign → +exp → lên `playerLevel` → rarity table tốt lên. `UserCampaignData.forgeLevel` ĐÃ BỊ XÓA; `LootService.RollOne` nhận `playerLevel-1` làm index. Con `User.ForgeLevel` trong save gốc là hệ auto-forge/hammer KHÁC (không phải bảng rarity này). Xem [[dungonrush-exp-reward-formula]] + [[dungonrush-campaign-flow]]. Phần dưới (điểm 1, "field forgeLevel") giữ lại làm lịch sử — đọc theo bản cập nhật này.
+
+**Quyết định cụ thể (2026-08-07, ĐÃ BỊ THAY bởi cập nhật 2026-09-07 ở trên):**
+- ~~Progression level 0–99 (tên field `forgeLevel`) là field RIÊNG trong `UserCampaignData`~~ → nay là `playerLevel` trong `UserPlayerData`, tăng bằng exp thắng màn.
 - ItemType mới cho item tiêu để loot đặt tên `LOOT_TICKET` (thêm vào enum `ItemType` ở `Common/GameEnums.cs`).
 
 **Đã code xong (2026-08-07), điểm 1+2:**

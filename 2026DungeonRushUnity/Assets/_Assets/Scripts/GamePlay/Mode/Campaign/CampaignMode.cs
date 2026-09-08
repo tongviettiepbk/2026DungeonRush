@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -50,6 +51,43 @@ public class CampaignMode : BaseMode
         GameController.Instance.ResetBattle();
         hero = null;
         isEndMode = false;
+    }
+
+    // ===== KẾT QUẢ TRẬN (Phase 1: chỉ vòng lặp win/lose + reload) =====
+    // BaseMode.EndGame gọi CalculateResult sau khi phát EventID.EndGame.
+    //   Win  → đánh dấu qua màn (PassStage: passedStageId + curStageId sang màn kế) rồi lưu.
+    //   Lose → giữ nguyên curStageId, đánh lại chính màn đó.
+    // Dù thắng hay thua đều dựng lại màn sau delayEndGame giây. Reload trễ (coroutine) để KHÔNG
+    // hủy unit ngay giữa lúc BaseMode đang dispatch sự kiện UnitDie/EndGame.
+    protected override void CalculateResult(bool isWin)
+    {
+        if (isWin)
+        {
+            int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.curStageId;
+
+            // Exp thắng màn = round(49 + level) (clear sạch quái, xem DecodedData/EXP_MODEL.md).
+            // Cộng vào playerExperience → có thể lên playerLevel (rarity table tự tốt lên).
+            int level = GameData.staticData.campaign.GetLevel(stageId);
+            int expReward = GameData.staticData.experience.GetStageExp(level);
+            int levelsGained = GameData.userData.player.AddExperience(expReward);
+
+            GameData.userData.campaign.PassStage(stageId);
+            GameData.Save(true);
+
+            // TODO(Phase 3): levelsGained > 0 -> bật UILevelPopup (bảng rarity + thưởng).
+            if (levelsGained > 0)
+            {
+                DebugCustom.Log($"[Campaign] Lên {levelsGained} level -> playerLevel = {GameData.userData.player.playerLevel}");
+            }
+        }
+
+        StartCoroutine(RoutineReloadAfterResult());
+    }
+
+    private IEnumerator RoutineReloadAfterResult()
+    {
+        yield return new WaitForSeconds(delayEndGame);
+        Build();
     }
 
     // ===== SPAWN QUÂN THẬT =====

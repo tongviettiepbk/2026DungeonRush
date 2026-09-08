@@ -26,4 +26,11 @@ public class StaticCampaignData
 
         return stageId + 1;
     }
+
+    // combatLevel LIÊN TỤC của màn (1-1=1 ... 1-10=10, 2-1=11 ...). Dùng cho sinh enemy + exp reward.
+    public int GetLevel(int stageId)
+    {
+        int level = (GetChapter(stageId) - 1) * STAGES_PER_CHAPTER + GetStageIndex(stageId);
+        return level < 1 ? 1 : level;
+    }
 }

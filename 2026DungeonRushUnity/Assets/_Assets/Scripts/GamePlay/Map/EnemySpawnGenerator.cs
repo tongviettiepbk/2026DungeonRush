@@ -77,10 +77,8 @@ public static class EnemySpawnGenerator
         if (enemySpawnCells == null || enemySpawnCells.Count == 0) return result;
 
         var campaign = GameData.staticData.campaign;
-        int chapter = campaign.GetChapter(stageId);
-        int stageIndex = campaign.GetStageIndex(stageId);
         // Level campaign LIÊN TỤC: 1-1=1 ... 1-10=10, 2-1=11 ... (globalStage).
-        int level = Mathf.Max(1, (chapter - 1) * StaticCampaignData.STAGES_PER_CHAPTER + stageIndex);
+        int level = campaign.GetLevel(stageId);
 
         // Nhánh campaign: combatLevel = level thô (không có base+×3 như dungeon).
         float totalArmyPower = TotalArmyPower(level);

@@ -27,3 +27,5 @@
 - [LevelPopup prefab gốc](dungonrush-levelpopup-prefab.md) — popup Rarity Table = LevelPopup.prefab (rip), đã rewire vào project + sprite chính xác; controller đã strip
 - [Pipeline sprite il2cpp](dungonrush-il2cpp-sprite-pipeline.md) — đọc CHÍNH XÁC sprite/field prefab ripped từ xapk (UnityPy+TypeTreeGenerator+DummyDll); Python 3.12 đã cài user-scope
 - [Công thức chỉ số enemy GỐC](dungonrush-enemy-stats-formula.md) — reverse il2cpp: Lancaster power split (500×10^hck / unitCount^Lanc → √); doc ở DecodedData/ENEMY_STATS_MODEL.md
+- [Công thức exp reward GỐC](dungonrush-exp-reward-formula.md) — reverse il2cpp: exp thắng màn = round(49 + level), chia đều mỗi quái; thua ko cộng; doc ở DecodedData/EXP_MODEL.md
+- [Luồng campaign + exp/playerLevel](dungonrush-campaign-flow.md) — Phase 1 win/lose loop XONG; UserPlayerData mới (playerLevel=level bảng rarity); bỏ forgeLevel; Phase 2/3 chờ

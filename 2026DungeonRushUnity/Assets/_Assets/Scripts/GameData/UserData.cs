@@ -13,12 +13,14 @@ using UnityEngine;
 public class UserData
 {
     public const string DATA_KEY_PROFILE = "key_user_profile";
+    public const string DATA_KEY_PLAYER = "key_user_player";
     public const string DATA_KEY_CAMPAIGN = "key_user_campaign";
     public const string DATA_KEY_ITEMS = "key_user_items";
     public const string DATA_KEY_SETTING = "key_user_settings";
     public const string DATA_KEY_EQUIPMENT = "key_user_equipment";
 
     public UserProfileData profile { get; set; } = new UserProfileData();
+    public UserPlayerData player { get; set; } = new UserPlayerData();
     public UserCampaignData campaign { get; set; } = new UserCampaignData();
     public UserItemData items { get; set; } = new UserItemData();
     public UserSettingData settings { get; set; } = new UserSettingData();
@@ -49,6 +51,7 @@ public class UserData
             profile.userName = GameUtils.GetNewUserName();
         }
 
+        player = LoadModule<UserPlayerData>(DATA_KEY_PLAYER, out _);
         campaign = LoadModule<UserCampaignData>(DATA_KEY_CAMPAIGN, out _);
         items = LoadModule<UserItemData>(DATA_KEY_ITEMS, out _);
         settings = LoadModule<UserSettingData>(DATA_KEY_SETTING, out _);
@@ -108,6 +111,7 @@ public class UserData
         {
             listData = new List<BaseUserData>();
             listData.Add(profile);
+            listData.Add(player);
             listData.Add(campaign);
             listData.Add(items);
             listData.Add(settings);
