@@ -26,9 +26,34 @@ public class StaticExperienceData
         1085200, 1115700, 1146600, 1178000, 1210000, 1242500, 1275400, 1308900, 1343000, 1377500,
     };
 
+    // GEM thưởng khi ĐẠT mỗi level (index = level-1). Nguồn: LevelPopup.ywc dump từ global-metadata
+    // (xem DecodedData/EXP_MODEL.md). Level 1-16 = 5, sau đó tăng dần tới 120.
+    private static readonly int[] levelUpGemReward =
+    {
+        5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+        5, 5, 5, 5, 5, 5, 10, 10, 10, 10,
+        10, 10, 10, 15, 15, 15, 15, 15, 15, 15,
+        20, 20, 20, 25, 25, 25, 25, 25, 25, 25,
+        25, 30, 30, 30, 35, 35, 40, 40, 40, 45,
+        45, 45, 45, 45, 45, 45, 45, 45, 45, 45,
+        50, 50, 55, 55, 60, 60, 60, 60, 60, 60,
+        60, 60, 65, 65, 70, 70, 75, 75, 75, 80,
+        80, 80, 80, 80, 80, 80, 85, 85, 90, 90,
+        95, 95, 100, 100, 105, 110, 110, 115, 115, 120,
+    };
+
     // Level tối đa = số dòng bảng (100). Cũng = số dòng bảng rarity ForgeData → level cao nhất
     // rarity table còn cải thiện.
     public int MaxLevel => xpRequired.Length;
+
+    // Gem thưởng khi đạt tới level này (mirror LevelPopup.kmv/ywc: clamp index [0, len-1]).
+    public int GetLevelUpGemReward(int level)
+    {
+        int index = level - 1;
+        if (index < 0) index = 0;
+        if (index >= levelUpGemReward.Length) index = levelUpGemReward.Length - 1;
+        return levelUpGemReward[index];
+    }
 
     // Exp cần để lên level tiếp (mirror ExperienceController.hdk: clamp index [0, len-1]).
     public int GetXpRequired(int level)

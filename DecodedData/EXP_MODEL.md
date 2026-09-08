@@ -50,6 +50,17 @@ Popup "Rarity Table" (vương miện **Level N**) = bảng `forge_rarity_probabi
 
 ⟹ **Chỉ MỘT con level**: thắng campaign → +exp → đầy ngưỡng → `PlayerLevel++` → bảng rarity tốt lên + thưởng (ảnh: +5 gem). Đây LÀ cái level ở popup, KHÔNG phải con `User.ForgeLevel` riêng (đó là hệ auto-forge/hammer khác).
 
+## Thưởng mỗi lần lên level (reverse cơ chế)
+- Loại thưởng = **GEM**. `LevelPopup.kmz(amount)`: `gem = UserController.dol(gem) + amount` rồi `UserController.dob` (set) — cộng thẳng vào gem người chơi.
+- Số lượng = **bảng tra theo level**: `LevelPopup.kmv(level) = rewardList[clamp(level-1, 0, n-1)]` (List<int>, KHÔNG phải công thức base+scaler như dungeon/exp).
+- Bảng = static `int[100]` `LevelPopup.ywc`, baked trong `global-metadata.dat` (FieldDefaultValues, fieldIndex=14992), init `.cctor` qua InitializeArray. KHÔNG ở remote_config/tables/*, KHÔNG ở `.so` rodata (il2cpp v31 để trong metadata).
+- **Bảng gem/level (index 0..99, dump 2026-09-09):**
+```
+5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 10 10 10 10 10 10 10 15 15 15 15 15 15 15 20 20 20 25 25 25 25 25 25 25 25 30 30 30 35 35 40 40 40 45 45 45 45 45 45 45 45 45 45 45 50 50 55 55 60 60 60 60 60 60 60 60 65 65 70 70 75 75 75 80 80 80 80 80 80 80 85 85 90 90 95 95 100 100 105 110 110 115 115 120
+```
+  → index 0-15 = 5 (level 1-16), rồi tăng dần tới 120. `kmv(level)` = `ywc[clamp(level-1,0,99)]`; kmt cộng qua `kmz`. Data point khớp: Level 9 & 12 đều nằm vùng =5.
+- (Lưu ý: `hct/hcu/hcv` = reward DUNGEON Bone/LootBox/Vial = base+scaler×(lvl-1), KHÁC thưởng level-up này.)
+
 ## Lưu ý cho bản REBUILD
 - `StaticCampaignData.STAGES_PER_CHAPTER = 10` **khớp gốc** — giữ nguyên. Công thức áp cho `level` mà `EnemySpawnGenerator` tính: `exp = round(49 + level)`.
 - exp = thuộc tính của campaign level (không phải enemy) → khi WIN chỉ cộng `round(49 + level)` cho màn vừa clear, KHÔNG gắn exp vào từng enemy prefab.

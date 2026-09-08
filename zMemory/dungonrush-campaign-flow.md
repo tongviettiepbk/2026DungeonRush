@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 93d5ec13-cae4-47da-8bc3-ea944554097d
-  modified: 2026-09-07T17:10:20.275Z
+  modified: 2026-09-08T19:25:02.735Z
 ---
 
 Luồng campaign đang dựng theo mô tả user (2026-09-07): win = giết hết quái → lên màn kế; lose = hero chết → đánh lại màn hiện tại; exp từ thắng → lên level → bảng rarity tốt lên + thưởng.
@@ -19,6 +19,7 @@ Luồng campaign đang dựng theo mô tả user (2026-09-07): win = giết hế
 
 **Phase 2 XONG (compile sạch):** `StaticExperienceData` (Scripts/Player/, NHÚNG bảng 100 dòng + hằng 49/1, GetXpRequired/GetStageExp) đăng ký `experience` trong StaticGameData. `StaticCampaignData.GetLevel(stageId)` (dùng chung EnemySpawnGenerator). `UserPlayerData.AddExperience(amount)` → cộng exp + while lên playerLevel (cap MaxLevel=100), trả levelsGained. `CampaignMode.CalculateResult(win)` → AddExperience(GetStageExp(GetLevel(stageId))) trước PassStage.
 
-**Phase 3 ĐANG DỞ:** controller `UILevelPopup.cs` (Scripts/UI/, :BaseUI) ĐÃ viết + compile — hiện Level N, thanh exp, bảng rarity Lv N vs N+1 (từ StaticForgeData row level-1 & level). CÒN LẠI (cần Unity, UnityMCP đang ngắt): (1) gán field serialized vào prefab Resources/Prefabs/UI/LevelPopup.prefab trong Inspector (rows Common..Divine → CommonCurrentRate/CommonNextRate; Header CurrentLevelText/NextLevelText; Slider exp; CloseButton); (2) gọi Show khi levelsGained>0 + chặn reload tới lúc đóng popup; (3) **data THƯỞNG mỗi level chưa có** (ảnh: +5 gem; bản reverse không lộ bảng reward level-up → cần reverse tiếp hoặc user chốt). Xem [[dungonrush-levelpopup-prefab]].
+**Phase 3 ĐANG DỞ:** controller `UILevelPopup.cs` (Scripts/UI/, :BaseUI) ĐÃ viết + compile — hiện Level N, thanh exp, bảng rarity Lv N vs N+1 (từ StaticForgeData row level-1 & level). CÒN LẠI (cần Unity, UnityMCP đang ngắt): (1) gán field serialized vào prefab Resources/Prefabs/UI/LevelPopup.prefab trong Inspector (rows Common..Divine → CommonCurrentRate/CommonNextRate; Header CurrentLevelText/NextLevelText; Slider exp; CloseButton); (2) gọi Show khi levelsGained>0 + chặn reload tới lúc đóng popup; (3) **thưởng level-up = GEM XONG (dump 2026-09-09)**: bảng `int[100]` `LevelPopup.ywc` dump từ global-metadata (FieldDefaultValues fieldIndex=14992) — level 1-16 = 5 gem, sau tăng dần tới 120 (KHÔNG phải all-5 như tưởng; 9&12 trùng vùng =5). ĐÃ nhúng vào `StaticExperienceData.levelUpGemReward` + `GetLevelUpGemReward(level)`; `CampaignMode.CalculateResult` grant `items.Receive(GEM, tổng gem các level vừa lên)`. Bảng đầy đủ ở DecodedData/EXP_MODEL.md.
+CÒN LẠI Phase 3 (cần Unity): wire prefab + gọi UILevelPopup.Show khi levelsGained>0 + chặn reload tới lúc đóng. Xem [[dungonrush-levelpopup-prefab]].
 
 **Đính chính:** enum `Rarity` rebuild ĐÃ ĐÚNG (Common..Mythic, Artifact, Ancient, Immortal, Divine, Ultimate) — khớp popup game. KHÔNG có lỗi tên tier (trước nhầm với comment tên-cột-forge Divine/Celestial/... trong StaticForgeData — đó chỉ là tên cột nội bộ, không phải tên hiển thị).

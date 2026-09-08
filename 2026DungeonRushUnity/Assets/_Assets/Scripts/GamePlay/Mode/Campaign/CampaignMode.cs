@@ -69,16 +69,25 @@ public class CampaignMode : BaseMode
             // Cộng vào playerExperience → có thể lên playerLevel (rarity table tự tốt lên).
             int level = GameData.staticData.campaign.GetLevel(stageId);
             int expReward = GameData.staticData.experience.GetStageExp(level);
+            int oldPlayerLevel = GameData.userData.player.playerLevel;
             int levelsGained = GameData.userData.player.AddExperience(expReward);
+
+            // Mỗi level vừa lên → thưởng gem theo bảng LevelPopup.ywc (level 1-16 = 5, sau tăng dần).
+            if (levelsGained > 0)
+            {
+                StaticExperienceData exp = GameData.staticData.experience;
+                int totalGem = 0;
+                for (int lv = oldPlayerLevel + 1; lv <= GameData.userData.player.playerLevel; lv++)
+                {
+                    totalGem += exp.GetLevelUpGemReward(lv);
+                }
+                GameData.userData.items.Receive(ItemType.GEM, totalGem);
+                DebugCustom.Log($"[Campaign] Lên {levelsGained} level -> playerLevel = {GameData.userData.player.playerLevel}, +{totalGem} gem");
+                // TODO(Phase 3): bật UILevelPopup (bảng rarity + số gem) trước khi reload.
+            }
 
             GameData.userData.campaign.PassStage(stageId);
             GameData.Save(true);
-
-            // TODO(Phase 3): levelsGained > 0 -> bật UILevelPopup (bảng rarity + thưởng).
-            if (levelsGained > 0)
-            {
-                DebugCustom.Log($"[Campaign] Lên {levelsGained} level -> playerLevel = {GameData.userData.player.playerLevel}");
-            }
         }
 
         StartCoroutine(RoutineReloadAfterResult());

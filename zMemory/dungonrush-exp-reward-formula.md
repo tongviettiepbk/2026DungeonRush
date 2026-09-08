@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 93d5ec13-cae4-47da-8bc3-ea944554097d
-  modified: 2026-09-06T19:29:13.197Z
+  modified: 2026-09-08T19:25:09.150Z
 ---
 
 Reverse từ `libil2cpp.so` (APK 41): **exp thắng 1 màn = `round(ExperienceLevelBase + ExperienceLevelScaler × level)` = round(49 + 1×level)** (`ExperienceController.hdm`). Mỗi quái rơi 1 phần chia đều tổng đó (`hdn(level, enemyCount)`) → clear sạch = nhận đúng tổng, độc lập số quái; **thua không cộng**.
@@ -16,4 +16,6 @@ Validate KHỚP TUYỆT ĐỐI 4 điểm liên tiếp (5-2=91, 5-3=92, 5-4=93, 5
 
 **playerLevel = level popup "Rarity Table"** (vương miện Level N = forge_rarity_probabilities row N-1; xác nhận UI: Lv9=row8, Lv10=row9). Thắng campaign +exp → đầy → playerLevel++ → rarity tốt lên + thưởng (gem). CHỈ 1 con level điều khiển bảng rarity, KHÔNG phải User.ForgeLevel (đó là auto-forge/hammer khác). Rebuild ĐÃ BỎ UserCampaignData.forgeLevel; loot dùng playerLevel-1 làm index. Xem [[dungonrush-loot-forge-design]].
 
-Doc đầy đủ: `DecodedData/EXP_MODEL.md`. Đồ nghề: [[dungonrush-reverse-native-il2cpp]] (dump cũ còn ở scratchpad 77eac08e).
+Thưởng lên level = GEM, bảng `int[100]` `LevelPopup.ywc` (dump global-metadata v31, FieldDefaultValues fieldIndex=14992): level 1-16=5, tăng dần tới 120. KHÔNG ở remote_config/.so — trong global-metadata (blob InitializeArray của il2cpp v31).
+
+Doc đầy đủ (kèm bảng gem 100 số): `DecodedData/EXP_MODEL.md`. Đồ nghề: [[dungonrush-reverse-native-il2cpp]] (dump cũ còn ở scratchpad 77eac08e).
