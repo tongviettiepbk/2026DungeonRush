@@ -155,6 +155,7 @@ public class BaseMode : MonoBehaviour
         if (mapPrefab == null) return MapController.Instance;
 
         GameObject env = Instantiate(mapPrefab, transform.position, Quaternion.identity, container);
+        env.transform.position = new Vector3(0, -1.5f, 0);
         env.name = "Environment";
 
         MapController map = env.GetComponentInChildren<MapController>();

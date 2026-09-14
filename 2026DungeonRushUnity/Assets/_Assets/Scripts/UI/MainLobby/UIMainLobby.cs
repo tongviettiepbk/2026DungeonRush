@@ -42,7 +42,7 @@ public class UIMainLobby : BaseUI
 #if UNITY_EDITOR
     [Space(20)]
     [Header("DEBUG - chỉ dùng test")]
-    // Nhập forgeLevel để test bảng rarity. -1 = dùng giá trị thật trong save (campaign.forgeLevel).
+    // Nhập level để test bảng rarity. -1 = dùng giá trị thật trong save (playerLevel).
     [SerializeField] private int debugForgeLevel = -1;
 #endif
 
@@ -102,7 +102,8 @@ public class UIMainLobby : BaseUI
             return;
         }
 
-        int forgeLevel = GameData.userData.campaign.forgeLevel;
+        // Bảng rarity bám playerLevel (hệ exp). Row 0-based = playerLevel - 1 (Level 1 -> dòng 0).
+        int forgeLevel = GameData.userData.player.playerLevel - 1;
 #if UNITY_EDITOR
         // Test: nếu có nhập debugForgeLevel (>=0) thì override level dùng để roll rarity.
         if (debugForgeLevel >= 0)

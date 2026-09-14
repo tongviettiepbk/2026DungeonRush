@@ -7,6 +7,7 @@ public class StaticGameData
 {
     public StaticItemData items;
     public StaticCampaignData campaign;
+    public StaticExperienceData experience;
     public StaticMapData map;
     public StaticWeaponData weapons;
     public StaticGearItemData gears;
@@ -19,6 +20,7 @@ public class StaticGameData
     {
         if (items == null) items = new StaticItemData();
         if (campaign == null) campaign = new StaticCampaignData();
+        if (experience == null) experience = new StaticExperienceData();
         if (map == null) map = new StaticMapData();
         if (weapons == null) weapons = new StaticWeaponData();
         if (gears == null) gears = new StaticGearItemData();

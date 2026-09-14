@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -50,6 +51,52 @@ public class CampaignMode : BaseMode
         GameController.Instance.ResetBattle();
         hero = null;
         isEndMode = false;
+    }
+
+    // ===== KẾT QUẢ TRẬN (Phase 1: chỉ vòng lặp win/lose + reload) =====
+    // BaseMode.EndGame gọi CalculateResult sau khi phát EventID.EndGame.
+    //   Win  → đánh dấu qua màn (PassStage: passedStageId + curStageId sang màn kế) rồi lưu.
+    //   Lose → giữ nguyên curStageId, đánh lại chính màn đó.
+    // Dù thắng hay thua đều dựng lại màn sau delayEndGame giây. Reload trễ (coroutine) để KHÔNG
+    // hủy unit ngay giữa lúc BaseMode đang dispatch sự kiện UnitDie/EndGame.
+    protected override void CalculateResult(bool isWin)
+    {
+        if (isWin)
+        {
+            int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.curStageId;
+
+            // Exp thắng màn = round(49 + level) (clear sạch quái, xem DecodedData/EXP_MODEL.md).
+            // Cộng vào playerExperience → có thể lên playerLevel (rarity table tự tốt lên).
+            int level = GameData.staticData.campaign.GetLevel(stageId);
+            int expReward = GameData.staticData.experience.GetStageExp(level);
+            int oldPlayerLevel = GameData.userData.player.playerLevel;
+            int levelsGained = GameData.userData.player.AddExperience(expReward);
+
+            // Mỗi level vừa lên → thưởng gem theo bảng LevelPopup.ywc (level 1-16 = 5, sau tăng dần).
+            if (levelsGained > 0)
+            {
+                StaticExperienceData exp = GameData.staticData.experience;
+                int totalGem = 0;
+                for (int lv = oldPlayerLevel + 1; lv <= GameData.userData.player.playerLevel; lv++)
+                {
+                    totalGem += exp.GetLevelUpGemReward(lv);
+                }
+                GameData.userData.items.Receive(ItemType.GEM, totalGem);
+                DebugCustom.Log($"[Campaign] Lên {levelsGained} level -> playerLevel = {GameData.userData.player.playerLevel}, +{totalGem} gem");
+                // TODO(Phase 3): bật UILevelPopup (bảng rarity + số gem) trước khi reload.
+            }
+
+            GameData.userData.campaign.PassStage(stageId);
+            GameData.Save(true);
+        }
+
+        StartCoroutine(RoutineReloadAfterResult());
+    }
+
+    private IEnumerator RoutineReloadAfterResult()
+    {
+        yield return new WaitForSeconds(delayEndGame);
+        Build();
     }
 
     // ===== SPAWN QUÂN THẬT =====

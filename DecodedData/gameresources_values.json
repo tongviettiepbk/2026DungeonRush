@@ -1,0 +1,248 @@
+{
+  "ItemStatBaseMeleeWeapon": 9.0,
+  "ItemStatBaseRangedWeapon": 7.0,
+  "ItemStatBaseGlovesDamage": 6.0,
+  "ItemStatBaseHeadItem": 45.0,
+  "ItemStatBaseBackItem": 30.0,
+  "ItemStatBaseNecklaceHealth": 20.0,
+  "ItemStatBaseRingDamage": 6.0,
+  "ItemStatTierScaler": 3.1622776985168457,
+  "ItemStatLevelScaler": 0.014999999664723873,
+  "PlayerBaseWeaponDamage": 6.0,
+  "PlayerBaseGlovesDamage": 4.0,
+  "PlayerBaseHelmetHealth": 30.0,
+  "PlayerBaseBackpackHealth": 20.0,
+  "PlayerBaseNecklaceHealth": 0.0,
+  "PlayerBaseRingDamage": 0.0,
+  "PlayerBaseAttackSpeed": 1.0,
+  "PlayerBaseMoveSpeed": 2.0,
+  "PlayerBaseAttackDistance": 1.5,
+  "EnemyBaseMoveSpeed": 1.5,
+  "EnemyBaseMeleeAttackDistance": 1.5,
+  "EnemyBaseRangeAttackDistance": 3.0,
+  "EnemyDetectionRange": 4.0,
+  "EnemyGearSeed": 12345,
+  "EnemyGearMaxCombatLevel": 300,
+  "EnemyGearTierWeights": [
+    5,
+    15,
+    25,
+    25,
+    25,
+    25,
+    30,
+    30,
+    40,
+    40,
+    40
+  ],
+  "ArmyPowerBase": 500.0,
+  "ArmyPowerExponentialScaler": 3.1622776985168457,
+  "ArmyPowerSegments": [
+    {
+      "Threshold": 80,
+      "LevelScaler": 20.0
+    },
+    {
+      "Threshold": 200,
+      "LevelScaler": 30.0
+    },
+    {
+      "Threshold": 999999,
+      "LevelScaler": 40.0
+    }
+  ],
+  "MeleeHealthToDamageRatio": 3.0,
+  "RangedHealthToDamageRatio": 2.0,
+  "BossHealthToDamageRatio": 10.0,
+  "RangedUnitDamageMultiplier": 0.800000011920929,
+  "PresetSeed": 42,
+  "ArmyPresets": [
+    {
+      "Name": "1 Melee",
+      "MeleeCount": 1,
+      "RangedCount": 0,
+      "LancasterCoefficient": 1.0
+    },
+    {
+      "Name": "1 Range",
+      "MeleeCount": 0,
+      "RangedCount": 1,
+      "LancasterCoefficient": 1.2000000476837158
+    },
+    {
+      "Name": "1 Melee 1 Range",
+      "MeleeCount": 1,
+      "RangedCount": 1,
+      "LancasterCoefficient": 1.0
+    },
+    {
+      "Name": "3 Melee",
+      "MeleeCount": 3,
+      "RangedCount": 0,
+      "LancasterCoefficient": 1.2000000476837158
+    },
+    {
+      "Name": "3 Range",
+      "MeleeCount": 0,
+      "RangedCount": 3,
+      "LancasterCoefficient": 1.5
+    },
+    {
+      "Name": "6 Melee",
+      "MeleeCount": 6,
+      "RangedCount": 0,
+      "LancasterCoefficient": 1.2000000476837158
+    },
+    {
+      "Name": "6 Range",
+      "MeleeCount": 0,
+      "RangedCount": 6,
+      "LancasterCoefficient": 1.7999999523162842
+    },
+    {
+      "Name": "2 Melee 2 Range",
+      "MeleeCount": 2,
+      "RangedCount": 2,
+      "LancasterCoefficient": 1.5
+    },
+    {
+      "Name": "3 Melee 3 Range",
+      "MeleeCount": 3,
+      "RangedCount": 3,
+      "LancasterCoefficient": 1.5
+    }
+  ],
+  "ManualPresets": [
+    {
+      "Name": "Level 1",
+      "MeleeCount": 1,
+      "RangedCount": 0,
+      "LancasterCoefficient": 1.0
+    },
+    {
+      "Name": "Level 2",
+      "MeleeCount": 2,
+      "RangedCount": 0,
+      "LancasterCoefficient": 1.0
+    },
+    {
+      "Name": "Level 3",
+      "MeleeCount": 0,
+      "RangedCount": 1,
+      "LancasterCoefficient": 1.0
+    },
+    {
+      "Name": "Level 4",
+      "MeleeCount": 0,
+      "RangedCount": 2,
+      "LancasterCoefficient": 1.2999999523162842
+    },
+    {
+      "Name": "Level 5",
+      "MeleeCount": 1,
+      "RangedCount": 1,
+      "LancasterCoefficient": 1.0
+    },
+    {
+      "Name": "Level 6",
+      "MeleeCount": 1,
+      "RangedCount": 2,
+      "LancasterCoefficient": 1.5
+    },
+    {
+      "Name": "Level 7",
+      "MeleeCount": 2,
+      "RangedCount": 2,
+      "LancasterCoefficient": 1.5
+    },
+    {
+      "Name": "Level 8",
+      "MeleeCount": 3,
+      "RangedCount": 3,
+      "LancasterCoefficient": 1.5
+    },
+    {
+      "Name": "Level 9",
+      "MeleeCount": 0,
+      "RangedCount": 5,
+      "LancasterCoefficient": 2.0
+    },
+    {
+      "Name": "Level 10",
+      "MeleeCount": 5,
+      "RangedCount": 0,
+      "LancasterCoefficient": 1.0
+    }
+  ],
+  "DragonLevelBase": 1,
+  "DragonLevelToCombatLevelMultiplier": 3,
+  "ZombieLevelBase": 5,
+  "ZombieLevelToCombatLevelMultiplier": 3,
+  "ZombiePresets": [
+    {
+      "Name": "6 Melee",
+      "MeleeCount": 6,
+      "RangedCount": 0,
+      "LancasterCoefficient": 1.0
+    },
+    {
+      "Name": "8 Melee",
+      "MeleeCount": 8,
+      "RangedCount": 0,
+      "LancasterCoefficient": 1.0
+    },
+    {
+      "Name": "10 Melee",
+      "MeleeCount": 10,
+      "RangedCount": 0,
+      "LancasterCoefficient": 1.0
+    },
+    {
+      "Name": "12 Melee",
+      "MeleeCount": 12,
+      "RangedCount": 0,
+      "LancasterCoefficient": 1.0
+    }
+  ],
+  "CultistLevelBase": 60,
+  "CultistLevelToCombatLevelMultiplier": 3,
+  "CultistPresets": [
+    {
+      "Name": "2 Melee 3 Ranged",
+      "MeleeCount": 2,
+      "RangedCount": 3,
+      "LancasterCoefficient": 1.5
+    },
+    {
+      "Name": "2 Melee 3 Ranged",
+      "MeleeCount": 3,
+      "RangedCount": 4,
+      "LancasterCoefficient": 1.5
+    },
+    {
+      "Name": "2 Melee 3 Ranged",
+      "MeleeCount": 3,
+      "RangedCount": 3,
+      "LancasterCoefficient": 1.5
+    },
+    {
+      "Name": "2 Melee 3 Ranged",
+      "MeleeCount": 3,
+      "RangedCount": 2,
+      "LancasterCoefficient": 1.5
+    },
+    {
+      "Name": "2 Melee 3 Ranged",
+      "MeleeCount": 4,
+      "RangedCount": 3,
+      "LancasterCoefficient": 1.5
+    }
+  ],
+  "BaseCriticalDamagePercent": 5.0,
+  "BaseGameSpeed": 1.0,
+  "DragonBossCharacterId": 999999,
+  "ExperienceLevelBase": 49.0,
+  "ExperienceLevelScaler": 1.0,
+  "HealthRegenMultiplier": 0.5
+}

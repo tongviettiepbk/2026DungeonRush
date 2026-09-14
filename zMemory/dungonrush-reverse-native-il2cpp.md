@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 1e37f0d7-d04a-49a9-b37c-9c5835d318d2
-  modified: 2026-08-05T05:44:20.585Z
+  modified: 2026-09-10T08:06:12.873Z
 ---
 
 Khi cần logic/công thức THẬT của 1 hàm game (không phải chỉ field/tên): bản AssetRipper (`AssetRipper/ExportedProject/.../Assembly-CSharp/*.cs`) **thân hàm il2cpp bị stub rỗng** (`return null`/`return 0`) → phải đọc native `libil2cpp.so`.
@@ -17,5 +17,9 @@ Khi cần logic/công thức THẬT của 1 hàm game (không phải chỉ field
 4. Disasm: lief đọc LOAD segments để map VA→file offset, capstone `CS_ARCH_ARM64` disasm N byte của hàm (size = VA hàm kế − VA hàm này). Đọc float const qua adrp+ldr offset.
 
 **Mẹo dịch ARM64 float:** `bl` tới hàm libm không tên → nhận diện qua pattern (sqrt+log+cos = Box-Muller; `0x42c80000`=100.0f; `frintm/frintp/fcvtzs+tst#1`=làm tròn banker's/floor/ceil). Field instance đọc qua `ldr sN,[x0,#off]` — tra `off` trong dump.cs.
+
+**Đọc mảng `static readonly T[] = {...}` (InitializeArray) — data KHÔNG ở .so (2026-09-09):** với il2cpp v31, blob khởi tạo mảng nằm trong `global-metadata.dat` (bảng `FieldDefaultValues`), KHÔNG ở rodata `.so` (nên quét .so trượt). Cách lấy: parse header metadata (sau magic+version là các cặp (offset,count) int32, thứ tự: stringLiteral, stringLiteralData, string, events, properties, methods, parameterDefaultValues, **fieldDefaultValues**, **fieldAndParameterDefaultValueData**, fieldMarshaledSizes, parameters, fields...). Mỗi `FieldDefaultValue`=12B {fieldIndex,typeIndex,dataIndex}; data mảng = blob[dataIndex] (đọc N phần tử theo type). `.cctor` gọi `InitializeArray(arr, fieldHandle)`; length lấy từ `mov w1,#<len>` trước lệnh alloc. VD dùng để dump bảng gem-reward LevelPopup.ywc int[100] (fieldIndex=14992) → [[dungonrush-exp-reward-formula]].
+
+**Dump hiện có (2026-09) ở scratchpad `...\claude\...\77eac08e-...\scratchpad\`**: libil2cpp.so + global-metadata.dat + dump/ + disasm.py + compile_check.py (Unity csc). Đồ nghề bản sạch trong repo: `tools/il2cpp_reverse/`. Python: `C:\Users\StarGear\AppData\Local\Programs\Python\Python312\python.exe`.
 
 Artefact dump nằm ở scratchpad TẠM (mất sau session) → cần thì bung + dump lại (~1 phút). Xem [[dungonrush-item-stats-source]], [[dungeonrush-config-format]].
