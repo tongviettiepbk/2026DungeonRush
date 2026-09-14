@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: ae5694f3-da2c-4a70-8ef8-612a7de65309
-  modified: 2026-09-04T06:18:23.598Z
+  modified: 2026-09-05T11:51:31.336Z
 ---
 
 Bản AssetRipper export KHÔNG có `.meta` ([[assetripper-export-no-meta]]) → guid `type:2` trong prefab là nhãn nội bộ AssetRipper, **không neo lại được** (không map với bundle name / path_id_map / project). Đừng cố khôi phục guid gốc.
