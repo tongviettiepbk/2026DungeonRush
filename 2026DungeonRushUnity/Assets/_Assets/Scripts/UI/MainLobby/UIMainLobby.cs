@@ -26,18 +26,22 @@ public class UIMainLobby : BaseUI
     public List<ElementTabMenuUILobby> listElementMenu;
 
     [Space(20)]
+    [Header(" Top")]
+    public TMP_Text txtLevelMap;
+    public TMP_Text txtPower;
+    public TMP_Text txtGem;
+
+    public TMP_Text txtLevelPlayer;
+    public Image imgProcessPlayer;
+    public TMP_Text txtProcess;
+
+    [Space(20)]
     public Button btAutoLoot;
     public Button btLoot;
     public Button btBoost;
 
     [Space(20)]
     public TMP_Text txtLootTicket;
-
-    [Space(20)]
-    public TMP_Text txtQuantityName;
-    public TMP_Text txtQuantityPower;
-    public TMP_Text txtQuantityGem;
-
 
 #if UNITY_EDITOR
     [Space(20)]
@@ -215,6 +219,10 @@ public class UIMainLobby : BaseUI
     public void Refresh()
     {
         ReloadInfoGear();
+        SetlevelPlayer();
+        UpdateProcessLevel();
+        LoadResourceTxt();
+        LoadInfoMap();
     }
 
     private void ReloadInfoGear()
@@ -235,5 +243,68 @@ public class UIMainLobby : BaseUI
             element.SetLayout(result);
         }
     }
+    #endregion
+
+    #region Full Info Player
+
+    private void LoadResourceTxt()
+    {
+        // số lượng gem hiện có (ItemType.GEM trong UserItemData). Gọi khi vào scene hoặc khi có thay đổi.
+        if (txtGem != null)
+            txtGem.text = GameData.userData.items.GetQuantityHave(ItemType.GEM).ToString("0");
+    }
+
+    private void LoadPowerTxt()
+    {
+        // sức mạnh tổng cửa người chơi
+        // update khi user thay đổi trang bị , pet, cần có nơi tính rồi load thông tin ra 
+        txtPower.text = "";
+    }
+
+    private void LoadInfoMap()
+    {
+        // Màn campaign đang tới: curStageId (101, 102...) hiển thị dạng "chương-màn" = "1-1".
+        if (txtLevelMap == null)
+            return;
+
+        int stageId = GameData.userData.campaign.curStageId;
+        StaticCampaignData campaign = GameData.staticData.campaign;
+        txtLevelMap.text = campaign.GetChapter(stageId) + "-" + campaign.GetStageIndex(stageId);
+    }
+
+    // Level người chơi (hệ exp) = INDEX bảng rarity loot. OnClickLoot roll rarity theo playerLevel - 1.
+    private void SetlevelPlayer()
+    {
+        if (txtLevelPlayer != null)
+            txtLevelPlayer.text = GameData.userData.player.playerLevel.ToString();
+    }
+
+    // Thanh exp tiến tới level kế: fill = expHiệnTại / ngưỡngLênLevel, text = "cur/need".
+    // Đạt MaxLevel (hết bảng experience_required_per_level) thì thanh đầy, hiện "MAX".
+    private void UpdateProcessLevel()
+    {
+        UserPlayerData player = GameData.userData.player;
+        StaticExperienceData exp = GameData.staticData.experience;
+
+        if (player.playerLevel >= exp.MaxLevel)
+        {
+            if (imgProcessPlayer != null)
+                imgProcessPlayer.fillAmount = 1f;
+            if (txtProcess != null)
+                txtProcess.text = "MAX";
+            return;
+        }
+
+        int need = exp.GetXpRequired(player.playerLevel);
+        int cur = player.playerExperience;
+
+        if (imgProcessPlayer != null)
+            imgProcessPlayer.fillAmount = need > 0 ? Mathf.Clamp01((float)cur / need) : 0f;
+        if (txtProcess != null)
+            txtProcess.text = cur + "/" + need;
+    }
+
+
+
     #endregion
 }
