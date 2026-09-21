@@ -22,10 +22,10 @@ public class BaseMode : MonoBehaviour
 
     [Header("Thời gian trận (0 = không giới hạn)")]
     public int defaultBattleTime;
-    public float delayEndGame = 1.5f;
+    public float delayEndGame = 3f;
 
     [Header("Màn")]
-    [Tooltip("0 = dùng curStageId của người chơi; >0 = ép build stage này.")]
+    [Tooltip("0 = dùng stageIdCurrent của người chơi; >0 = ép build stage này.")]
     public int overrideStageId = 0;
 
     [Header("Lưới")]
@@ -130,7 +130,7 @@ public class BaseMode : MonoBehaviour
     {
         EnsureGameDataLoaded();
 
-        int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.curStageId;
+        int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.stageIdCurrent;
         currentLevel = CampaignLevelBuilder.Build(stageId, type);
 
         container = new GameObject("_Combat").transform;

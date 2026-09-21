@@ -3,7 +3,7 @@
 // Vao:  tools/_rewire/<Ten>.images.txt  (do dump sinh)  +  AssetRipper export prefab
 // Ra:   tools/_rewire/<Ten>.spritemap.json  (export-guid -> target-guid) + bao sprite thieu.
 const fs = require("fs"), path = require("path");
-const ROOT = "E:/Project/2026DungeonRush";
+const ROOT = path.resolve(__dirname, "..");
 const TARGET = process.argv[2] || "LevelPopup";
 const SRC = `${ROOT}/AssetRipper/ExportedProject/Assets/GameObject/${TARGET}.prefab`;
 const IMAGES = `${ROOT}/tools/_rewire/${TARGET}.images.txt`;

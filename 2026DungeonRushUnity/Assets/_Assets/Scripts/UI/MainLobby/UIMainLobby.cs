@@ -263,11 +263,11 @@ public class UIMainLobby : BaseUI
 
     private void LoadInfoMap()
     {
-        // Màn campaign đang tới: curStageId (101, 102...) hiển thị dạng "chương-màn" = "1-1".
+        // Màn campaign đang đánh: stageIdCurrent (101, 102...) hiển thị dạng "chương-màn" = "1-1".
         if (txtLevelMap == null)
             return;
 
-        int stageId = GameData.userData.campaign.curStageId;
+        int stageId = GameData.userData.campaign.stageIdCurrent;
         StaticCampaignData campaign = GameData.staticData.campaign;
         txtLevelMap.text = campaign.GetChapter(stageId) + "-" + campaign.GetStageIndex(stageId);
     }

@@ -11,6 +11,7 @@ public class UILootGearInfo : BaseUI
     public GameObject objEquip;
     public Image imgBgRarityEquip;
     public Image imgIconEquip;
+    public TMP_Text txtLvlEquip;
     public TMP_Text txtTypeRarityEquip;
     public TMP_Text txtNameGearEquip;
     public TMP_Text txtMainStatsEquip;
@@ -20,6 +21,7 @@ public class UILootGearInfo : BaseUI
     public GameObject objNew;
     public Image imgBgRarityNew;
     public Image imgIconNew;
+    public TMP_Text txtLvlNew;
     public TMP_Text txtTypeRarityNew;
     public TMP_Text txtNameGearNew;
     public TMP_Text txtMainStatsNew;
@@ -47,13 +49,13 @@ public class UILootGearInfo : BaseUI
         this.onEquip = onEquip;
         this.onSell = onSell;
 
-        FillLayout(newResult, imgIconNew, txtTypeRarityNew, txtNameGearNew, txtMainStatsNew, listTxtSubStatsNew);
+        FillLayout(newResult, imgIconNew, txtLvlNew, txtTypeRarityNew, txtNameGearNew, txtMainStatsNew, listTxtSubStatsNew);
 
         bool hasOld = oldResult != null;
         if (objEquip != null)
             objEquip.SetActive(hasOld);
         if (hasOld)
-            FillLayout(oldResult, imgIconEquip, txtTypeRarityEquip, txtNameGearEquip, txtMainStatsEquip, listTxtSubStatsEquip);
+            FillLayout(oldResult, imgIconEquip, txtLvlEquip, txtTypeRarityEquip, txtNameGearEquip, txtMainStatsEquip, listTxtSubStatsEquip);
 
         gameObject.SetActive(true);
     }
@@ -70,10 +72,14 @@ public class UILootGearInfo : BaseUI
         Close();
     }
 
-    private static void FillLayout(LootResult result, Image imgIcon, TMP_Text txtTypeRarity, TMP_Text txtNameGear, TMP_Text txtMainStats, List<TMP_Text> listTxtSubStats)
+    private static void FillLayout(LootResult result, Image imgIcon, TMP_Text txtLvl, TMP_Text txtTypeRarity, TMP_Text txtNameGear, TMP_Text txtMainStats, List<TMP_Text> listTxtSubStats)
     {
         if (imgIcon != null)
             imgIcon.sprite = result.icon;
+
+        // Level món (đã tính theo món đang mặc trong LootService.ComputeForgeLevel).
+        if (txtLvl != null)
+            txtLvl.text = "Lv." + result.level;
 
         string typeLabel = result.kind == LootItemKind.Weapon
             ? "Vũ khí (" + (result.weaponType == WeaponType.Melee ? "Cận chiến" : "Bắn xa") + ")"
@@ -87,7 +93,7 @@ public class UILootGearInfo : BaseUI
 
         string mainLabel = result.mainStatKind == GearMainStatKind.Health ? "Máu" : "Sát thương";
         if (txtMainStats != null)
-            txtMainStats.text = mainLabel + ": " + result.mainStat.ToString("0.##");
+            txtMainStats.text = mainLabel + ": " + result.mainStat.ToString("0");   // game gốc hiện main stat làm tròn nguyên
 
         DebugCustom.ShowLog("subStats:", JsonConvert.SerializeObject(result.subStats));
 

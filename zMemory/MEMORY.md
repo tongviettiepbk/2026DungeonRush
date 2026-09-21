@@ -29,3 +29,5 @@
 - [Công thức chỉ số enemy GỐC](dungonrush-enemy-stats-formula.md) — reverse il2cpp: Lancaster power split (500×10^hck / unitCount^Lanc → √); doc ở DecodedData/ENEMY_STATS_MODEL.md
 - [Công thức exp reward GỐC](dungonrush-exp-reward-formula.md) — reverse il2cpp: exp thắng màn = round(49 + level), chia đều mỗi quái; thua ko cộng; doc ở DecodedData/EXP_MODEL.md
 - [Luồng campaign + exp/playerLevel](dungonrush-campaign-flow.md) — Phase 1 win/lose loop XONG; UserPlayerData mới (playerLevel=level bảng rarity); bỏ forgeLevel; Phase 2/3 chờ
+- [Công thức Level gear GỐC](dungonrush-item-level-formula.md) — reverse il2cpp: level KHÔNG cố định 1; forge theo món đang mặc, base=level cũ + weightedOffset(rarity), lên rarity→reset 1, tụt→90+; doc ở DecodedData/ITEM_LEVEL_MODEL.md
+- [Batch prefab UI vào feature folders](dungonrush-ui-prefabs-batch.md) — đã lấy 128 prefab UI từ AssetRipper vào Prefabs/UI/<Feature>/ (layout-only, giống Pet); tooling mac ở tools/extract_ui_batch.py + venv

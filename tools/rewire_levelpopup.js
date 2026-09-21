@@ -2,11 +2,16 @@
 // Dung:  node tools/rewire_levelpopup.js <TenPrefab>   (mac dinh LevelPopup)
 // Vao:  AssetRipper export prefab + tools/_rewire/<Ten>.spritemap.json (do join sinh)
 // Lam: (1) thay guid script UGUI/TMP + font -> guid chuan project; (2) map sprite; (3) strip MOI script game.
-const fs = require("fs"), crypto = require("crypto");
-const ROOT = "E:/Project/2026DungeonRush";
+const fs = require("fs"), crypto = require("crypto"), path = require("path");
+const ROOT = path.resolve(__dirname, "..");
 const TARGET = process.argv[2] || "LevelPopup";
+// argv[3] = ten thu muc tinh nang; co -> Prefabs/UI/<Feature>/, khong -> Resources/Prefabs/UI/ (nhu cu)
+const FEATURE = process.argv[3] || "";
 const SRC = `${ROOT}/AssetRipper/ExportedProject/Assets/GameObject/${TARGET}.prefab`;
-const DEST = `${ROOT}/2026DungeonRushUnity/Assets/_Assets/Resources/Prefabs/UI/${TARGET}.prefab`;
+const DEST = FEATURE
+  ? `${ROOT}/2026DungeonRushUnity/Assets/_Assets/Prefabs/UI/${FEATURE}/${TARGET}.prefab`
+  : `${ROOT}/2026DungeonRushUnity/Assets/_Assets/Resources/Prefabs/UI/${TARGET}.prefab`;
+fs.mkdirSync(path.dirname(DEST), { recursive: true });
 const SPRITEMAP = `${ROOT}/tools/_rewire/${TARGET}.spritemap.json`;
 
 let raw = fs.readFileSync(SRC, "utf8").replace(/\r\n/g, "\n");

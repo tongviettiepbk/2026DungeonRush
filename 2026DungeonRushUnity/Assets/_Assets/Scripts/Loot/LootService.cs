@@ -7,8 +7,9 @@ using UnityEngine;
 // nằm trong pool gear (StaticGearItemData chỉ load GearItemData).
 public static class LootService
 {
-    // Level của item rơi ra (bản cơ bản: cố định Lv1, chỉ số chính đã đủ khác nhau theo rarity).
-    public const int LOOT_LEVEL = 1;
+    // Level fallback khi dựng lại món từ save mà KHÔNG có bản ghi (BuildFromEquipId). Level thật của
+    // món loot ra nay tính động theo món đang mặc (ComputeForgeLevel + ForgeController.RollForgeLevel).
+    public const int LOOT_LEVEL = ForgeController.ForgeMinLevel;
 
     // Bảng công thức chỉ số, cache 1 lần từ Resources (asset Gears/GearStatConfig).
     private static GearStatConfigData gearStatConfig;
@@ -72,9 +73,34 @@ public static class LootService
         // Random đều tay trên tập đã lọc để tỉ lệ ra vũ khí đúng theo số lượng asset cùng rarity.
         bool lootWeapon = weaponMatches.Count > 0 && (gearMatches.Count == 0 || Random.Range(0, gearMatches.Count + weaponMatches.Count) >= gearMatches.Count);
 
-        return lootWeapon
-            ? BuildWeaponResult(weaponMatches[Random.Range(0, weaponMatches.Count)])
-            : BuildGearResult(gearMatches[Random.Range(0, gearMatches.Count)]);
+        // Level tính theo món ĐANG MẶC ở slot đích (port đúng game gốc, xem ComputeForgeLevel).
+        // rolledRarity = rarity thật của món chọn được (đã lùi bậc ở while trên nếu thiếu asset).
+        if (lootWeapon)
+        {
+            WeaponData weapon = weaponMatches[Random.Range(0, weaponMatches.Count)];
+            int level = ComputeForgeLevel(GearSlotType.WEAPON, weapon.rarity);
+            return BuildWeaponResult(weapon, level);
+        }
+
+        GearItemData chosenGear = gearMatches[Random.Range(0, gearMatches.Count)];
+        int gearLevel = ComputeForgeLevel(chosenGear.slot, chosenGear.rarity);
+        return BuildGearResult(chosenGear, gearLevel);
+    }
+
+    // Tính level món forge/summon ra cho 1 slot: đọc bản ghi món ĐANG MẶC ở slot đó (base level +
+    // rarity cũ), rồi áp công thức 4 nhánh của game gốc (ForgeController.RollForgeLevel).
+    // Slot trống -> base = ForgeMinLevel, rarity cũ = Common (isEmpty=true).
+    private static int ComputeForgeLevel(GearSlotType slot, Rarity rolledRarity)
+    {
+        EquippedItemData rec = GameData.userData != null && GameData.userData.equipment != null
+            ? GameData.userData.equipment.GetRecord(slot)
+            : null;
+
+        bool isEmpty = rec == null;
+        int baseLevel = isEmpty ? ForgeController.ForgeMinLevel : rec.level;
+        Rarity inRarity = isEmpty ? Rarity.Common : rec.rarity;
+
+        return ForgeController.RollForgeLevel(baseLevel, inRarity, rolledRarity, isEmpty);
     }
 
     private static List<GearItemData> FilterByRarity(List<GearItemData> pool, Rarity rarity)
@@ -103,18 +129,18 @@ public static class LootService
         return result;
     }
 
-    // Dựng LootResult cho 1 gear (C2..C6).
-    private static LootResult BuildGearResult(GearItemData gear)
+    // Dựng LootResult cho 1 gear (C2..C6). level = level đã tính theo món đang mặc (ComputeForgeLevel).
+    private static LootResult BuildGearResult(GearItemData gear, int level)
     {
         GearMainStatKind mainKind;
-        double mainStat = GearStatCalculator.GetGearMainStat(gearStatConfig, gear.slot, gear.rarity, LOOT_LEVEL, out mainKind);
+        double mainStat = GearStatCalculator.GetGearMainStat(gearStatConfig, gear.slot, gear.rarity, level, out mainKind);
 
         return new LootResult
         {
             kind = LootItemKind.Gear,
             displayName = gear.displayName,
             rarity = gear.rarity,
-            level = LOOT_LEVEL,
+            level = level,
             icon = gear.icon,
             equipId = gear.assetName,
             gearSlot = gear.slot,
@@ -125,16 +151,17 @@ public static class LootService
     }
 
     // Dựng LootResult cho 1 vũ khí (C1) — chỉ số chính luôn là Sát thương.
-    private static LootResult BuildWeaponResult(WeaponData weapon)
+    // level = level đã tính theo món đang mặc (ComputeForgeLevel).
+    private static LootResult BuildWeaponResult(WeaponData weapon, int level)
     {
-        double mainStat = GearStatCalculator.GetWeaponMainStat(gearStatConfig, weapon.weaponType, weapon.rarity, LOOT_LEVEL);
+        double mainStat = GearStatCalculator.GetWeaponMainStat(gearStatConfig, weapon.weaponType, weapon.rarity, level);
 
         return new LootResult
         {
             kind = LootItemKind.Weapon,
             displayName = weapon.displayName,
             rarity = weapon.rarity,
-            level = LOOT_LEVEL,
+            level = level,
             icon = weapon.icon,
             equipId = weapon.assetName,
             weaponType = weapon.weaponType,

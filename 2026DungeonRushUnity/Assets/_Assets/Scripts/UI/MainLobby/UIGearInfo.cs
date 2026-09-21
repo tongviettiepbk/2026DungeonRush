@@ -40,7 +40,7 @@ public class UIGearInfo : BaseUI
 
         string mainLabel = result.mainStatKind == GearMainStatKind.Health ? "Máu" : "Sát thương";
         if (txtMainStats != null)
-            txtMainStats.text = mainLabel + ": " + result.mainStat.ToString("0.##");
+            txtMainStats.text = mainLabel + ": " + result.mainStat.ToString("0");   // game gốc hiện main stat làm tròn nguyên
 
         DebugCustom.ShowLog("subStats:", JsonConvert.SerializeObject(result.subStats));
 

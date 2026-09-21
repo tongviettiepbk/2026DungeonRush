@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 
 // Mode CAMPAIGN (MainMap — màn thường). BaseMode đã lo dựng map/lưới/wall + vòng đời
@@ -55,15 +56,16 @@ public class CampaignMode : BaseMode
 
     // ===== KẾT QUẢ TRẬN (Phase 1: chỉ vòng lặp win/lose + reload) =====
     // BaseMode.EndGame gọi CalculateResult sau khi phát EventID.EndGame.
-    //   Win  → đánh dấu qua màn (PassStage: passedStageId + curStageId sang màn kế) rồi lưu.
-    //   Lose → giữ nguyên curStageId, đánh lại chính màn đó.
+    //   Win  → đánh dấu qua màn (PassStage: cập nhật passedStageId + stageIdCurrent sang màn kế) rồi lưu.
+    //   Lose → lùi stageIdCurrent 1 màn (StepBackStage), passedStageId giữ nguyên, rồi đánh lại màn dễ hơn.
     // Dù thắng hay thua đều dựng lại màn sau delayEndGame giây. Reload trễ (coroutine) để KHÔNG
     // hủy unit ngay giữa lúc BaseMode đang dispatch sự kiện UnitDie/EndGame.
     protected override void CalculateResult(bool isWin)
     {
+        DebugCustom.ShowLog("Show EndGame");
         if (isWin)
         {
-            int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.curStageId;
+            int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.stageIdCurrent;
 
             // Exp thắng màn = round(49 + level) (clear sạch quái, xem DecodedData/EXP_MODEL.md).
             // Cộng vào playerExperience → có thể lên playerLevel (rarity table tự tốt lên).
@@ -89,6 +91,13 @@ public class CampaignMode : BaseMode
             GameData.userData.campaign.PassStage(stageId);
             GameData.Save(true);
         }
+        else if (overrideStageId <= 0)
+        {
+            // Thua → tự động lùi campaign 1 màn rồi đánh lại màn dễ hơn.
+            // (Chỉ áp dụng cho tiến trình thật; đang ép stage trong Editor thì giữ nguyên.)
+            GameData.userData.campaign.StepBackStage();
+            GameData.Save(true);
+        }
 
         StartCoroutine(RoutineReloadAfterResult());
     }
@@ -97,6 +106,12 @@ public class CampaignMode : BaseMode
     {
         yield return new WaitForSeconds(delayEndGame);
         Build();
+
+        // Cập nhật lại lobby (level, thanh exp, gem, tên màn) sau khi data đổi vì thắng/thua.
+        if (GameController.Instance.uiLobby != null)
+        {
+            GameController.Instance.uiLobby.Refresh();
+        }
     }
 
     // ===== SPAWN QUÂN THẬT =====

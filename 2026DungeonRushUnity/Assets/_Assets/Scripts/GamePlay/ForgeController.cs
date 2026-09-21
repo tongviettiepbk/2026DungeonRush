@@ -38,4 +38,74 @@ public static class ForgeController
         }
         return Rarity.Common;
     }
+
+    // ---- LEVEL của món forge ra (port ĐÚNG game gốc qv.iaq, reverse libil2cpp v41) ----
+    // Xem DecodedData/ITEM_LEVEL_MODEL.md. Hằng số + bảng offset = giá trị GameResources gốc.
+
+    public const int ForgeMinLevel = 1;
+    public const int ForgeMaxLevel = 100;            // cap gốc: + bonus mastery; base player = 100.
+    public const int ForgeLowerRarityMinLevel = 90;  // tụt rarity thì level nhảy lên [90 .. cap].
+
+    // Bảng {offset, weight} theo rarity (chỉ Common/Uncommon/Rare có bảng riêng).
+    private static readonly int[][] LevelOffsetsCommon   = { new[] { 3, 10 }, new[] { 6, 30 }, new[] { 9, 40 }, new[] { 12, 15 }, new[] { 15, 5 } };
+    private static readonly int[][] LevelOffsetsUncommon = { new[] { 2, 10 }, new[] { 4, 30 }, new[] { 6, 40 }, new[] { 8, 15 }, new[] { 10, 5 } };
+    private static readonly int[][] LevelOffsetsRare     = { new[] { 1, 10 }, new[] { 2, 30 }, new[] { 3, 40 }, new[] { 4, 15 }, new[] { 5, 5 } };
+    // Rarity >= Epic dùng bảng default (offset có thể âm).
+    private static readonly int[][] LevelOffsetsDefault  = { new[] { -2, 5 }, new[] { -1, 10 }, new[] { 0, 15 }, new[] { 1, 20 }, new[] { 2, 25 }, new[] { 3, 15 }, new[] { 4, 10 } };
+
+    // Tính level món forge/summon ra. base/inRarity = level & rarity món ĐANG MẶC ở slot đích
+    // (isEmpty = slot đang trống). rolledRarity = rarity đã roll cho món mới. 4 nhánh:
+    //   - slot trống HOẶC lên rarity cao hơn  -> ForgeMinLevel (reset về 1)
+    //   - cùng rarity                          -> clamp(baseLevel + offset_ngẫu_nhiên(rarity), 1, cap) (cộng dồn)
+    //   - tụt rarity thấp hơn                  -> Random[ForgeLowerRarityMinLevel .. cap]
+    public static int RollForgeLevel(int baseLevel, Rarity inRarity, Rarity rolledRarity, bool isEmpty)
+    {
+        if (isEmpty || rolledRarity > inRarity)
+        {
+            return ForgeMinLevel;
+        }
+
+        int cap = ForgeMaxLevel;   // gốc: ForgeMaxLevel + round(bonus mastery); base player = 100.
+
+        if (rolledRarity < inRarity)
+        {
+            return Random.Range(ForgeLowerRarityMinLevel, cap + 1);
+        }
+
+        // rolledRarity == inRarity: cộng dồn offset có trọng số vào level cũ.
+        int level = baseLevel + WeightedLevelOffset(rolledRarity);
+        return Mathf.Clamp(level, ForgeMinLevel, cap);
+    }
+
+    // Rút 1 offset theo trọng số từ bảng của rarity (fallback bảng default cho Epic trở lên).
+    private static int WeightedLevelOffset(Rarity rarity)
+    {
+        int[][] table;
+        switch (rarity)
+        {
+            case Rarity.Common:   table = LevelOffsetsCommon; break;
+            case Rarity.Uncommon: table = LevelOffsetsUncommon; break;
+            case Rarity.Rare:     table = LevelOffsetsRare; break;
+            default:              table = LevelOffsetsDefault; break;
+        }
+
+        int total = 0;
+        for (int i = 0; i < table.Length; i++)
+        {
+            total += table[i][1];
+        }
+
+        int roll = Random.Range(0, total);
+        int acc = 0;
+        for (int i = 0; i < table.Length; i++)
+        {
+            acc += table[i][1];
+            if (roll < acc)
+            {
+                return table[i][0];
+            }
+        }
+
+        return table[table.Length - 1][0];
+    }
 }

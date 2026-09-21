@@ -42,15 +42,15 @@ public class GameDataTester : MonoBehaviour
     private void CheatPassStage()
     {
         var campaign = GameData.userData.campaign;
-        campaign.PassStage(campaign.curStageId);
+        campaign.PassStage(campaign.stageIdCurrent);
         GameData.Save(true);
-        DebugCustom.Log("[Tester] curStageId=" + campaign.curStageId + ", passed=" + campaign.passedStageId);
+        DebugCustom.Log("[Tester] stageIdCurrent=" + campaign.stageIdCurrent + ", passed=" + campaign.passedStageId);
     }
 
     [ContextMenu("Test/Generate Current Campaign Level")]
     private void TestGenerateLevel()
     {
-        int stageId = GameData.userData.campaign.curStageId;
+        int stageId = GameData.userData.campaign.stageIdCurrent;
         CampaignLevelBuilder.CampaignLevel level = CampaignLevelBuilder.Build(stageId);
 
         int rows = level.grid.GetLength(0);

@@ -1,0 +1,6 @@
+#!/Volumes/Work/Project/2026DungeonRush/tools/.venv/bin/python
+import sys
+from UnityPy.cli import main
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(main())

@@ -5,7 +5,7 @@
 import os, sys, zipfile, tempfile, glob, struct
 import UnityPy
 from UnityPy.helpers.TypeTreeGenerator import TypeTreeGenerator
-ROOT=r"E:\Project\2026DungeonRush"
+ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 XAPK=os.path.join(ROOT,"Dungeon+Rush_41_APKPure.xapk")
 GA=os.path.join(ROOT,"AssetRipper","AuxiliaryFiles","GameAssemblies")
 TARGET=sys.argv[1] if len(sys.argv)>1 else "LevelPopup"

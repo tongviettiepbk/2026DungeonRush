@@ -244,5 +244,115 @@
   "DragonBossCharacterId": 999999,
   "ExperienceLevelBase": 49.0,
   "ExperienceLevelScaler": 1.0,
-  "HealthRegenMultiplier": 0.5
+  "HealthRegenMultiplier": 0.5,
+  "ForgeMinLevel": 1,
+  "ForgeMaxLevel": 100,
+  "ForgeLowerRarityMinLevel": 90,
+  "ForgeDefaultLevelOffsets": [
+    {
+      "Offset": -2,
+      "Weight": 5
+    },
+    {
+      "Offset": -1,
+      "Weight": 10
+    },
+    {
+      "Offset": 0,
+      "Weight": 15
+    },
+    {
+      "Offset": 1,
+      "Weight": 20
+    },
+    {
+      "Offset": 2,
+      "Weight": 25
+    },
+    {
+      "Offset": 3,
+      "Weight": 15
+    },
+    {
+      "Offset": 4,
+      "Weight": 10
+    }
+  ],
+  "ForgeRarityLevelOffsets": [
+    {
+      "Rarity": 0,
+      "Offsets": [
+        {
+          "Offset": 3,
+          "Weight": 10
+        },
+        {
+          "Offset": 6,
+          "Weight": 30
+        },
+        {
+          "Offset": 9,
+          "Weight": 40
+        },
+        {
+          "Offset": 12,
+          "Weight": 15
+        },
+        {
+          "Offset": 15,
+          "Weight": 5
+        }
+      ]
+    },
+    {
+      "Rarity": 1,
+      "Offsets": [
+        {
+          "Offset": 2,
+          "Weight": 10
+        },
+        {
+          "Offset": 4,
+          "Weight": 30
+        },
+        {
+          "Offset": 6,
+          "Weight": 40
+        },
+        {
+          "Offset": 8,
+          "Weight": 15
+        },
+        {
+          "Offset": 10,
+          "Weight": 5
+        }
+      ]
+    },
+    {
+      "Rarity": 2,
+      "Offsets": [
+        {
+          "Offset": 1,
+          "Weight": 10
+        },
+        {
+          "Offset": 2,
+          "Weight": 30
+        },
+        {
+          "Offset": 3,
+          "Weight": 40
+        },
+        {
+          "Offset": 4,
+          "Weight": 15
+        },
+        {
+          "Offset": 5,
+          "Weight": 5
+        }
+      ]
+    }
+  ]
 }
