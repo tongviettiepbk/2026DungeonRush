@@ -137,18 +137,19 @@ public class CampaignMode : BaseMode
             return;
         }
 
-        //BaseStats petStats = BuildPetStats();
-        //for (int i = 0; i < petCount; i++)
-        //{
-        //    // Rải pet quanh hero.
-        //    float angle = (360f / petCount) * i * Mathf.Deg2Rad;
-        //    Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 0.8f;
-        //    Vector3 petPos = MapController.Instance.ClampPointInMap(heroPos + offset);
+        // Spawn companion đi theo hero. petPrefab phải là prefab companion (PetUnit/lớp con)
+        // đã gán CompanionData — SetupCompanion đổ chỉ số + hành vi + FX từ data đó.
+        for (int i = 0; i < petCount; i++)
+        {
+            // Rải pet quanh hero.
+            float angle = (360f / petCount) * i * Mathf.Deg2Rad;
+            Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 0.8f;
+            Vector3 petPos = MapController.Instance.ClampPointInMap(heroPos + offset);
 
-        //    PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, parent);
-        //    pet.owner = hero;
-        //    pet.SpawnInBattle(petStats, StaticValue.TAG_TEAM_A, petPos);
-        //}
+            PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, parent);
+            int petLevel = pet.Data != null ? pet.Data.level : 1;
+            pet.SetupCompanion(pet.Data, hero, petLevel, petPos);
+        }
     }
 
     private void SpawnEnemies(List<EnemySpawnGenerator.EnemySpawnInfo> enemies)
@@ -205,17 +206,5 @@ public class CampaignMode : BaseMode
         }
 
         return gearStatConfig.GetPlayerBaseStats();
-    }
-
-    private BaseStats BuildPetStats()
-    {
-        return new BaseStats
-        {
-            attack = petAttack,
-            attackPerSecond = petAttackSpeed,
-            attackRange = petAttackRange,
-            maxHp = petMaxHp,
-            moveSpeed = petMoveSpeed,
-        };
     }
 }
