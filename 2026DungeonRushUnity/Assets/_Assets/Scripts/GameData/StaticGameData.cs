@@ -15,6 +15,7 @@ public class StaticGameData
     public StaticWingData wings;
     public StaticForgeData forge;
     public StaticCompanionData companions;
+    public StaticMasteryData mastery;
 
     public void Load()
     {
@@ -28,5 +29,6 @@ public class StaticGameData
         if (wings == null) wings = new StaticWingData();
         if (forge == null) forge = new StaticForgeData();
         if (companions == null) companions = new StaticCompanionData();
+        if (mastery == null) mastery = new StaticMasteryData();
     }
 }

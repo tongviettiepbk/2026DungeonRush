@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8ede901b5248dab77d845e4d8b6d54, type: 3}
+  m_Name: 1-AutoLootHammerCount
+  m_EditorClassIdentifier:
+  assetName: 1-AutoLootHammerCount
+  upgradeType: 8
+  upgradeName: Auto-Loot Speed
+  description: Increases the number of loot boxes opened simultaneously in Auto Mode.
+  icon: {fileID: 21300000, guid: e7073a78ac7b4455aa7c739a2cd1a920, type: 3}
+  unlockGemCost: 0
+  addedLater: 0
+  defaultValue: 0
+  isValueAdditive: 0
+  applyDefaultBeforeFeatureUnlock: 0
+  applyDefaultBeforeCardUnlock: 1
+  valuePrefix: ''
+  valueSuffix: ''
+  levels:
+  - gemCost: 0
+    value: 1
+  - gemCost: 40
+    value: 2
+  - gemCost: 60
+    value: 3
+  - gemCost: 120
+    value: 4
+  - gemCost: 160
+    value: 5
+  - gemCost: 200
+    value: 6
+  - gemCost: 300
+    value: 7
+  - gemCost: 420
+    value: 8

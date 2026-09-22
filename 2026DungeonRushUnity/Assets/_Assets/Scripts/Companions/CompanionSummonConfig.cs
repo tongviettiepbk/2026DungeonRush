@@ -36,12 +36,20 @@ public class CompanionSummonConfig
     public static readonly int[] SUMMON_CAPACITY_VALUE = { 0, 1, 2, 3, 4, 5 };
     public static readonly int[] SUMMON_CAPACITY_GEM_COST = { 0, 60, 120, 160, 200, 250 };
 
-    // Giá trị Summon Capacity hiện tại theo cấp mastery (clamp). Mastery chưa làm → truyền 0.
+    // Giá trị Summon Capacity hiện tại theo cấp mastery (clamp).
     public int GetSummonCapacity(int masteryLevel)
     {
         if (masteryLevel < 0) masteryLevel = 0;
         if (masteryLevel >= SUMMON_CAPACITY_VALUE.Length) masteryLevel = SUMMON_CAPACITY_VALUE.Length - 1;
         return SUMMON_CAPACITY_VALUE[masteryLevel];
+    }
+
+    // Sức chứa Summon ĐANG tác dụng, đọc trực tiếp từ hệ Mastery (nhánh CompanionSummonCount).
+    // Dùng thay cho việc truyền tay masteryLevel; trả 0 khi nhánh chưa mở khoá.
+    public int GetCurrentSummonCapacity()
+    {
+        return (int)Math.Round(MasteryService.GetCurrentValue(MasteryUpgradeType.CompanionSummonCount),
+                               MidpointRounding.ToEven);
     }
 
     // Số con thực nhận cho 1 gói Bone (mirror CompanionTabPage.guc): round(cap) + base.

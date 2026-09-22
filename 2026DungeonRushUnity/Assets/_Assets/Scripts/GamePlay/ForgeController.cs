@@ -65,7 +65,8 @@ public static class ForgeController
             return ForgeMinLevel;
         }
 
-        int cap = ForgeMaxLevel;   // gốc: ForgeMaxLevel + round(bonus mastery); base player = 100.
+        // gốc: ForgeMaxLevel + round(bonus mastery ForgeMaxItemLevel); base player = 100.
+        int cap = ForgeMaxLevel + Mathf.RoundToInt(MasteryService.GetCurrentValue(MasteryUpgradeType.ForgeMaxItemLevel));
 
         if (rolledRarity < inRarity)
         {
