@@ -179,10 +179,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1086575161306814}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fb6323f73e797f28de7f4da51818eec, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f68e3fc889e38146ab7a1af4e5ea3c8, type: 3}
   m_Name:
-  m_EditorClassIdentifier:
-  BodyTransform: {fileID: 4297232036333885}
+  m_EditorClassIdentifier: Assembly-CSharp::PetUnit
+  bodyOffset: 0.3
+  impactAttack: {fileID: 0}
+  sfxAttack: {fileID: 0}
+  stateCurrent: 0
+  owner: {fileID: 0}
+  engageRange: 3
+  followDistance: 1.5
+  followSlack: 0.4
+  weaponData: {fileID: 0}
 --- !u!114 &114785187498417174
 MonoBehaviour:
   m_ObjectHideFlags: 0
