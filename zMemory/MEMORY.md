@@ -31,3 +31,5 @@
 - [Luồng campaign + exp/playerLevel](dungonrush-campaign-flow.md) — Phase 1 win/lose loop XONG; UserPlayerData mới (playerLevel=level bảng rarity); bỏ forgeLevel; Phase 2/3 chờ
 - [Công thức Level gear GỐC](dungonrush-item-level-formula.md) — reverse il2cpp: level KHÔNG cố định 1; forge theo món đang mặc, base=level cũ + weightedOffset(rarity), lên rarity→reset 1, tụt→90+; doc ở DecodedData/ITEM_LEVEL_MODEL.md
 - [Batch prefab UI vào feature folders](dungonrush-ui-prefabs-batch.md) — đã lấy 128 prefab UI từ AssetRipper vào Prefabs/UI/<Feature>/ (layout-only, giống Pet); tooling mac ở tools/extract_ui_batch.py + venv
+- [Companion unlock/summon](dungonrush-companion-unlock-summon.md) — pet unlock PlayerLevel 5; nguyên liệu Bone (Zombie Outbreak); summon ad x12 / Bone 100→16 / 200→36; công thức guc+eby
+- [Companion battle classes](dungonrush-companion-battle-classes.md) — pattern in-battle: PetUnit companion-aware + mỗi loại 1 lớp con (PetCompanionDps xong); FX impact chờ wiring BaseFx

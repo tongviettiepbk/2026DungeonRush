@@ -9,10 +9,15 @@ public class StaticCompanionData
 {
     public List<CompanionData> companions;
 
+    // Config triệu hồi (unlock level + chi phí Bone + công thức), reverse từ game gốc.
+    public CompanionSummonConfig summonConfig;
+
     private Dictionary<Rarity, List<CompanionData>> poolByRarity;
 
     public StaticCompanionData()
     {
+        summonConfig = new CompanionSummonConfig();
+
         companions = Resources.LoadAll<CompanionData>("Scriptable Objects/Companions")
             .OrderBy(x => x.assetName).ToList();
 

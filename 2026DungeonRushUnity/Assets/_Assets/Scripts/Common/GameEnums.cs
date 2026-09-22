@@ -6,6 +6,7 @@ public enum ItemType
     GEM = 2,
     ENERGY = 3,
     LOOT_TICKET = 4,
+    BONE = 5,           // Nguyên liệu triệu hồi Companion (reward dungeon Zombie Outbreak). Xem DecodedData/COMPANION_MODEL.md
 }
 
 // Loại môi trường map. Giá trị = EnvironmentType trong MapConfig gốc của DungeonRush.
