@@ -147,7 +147,12 @@ public class CampaignMode : BaseMode
             Vector3 petPos = MapController.Instance.ClampPointInMap(heroPos + offset);
 
             PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, parent);
-            int petLevel = pet.Data != null ? pet.Data.level : 1;
+            // Level companion lấy từ SAVE (UserCompanionData) theo assetName — chưa sở hữu → 1.
+            int petLevel = 1;
+            if (pet.Data != null && GameData.userData != null && GameData.userData.companions != null)
+            {
+                petLevel = GameData.userData.companions.GetLevel(pet.Data.assetName);
+            }
             pet.SetupCompanion(pet.Data, hero, petLevel, petPos);
         }
     }

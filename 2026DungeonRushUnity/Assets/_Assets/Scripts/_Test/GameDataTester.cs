@@ -81,6 +81,26 @@ public class GameDataTester : MonoBehaviour
         }
     }
 
+    // Companion DPS (Ember Fist) để test hệ save/level companion.
+    private const string CHEAT_COMPANION_ID = "Companion_1_Common_DPS_Single";
+
+    [ContextMenu("Cheat/Companion - Add 16 Cards (DPS)")]
+    private void CheatCompanionAddCards()
+    {
+        int levelsUp = GameData.userData.companions.AddCards(CHEAT_COMPANION_ID, 16);
+        GameData.userData.companions.Equip(CHEAT_COMPANION_ID);
+        GameData.Save(true);
+
+        CompanionModel m = GameData.userData.companions.GetModel(CHEAT_COMPANION_ID);
+        DebugCustom.Log($"[Tester] Companion {CHEAT_COMPANION_ID}: +{levelsUp} level -> lv={m.level} cards={m.cardCount} equipped={GameData.userData.companions.IsEquipped(CHEAT_COMPANION_ID)}");
+    }
+
+    [ContextMenu("Cheat/Companion - Log Owned")]
+    private void CheatCompanionLog()
+    {
+        DebugCustom.Log("[Tester] Companions=" + JsonConvert.SerializeObject(GameData.userData.companions));
+    }
+
     [ContextMenu("Cheat/Clear All Save")]
     private void CheatClearSave()
     {

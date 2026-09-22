@@ -33,3 +33,5 @@
 - [Batch prefab UI vào feature folders](dungonrush-ui-prefabs-batch.md) — đã lấy 128 prefab UI từ AssetRipper vào Prefabs/UI/<Feature>/ (layout-only, giống Pet); tooling mac ở tools/extract_ui_batch.py + venv
 - [Companion unlock/summon](dungonrush-companion-unlock-summon.md) — pet unlock PlayerLevel 5; nguyên liệu Bone (Zombie Outbreak); summon ad x12 / Bone 100→16 / 200→36; công thức guc+eby
 - [Companion battle classes](dungonrush-companion-battle-classes.md) — pattern in-battle: PetUnit companion-aware + mỗi loại 1 lớp con (PetCompanionDps xong); FX impact chờ wiring BaseFx
+- [Hệ Mastery (G1)](dungonrush-mastery-feature.md) — 10 nhánh buff vĩnh viễn tiêu Gem; data+service+save+2 hook XONG (chưa UI); ĐÃ reverse il2cpp: phí mở khoá=UnlockGemCost per-branch, iuf dead code
+- [Companion save/upgrade](dungonrush-companion-save-upgrade.md) — schema CompanionModel + UserCompanionData (level/card, max 100, fallback 16); wire level pet từ save

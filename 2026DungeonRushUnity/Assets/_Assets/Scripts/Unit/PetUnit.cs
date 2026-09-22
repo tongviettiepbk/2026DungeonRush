@@ -68,10 +68,14 @@ public class PetUnit : BaseUnit
         };
     }
 
-    // Sát thương 1 nhịp kỹ năng = (base + scaler*(level-1)) * hệ số CompanionDamage của chủ.
-    // LƯU Ý: đường cong theo level (cộng dồn scaler) suy từ pattern các model đã reverse của project;
-    // ở level 1 = damageBase, khớp <Value> hiển thị trên mô tả. Cần đối chiếu native nếu cân bằng
-    // theo level về sau. damageBase/damageScaler là sát thương TUYỆT ĐỐI (mô tả "deal X Damage").
+    // Sát thương 1 nhịp kỹ năng — CÔNG THỨC GỐC (reverse libil2cpp v41, strategy DPS `kn$$gfk` @0x2C408D0):
+    //   damage = (DamageBase + DamageScaler × level) × (1 + CompanionDamageBonus/100)
+    // Trong đó:
+    //   • level = cấp companion (1-based, cap 100) — dùng THẲNG level, KHÔNG phải (level-1).
+    //     ⇒ DPS level 1 = 90 + 4.5×1 = 94.5 (mô tả "<Value>" hiển thị 90 là base, khác giá trị combat).
+    //   • (1 + CompanionDamageBonus/100): native `Companion.bgoh` = Character.CompanionDamageBonus(0xF4)/100,
+    //     rồi (bgoh + 1). Trùng đúng owner.stats.companionDamage (đã lưu dạng bội số 1+%).
+    // Xem [[dungonrush-companion-battle-classes]].
     protected double GetAbilityDamage()
     {
         if (companionData == null)
@@ -79,7 +83,7 @@ public class PetUnit : BaseUnit
             return stats.attack;
         }
 
-        double dmg = companionData.damageBase + companionData.damageScaler * (level - 1);
+        double dmg = companionData.damageBase + companionData.damageScaler * level;
         if (owner != null)
         {
             dmg *= owner.stats.companionDamage;
@@ -87,7 +91,7 @@ public class PetUnit : BaseUnit
         return dmg;
     }
 
-    // Lượng hồi máu 1 nhịp (dùng cho companion healer) — cùng dạng công thức với sát thương.
+    // Hồi máu 1 nhịp (companion healer) — cùng dạng công thức gốc với sát thương (base + scaler×level).
     protected double GetAbilityHeal()
     {
         if (companionData == null)
@@ -95,7 +99,7 @@ public class PetUnit : BaseUnit
             return 0f;
         }
 
-        double heal = companionData.healBase + companionData.healScaler * (level - 1);
+        double heal = companionData.healBase + companionData.healScaler * level;
         if (owner != null)
         {
             heal *= owner.stats.companionDamage;
