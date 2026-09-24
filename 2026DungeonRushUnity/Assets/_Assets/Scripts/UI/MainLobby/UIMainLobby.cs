@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 public enum TypeMenuLobby
 {
-    None = 0,
-    Main,
-    Shop,
-    Pet,
-    Mode,
-    Clan
+    Shop = 0,
+    Pet = 1,
+    Dungeon = 2,
+    Event = 3,
+    Clan = 4,
+
 }
 
 public class UIMainLobby : BaseUI
@@ -24,6 +24,9 @@ public class UIMainLobby : BaseUI
 
     [Space(20)]
     public List<ElementTabMenuUILobby> listElementMenu;
+
+    [Space(20)]
+    public List<GameObject> listObjTab = new List<GameObject>();
 
     [Space(20)]
     [Header(" Top")]
@@ -56,7 +59,62 @@ public class UIMainLobby : BaseUI
             btLoot.onClick.AddListener(OnClickLoot);
 
         UpdateLootTicketText();
+        InitTabMenu();
     }
+
+    #region Tab menu
+
+    // listElementMenu[i] <-> listObjTab[i] <-> (TypeMenuLobby)i
+    private void InitTabMenu()
+    {
+        for (int i = 0; i < listElementMenu.Count; i++)
+        {
+            if (listElementMenu[i] != null)
+                listElementMenu[i].Init((TypeMenuLobby)i, OnClickTab);
+        }
+
+        // Mặc định vào lobby: đóng hết, không tab nào mở.
+        CloseAllTabs();
+    }
+
+    // Bấm tab đang đóng -> mở; bấm lại chính tab đang mở -> đóng.
+    private void OnClickTab(TypeMenuLobby type)
+    {
+        int index = (int)type;
+        if (index < listElementMenu.Count && listElementMenu[index] != null && listElementMenu[index].isOpen)
+            CloseAllTabs();
+        else
+            OpenTab(type);
+    }
+
+    // Mở 1 tab thì đóng các tab còn lại (cả objSelect của element lẫn obj nội dung tab).
+    public void OpenTab(TypeMenuLobby type)
+    {
+        SetActiveTab((int)type);
+    }
+
+    public void CloseAllTabs()
+    {
+        SetActiveTab(-1);
+    }
+
+    // index = -1 -> không tab nào mở.
+    private void SetActiveTab(int index)
+    {
+        for (int i = 0; i < listElementMenu.Count; i++)
+        {
+            if (listElementMenu[i] != null)
+                listElementMenu[i].SetOpen(i == index);
+        }
+
+        for (int i = 0; i < listObjTab.Count; i++)
+        {
+            if (listObjTab[i] != null)
+                listObjTab[i].SetActive(i == index);
+        }
+    }
+
+    #endregion
 
     private void Update()
     {

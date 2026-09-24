@@ -10,6 +10,7 @@ public class UserCompanionData : BaseUserData
 
     public List<CompanionModel> owned { get; set; } = new List<CompanionModel>();
     public List<string> equipped { get; set; } = new List<string>();
+    public int totalSummons { get; set; }        // TotalCompanionSummons gốc — quyết định Summon Level
 
     protected override string GetDataKey()
     {
@@ -21,6 +22,7 @@ public class UserCompanionData : BaseUserData
         base.InitData();
         owned = new List<CompanionModel>();
         equipped = new List<string>();
+        totalSummons = 0;
         isDataChanged = true;
     }
 
@@ -121,34 +123,50 @@ public class UserCompanionData : BaseUserData
         return m;
     }
 
-    // Cộng `count` thẻ cho companion + TỰ lên cấp khi đủ (tiêu thẻ theo CompanionUpgradeConfig).
-    // Chưa sở hữu thì tự sở hữu. Trả về SỐ CẤP vừa lên (0 nếu không lên).
-    public int AddCards(string id, int count)
+    // Cộng `count` thẻ cho companion (chưa sở hữu thì tự sở hữu). KHÔNG tự lên cấp — gốc
+    // UserController.edi chỉ CardCount++; lên cấp thủ công qua Upgrade().
+    public void AddCards(string id, int count)
     {
         if (count <= 0)
         {
-            return 0;
+            return;
         }
 
         CompanionModel m = Own(id);
         m.cardCount += count;
         isDataChanged = true;
+    }
 
-        int levelsGained = 0;
-        while (m.level < CompanionUpgradeConfig.MAX_LEVEL)
+    public bool CanUpgrade(string id)
+    {
+        CompanionModel m = GetModel(id);
+        return m != null && CompanionUpgradeConfig.CanUpgrade(m.level, m.cardCount);
+    }
+
+    // Lên 1 cấp nếu đủ thẻ (tiêu thẻ theo CompanionUpgradeConfig). Trả về true nếu đã lên.
+    public bool Upgrade(string id)
+    {
+        if (CanUpgrade(id) == false)
         {
-            int need = CompanionUpgradeConfig.GetCardsRequired(m.level);
-            if (m.cardCount < need)
-            {
-                break;
-            }
-
-            m.cardCount -= need;
-            m.level++;
-            levelsGained++;
+            return false;
         }
 
-        return levelsGained;
+        CompanionModel m = GetModel(id);
+        m.cardCount -= CompanionUpgradeConfig.GetCardsRequired(m.level);
+        m.level++;
+        isDataChanged = true;
+        return true;
+    }
+
+    // Tắt cờ "mới nhận" khi người chơi đã click xem.
+    public void ClearNew(string id)
+    {
+        CompanionModel m = GetModel(id);
+        if (m != null && m.isNew)
+        {
+            m.isNew = false;
+            isDataChanged = true;
+        }
     }
 
     // ===== Trang bị (tối đa 3, khoá = assetName) =====

@@ -1,26 +1,29 @@
 ---
 name: dungonrush-companion-save-upgrade
-description: Save & nâng cấp companion — schema CompanionModel + UserCompanionData + card-per-level
+description: Save/nâng cấp/summon-level companion + UI CompanionUI — bảng whn & whm ĐÃ trích, nâng cấp THỦ CÔNG
 metadata:
   type: project
+  modified: 2026-09-25
 ---
 
-Save + level companion (reverse il2cpp v41, xem DecodedData/COMPANION_MODEL.md §7). Khác hệ meta
-unlock/summon ở [[dungonrush-companion-unlock-summon]]; dùng cho level pet in-battle [[dungonrush-companion-battle-classes]].
+Save + level + summon companion (reverse il2cpp v41, xem DecodedData/COMPANION_MODEL.md §7-8). Khác hệ meta
+unlock/summon cost ở [[dungonrush-companion-unlock-summon]]; level pet in-battle [[dungonrush-companion-battle-classes]].
 
-**Schema GỐC:** `CompanionModel { CompanionId(assetName), Level, CardCount, IsNew }` ;
-`User.OwnedCompanions: List<CompanionModel>` ; `User.EquippedCompanions: List<string>` (tối đa 3, khoá=assetName).
-Lên cấp bằng THẺ (tích CardCount), KHÔNG có XP.
+**Schema GỐC:** `CompanionModel { CompanionId(assetName), Level, CardCount, IsNew }` ; OwnedCompanions ;
+EquippedCompanions (tối đa 3) ; `TotalCompanionSummons` (→ `UserCompanionData.totalSummons`).
 
-**Nâng cấp (class helper `ly`):** max level **100** (`ly.gpx`); cards/level = BẢNG int[] (`ly.gpz`, index=level),
-fallback **16** khi vượt bảng. Bảng int[] nằm trong ScriptableObject companion manager, **CHƯA trích** → tạm fallback 16.
+**ĐÃ reverse (2026-09-25):**
+- Thẻ/level `ly.gpz` = `whn {0,2,3,3,3,4,4,5,5,6,7,8,10,11,13}`, level≥15 → 16 (KHÔNG phải SO companion manager như ghi cũ).
+- Summon Level = bảng `ly.whm` 100 hàng (threshold tổng lượt + 6 tỉ lệ Common..Mythic) → `CompanionSummonLevelConfig.cs`.
+- `UserController.edi`: con mới = sở hữu 0 thẻ + IsNew; trùng = +1 thẻ, **KHÔNG auto lên cấp** → nâng cấp THỦ CÔNG (user chốt).
+- Quick equip = sort rarity↓ rồi level↓, lấy 3 (`UserController.ep.dnc`).
+- Trích bằng emulator capstone nhỏ (track w/s register, bắt `ValueTuple.ctor`) + đọc InitializeArray blob theo
+  `/*Metadata offset*/` của `__StaticArrayInitTypeSize=N` trong dump.cs. Xem [[dungonrush-reverse-native-il2cpp]].
 
-**ĐÃ dựng trong project (compile sạch):**
-- `Companions/CompanionModel.cs`, `Companions/UserCompanionData.cs` (owned/equipped + GetLevel/Own/AddCards/Equip/Unequip),
-  `Companions/CompanionUpgradeConfig.cs` (MAX_LEVEL 100 + GetCardsRequired fallback 16).
-- Đăng ký ở `UserData` (DATA_KEY_COMPANION + field `companions` + Load + ValidateData list) — pattern BaseUserData.
-- `CampaignMode.SpawnHeroAndPets`: pet level lấy từ `GameData.userData.companions.GetLevel(assetName)` (chưa sở hữu → 1).
-- Cheat test ở `_Test/GameDataTester.cs`: "Companion - Add 16 Cards (DPS)" / "Log Owned".
+**Code (compile sạch):** `CompanionService` (static: Summon/TrySummonByBone/TryUpgrade/UpgradeAll/QuickEquip),
+`UserCompanionData` (AddCards không level, Upgrade, ClearNew, totalSummons), `CompanionUpgradeConfig` (bảng whn),
+UI `UI/Companions/CompanionUI.cs` + `ElementPetEquimentUI.cs` (clone template trong Content; slot trống=objAddArea).
 
-**CÒN LẠI:** (a) trích bảng int[] card-per-level thật; (b) disasm `UserController.edi` (summon apply);
-(c) spawn theo EquippedCompanions thật (giờ vẫn dùng petPrefab gán tay ở mode inspector).
+**CÒN LẠI:** ads thật + giới hạn/ngày ad summon; panel kết quả summon; btInfo (popup tỉ lệ — CompanionUpgradeInfoPopup);
+ObjDownArrow; imgProcess summon ở scene đang Image Type=Sliced (phải đổi Filled mới chạy fillAmount);
+spawn theo EquippedCompanions thật.

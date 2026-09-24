@@ -87,7 +87,12 @@ public class GameDataTester : MonoBehaviour
     [ContextMenu("Cheat/Companion - Add 16 Cards (DPS)")]
     private void CheatCompanionAddCards()
     {
-        int levelsUp = GameData.userData.companions.AddCards(CHEAT_COMPANION_ID, 16);
+        GameData.userData.companions.AddCards(CHEAT_COMPANION_ID, 16);
+        int levelsUp = 0;
+        while (GameData.userData.companions.Upgrade(CHEAT_COMPANION_ID))
+        {
+            levelsUp++;
+        }
         GameData.userData.companions.Equip(CHEAT_COMPANION_ID);
         GameData.Save(true);
 

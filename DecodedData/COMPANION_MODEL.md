@@ -115,3 +115,25 @@ damage = (DamageBase + DamageScaler × level) × (1 + CompanionDamageBonus/100)
 
 **Đã dựng trong project:** `CompanionModel`, `UserCompanionData` (owned/equipped + GetLevel/Own/AddCards/Equip),
 `CompanionUpgradeConfig` (MAX_LEVEL 100 + fallback 16). CampaignMode nạp level pet từ save theo assetName.
+
+## 8. SUMMON LEVEL + tỉ lệ rarity + bảng thẻ nâng cấp (reverse il2cpp v41, 2026-09-25)
+
+Nguồn: `ly.cctor` (@0x2763C48) dựng 2 mảng static; các hàm `ly.gpu/gpy/gqb/gpt/gpz/gqa`; executor `UserController.edi`.
+
+**Summon Level** — theo TỔNG lượt đã summon (save `TotalCompanionSummons`, User 0x348), KHÔNG theo Bone:
+- `whm = (threshold, t1..t6)[100]`. `gpu(total)` = (index hàng đầu tiên có threshold > total) + 1, cap 100.
+  → lv1: 0–49, lv2: 50–104, lv3: 105–164 … hàng 100 threshold = int.MaxValue (max).
+- `gpy(total)` = (total − threshold[i−1], threshold[i] − threshold[i−1], isMax) → text/thanh tiến độ.
+- `gpt(total)` roll rarity: `r = Random.Range(0,100)`, so cộng dồn từ Mythic (t6) xuống; t1..t6 = Common..Mythic.
+- Bảng đầy đủ 100 hàng: `Scripts/Companions/CompanionSummonLevelConfig.cs`. Mốc tiêu biểu:
+  lv1 100% Common · lv7 lần đầu ra Rare 0.2% · lv25 Epic 0.01% · lv50 Legendary 0.01% · lv75 Mythic 0.01% ·
+  lv100 = 17.5/16.5/16.5/16.5/16.5/16.5.
+
+**Executor `edi(count)`** — mỗi lượt: rarity = gpt(Total hiện tại) → `GameResources.jhm(rarity)` (random 1 con) →
+chưa có: `new CompanionModel(id)` (Level 1, 0 thẻ, IsNew) · có rồi: `CardCount++` (KHÔNG tự lên cấp) → `Total++`.
+
+**Thẻ nâng cấp `gpz(level)`** = `whn[level]`, `whn = int[15] {0,2,3,3,3,4,4,5,5,6,7,8,10,11,13}` (InitializeArray,
+global-metadata offset 0x79DBC8); level ≤ 0 → whn[1]; level ≥ 15 → 16. `gqa(level, cards)` = cards ≥ gpz(level).
+→ Nâng cấp THỦ CÔNG (thay cho ghi chú "auto lên cấp" ở §7).
+
+**Quick Equip** — comparer `UserController.ep.dnc`: rarity giảm dần, cùng rarity thì Level giảm dần → lấy top 3.
