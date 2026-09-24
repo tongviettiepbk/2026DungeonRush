@@ -24,6 +24,9 @@ Hệ Mastery (G1): 10 nhánh buff toàn cục vĩnh viễn, tiêu GEM. Data gố
 - Enum gốc (TypeDefIndex 897): type 0=GemOfferCount, 9=LevelUpRewardWorth (v41 KHÔNG ship 2 type này); còn lại 1..8,10,11. Đã sửa MasteryEnums (trước đó để nhầm None=0).
 - Pipeline reverse mac: extract .so+metadata từ xapk → Il2CppDumper (clone GitHub, dotnet build net8, chạy DOTNET_ROLL_FORWARD=Major) → dump.cs/script.json → capstone disasm (offset=VA-0x4000). Artifact nặng (.so/dump) đã xoá khỏi repo sau khi xong.
 
-**Chưa làm:** UI MasteryPage; nối các consumer còn lại (AutoLoot/GemOffer/AdBoost/Offline/MoveSpeed/Mining — các hệ đó chưa có trong game).
+**Thứ tự mở khoá GỐC (đọc MasteryConfig.Upgrades từ xapk, 2026-09-25):** mở TUẦN TỰ theo list: AutoLoot(0) → AdBoostWorth(0) → GemOfferChance(30) → CompanionSummon(60) → MaxOffline(90) → MaxPickaxe(120) → ForgeMaxItemLevel(150) → AdBoostDuration(180) → OfflineEarning(210) → MoveSpeed(240) — phí = unlockGemCost nhánh kế, tăng dần. Đã chốt vào StaticMasteryData.ORDER.
+**UI (2026-09-25):** MasteryUI (lưới + nút mở nhánh kế, cờ isTestFree) + ElementMasteryUI XONG; chưa có click nâng cấp từng ô.
+
+**Chưa làm:** click nâng cấp nhánh trong UI; nối các consumer còn lại (AutoLoot/GemOffer/AdBoost/Offline/MoveSpeed/Mining — các hệ đó chưa có trong game).
 
 KHÁC với StatModifierSource.MasteryCommon/MasteryPromotion (MechanicEnums) = bậc mastery của CARD trong battle, không liên quan.

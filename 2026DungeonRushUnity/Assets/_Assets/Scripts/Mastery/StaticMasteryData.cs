@@ -17,12 +17,28 @@ public class StaticMasteryData
     // (xem MasteryService.GetUnlockCost). MasteryConfig.UnlockGemCosts + hàm iuf là DEAD CODE,
     // cố tình KHÔNG dùng ở đây.
 
+    // Thứ tự GỐC = MasteryConfig.Upgrades (đọc từ xapk v41). Là thứ tự hiển thị VÀ thứ tự mở khoá
+    // tuần tự; phí mở (unlockGemCost) tăng dần theo đúng thứ tự này: 0, 0, 30, 60 ... 240.
+    private static readonly MasteryUpgradeType[] ORDER =
+    {
+        MasteryUpgradeType.AutoLootHammerCount,
+        MasteryUpgradeType.AdBoostWorth,
+        MasteryUpgradeType.GemOfferChance,
+        MasteryUpgradeType.CompanionSummonCount,
+        MasteryUpgradeType.MaxOfflineTime,
+        MasteryUpgradeType.MiningMaxPickaxe,
+        MasteryUpgradeType.ForgeMaxItemLevel,
+        MasteryUpgradeType.AdBoostDuration,
+        MasteryUpgradeType.OfflineEarningWorth,
+        MasteryUpgradeType.PlayerMovementSpeed,
+    };
+
     private Dictionary<MasteryUpgradeType, MasteryUpgradeData> byType;
 
     public StaticMasteryData()
     {
         upgrades = Resources.LoadAll<MasteryUpgradeData>("Scriptable Objects/Mastery")
-            .OrderBy(x => (int)x.upgradeType).ToList();
+            .OrderBy(x => System.Array.IndexOf(ORDER, x.upgradeType)).ToList();
 
         byType = new Dictionary<MasteryUpgradeType, MasteryUpgradeData>();
         for (int i = 0; i < upgrades.Count; i++)
