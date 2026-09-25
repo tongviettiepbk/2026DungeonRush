@@ -16,7 +16,7 @@ public enum TypeMenuLobby
 
 public class UIMainLobby : BaseUI
 {
-    public Toggle togleAutoPet;
+    public Button btAutoPet;
     public List<ElementPetUILobby> listElementPet;
 
     [Space(20)]

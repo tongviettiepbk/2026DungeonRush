@@ -7,4 +7,5 @@ public class ElementPetUILobby : MonoBehaviour
     public GameObject objPlusImage;
     public Image imgFillBar;
     public GameObject objLock;
+    public GameObject objUnlock;
 }
