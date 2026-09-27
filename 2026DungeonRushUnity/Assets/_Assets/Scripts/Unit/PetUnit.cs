@@ -38,6 +38,35 @@ public class PetUnit : BaseUnit
     public override bool isTargetable => false;
     public override bool isImmuneCC => true;
 
+    // ===== Va chạm giữa các pet =====
+    // Prefab rip để collider pet là TRIGGER → các pet đi xuyên, chồng lên nhau. Bật collider THẬT
+    // (Rigidbody2D Dynamic sẵn trên prefab tự đẩy tách) nhưng CHỈ va với pet khác + tường, không
+    // chạm hero/enemy (tránh pet đẩy/chặn đường hero). Thuần hiển thị: đạn/target tính theo khoảng cách.
+    private const int PET_LAYER = 14;        // layer companion trên prefab rip (chỉ pet dùng)
+    private const int OBSTACLE_LAYER = 12;   // layer tường (MainObstacle/ZombieObstacle/...)
+
+    protected override void Awake()
+    {
+        base.Awake();
+        SetupPetCollision();
+    }
+
+    private void SetupPetCollision()
+    {
+        // Va chạm có thể làm xoay body (prefab pet không khoá rotation).
+        rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        if (bodyCollider == null)
+        {
+            return;
+        }
+
+        bodyCollider.gameObject.layer = PET_LAYER;   // Blaster rip để layer 0 (trùng hero)
+        bodyCollider.isTrigger = false;
+        bodyCollider.excludeLayers = ~((1 << PET_LAYER) | (1 << OBSTACLE_LAYER));
+        bodyCollider.layerOverridePriority = 10;     // quyết định của pet thắng collider hero/enemy (priority 0)
+    }
+
     // ===== Spawn từ CompanionData =====
 
     // Vào trận: gán chủ + data, quy đổi data → hành vi/chỉ số rồi kích hoạt tại vị trí.
