@@ -192,6 +192,7 @@ public class CompanionUI : MonoBehaviour
     {
         CompanionService.QuickEquip();
         Refresh();
+        OnEquippedChanged();
     }
 
     private void OnClickUpgradeAll()
@@ -226,7 +227,7 @@ public class CompanionUI : MonoBehaviour
 
         GameData.Save();
         Refresh();
-        GameController.Instance.uiLobby.RefreshPets();
+        OnEquippedChanged();
     }
 
     public void OnClickUnequip(CompanionData data)
@@ -234,6 +235,18 @@ public class CompanionUI : MonoBehaviour
         GameData.userData.companions.Unequip(data.assetName);
         GameData.Save();
         Refresh();
+        OnEquippedChanged();
+    }
+
+    // Đổi equip → cập nhật ô pet ở lobby + pet trong trận NGAY (không chờ màn sau).
+    private void OnEquippedChanged()
+    {
         GameController.Instance.uiLobby.RefreshPets();
+
+        CampaignMode campaign = GameController.Instance.mode as CampaignMode;
+        if (campaign != null)
+        {
+            campaign.SyncPets();
+        }
     }
 }

@@ -54,6 +54,7 @@ public class CampaignMode : BaseMode
 
         GameController.Instance.ResetBattle();
         hero = null;
+        alliesGroup = null;
         pets.Clear();
         isEndMode = false;
     }
@@ -141,17 +142,55 @@ public class CampaignMode : BaseMode
         Vector2Int heroCell = new Vector2Int(0, MapController.Instance.Cols / 2);
         Vector3 heroPos = MapController.Instance.CellToWorld(heroCell);
 
-        Transform parent = NewGroup("Allies");
-        hero = SpawnUnit<HeroUnit>(heroPrefab, heroPos, parent);
+        alliesGroup = NewGroup("Allies");
+        hero = SpawnUnit<HeroUnit>(heroPrefab, heroPos, alliesGroup);
         hero.SpawnInBattle(BuildHeroStats(), StaticValue.TAG_TEAM_A, heroPos);
 
-        // Spawn 1 companion cho MỖI pet đang equip (save UserCompanionData, tối đa 3), đi theo hero.
-        // Prefab riêng từng con load theo assetName (CompanionData.LoadPrefab) — SetupCompanion đổ
-        // data của con đang equip vào (chỉ số + cooldown + level trong save).
+        SyncPets();
+    }
+
+    private Transform alliesGroup;
+
+    // Đồng bộ pet trong trận với danh sách equip (save UserCompanionData, tối đa 3), đi theo hero.
+    // Gọi lúc dựng màn VÀ ngay khi đổi equip ở CompanionUI (không phải chờ màn sau):
+    //   • Pet đang trong trận mà đã bỏ equip → gỡ khỏi trận.
+    //   • Pet mới equip chưa có trong trận → spawn quanh vị trí hero hiện tại.
+    // Prefab riêng từng con load theo assetName (CompanionData.LoadPrefab) — SetupCompanion đổ
+    // data của con đang equip vào (chỉ số + cooldown + level trong save).
+    public void SyncPets()
+    {
+        if (hero == null || isEndMode)
+        {
+            return;
+        }
+
         UserCompanionData user = GameData.userData.companions;
         List<string> equipped = user.GetEquipped();
+
+        for (int i = pets.Count - 1; i >= 0; i--)
+        {
+            PetUnit pet = pets[i];
+            if (pet != null && pet.Data != null && equipped.Contains(pet.Data.assetName))
+            {
+                continue;
+            }
+
+            if (pet != null)
+            {
+                pet.Deactive();
+                Destroy(pet.gameObject);
+            }
+            pets.RemoveAt(i);
+        }
+
+        Vector3 heroPos = hero.transform.position;
         for (int i = 0; i < equipped.Count; i++)
         {
+            if (GetPet(equipped[i]) != null)
+            {
+                continue;
+            }
+
             CompanionData data = GameData.staticData.companions.GetData(equipped[i]);
             if (data == null)
             {
@@ -170,7 +209,7 @@ public class CampaignMode : BaseMode
             Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 0.8f;
             Vector3 petPos = MapController.Instance.ClampPointInMap(heroPos + offset);
 
-            PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, parent);
+            PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, alliesGroup);
             pet.SetupCompanion(data, hero, user.GetLevel(data.assetName), petPos);
             pets.Add(pet);
         }
