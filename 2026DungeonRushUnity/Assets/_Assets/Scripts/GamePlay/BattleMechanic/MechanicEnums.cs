@@ -14,6 +14,7 @@
     CompanionDamage = 30,
     CompanionAttackBonus = 31,
     CompanionAttackSpeed = 32,
+    CompanionCooldownReduction = 33,
     SkillDamage = 35,
     EnhancementSkillSlots = 36,
     BossDamageBonus = 40,
@@ -23,7 +24,9 @@
 
     MaxHp = 100,
     HpRecovery = 110,
+    Lifesteal = 111,
     EvasionRate = 120,
+    BlockChance = 121,
     SkillHealingRate = 130,
 
     MoveSpeed = 200,

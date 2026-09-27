@@ -75,14 +75,17 @@ Mỗi `CompanionType` map sang 1 strategy class riêng qua factory `lp$$gjt(type
 
 | type | tên | strategy | | type | tên | strategy |
 |---|---|---|---|---|---|---|
-| 0 DPS | kn | 0x2C40… | | 8 Guardian | ko | |
+| 0 DPS | kn | | | 8 Guardian | ko | |
 | 1 Healer | kq | | | 9 AoeSlower | kd | |
-| 2 Slower | kx | | | 10 Blaster | kh | |
-| 3 Lightning | kx (chung Slower) | | | 11 Meteor | (?) | |
-| 4 ChainHealer | kl | | | 12 Siphon | kt | |
-| 5 Bomber | kk | | | 13 HealNova | kt (chung Siphon) | |
-| 6 MultiSlower | lh | | | 14 MirrorClone | System.Object (no-op?) | |
+| 2 Slower | lo | | | 10 Blaster | kh | |
+| 3 Lightning | kx | | | 11 Meteor | lb | |
+| 4 ChainHealer | kl | | | 12 Siphon | lm | |
+| 5 Bomber | kk | | | 13 HealNova | kt | |
+| 6 MultiSlower | lh | | | 14 MirrorClone | ld | |
 | 7 Beam | kf | | | 15 Immortality | kv | |
+
+(Bảng trên ĐÃ SỬA 2026-09-27 bằng giải jump-table `lp$$gjt` @0x2C4786C: byte table @0xF662DF, slot lớp
+0x238..0x2B0 xếp theo tên kd,kf,kh,kk,kl,kn,ko,kq,kt,kv,kx,lb,ld,lh,lm,lo. Bảng cũ ghi 2/3=kx, 12/13=kt là SAI.)
 
 **DPS (`kn$$gfk`, thân hàm @0x2C408D0) — công thức áp cho projectile:**
 ```
@@ -94,8 +97,61 @@ damage = (DamageBase + DamageScaler × level) × (1 + CompanionDamageBonus/100)
 - **level dùng THẲNG (1-based, cap 100), KHÔNG phải (level-1).** DPS Ember Fist lv1 = 90+4.5×1 = **94.5**
   (chuỗi mô tả "<Value>=90" chỉ là base hiển thị, khác giá trị combat).
 - `(1 + CompanionDamageBonus/100)` = hệ số CompanionDamage của chủ (Stats lưu dạng bội số 1+%).
-- Healer/Lightning… (kq/kx) suy đoán cùng dạng `Base + Scaler×level` với Heal/Damage tương ứng —
-  cần disasm kq/kx để chốt (chưa làm).
+- Lightning… (kx) suy đoán cùng dạng `Base + Scaler×level` — cần disasm kx để chốt (chưa làm).
+
+**Healer (`kq`, reverse 2026-09-27)** — `kq$$gfk` @0x2C40F80, closure `kq.kp.gge` @0x2C41270 / `ggf` @0x2C4150C:
+```
+heal = (HealBase + HealScaler × level) × (1 + CompanionDamageBonus/100)
+```
+- ASM: `ldp s8,s9,[data,#0x74]` (HealBase 0x74, HealScaler 0x78); level `[comp,#0xD8]`; `Companion.gik` =
+  `Character.CompanionDamageBonus(0xF4)/100` (cùng hệ số với DPS); `fadd #1` rồi nhân.
+- Mục tiêu = **chủ** (`Companion+0x40`, Character), KHÔNG chọn enemy. gfk chỉ trả false khi `ProjectilePrefab`
+  null → **bắn mỗi lần hồi chiêu xong, KỂ CẢ khi hero đầy máu** (không kiểm tra HP).
+- gfk: `Companion.giz(ownerPos, gge)` = quay về phía chủ + chạy anim, tới điểm ra đòn gọi gge.
+- gge: chủ null/chết → thôi; `LeanPool.Spawn(ProjectilePrefab, Companion.gjk(firePoint))` →
+  `CompanionProjectile.gpa(ownerTransform, ProjectileSpeed(0x84), ggf, ProjectileHitSound, volume)` = homing tới hero.
+- ggf (tới nơi): chủ còn sống → `Character.evu(min(hp + heal, maxHp))` rồi `Character.ewr(CharacterParticleType.Heal, true)`.
+- Cooldown chung (Companion.gis): `Cooldown × (1 − CompanionCooldownReduction(0xF0)/100)`; EffectDuration > 0 → pha Active trước.
+- **Nguồn CompanionCooldownReduction (reverse 2026-09-27):** `Soldier.eyw(List<SubStatEntry>, ...)` @0x2A1D320 —
+  switch SubStatType (jump-table @0xF65A63): type 11 CompanionCooldown → `Character+0xF0 += value` (giá trị THÔ %,
+  KHÔNG /100, không trần), type 12 CompanionDamage → `+0xF4` tương tự. Mastery (UpgradeType) không có nhánh này.
+- **Không chí mạng:** damage companion đi thẳng `Character.ewh(double,bool)` / `ewg(attacker,double,bool)`, không roll crit.
+- **BlockChance / Lifesteal (Character.ewb @0x2A15640, reverse 2026-09-27):** eyw cộng THÔ % substat BlockChance(1)→0xE4,
+  Lifesteal(8)→0xEC. Trong ewb (1 đòn thường): bên đánh `IsHome`(0x148, phe người chơi) → KHÔNG roll chặn, roll crit
+  (`rm.ioz(CritChance)` = Random.Range(0,100) <= p) ×CriticalDamage, `target.ewg(this,dmg,crit)`, rồi hút máu:
+  Lifesteal>0 && 0<Health<Max → Health = min(Max, Health + dmg×Lifesteal/100). Bên đánh là enemy thường → roll
+  `rm.ioz(target.BlockChance)`: trúng → chặn TRỌN (sự kiện CharacterBlocked); không → ewg(dmg, không crit, không hút máu).
+
+**Chọn mục tiêu (Companion):** `gjm` = enemy GẦN HERO nhất ; `gjn` = enemy XA HERO nhất ; `gjo(pos,r)` = enemy trong
+bán kính ; `gil` = list enemy sống ; `lw.gpp(list,r)` = vị trí enemy có nhiều enemy khác trong r nhất. Mọi damage
+(trừ Burn) = `(Base + Scaler×level) × (1 + CompanionDamageBonus/100)`, gây qua `Character.ewh/ewg` (không crit).
+
+**Tóm tắt từng strategy (reverse 2026-09-27):**
+- **lo Slower**: đạn → gjm; trúng: damage + `CompanionSlowEffect(SlowDuration, SlowAmount)` = NHÂN MoveSpeed(0xB8) &
+  AttackSpeed(0xC0) với SlowAmount; trúng lại chỉ reset thời gian.
+- **kx Lightning**: chuỗi = gjm + tối đa LightningChainCount enemy khác (thứ tự list SpawnController). Tia chạy
+  LightningSpeed, chạm con nào TRỌN damage (goe); giữ LightningDuration, mỗi LightningTickInterval TRỌN damage cả chuỗi (gof).
+- **kl ChainHeal**: tia tới CHỦ (ChainHealSpeed), giữ ChainHealDuration, mỗi HealTickInterval hồi TRỌN heal (glh).
+- **kk Bomber**: điểm = lw.gpp(BombRadius); bom bay cong thời gian max(dist/BombProjectileSpeed, 0.25), cao
+  y+=4h·t(1−t); nổ: FX×BombRadius sống BombExplosionDuration, damage mọi enemy trong BombRadius; BurnEnabled →
+  `CompanionBurnEffect`: mỗi 0.5s BurnTickDamage CỐ ĐỊNH (không level) trong BurnDuration.
+- **lh MultiSlower**: đạn → gjm (damage+slow+MultiSlowImpact) rồi tách MultiSlowChainCount viên từ điểm trúng tới
+  enemy gần nhất chưa trúng (lh.ght), mỗi viên damage+slow.
+- **kf Beam**: như Lightning 1 mục tiêu với BeamSpeed/BeamDuration/BeamTickInterval (chạm: gkh, tick: gki).
+- **ko Guardian**: nhắm chủ; hồi heal chuẩn 1 LẦN (GuardianHealAmount không dùng) + BlockChance(0xE4) += GuardianBlockChance
+  trong GuardianActiveDuration.
+- **kd AoeSlower**: khung Bomber với AoeSlow* (radius/speed/arc/explosionDuration) + slow thay burn.
+- **kh Blaster**: nhắm gjm trong BlasterRange; `gkt(dmg, waveCount, fireDuration)`: sóng đầu ngay, rồi mỗi
+  fireDuration/waveCount; mỗi sóng TRỌN damage enemy trong BlasterRange & nón BlasterConeAngle (hướng bám mục tiêu).
+- **lb Meteor**: MeteorBombCount điểm = enemy[i % n] + insideUnitCircle×Random(0.5, MeteorOffsetRange); coroutine thả
+  mỗi MeteorBombDelay từ MeteorDropHeight (BombProjectileSpeed), nổ như Bomber (BombRadius, +burn nếu bật).
+- **lm Siphon**: đạn sin (SiphonProjectileSpeed/Amplitude/Frequency) → gjn (XA nhất) → damage → bay về chủ → hồi heal chuẩn.
+- **kt HealNova**: đạn hồi về chủ → heal chuẩn → vòng nở HealNovaStart→EndRadius trong HealNovaDuration, tick
+  HealNovaTickInterval, mỗi enemy trúng 1 lần `(HealNovaDamageBase + HealNovaDamageScaler×lv)×bonus`.
+- **ld MirrorClone**: đạn về chủ → `lt.gon(hero, data, level)`: bản sao Soldier ở ô trống gần (CloneGridSearchCount),
+  maxHp = heroMaxHp × (CloneHealthPercent + CloneHealthPercentScaler×lv)/100, sống CloneLifetime, tint Alpha/Brightness.
+- **kv Immortality**: duration = ImmortalityDuration + ImmortalityDurationScaler×lv (không bonus, cũng thay pha active
+  Companion+0x94); đạn về chủ → `IsImmortal`(0xF9) trong duration.
 
 ## 7. SAVE companion + NÂNG CẤP (reverse il2cpp v41)
 

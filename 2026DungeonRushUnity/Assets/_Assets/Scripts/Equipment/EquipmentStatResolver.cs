@@ -7,8 +7,7 @@ using UnityEngine;
 //      qua GearStatCalculator. weapon→Attack; gear Damage-kind→Attack / Health-kind→MaxHp.
 //   2. SUBSTAT (+X% đã roll, lưu trong save): percent (isFlatValue=false), value = phần trăm/100.
 //      Mỗi SubStatType map sang StatModifierType tương ứng (xem MapSubStat). MeleeDamage/RangedDamage
-//      chỉ tính khi vũ khí ĐANG CẦM đúng kiểu (điều kiện toàn cục). Loại chưa có field Stats
-//      (Lifesteal/BlockChance/CompanionCooldown) tạm bỏ qua — data vẫn lưu, áp khi có hệ combat tương ứng.
+//      chỉ tính khi vũ khí ĐANG CẦM đúng kiểu (điều kiện toàn cục). Đủ 13 loại substat gốc đều đã map.
 //
 // LƯU Ý mô hình áp: main = cộng dồn (PlayerBase + Σ flat); substat = % áp lên tổng (do HeroUnit gom
 // theo đích rồi nhân/cộng). Công thức TỔNG HỢP substat gốc chưa reverse → dùng mô hình % chuẩn genre.
@@ -137,6 +136,9 @@ public static class EquipmentStatResolver
             case SubStatType.DoubleHitChance: type = StatModifierType.DoubleShot; return true;
             case SubStatType.HealthRegen: type = StatModifierType.HpRecovery; return true;
             case SubStatType.CompanionDamage: type = StatModifierType.CompanionDamage; return true;
+            case SubStatType.CompanionCooldown: type = StatModifierType.CompanionCooldownReduction; return true;
+            case SubStatType.BlockChance: type = StatModifierType.BlockChance; return true;
+            case SubStatType.Lifesteal: type = StatModifierType.Lifesteal; return true;
 
             // MeleeDamage/RangedDamage: chỉ cộng vào Sát thương khi vũ khí đang cầm đúng kiểu.
             case SubStatType.MeleeDamage:
@@ -146,7 +148,6 @@ public static class EquipmentStatResolver
                 type = StatModifierType.Attack;
                 return weaponType == WeaponType.Range;
 
-            // Chưa có field Stats/combat: Lifesteal, BlockChance, CompanionCooldown → data vẫn lưu, chưa áp.
             default:
                 type = StatModifierType.None;
                 return false;

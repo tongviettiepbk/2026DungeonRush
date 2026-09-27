@@ -107,9 +107,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1116856031163603}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f68e3fc889e38146ab7a1af4e5ea3c8, type: 3}
+  m_Script: {fileID: 11500000, guid: 650d51e7613e4adc86583723df47cb37, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PetUnit
+  m_EditorClassIdentifier: Assembly-CSharp::PetCompanionSlow
   bodyOffset: 0.3
   impactAttack: {fileID: 0}
   sfxAttack: {fileID: 0}
@@ -119,7 +119,9 @@ MonoBehaviour:
   followDistance: 1.5
   followSlack: 0.4
   weaponData: {fileID: 0}
-  companionData: {fileID: 0}
+  companionData: {fileID: 11400000, guid: 0ea1fd1fdd1b45faa06140447b45fe2c, type: 2}
+  projectilePrefab: {fileID: 114324289371622058, guid: 3583254b884a4bce9a8a96a8b6ef1806, type: 3}
+  sfxShoot: {fileID: 0}
 --- !u!1 &453872220136936014
 GameObject:
   m_ObjectHideFlags: 0

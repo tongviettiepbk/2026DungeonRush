@@ -131,9 +131,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1086575161306814}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f68e3fc889e38146ab7a1af4e5ea3c8, type: 3}
+  m_Script: {fileID: 11500000, guid: 851affb6ef0349518637fee2b60a68d3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PetUnit
+  m_EditorClassIdentifier: Assembly-CSharp::PetCompanionChainHeal
   bodyOffset: 0.3
   impactAttack: {fileID: 0}
   sfxAttack: {fileID: 0}
@@ -143,7 +143,9 @@ MonoBehaviour:
   followDistance: 1.5
   followSlack: 0.4
   weaponData: {fileID: 0}
-  companionData: {fileID: 0}
+  companionData: {fileID: 11400000, guid: 681189dfe1ed46c7b2d510712157dc9e, type: 2}
+  projectilePrefab: {fileID: 0}
+  sfxShoot: {fileID: 0}
 --- !u!58 &58214046153278864
 CircleCollider2D:
   m_ObjectHideFlags: 0

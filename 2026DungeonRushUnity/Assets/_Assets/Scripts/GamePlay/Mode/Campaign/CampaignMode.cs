@@ -106,6 +106,15 @@ public class CampaignMode : BaseMode
         StartCoroutine(RoutineReloadAfterResult());
     }
 
+    // Thua khi HERO chết — bản sao hero (companion Clone) cũng ở team A nhưng không giữ trận.
+    protected override void OnAllyDie(int battleId)
+    {
+        if (hero == null || !hero.isTargetable)
+        {
+            EndGame(false);
+        }
+    }
+
     private IEnumerator RoutineReloadAfterResult()
     {
         yield return new WaitForSeconds(delayEndGame);

@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 // Pet/Companion (TeamA) — ĐI THEO hero và chỉ tấn công enemy trong tầm (spec).
@@ -102,11 +105,27 @@ public class PetUnit : BaseUnit
         return true;
     }
 
+    // Gốc (Companion.gis): ra đòn xong vào pha ACTIVE (EffectDuration, Immortal = thời gian bất tử)
+    // rồi mới tới pha COOLDOWN → một lượt đầy = thời gian active + cooldown.
+    // Cooldown gốc = Cooldown × (1 − CompanionCooldownReduction/100) của CHỦ (substat trang bị,
+    // % cộng dồn thô). Không áp cho initialDelay và pha active.
     private void StartCooldown()
     {
-        cooldownCurrent = cooldownDuration;
-        cooldownRemain = cooldownDuration;
+        cooldownCurrent = Mathf.Max(0f, GetActiveDuration()) + GetReducedCooldown();
+        cooldownRemain = cooldownCurrent;
         isActivateRequested = false;
+    }
+
+    private float GetReducedCooldown()
+    {
+        float reduction = owner != null ? owner.stats.companionCooldownReduction : 0f;
+        return Mathf.Max(0f, cooldownDuration * (1f - reduction / 100f));
+    }
+
+    // Thời gian pha active sau khi ra đòn (mặc định CompanionData.effectDuration).
+    protected virtual float GetActiveDuration()
+    {
+        return companionData != null ? companionData.effectDuration : 0f;
     }
 
     // KHÔNG gọi base: BaseUnit chỉ chạy state machine khi isTargetable, mà pet luôn isTargetable=false
@@ -197,15 +216,11 @@ public class PetUnit : BaseUnit
             return stats.attack;
         }
 
-        double dmg = companionData.damageBase + companionData.damageScaler * level;
-        if (owner != null)
-        {
-            dmg *= owner.stats.companionDamage;
-        }
-        return dmg;
+        return ScaleByLevel(companionData.damageBase, companionData.damageScaler);
     }
 
-    // Hồi máu 1 nhịp (companion healer) — cùng dạng công thức gốc với sát thương (base + scaler×level).
+    // Hồi máu 1 nhịp — CÔNG THỨC GỐC (reverse `kq$$gfk`, cùng dạng sát thương):
+    //   heal = (HealBase + HealScaler × level) × (1 + CompanionDamageBonus/100)
     protected double GetAbilityHeal()
     {
         if (companionData == null)
@@ -213,18 +228,186 @@ public class PetUnit : BaseUnit
             return 0f;
         }
 
-        double heal = companionData.healBase + companionData.healScaler * level;
+        return ScaleByLevel(companionData.healBase, companionData.healScaler);
+    }
+
+    // (base + scaler × level) × hệ số CompanionDamage của chủ — dạng chung mọi giá trị kỹ năng gốc.
+    protected double ScaleByLevel(float baseValue, float scaler)
+    {
+        double value = baseValue + scaler * level;
         if (owner != null)
         {
-            heal *= owner.stats.companionDamage;
+            value *= owner.stats.companionDamage;
         }
-        return heal;
+        return value;
     }
 
     // AttackData mang sát thương companion (thay cho GetBasicAttackData dựa trên stats.attack).
     protected AttackData GetAbilityAttackData()
     {
-        return new AttackData(this, AttackType.BasicAttack, CritType.Critable, GetAbilityDamage());
+        return MakeAttackData(GetAbilityDamage());
+    }
+
+    // Gốc: companion gây damage thẳng qua Character.ewh/ewg (không roll chí mạng) → NonCrit.
+    protected AttackData MakeAttackData(double damage)
+    {
+        return new AttackData(this, AttackType.BasicAttack, CritType.NonCrit, damage);
+    }
+
+    // ===== Helper dùng chung cho các lớp con (mục tiêu / sát thương / hồi máu) =====
+
+    // Gây sát thương kỹ năng lên 1 enemy (bỏ qua nếu đã chết/biến mất).
+    protected void DealDamage(BaseUnit victim, double damage)
+    {
+        if (victim != null && victim.isTargetable)
+        {
+            victim.TakeAttack(MakeAttackData(damage));
+        }
+    }
+
+    // Hồi máu cho chủ (kẹp ở maxHp trong BaseUnit.GetHeal).
+    protected void HealOwner(double heal)
+    {
+        if (owner != null && owner.isTargetable)
+        {
+            owner.GetHeal(this, heal);
+        }
+    }
+
+    // Enemy còn sống trong tầm giao chiến quanh hero (bản sao, an toàn khi duyệt + gây damage).
+    protected List<BaseUnit> GetEnemiesAroundOwner()
+    {
+        Vector3 center = owner != null ? owner.Transform.position : Transform.position;
+        List<BaseUnit> result = new List<BaseUnit>();
+        List<BaseUnit> enemies = GetAliveEnemies();
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            BaseUnit e = enemies[i];
+            if (e != null && e.isTargetable && VectorUtils.IsInRange(center, e.Transform.position, engageRange))
+            {
+                result.Add(e);
+            }
+        }
+        return result;
+    }
+
+    // Enemy còn sống trong bán kính quanh 1 điểm (gốc Companion.gjo).
+    protected List<BaseUnit> GetEnemiesInRadius(Vector3 center, float radius)
+    {
+        List<BaseUnit> result = new List<BaseUnit>();
+        List<BaseUnit> enemies = GetAliveEnemies();
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            BaseUnit e = enemies[i];
+            if (e != null && e.isTargetable && VectorUtils.IsInRange(center, e.Transform.position, radius))
+            {
+                result.Add(e);
+            }
+        }
+        return result;
+    }
+
+    // Enemy XA hero nhất (gốc Companion.gjn — Siphon).
+    protected BaseUnit GetFarthestEnemy()
+    {
+        Vector3 center = owner != null ? owner.Transform.position : Transform.position;
+        List<BaseUnit> enemies = GetEnemiesAroundOwner();
+        BaseUnit farthest = null;
+        float farthestSqr = -1f;
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            float sqr = VectorUtils.SqrDistance(center, enemies[i].Transform.position);
+            if (sqr > farthestSqr)
+            {
+                farthestSqr = sqr;
+                farthest = enemies[i];
+            }
+        }
+        return farthest;
+    }
+
+    // Vị trí enemy có NHIỀU enemy khác trong 'radius' nhất (gốc lw.gpp — Bomber/AoeSlower).
+    protected Vector3 FindDensestEnemyPoint(float radius, Vector3 fallback)
+    {
+        List<BaseUnit> enemies = GetEnemiesAroundOwner();
+        int bestCount = -1;
+        Vector3 best = fallback;
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            Vector3 p = enemies[i].Transform.position;
+            int count = 0;
+            for (int j = 0; j < enemies.Count; j++)
+            {
+                if (i != j && VectorUtils.IsInRange(p, enemies[j].Transform.position, radius))
+                {
+                    count++;
+                }
+            }
+
+            if (count > bestCount)
+            {
+                bestCount = count;
+                best = p;
+            }
+        }
+        return best;
+    }
+
+    // Bắn 1 viên CompanionBullet đuổi theo 'victim' từ firePoint; tới nơi gọi onArrive(victim).
+    protected CompanionBullet FireHoming(BaseBullet prefab, BaseUnit victim, float speed, Action<BaseUnit> onArrive)
+    {
+        return FireHomingFrom(prefab, firePoint.position, victim, speed, onArrive);
+    }
+
+    protected CompanionBullet FireHomingFrom(BaseBullet prefab, Vector3 start, BaseUnit victim, float speed, Action<BaseUnit> onArrive)
+    {
+        CompanionBullet bullet = SpawnCompanionBullet(prefab, speed);
+        if (bullet == null)
+        {
+            // Thiếu prefab đạn → tác động ngay để kỹ năng vẫn chạy.
+            onArrive?.Invoke(victim);
+            return null;
+        }
+
+        bullet.ActiveHoming(start, this, victim, onArrive);
+        return bullet;
+    }
+
+    protected CompanionBullet SpawnCompanionBullet(BaseBullet prefab, float speed)
+    {
+        if (prefab == null)
+        {
+            return null;
+        }
+
+        CompanionBullet bullet = PoolingController.Instance.GetBullet(prefab) as CompanionBullet;
+        if (bullet != null && speed > 0.01f)
+        {
+            bullet.speed = speed;
+        }
+        return bullet;
+    }
+
+    protected void PlayShootSfx()
+    {
+        if (sfxShoot != null)
+        {
+            PlaySfx(sfxShoot);
+        }
+    }
+
+    // Chờ theo thời gian TRẬN (dừng khi pause, nhân gameSpeed) — dùng trong coroutine kỹ năng.
+    protected IEnumerator WaitBattleTime(float seconds)
+    {
+        float t = 0f;
+        while (t < seconds)
+        {
+            if (!isPause)
+            {
+                t += Time.deltaTime * GameController.Instance.gameSpeed;
+            }
+            yield return null;
+        }
     }
 
     // Pet dùng vũ khí gán sẵn trên prefab cho basic attack (melee/ranged). Trống → companion tự
@@ -286,9 +469,20 @@ public class PetUnit : BaseUnit
 
     // ===== Targeting / di chuyển theo hero (giữ nguyên spec) =====
 
-    // Chọn enemy gần nhất trong engageRange tính từ vị trí HERO (giữ pet quanh hero).
+    // Companion hỗ trợ (Heal/ChainHeal/Guardian/HealNova/Clone/Immortal) nhắm CHỦ thay vì enemy:
+    // hồi chiêu xong là ra đòn, không cần enemy (đúng các strategy gốc nhắm Companion+0x40).
+    protected virtual bool TargetsOwner => false;
+
+    // Chọn enemy gần nhất trong engageRange tính từ vị trí HERO (gốc Companion.gjm) — hoặc chính
+    // hero với companion hỗ trợ.
     protected override void FindNearestTarget()
     {
+        if (TargetsOwner)
+        {
+            target = owner != null && owner.isTargetable ? owner : null;
+            return;
+        }
+
         Vector3 center = owner != null ? owner.Transform.position : Transform.position;
         target = FindNearestEnemyFrom(center, GetAliveEnemies(), engageRange);
     }

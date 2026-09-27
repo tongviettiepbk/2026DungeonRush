@@ -10,6 +10,17 @@ public class HeroUnit : BaseUnit
 {
     [SerializeField] private HeroVisual heroVisual;
 
+    // Bản sao hero của companion MirrorClone (gốc lt.gon): > 0 = đây là clone, máu tối đa = maxHp ×
+    // cloneHealthPercent/100. Clone chụp chỉ số lúc sinh, không nhận sự kiện đổi đồ.
+    private float cloneHealthPercent;
+    public bool IsMirrorClone => cloneHealthPercent > 0f;
+
+    // Gọi TRƯỚC SpawnInBattle để lần tính chỉ số đầu tiên đã áp tỉ lệ máu.
+    public void SetupAsMirrorClone(float healthPercent)
+    {
+        cloneHealthPercent = Mathf.Max(0.01f, healthPercent);
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -78,7 +89,8 @@ public class HeroUnit : BaseUnit
 
         // Pass 2: SUBSTAT (%) — gom theo đích (value đã là phân số, VD 0.12 = +12%).
         float attackPct = 0f, hpPct = 0f, atkSpeedPct = 0f, compDmgPct = 0f;
-        float critRateAdd = 0f, critDmgAdd = 0f, doubleShotAdd = 0f, hpRegenPct = 0f;
+        float critRateAdd = 0f, critDmgAdd = 0f, doubleShotAdd = 0f, hpRegenPct = 0f, compCooldownPct = 0f;
+        float blockPct = 0f, lifestealPct = 0f;
 
         for (int i = 0; i < modifiers.Count; i++)
         {
@@ -99,6 +111,9 @@ public class HeroUnit : BaseUnit
                 case StatModifierType.CritDamage: critDmgAdd += v; break;
                 case StatModifierType.DoubleShot: doubleShotAdd += v; break;
                 case StatModifierType.HpRecovery: hpRegenPct += v; break;
+                case StatModifierType.CompanionCooldownReduction: compCooldownPct += v; break;
+                case StatModifierType.BlockChance: blockPct += v; break;
+                case StatModifierType.Lifesteal: lifestealPct += v; break;
             }
         }
 
@@ -110,14 +125,49 @@ public class HeroUnit : BaseUnit
         stats.critDamage += critDmgAdd;
         stats.doubleShot += doubleShotAdd;
         stats.hpRecovery += stats.maxHp * hpRegenPct;   // hồi máu = % máu tối đa (sau khi đã áp Health%).
+
+        // GỐC (Soldier.eyw @0x2A1D320): substat CompanionCooldown / BlockChance / Lifesteal cộng dồn THÔ %
+        // của mọi món vào Character.CompanionCooldownReduction / BlockChance / Lifesteal, không trần.
+        // Lưu đơn vị % như gốc (value ở đây là phân số → ×100).
+        stats.companionCooldownReduction = compCooldownPct * 100f;
+        stats.blockChance = blockPct * 100f;
+        stats.lifesteal = lifestealPct * 100f;
+
+        // Bản sao MirrorClone: máu tối đa = maxHp hero × cloneHealthPercent/100 (gốc lt.gon).
+        if (IsMirrorClone)
+        {
+            stats.maxHp *= cloneHealthPercent / 100f;
+        }
     }
 
-    // Đổi đồ khi Hero đang sống → tính lại chỉ số ngay + nạp lại cấu hình vũ khí (tầm đánh/đạn).
-    // ReloadStats đổ lại từ NỀN nên phải ApplyWeapon lại (nếu không attackRange rớt về mặc định).
+    // Hút máu — GỐC (Character.ewb @0x2A15640): phe người chơi đánh thường trúng → nếu Lifesteal > 0 và
+    // chưa đầy máu: hp = min(maxHp, hp + damage × Lifesteal/100). damage = damage đòn đã tính chí mạng
+    // (trước khi mục tiêu chặn/giảm). Không hiện số / FX.
+    public override void OnAttackDone(ProcessedAttackData processedAttackData, double damageDealt)
+    {
+        base.OnAttackDone(processedAttackData, damageDealt);
+
+        if (stats.lifesteal <= 0f || processedAttackData == null || processedAttackData.attackType != AttackType.BasicAttack)
+        {
+            return;
+        }
+
+        if (hp > 0f && hp < GetMaxHp())
+        {
+            GetHeal(this, processedAttackData.damage * stats.lifesteal / 100f, showFx: false, showText: false);
+        }
+    }
+
+    // Đổi đồ khi Hero đang sống → tính lại chỉ số ngay (ReloadStats tự áp lại vũ khí: tầm đánh/đạn).
+    // Bản sao MirrorClone bỏ qua (chỉ số chụp lúc sinh).
     private void OnEquipmentChanged(object param)
     {
+        if (IsMirrorClone)
+        {
+            return;
+        }
+
         ReloadStats();
-        ApplyWeapon(GetCombatWeapon());
 
         if (hp > stats.maxHp)
         {

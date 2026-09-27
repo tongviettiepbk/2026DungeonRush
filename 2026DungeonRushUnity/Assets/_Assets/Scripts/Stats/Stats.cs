@@ -24,6 +24,12 @@ public class Stats
     public float companionDamage = 1f;
     public float companionAttackSpeed = 1f;
     public float companionAttackBonus = 1f;
+    // % giảm hồi chiêu pet (gốc Character.CompanionCooldownReduction 0xF0, đơn vị %: 7 = 7%).
+    public float companionCooldownReduction;
+    // % chặn TRỌN 1 đòn đánh của enemy (gốc Character.BlockChance 0xE4, đơn vị %).
+    public float blockChance;
+    // % hút máu theo damage đòn đánh thường gây ra (gốc Character.Lifesteal 0xEC, đơn vị %).
+    public float lifesteal;
 
     public double maxHp;
     public double hpRecovery;

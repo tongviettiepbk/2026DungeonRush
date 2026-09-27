@@ -69,6 +69,20 @@ public class BaseUnit : MonoBehaviour
     public BaseUnit target { get; protected set; }
     public int level { get; protected set; } = 1;
 
+    // Hiệu ứng tạm từ companion (gốc Character.BlockChance 0xE4 / IsImmortal 0xF9):
+    //   bonusBlockChance: % chặn đòn cộng thêm (Guardian +5) ; isImmortal: HP không xuống dưới 1.
+    public float bonusBlockChance { get; set; }
+    public bool isImmortal { get; set; }
+    // Hệ số làm chậm (companion Slow, gốc CompanionSlowEffect: NHÂN MoveSpeed & AttackSpeed); 1 = không chậm.
+    // Áp ở cuối ReloadStats nên không mất khi chỉ số được tính lại.
+    public float slowMultiplier { get; private set; } = 1f;
+
+    public void SetSlowMultiplier(float multiplier)
+    {
+        slowMultiplier = multiplier;
+        ReloadStats();
+    }
+
     // Controllers
     public BuffController buffController { get; protected set; }
     public ShieldController shieldController { get; protected set; }
@@ -341,9 +355,8 @@ public class BaseUnit : MonoBehaviour
 
     public virtual void OnBeginBattle()
     {
-        ReloadStats();
+        ReloadStats();                    // gồm cả áp vũ khí (tầm đánh + nhánh đạn)
         hp = stats.maxHp;
-        ApplyWeapon(GetCombatWeapon());   // vũ khí ghi đè attackRange & quyết định nhánh đạn
         CheckUniqueSkill();
         //UpdateHealthBar();
     }
@@ -375,12 +388,18 @@ public class BaseUnit : MonoBehaviour
     #endregion
 
     #region Stats
+    // Tính lại chỉ số từ đầu rồi ÁP LẠI VŨ KHÍ (tầm đánh/đạn) — mọi nơi gọi ReloadStats (InitModeDone,
+    // buff/debuff/shield/CC, đổi đồ) đều giữ đúng tầm đánh của vũ khí.
     public virtual void ReloadStats()
     {
         modifiers.Clear();
         LoadPermanentModifiers();
         LoadDurationModifiers();
         CalculateCurrentStats();
+        ApplyWeapon(GetCombatWeapon());
+
+        stats.moveSpeed *= slowMultiplier;
+        stats.attackSpeed *= slowMultiplier;
     }
 
     protected virtual void LoadPermanentModifiers()
@@ -399,11 +418,9 @@ public class BaseUnit : MonoBehaviour
     // (Buff/modifier chưa áp — thêm khi làm hệ buff sâu; xem BattleMechanic.)
     protected virtual void CalculateCurrentStats()
     {
-        stats.attack = baseStats.attack;
-        stats.attackSpeed = baseStats.attackPerSecond;
-        stats.attackRange = baseStats.attackRange;
-        stats.maxHp = baseStats.maxHp;
-        stats.moveSpeed = baseStats.moveSpeed;
+        // Dựng Stats MỚI mỗi lần tính: mọi field (companionDamage, crit, blockChance...) về mặc định rồi
+        // lớp con mới áp modifier → ReloadStats gọi nhiều lần không bị cộng/nhân dồn.
+        stats = new Stats(baseStats);
     }
 
     #region Map unit (DungeonRush) — spawn + targeting chung cho Hero/Pet/Enemy
@@ -484,6 +501,11 @@ public class BaseUnit : MonoBehaviour
     public virtual double GetMaxHp()
     {
         return stats.maxHp;
+    }
+
+    public BaseStats GetBaseStats()
+    {
+        return baseStats;
     }
 
     public float GetHpPercent()
@@ -994,6 +1016,12 @@ public class BaseUnit : MonoBehaviour
             }
         }
 
+        // Bất tử (companion Immortal): giữ HP tối thiểu 1.
+        if (isImmortal && hp - takenDamage < 1f)
+        {
+            takenDamage = System.Math.Max(0f, hp - 1f);
+        }
+
         hp -= takenDamage;
         crowdController.OnTakeDamage(takenDamage);
 
@@ -1065,9 +1093,18 @@ public class BaseUnit : MonoBehaviour
         return damage;
     }
 
+    // Chặn TRỌN 1 đòn — GỐC (Character.ewb + rm.ioz): chỉ khi bên đánh là ENEMY (không phải phe người
+    // chơi), roll Random.Range(0,100) <= BlockChance của bên bị đánh. BlockChance = substat đồ + phần
+    // Guardian (Vital Root) cộng thêm tạm thời.
     protected virtual bool IsBlock(TakeDamageData data)
     {
-        return false;
+        if (data.attacker == null || data.attacker.isTeamA)
+        {
+            return false;
+        }
+
+        float chance = stats.blockChance + bonusBlockChance;
+        return chance > 0f && Random.Range(0f, 100f) <= chance;
     }
 
     protected virtual bool IsCrit(BaseUnit attacker, CritType critType)
