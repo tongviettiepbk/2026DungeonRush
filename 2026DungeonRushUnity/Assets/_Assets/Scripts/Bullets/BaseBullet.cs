@@ -45,11 +45,11 @@ public class BaseBullet : MonoBehaviour
 
         if (movingType == BulletMovingType.Parabol)
         {
-            ActiveParabol(firePoint, attacker, target);
+            ActiveParabol(firePoint, attacker, target, attackData);
         }
         else if (movingType == BulletMovingType.Straight)
         {
-            ActiveStraight(firePoint, attacker, target);
+            ActiveStraight(firePoint, attacker, target, attackData);
         }
 
         isActive = true;
@@ -228,7 +228,74 @@ public class BaseBullet : MonoBehaviour
         }
         else
         {
-            ActiveStraight(firePoint, attacker, target);
+            ActiveStraight(firePoint, attacker, target, attackData);
+        }
+    }
+
+    // ===== Homing: đuổi theo target, bay thẳng tới vị trí HIỆN TẠI của target mỗi frame =====
+    // Target chết/biến mất giữa đường → bay nốt tới vị trí cuối rồi tắt (không gây damage).
+
+    private bool isHoming;
+    private Vector3 homingPoint;
+
+    public void ActiveHoming(Transform firePoint, BaseUnit attacker, BaseUnit target, AttackData attackData = null)
+    {
+        if (target == null)
+        {
+            isActive = false;
+            gameObject.SetActive(false);
+            return;
+        }
+
+        this.attacker = attacker;
+        this.target = target;
+        this.attackData = attackData;
+
+        Transform.SetParent(firePoint);
+        Transform.localEulerAngles = Vector3.zero;
+        Transform.localPosition = Vector3.zero;
+        Transform.SetParent(null);
+
+        homingPoint = target.centerBodyPoint.position;
+        isHoming = true;
+        isActive = true;
+        Transform.FaceUpAxisToPoint(homingPoint);
+        gameObject.SetActive(true);
+    }
+
+    protected virtual void Update()
+    {
+        if (!isHoming || !isActive)
+        {
+            return;
+        }
+
+        if (attacker != null && attacker.isPause)
+        {
+            return;
+        }
+
+        bool isTargetAlive = target != null && target.isTargetable;
+        if (isTargetAlive)
+        {
+            homingPoint = target.centerBodyPoint.position;
+        }
+
+        float step = speed * GameController.Instance.gameSpeed * Time.deltaTime;
+        Transform.position = Vector3.MoveTowards(Transform.position, homingPoint, step);
+        Transform.FaceUpAxisToPoint(homingPoint);
+
+        if (VectorUtils.IsInRange(Transform.position, homingPoint, 0.05f))
+        {
+            isHoming = false;
+            if (isTargetAlive)
+            {
+                OnTargetTakeDamage();
+            }
+            else
+            {
+                Deactive();
+            }
         }
     }
 
@@ -269,6 +336,7 @@ public class BaseBullet : MonoBehaviour
     public virtual void Deactive()
     {
         isActive = false;
+        isHoming = false;
         gameObject.SetActive(false);
 
         if (isPooling)

@@ -130,4 +130,12 @@ public class CompanionData : ScriptableObject
     {
         return "Items.Companion.Name." + assetName;
     }
+
+    // Prefab in-battle đặt trong Resources/Prefabs/Units/Companions, tên file = assetName.
+    public const string PREFAB_PATH = "Prefabs/Units/Companions/";
+
+    public GameObject LoadPrefab()
+    {
+        return Resources.Load<GameObject>(PREFAB_PATH + assetName);
+    }
 }

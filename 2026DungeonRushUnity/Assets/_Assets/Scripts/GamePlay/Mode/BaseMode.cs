@@ -37,7 +37,6 @@ public class BaseMode : MonoBehaviour
 
     [Header("Prefab unit (BẮT BUỘC có rig BaseUnit)")]
     public GameObject heroPrefab;
-    public GameObject petPrefab;
     public GameObject enemyPrefab;
 
     // Chỉ số Hero giờ lấy từ tầng nền PlayerBase* trong GearStatConfig (xem CampaignMode.BuildHeroStats),

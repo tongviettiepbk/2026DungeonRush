@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 58953210355213668}
   - component: {fileID: 1311099186659347962}
   m_Layer: 14
-  m_Name: Companion_6_Divine_1
+  m_Name: Companion_3_Rare_Bomber_AOE_Burn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,7 +50,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 2
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -92,7 +92,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -119,6 +119,7 @@ MonoBehaviour:
   followDistance: 1.5
   followSlack: 0.4
   weaponData: {fileID: 0}
+  companionData: {fileID: 0}
 --- !u!1 &453872220136936014
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,7 +201,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 87f6b22955d948c98b66985dbe1bdaec, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 49bd30d4aed452261618964030d33040, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

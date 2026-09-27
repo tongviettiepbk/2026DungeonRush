@@ -8,7 +8,7 @@ using UnityEngine;
 // LỚP NỀN companion (bám StickIdle BaseCompanion): giữ CompanionData, quy đổi data → hành vi
 // (nhịp = cooldown, tầm = followDistance/minDistance) và tính SÁT THƯƠNG companion từ data +
 // hệ số CompanionDamage của chủ. Mỗi loại companion (DPS/Heal/Lightning/…) là 1 lớp con
-// override ReleaseAbility() để bắn đạn/tia/heal riêng — xem PetCompanionDps.
+// override ReleaseAbility() khi khác kiểu mặc định (đạn đuổi theo target đơn mục tiêu).
 public class PetUnit : BaseUnit
 {
     public BaseUnit owner;               // hero để đi theo (gán khi spawn)
@@ -21,6 +21,12 @@ public class PetUnit : BaseUnit
 
     [Tooltip("Data companion: chỉ số cân bằng + loại kỹ năng. Gán sẵn trên prefab hoặc set khi spawn.")]
     [SerializeField] protected CompanionData companionData;
+
+    [Tooltip("Prefab đạn mặc định (gắn BaseBullet) — đuổi theo target. Trống → đánh cận chiến.")]
+    [SerializeField] protected BaseBullet projectilePrefab;
+
+    [Tooltip("Âm thanh khi bắn (ShootSound của companion gốc). Có thể để trống.")]
+    [SerializeField] protected AudioClip sfxShoot;
 
     public CompanionData Data => companionData;
 
@@ -49,7 +55,7 @@ public class PetUnit : BaseUnit
         }
 
         this.level = Mathf.Max(1, level);
-        engageRange = Mathf.Max(data.followDistance, data.minDistance);
+        engageRange = ATTACK_RANGE;
         followDistance = Mathf.Max(0.5f, data.minDistance);
 
         // Vào trận chờ initialDelay rồi mới được kích hoạt lần đầu.
@@ -66,6 +72,7 @@ public class PetUnit : BaseUnit
     // Chế độ lưu ở save (UserCompanionData.isAutoActive), nút btAutoPet ở UIMainLobby bật/tắt.
 
     private const float ABILITY_WINDUP = 0.3f;   // thời gian vung đòn sau khi kích hoạt
+    private const float ATTACK_RANGE = 20f;      // tầm đánh chung mọi companion (chọn mục tiêu quanh hero + tầm ra đòn)
 
     private float cooldownDuration = 1f;          // cooldown đầy đủ (CompanionData.cooldown)
     private float cooldownCurrent = 1f;           // độ dài lượt đang hồi (lần đầu = initialDelay)
@@ -139,8 +146,14 @@ public class PetUnit : BaseUnit
             return;
         }
 
-        // Đang chờ hồi/chờ bấm: mục tiêu chết, rời tầm giao chiến quanh hero hoặc ra ngoài tầm đánh
-        // → về Idle để đi theo hero / tìm mục tiêu khác.
+        // Đang hồi chiêu / chờ bấm → về Idle để đi theo hero (không đứng chờ tại chỗ).
+        if (!CanReleaseAbility)
+        {
+            ChangeState(BattleState.Idle);
+            return;
+        }
+
+        // Mục tiêu chết, rời tầm giao chiến quanh hero hoặc ra ngoài tầm đánh → về Idle tìm mục tiêu khác.
         Vector3 center = owner != null ? owner.Transform.position : Transform.position;
         bool inEngage = IsTargetAvailable()
             && VectorUtils.IsInRange(center, target.Transform.position, engageRange);
@@ -150,13 +163,10 @@ public class PetUnit : BaseUnit
             return;
         }
 
-        if (CanReleaseAbility)
-        {
-            BeginAttack();
-        }
+        BeginAttack();
     }
 
-    // BaseStats cho companion: tầm = engageRange, tốc độ = moveSpeed. Nhịp ra đòn KHÔNG còn do
+    // BaseStats cho companion: tầm = ATTACK_RANGE, tốc độ = moveSpeed. Nhịp ra đòn KHÔNG còn do
     // attackPerSecond mà do cooldown kỹ năng (xem vùng "Kích hoạt kỹ năng"); attackPerSecond chỉ là
     // thời gian vung đòn (wind-up) sau khi kích hoạt.
     // maxHp chỉ cần > 0 (pet không chết); SÁT THƯƠNG tính riêng ở GetAbilityDamage() lúc ra đòn.
@@ -166,7 +176,7 @@ public class PetUnit : BaseUnit
         {
             attack = data != null ? data.damageBase : 0f,
             attackPerSecond = 1f / ABILITY_WINDUP,
-            attackRange = data != null ? Mathf.Max(data.followDistance, data.minDistance) : engageRange,
+            attackRange = ATTACK_RANGE,
             moveSpeed = data != null ? data.moveSpeed : 2f,
             maxHp = 1f,
         };
@@ -240,7 +250,9 @@ public class PetUnit : BaseUnit
         StartCooldown();
     }
 
-    // Kỹ năng mặc định: cận chiến đơn mục tiêu bằng sát thương companion. DPS/Heal/Lightning override.
+    // Kỹ năng MẶC ĐỊNH mọi companion: bắn 1 viên đạn ĐUỔI THEO target (bay thẳng tới vị trí hiện
+    // tại của target mỗi frame), trúng gây sát thương companion. Tốc độ đạn = CompanionData.projectileSpeed.
+    // Thiếu prefab đạn → cận chiến tạm. Companion có kiểu khác (Heal/Lightning/Bomber…) override hàm này.
     protected virtual void ReleaseAbility()
     {
         if (target == null)
@@ -248,8 +260,28 @@ public class PetUnit : BaseUnit
             return;
         }
 
-        target.TakeAttack(GetAbilityAttackData(), impactAttack);
-        PlaySfxAttack();
+        if (projectilePrefab == null)
+        {
+            target.TakeAttack(GetAbilityAttackData(), impactAttack);
+            PlaySfxAttack();
+            return;
+        }
+
+        BaseBullet bullet = PoolingController.Instance.GetBullet(projectilePrefab);
+        if (bullet != null)
+        {
+            if (companionData != null && companionData.projectileSpeed > 0.01f)
+            {
+                bullet.speed = companionData.projectileSpeed;
+            }
+
+            bullet.ActiveHoming(firePoint, this, target, GetAbilityAttackData());
+        }
+
+        if (sfxShoot != null)
+        {
+            PlaySfx(sfxShoot);
+        }
     }
 
     // ===== Targeting / di chuyển theo hero (giữ nguyên spec) =====
@@ -265,7 +297,8 @@ public class PetUnit : BaseUnit
     {
         FindNextTarget();
 
-        if (target != null)
+        // Chỉ giao chiến khi kỹ năng sẵn sàng; đang hồi chiêu thì đi theo hero.
+        if (target != null && CanReleaseAbility)
         {
             if (IsTargetInAttackRange())
             {
@@ -278,7 +311,7 @@ public class PetUnit : BaseUnit
             return;
         }
 
-        // Không có enemy → đi theo hero nếu tụt lại quá xa.
+        // Không có enemy / đang hồi chiêu → đi theo hero nếu tụt lại quá xa.
         if (owner != null && owner.isTargetable && isMoveable)
         {
             float d = Vector3.Distance(Transform.position, owner.Transform.position);
@@ -292,7 +325,7 @@ public class PetUnit : BaseUnit
 
     protected override void UpdateMove()
     {
-        if (target != null)
+        if (target != null && CanReleaseAbility)
         {
             // Rời tầm giao chiến (đo từ hero) hoặc mục tiêu chết → thôi đuổi, về theo hero.
             Vector3 center = owner != null ? owner.Transform.position : Transform.position;
@@ -314,7 +347,7 @@ public class PetUnit : BaseUnit
             return;
         }
 
-        // Đang đi theo hero.
+        // Đang đi theo hero (không có mục tiêu hoặc đang hồi chiêu).
         if (owner == null || !owner.isTargetable)
         {
             ChangeState(BattleState.Idle);

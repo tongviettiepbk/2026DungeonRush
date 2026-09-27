@@ -7,7 +7,8 @@ using UnityEngine;
 // (RoutineTimer, EndGame, Pause/Resume, OnUnitDie→thắng/thua, cheat Editor W/L); ở đây chỉ
 // còn phần riêng của campaign: spawn quân THẬT (Hero+Pet team A, Enemy team B) từ prefab có rig.
 //
-// YÊU CẦU PREFAB: heroPrefab/petPrefab/enemyPrefab (khai báo ở BaseMode) phải có rig BaseUnit
+// YÊU CẦU PREFAB: heroPrefab/enemyPrefab (khai báo ở BaseMode) + prefab companion (load theo
+// assetName từ Resources/Prefabs/Units/Companions) phải có rig BaseUnit
 // (con "Body" Collider2D, "FlipPoints"/"CenterBody"/"FirePoint"/"health-bar", Rigidbody2D+
 // AudioSource+AnimationController ở root) — PreviewCharacter là mẫu. YÊU CẦU TAG: "TeamA"/"TeamB".
 public class CampaignMode : BaseMode
@@ -135,15 +136,9 @@ public class CampaignMode : BaseMode
         hero = SpawnUnit<HeroUnit>(heroPrefab, heroPos, parent);
         hero.SpawnInBattle(BuildHeroStats(), StaticValue.TAG_TEAM_A, heroPos);
 
-        if (petPrefab == null)
-        {
-            return;
-        }
-
         // Spawn 1 companion cho MỖI pet đang equip (save UserCompanionData, tối đa 3), đi theo hero.
-        // petPrefab là prefab companion dùng chung (PetUnit/lớp con) — SetupCompanion đổ data của
-        // con đang equip vào (chỉ số + cooldown + level trong save).
-        // TODO: CompanionData đã bỏ ref Prefab → mọi loại đang dùng chung hành vi của petPrefab.
+        // Prefab riêng từng con load theo assetName (CompanionData.LoadPrefab) — SetupCompanion đổ
+        // data của con đang equip vào (chỉ số + cooldown + level trong save).
         UserCompanionData user = GameData.userData.companions;
         List<string> equipped = user.GetEquipped();
         for (int i = 0; i < equipped.Count; i++)
@@ -151,6 +146,13 @@ public class CampaignMode : BaseMode
             CompanionData data = GameData.staticData.companions.GetData(equipped[i]);
             if (data == null)
             {
+                continue;
+            }
+
+            GameObject petPrefab = data.LoadPrefab();
+            if (petPrefab == null)
+            {
+                DebugCustom.LogWarning("[CampaignMode] Không tìm thấy prefab companion: " + CompanionData.PREFAB_PATH + data.assetName);
                 continue;
             }
 
