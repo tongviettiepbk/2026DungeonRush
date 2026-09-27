@@ -51,17 +51,121 @@ public class PetUnit : BaseUnit
         this.level = Mathf.Max(1, level);
         engageRange = Mathf.Max(data.followDistance, data.minDistance);
         followDistance = Mathf.Max(0.5f, data.minDistance);
+
+        // Vào trận chờ initialDelay rồi mới được kích hoạt lần đầu.
+        cooldownDuration = data.cooldown > 0.01f ? data.cooldown : 1f;
+        cooldownRemain = Mathf.Max(0f, data.initialDelay);
+        cooldownCurrent = cooldownRemain > 0f ? cooldownRemain : cooldownDuration;
+        isActivateRequested = false;
     }
 
-    // BaseStats cho companion: nhịp = cooldown, tầm = engageRange, tốc độ = moveSpeed.
+    // ===== Kích hoạt kỹ năng (cooldown) =====
+    // Mỗi lần ra đòn tốn 1 lượt cooldown. Hồi xong (IsReady):
+    //   • Auto   → tự ra đòn khi có enemy trong tầm.
+    //   • Thủ công → chờ người chơi bấm ô pet ở lobby (RequestActivate) rồi mới ra đòn.
+    // Chế độ lưu ở save (UserCompanionData.isAutoActive), nút btAutoPet ở UIMainLobby bật/tắt.
+
+    private const float ABILITY_WINDUP = 0.3f;   // thời gian vung đòn sau khi kích hoạt
+
+    private float cooldownDuration = 1f;          // cooldown đầy đủ (CompanionData.cooldown)
+    private float cooldownCurrent = 1f;           // độ dài lượt đang hồi (lần đầu = initialDelay)
+    private float cooldownRemain;
+    private bool isActivateRequested;
+
+    public bool IsReady => cooldownRemain <= 0f;
+
+    // 0 → 1: tiến độ hồi chiêu (1 = sẵn sàng) — UI lobby đổ vào thanh fill.
+    public float CooldownProgress => cooldownCurrent > 0f ? 1f - Mathf.Clamp01(cooldownRemain / cooldownCurrent) : 1f;
+
+    private static bool IsAutoActive => GameData.userData.companions.isAutoActive;
+
+    // Được ra đòn ngay chưa: đã hồi + (đang auto hoặc người chơi đã bấm).
+    private bool CanReleaseAbility => IsReady && (IsAutoActive || isActivateRequested);
+
+    // Người chơi bấm kích hoạt (chế độ thủ công). Chưa hồi xong → bỏ qua. Bấm rồi mà chưa có enemy
+    // trong tầm thì giữ lệnh, gặp enemy là ra đòn.
+    public bool RequestActivate()
+    {
+        if (!IsReady)
+        {
+            return false;
+        }
+
+        isActivateRequested = true;
+        return true;
+    }
+
+    private void StartCooldown()
+    {
+        cooldownCurrent = cooldownDuration;
+        cooldownRemain = cooldownDuration;
+        isActivateRequested = false;
+    }
+
+    // KHÔNG gọi base: BaseUnit chỉ chạy state machine khi isTargetable, mà pet luôn isTargetable=false
+    // (enemy không nhắm được) → base sẽ bỏ qua toàn bộ AI của pet.
+    public override void UpdateBehavior()
+    {
+        if (isPause || !gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
+        UpdateBattleState();
+        animationController.UpdateSortingOrder();
+
+        if (cooldownRemain > 0f)
+        {
+            cooldownRemain -= Time.deltaTime * GameController.Instance.gameSpeed;
+        }
+    }
+
+    // Vào state Attack nhưng chưa được ra đòn → đứng chờ cạnh mục tiêu (UpdateAttack sẽ gọi lại).
+    protected override void BeginAttack()
+    {
+        if (!CanReleaseAbility)
+        {
+            StopMove();
+            return;
+        }
+
+        base.BeginAttack();
+    }
+
+    protected override void UpdateAttack()
+    {
+        if (isAttacking)
+        {
+            return;
+        }
+
+        // Đang chờ hồi/chờ bấm: mục tiêu chết, rời tầm giao chiến quanh hero hoặc ra ngoài tầm đánh
+        // → về Idle để đi theo hero / tìm mục tiêu khác.
+        Vector3 center = owner != null ? owner.Transform.position : Transform.position;
+        bool inEngage = IsTargetAvailable()
+            && VectorUtils.IsInRange(center, target.Transform.position, engageRange);
+        if (!inEngage || !IsTargetInAttackRange())
+        {
+            ChangeState(BattleState.Idle);
+            return;
+        }
+
+        if (CanReleaseAbility)
+        {
+            BeginAttack();
+        }
+    }
+
+    // BaseStats cho companion: tầm = engageRange, tốc độ = moveSpeed. Nhịp ra đòn KHÔNG còn do
+    // attackPerSecond mà do cooldown kỹ năng (xem vùng "Kích hoạt kỹ năng"); attackPerSecond chỉ là
+    // thời gian vung đòn (wind-up) sau khi kích hoạt.
     // maxHp chỉ cần > 0 (pet không chết); SÁT THƯƠNG tính riêng ở GetAbilityDamage() lúc ra đòn.
     protected virtual BaseStats BuildCompanionStats(CompanionData data)
     {
-        float cooldown = (data != null && data.cooldown > 0.01f) ? data.cooldown : 1f;
         return new BaseStats
         {
             attack = data != null ? data.damageBase : 0f,
-            attackPerSecond = 1f / cooldown,               // cadence ra đòn = cooldown companion
+            attackPerSecond = 1f / ABILITY_WINDUP,
             attackRange = data != null ? Mathf.Max(data.followDistance, data.minDistance) : engageRange,
             moveSpeed = data != null ? data.moveSpeed : 2f,
             maxHp = 1f,
@@ -123,7 +227,8 @@ public class PetUnit : BaseUnit
     // ===== Ra đòn =====
 
     // Điểm ra đòn mỗi nhịp (OnAttackEnd của BaseUnit). Chặn khi mất mục tiêu / ngoài tầm rồi
-    // uỷ quyền cho ReleaseAbility() — lớp con định nghĩa hiệu ứng thật.
+    // uỷ quyền cho ReleaseAbility() — lớp con định nghĩa hiệu ứng thật. Chỉ tính lượt cooldown khi
+    // ra đòn thật (mất mục tiêu giữa lúc vung → giữ nguyên trạng thái sẵn sàng + lệnh bấm).
     protected override void ReleaseAttack()
     {
         if (!IsTargetAvailable() || !IsTargetInAttackRange())
@@ -132,6 +237,7 @@ public class PetUnit : BaseUnit
         }
 
         ReleaseAbility();
+        StartCooldown();
     }
 
     // Kỹ năng mặc định: cận chiến đơn mục tiêu bằng sát thương companion. DPS/Heal/Lightning override.

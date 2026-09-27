@@ -11,12 +11,12 @@ public enum TypeMenuLobby
     Dungeon = 2,
     Event = 3,
     Clan = 4,
-
 }
 
 public class UIMainLobby : BaseUI
 {
     public Button btAutoPet;
+    public TMP_Text txtAutoPet;
     public List<ElementPetUILobby> listElementPet;
 
     [Space(20)]
@@ -46,6 +46,9 @@ public class UIMainLobby : BaseUI
     [Space(20)]
     public TMP_Text txtLootTicket;
 
+    private string petAuto = "Auto On";
+    private string petOff = "Auto Off";
+
 #if UNITY_EDITOR
     [Space(20)]
     [Header("DEBUG - chỉ dùng test")]
@@ -57,6 +60,10 @@ public class UIMainLobby : BaseUI
     {
         if (btLoot != null)
             btLoot.onClick.AddListener(OnClickLoot);
+
+        btAutoPet.onClick.AddListener(ClickTooglePet);
+        for (int i = 0; i < listElementPet.Count; i++)
+            listElementPet[i].Init(this);
 
         UpdateLootTicketText();
         InitTabMenu();
@@ -118,6 +125,7 @@ public class UIMainLobby : BaseUI
 
     private void Update()
     {
+        UpdatePetCooldowns();
 
 #if UNITY_EDITOR
         // add more loot ticket for test
@@ -143,10 +151,78 @@ public class UIMainLobby : BaseUI
             txtLootTicket.text = GameData.userData.items.GetQuantityHave(ItemType.LOOT_TICKET).ToString("0");
     }
 
+    #region Pet
+
+    // Đổ 3 ô pet theo danh sách equip (UserCompanionData) + trạng thái nút auto.
+    // Gọi khi vào lobby và khi CompanionUI đổi equip.
+    public void RefreshPets()
+    {
+        bool isUnlocked = GameData.userData.player.playerLevel >= CompanionSummonConfig.COMPANION_UNLOCK_PLAYER_LEVEL;
+        List<string> equipped = GameData.userData.companions.GetEquipped();
+        for (int i = 0; i < listElementPet.Count; i++)
+        {
+            CompanionData data = i < equipped.Count ? GameData.staticData.companions.GetData(equipped[i]) : null;
+            listElementPet[i].SetData(data, isUnlocked);
+        }
+
+        UpdateAutoPetVisual();
+    }
+
+    // Thanh fill mỗi ô = tiến độ hồi chiêu của pet tương ứng đang ở trong trận.
+    private void UpdatePetCooldowns()
+    {
+        for (int i = 0; i < listElementPet.Count; i++)
+        {
+            ElementPetUILobby element = listElementPet[i];
+            element.UpdateCooldown(element.Data != null ? GetBattlePet(element.Data.assetName) : null);
+        }
+    }
+
+    private static PetUnit GetBattlePet(string assetName)
+    {
+        CampaignMode campaign = GameController.Instance.mode as CampaignMode;
+        return campaign != null ? campaign.GetPet(assetName) : null;
+    }
+
+    // Bấm ô pet: khoá → báo level mở; trống → mở tab Pet; có pet → kích hoạt ra đòn (khi đã hồi).
+    public void OnClickPetSlot(ElementPetUILobby element)
+    {
+        if (!element.IsUnlocked)
+        {
+            UIManager.Instance.ShowToastMessage(
+                "Mở pet ở level " + CompanionSummonConfig.COMPANION_UNLOCK_PLAYER_LEVEL, isLocalize: false);
+            return;
+        }
+
+        if (element.Data == null)
+        {
+            OpenTab(TypeMenuLobby.Pet);
+            return;
+        }
+
+        PetUnit pet = GetBattlePet(element.Data.assetName);
+        if (pet != null)
+            pet.RequestActivate();
+    }
+
+    // Bật/tắt auto kích hoạt pet (lưu save).
     private void ClickTooglePet()
     {
-
+        UserCompanionData companions = GameData.userData.companions;
+        companions.isAutoActive = !companions.isAutoActive;
+        companions.isDataChanged = true;
+        GameData.Save();
+        UpdateAutoPetVisual();
     }
+
+    // Chữ trên nút auto: petAuto khi pet tự kích hoạt, petOff khi người chơi bấm tay.
+    private void UpdateAutoPetVisual()
+    {
+        if (txtAutoPet != null)
+            txtAutoPet.text = GameData.userData.companions.isAutoActive ? petAuto : petOff;
+    }
+
+    #endregion
 
     // ---- LOOT: bấm Btn_Loot -> tiêu 1 LOOT_TICKET -> LootService random 1 item theo forgeLevel
     // (rarity roll từ ForgeData), UI chỉ format & hiển thị ----
@@ -277,6 +353,7 @@ public class UIMainLobby : BaseUI
     public void Refresh()
     {
         ReloadInfoGear();
+        RefreshPets();
         SetlevelPlayer();
         UpdateProcessLevel();
         LoadResourceTxt();

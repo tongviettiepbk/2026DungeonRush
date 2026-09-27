@@ -17,6 +17,8 @@ public class CampaignMode : BaseMode
     private HeroUnit hero;
     public HeroUnit Hero => hero;
 
+    private readonly List<PetUnit> pets = new List<PetUnit>();
+
     public override void Init(GameController controller, ModeType typeModeInput = ModeType.DefaultLevel)
     {
         base.Init(controller, typeModeInput);
@@ -51,6 +53,7 @@ public class CampaignMode : BaseMode
 
         GameController.Instance.ResetBattle();
         hero = null;
+        pets.Clear();
         isEndMode = false;
     }
 
@@ -132,29 +135,47 @@ public class CampaignMode : BaseMode
         hero = SpawnUnit<HeroUnit>(heroPrefab, heroPos, parent);
         hero.SpawnInBattle(BuildHeroStats(), StaticValue.TAG_TEAM_A, heroPos);
 
-        if (petPrefab == null || petCount <= 0)
+        if (petPrefab == null)
         {
             return;
         }
 
-        // Spawn companion đi theo hero. petPrefab phải là prefab companion (PetUnit/lớp con)
-        // đã gán CompanionData — SetupCompanion đổ chỉ số + hành vi + FX từ data đó.
-        for (int i = 0; i < petCount; i++)
+        // Spawn 1 companion cho MỖI pet đang equip (save UserCompanionData, tối đa 3), đi theo hero.
+        // petPrefab là prefab companion dùng chung (PetUnit/lớp con) — SetupCompanion đổ data của
+        // con đang equip vào (chỉ số + cooldown + level trong save).
+        // TODO: CompanionData đã bỏ ref Prefab → mọi loại đang dùng chung hành vi của petPrefab.
+        UserCompanionData user = GameData.userData.companions;
+        List<string> equipped = user.GetEquipped();
+        for (int i = 0; i < equipped.Count; i++)
         {
+            CompanionData data = GameData.staticData.companions.GetData(equipped[i]);
+            if (data == null)
+            {
+                continue;
+            }
+
             // Rải pet quanh hero.
-            float angle = (360f / petCount) * i * Mathf.Deg2Rad;
+            float angle = (360f / equipped.Count) * i * Mathf.Deg2Rad;
             Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 0.8f;
             Vector3 petPos = MapController.Instance.ClampPointInMap(heroPos + offset);
 
             PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, parent);
-            // Level companion lấy từ SAVE (UserCompanionData) theo assetName — chưa sở hữu → 1.
-            int petLevel = 1;
-            if (pet.Data != null && GameData.userData != null && GameData.userData.companions != null)
-            {
-                petLevel = GameData.userData.companions.GetLevel(pet.Data.assetName);
-            }
-            pet.SetupCompanion(pet.Data, hero, petLevel, petPos);
+            pet.SetupCompanion(data, hero, user.GetLevel(data.assetName), petPos);
+            pets.Add(pet);
         }
+    }
+
+    // Pet trong trận hiện tại theo assetName (UI lobby đọc cooldown / bấm kích hoạt). null nếu không có.
+    public PetUnit GetPet(string assetName)
+    {
+        for (int i = 0; i < pets.Count; i++)
+        {
+            if (pets[i] != null && pets[i].Data != null && pets[i].Data.assetName == assetName)
+            {
+                return pets[i];
+            }
+        }
+        return null;
     }
 
     private void SpawnEnemies(List<EnemySpawnGenerator.EnemySpawnInfo> enemies)

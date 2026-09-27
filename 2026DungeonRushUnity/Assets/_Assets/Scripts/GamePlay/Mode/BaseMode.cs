@@ -44,7 +44,6 @@ public class BaseMode : MonoBehaviour
     // không còn placeholder ở đây.
 
     [Header("Pet")]
-    public int petCount = 1;
     public float petMaxHp = 400f;
     public float petAttack = 25f;
     public float petAttackSpeed = 1f;

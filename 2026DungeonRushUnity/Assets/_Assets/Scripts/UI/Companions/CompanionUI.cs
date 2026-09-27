@@ -226,6 +226,7 @@ public class CompanionUI : MonoBehaviour
 
         GameData.Save();
         Refresh();
+        GameController.Instance.uiLobby.RefreshPets();
     }
 
     public void OnClickUnequip(CompanionData data)
@@ -233,5 +234,6 @@ public class CompanionUI : MonoBehaviour
         GameData.userData.companions.Unequip(data.assetName);
         GameData.Save();
         Refresh();
+        GameController.Instance.uiLobby.RefreshPets();
     }
 }

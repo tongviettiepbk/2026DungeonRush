@@ -30,3 +30,5 @@ Hành vi companion TRONG TRẬN (khác hệ meta unlock/summon ở [[dungonrush-
 **FX:** behavior gốc AssetRipper STUB RỖNG. FX gốc (ProjectilePrefab guid 6c98eedd…) nằm trong AssetBundle KHÔNG export → dùng FX đã import (RedOrb làm đạn lửa). FX đã import CHƯA prefab nào gắn `BaseFx` → impact-on-hit chờ pass wiring BaseFx (task tồn: "30 prefab missing-script"). Script ở Unit/Pet/PetCompanionDps.cs (user đã move).
 
 **Wire test:** CampaignMode.SpawnHeroAndPets đã nối lại spawn qua SetupCompanion (gán petPrefab=companion prefab + petCount≥1 ở mode inspector). Compile-check: `dotnet build 2026DungeonRushUnity/Assembly-CSharp.csproj` (nhớ thêm file mới vào .csproj vì liệt kê thủ công).
+
+**Cooldown/kích hoạt (2026-09-27):** PetUnit ra đòn theo cooldown CompanionData (initialDelay lần đầu), KHÔNG theo attackPerSecond (chỉ còn wind-up 0.3s). Auto/thủ công lưu `UserCompanionData.isAutoActive`; thủ công → bấm ô ElementPetUILobby → `PetUnit.RequestActivate()`. CampaignMode spawn pet theo danh sách EQUIP (bỏ petCount), UI tra pet qua `CampaignMode.GetPet(assetName)`. PetUnit tự override UpdateBehavior vì isTargetable=false làm base bỏ qua AI.

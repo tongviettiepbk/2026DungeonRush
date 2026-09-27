@@ -11,6 +11,7 @@ public class UserCompanionData : BaseUserData
     public List<CompanionModel> owned { get; set; } = new List<CompanionModel>();
     public List<string> equipped { get; set; } = new List<string>();
     public int totalSummons { get; set; }        // TotalCompanionSummons gốc — quyết định Summon Level
+    public bool isAutoActive { get; set; } = true; // pet tự ra đòn khi hồi xong; false = người chơi bấm ô pet ở lobby
 
     protected override string GetDataKey()
     {
@@ -23,6 +24,7 @@ public class UserCompanionData : BaseUserData
         owned = new List<CompanionModel>();
         equipped = new List<string>();
         totalSummons = 0;
+        isAutoActive = true;
         isDataChanged = true;
     }
 
