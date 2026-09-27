@@ -135,6 +135,10 @@ public class UIMainLobby : BaseUI
             UpdateLootTicketText();
         }
 
+        // test: mở tất cả pet (sở hữu đủ 16 con, level 1)
+        if (Input.GetKeyDown(KeyCode.P))
+            CheatUnlockAllPets();
+
         // chỉnh nhanh debugForgeLevel khi đang chơi: mũi tên lên/xuống
         if (Input.GetKeyDown(KeyCode.UpArrow))
             DebugCustom.Log($"[Forge] debugForgeLevel = {++debugForgeLevel}");
@@ -152,6 +156,31 @@ public class UIMainLobby : BaseUI
     }
 
     #region Pet
+
+#if UNITY_EDITOR
+    // Test: sở hữu toàn bộ companion + đẩy playerLevel lên mốc mở hệ pet (nếu chưa đủ) để ô pet lobby mở.
+    private void CheatUnlockAllPets()
+    {
+        List<CompanionData> all = GameData.staticData.companions.companions;
+        for (int i = 0; i < all.Count; i++)
+            GameData.userData.companions.Own(all[i].assetName);
+
+        UserPlayerData player = GameData.userData.player;
+        if (player.playerLevel < CompanionSummonConfig.COMPANION_UNLOCK_PLAYER_LEVEL)
+        {
+            player.playerLevel = CompanionSummonConfig.COMPANION_UNLOCK_PLAYER_LEVEL;
+            player.isDataChanged = true;
+        }
+
+        GameData.Save(true);
+        Refresh();
+        CompanionUI companionUI = FindAnyObjectByType<CompanionUI>();
+        if (companionUI != null)
+            companionUI.Refresh();
+
+        DebugCustom.Log($"[Cheat] Mở tất cả pet: owned={GameData.userData.companions.owned.Count}/{all.Count}, playerLevel={player.playerLevel}");
+    }
+#endif
 
     // Đổ 3 ô pet theo danh sách equip (UserCompanionData) + trạng thái nút auto.
     // Gọi khi vào lobby và khi CompanionUI đổi equip.
