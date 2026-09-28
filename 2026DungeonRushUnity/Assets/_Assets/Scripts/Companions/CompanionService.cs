@@ -35,13 +35,16 @@ public static class CompanionService
 
     // Executor summon (mirror UserController.edi): mỗi lượt roll rarity theo summon level HIỆN TẠI →
     // random 1 con trong rarity → chưa có thì sở hữu (0 thẻ, isNew), có rồi thì +1 thẻ → totalSummons++.
+    // Riêng lượt thứ 53 (totalSummons == 52 trước khi roll) ép ra Uncommon — hằng số trong native edi.
     // Trả về danh sách con ra được theo thứ tự.
     public static List<CompanionData> Summon(int count)
     {
         List<CompanionData> results = new List<CompanionData>();
         for (int i = 0; i < count; i++)
         {
-            Rarity rarity = CompanionSummonLevelConfig.RollRarity(User.totalSummons);
+            Rarity rarity = User.totalSummons == CompanionSummonLevelConfig.GUARANTEED_UNCOMMON_AT
+                ? Rarity.Uncommon
+                : CompanionSummonLevelConfig.RollRarity(User.totalSummons);
             CompanionData data = Static.GetRandom(rarity);
             if (data == null)
             {

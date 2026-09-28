@@ -71,10 +71,14 @@ public class StaticCompanionData
         return new List<CompanionData>();
     }
 
-    // Random 1 companion theo rarity (dùng khi mở rương/gacha).
+    // Random 1 companion theo rarity (mirror GameResources.jhm): rarity không có con nào → random trong TOÀN BỘ.
     public CompanionData GetRandom(Rarity rarity)
     {
         List<CompanionData> pool = GetPool(rarity);
+        if (pool.Count == 0)
+        {
+            pool = companions;
+        }
         if (pool.Count > 0)
         {
             return pool[Random.Range(0, pool.Count)];

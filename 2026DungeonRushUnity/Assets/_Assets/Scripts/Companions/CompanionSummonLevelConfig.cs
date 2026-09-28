@@ -10,6 +10,10 @@ public static class CompanionSummonLevelConfig
     public const int MAX_LEVEL = 100;
     public const int RARITY_COUNT = 6; // Common..Mythic
 
+    // UserController.edi: `if (TotalCompanionSummons == 52) rarity = Uncommon` (bỏ qua roll) — đảm bảo
+    // người chơi có Uncommon đầu tiên ngay sau khi lên Summon Lv2 (lv2 chỉ 2% Uncommon).
+    public const int GUARANTEED_UNCOMMON_AT = 52;
+
     private static readonly int[] THRESHOLDS =
     {
         50, 105, 165, 230, 300, 375, 455, 540, 630, 725,
@@ -166,18 +170,20 @@ public static class CompanionSummonLevelConfig
         isMax = false;
     }
 
-    // % ra rarity (Common..Mythic) ở level ứng với tổng lượt — dùng cho popup Info.
-    public static float GetRate(int totalSummons, Rarity rarity)
+    // % ra rarity (Common..Mythic) ở summon level (1..100, clamp) — dùng cho popup Info (UIUpgradePet).
+    public static float GetRate(int level, Rarity rarity)
     {
         int r = (int)rarity;
         if (r < 0 || r >= RARITY_COUNT)
         {
             return 0f;
         }
-        return RATES[GetRowIndex(totalSummons), r];
+        int row = Mathf.Clamp(level, 1, MAX_LEVEL) - 1;
+        return RATES[row, r];
     }
 
-    // Roll rarity cho 1 lượt (ly.gpt): Random[0,100) so cộng dồn từ Mythic xuống Common.
+    // Roll rarity cho 1 lượt (ly.gpt, đã disasm): roll = Random.Range(0f, 100f) (bản FLOAT) → so `roll < acc`
+    // cộng dồn từ Mythic xuống Uncommon; không trúng mức nào = Common.
     public static Rarity RollRarity(int totalSummons)
     {
         int row = GetRowIndex(totalSummons);

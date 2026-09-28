@@ -42,6 +42,7 @@ public class CompanionUI : MonoBehaviour
         btAds.onClick.AddListener(OnClickSummonAds);
         btSummonX100.onClick.AddListener(OnClickSummonX100);
         btSummonX200.onClick.AddListener(OnClickSummonX200);
+        btInfo.onClick.AddListener(OnClickSummonInfo);
 
         for (int i = 0; i < listPetEquip.Count; i++)
         {
@@ -173,6 +174,16 @@ public class CompanionUI : MonoBehaviour
                                                       CompanionService.GetBoneBigSummonCount()));
     }
 
+    // Nút (i) cạnh Summon Level → popup bảng tỉ lệ rarity level hiện tại / level kế.
+    private void OnClickSummonInfo()
+    {
+        UIUpgradePet uiUpgradePet = UIManager.Instance.LoadUI(UIKey.UpgradePet) as UIUpgradePet;
+        if (uiUpgradePet != null)
+        {
+            uiUpgradePet.Show();
+        }
+    }
+
     private void OnSummonDone(List<CompanionData> results)
     {
         if (results == null)
@@ -181,8 +192,12 @@ public class CompanionUI : MonoBehaviour
             return;
         }
 
-        // TODO: panel hiển thị kết quả summon (SummonPanel gốc) — tạm toast số lượt.
-        UIManager.Instance.ShowToastMessage("Summon x" + results.Count, isLocalize: false);
+        UISumonPet uiSumonPet = UIManager.Instance.LoadUI(UIKey.SummonPet) as UISumonPet;
+        if (uiSumonPet != null)
+        {
+            uiSumonPet.Show(results);
+        }
+
         Refresh();
         OnOwnedChanged();
     }
