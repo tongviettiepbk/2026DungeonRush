@@ -174,6 +174,7 @@ public class UIMainLobby : BaseUI
 
         GameData.Save(true);
         Refresh();
+        this.PostEvent(EventID.CompanionOwnedChanged);
         CompanionUI companionUI = FindAnyObjectByType<CompanionUI>();
         if (companionUI != null)
             companionUI.Refresh();

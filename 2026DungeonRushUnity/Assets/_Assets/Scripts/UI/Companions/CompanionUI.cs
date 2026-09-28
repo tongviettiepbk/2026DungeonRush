@@ -184,6 +184,7 @@ public class CompanionUI : MonoBehaviour
         // TODO: panel hiển thị kết quả summon (SummonPanel gốc) — tạm toast số lượt.
         UIManager.Instance.ShowToastMessage("Summon x" + results.Count, isLocalize: false);
         Refresh();
+        OnOwnedChanged();
     }
 
     // ----- Nâng cấp / trang bị -----
@@ -197,24 +198,42 @@ public class CompanionUI : MonoBehaviour
 
     private void OnClickUpgradeAll()
     {
-        CompanionService.UpgradeAll();
+        if (CompanionService.UpgradeAll() > 0)
+        {
+            OnOwnedChanged();
+        }
         Refresh();
     }
 
-    // Click ô pet: tắt cờ New, đủ thẻ thì nâng 1 cấp.
-    public void OnClickPet(CompanionData data)
+    // Click ô pet: tắt cờ New (nếu đã sở hữu) rồi mở UIPetInfo — pet chưa sở hữu vẫn xem được (hiện khoá).
+    public void OnClickInfo(CompanionData data)
     {
         UserCompanionData user = GameData.userData.companions;
-        if (user.IsOwned(data.assetName) == false)
+        if (user.IsOwned(data.assetName))
         {
-            UIManager.Instance.ShowToastMessage("Chưa sở hữu", isLocalize: false);
+            user.ClearNew(data.assetName);
+            GameData.Save();
+            Refresh();
+        }
+
+        UIPetInfo uiPetInfo = UIManager.Instance.LoadUI(UIKey.PetInfo) as UIPetInfo;
+        if (uiPetInfo != null)
+        {
+            uiPetInfo.Show(data, this);
+        }
+    }
+
+    // Nâng 1 cấp (gọi từ UIPetInfo).
+    public void OnClickUpgrade(CompanionData data)
+    {
+        if (CompanionService.TryUpgrade(data.assetName) == false)
+        {
+            UIManager.Instance.ShowToastMessage("Không đủ thẻ", isLocalize: false);
             return;
         }
 
-        user.ClearNew(data.assetName);
-        CompanionService.TryUpgrade(data.assetName);
-        GameData.Save();
         Refresh();
+        OnOwnedChanged();
     }
 
     public void OnClickEquip(CompanionData data)
@@ -236,6 +255,12 @@ public class CompanionUI : MonoBehaviour
         GameData.Save();
         Refresh();
         OnEquippedChanged();
+    }
+
+    // Pet sở hữu / level đổi → Hero tính lại Own Effect (cộng flat Damage/Health) ngay cả khi đang trong trận.
+    private void OnOwnedChanged()
+    {
+        this.PostEvent(EventID.CompanionOwnedChanged);
     }
 
     // Đổi equip → cập nhật ô pet ở lobby + pet trong trận NGAY (không chờ màn sau).

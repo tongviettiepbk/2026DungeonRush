@@ -510,6 +510,8 @@ public class BaseUnit : MonoBehaviour
 
     public float GetHpPercent()
     {
+        // Unit chưa Init stats (vd. OnDisable của health-bar ngay trong Awake) -> tránh 0/0 = NaN
+        if (stats.maxHp <= 0) return 0f;
         float percent = (float)(hp / stats.maxHp);
         return Mathf.Clamp01(percent);
     }

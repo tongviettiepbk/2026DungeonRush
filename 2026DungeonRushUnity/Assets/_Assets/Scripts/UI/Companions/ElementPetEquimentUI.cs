@@ -5,10 +5,16 @@ using UnityEngine.UI;
 // 1 ô pet — dùng chung cho 3 slot đang equip VÀ các ô trong inventory (cùng prefab CompanionPageElementUI).
 //   • Slot equip trống      → chỉ hiện objAddArea.
 //   • Pet chưa sở hữu        → icon + objLock.
-//   • Pet đã sở hữu          → level + tiến độ thẻ nâng cấp; đang equip → objEquip + objRemove, chưa → objAddButotn.
+//   • Pet đã sở hữu          → level + tiến độ thẻ nâng cấp; đang equip → objEquip + objRemove,
+//                              chưa equip & còn slot trống → objAddButotn.
+//   • btInfo (cả ô)          → mở UIPetInfo.
 //   • objNew                 → pet vừa nhận, chưa click xem.
 public class ElementPetEquimentUI : MonoBehaviour
 {
+    public Button btInfo;
+    public Button btEquipPet;
+    public Button btRemovePet;
+
     public Image imgIcon;
     public GameObject objLock;
     public TMP_Text txtLv;
@@ -32,14 +38,14 @@ public class ElementPetEquimentUI : MonoBehaviour
         return data;
     }
 
-    // Gắn listener 1 lần. Nút Add/Remove là Button nằm trên chính objAddButotn/objRemove.
+    // Gắn listener 1 lần. btEquipPet/btRemovePet nằm trên chính objAddButotn/objRemove.
     public void Init(CompanionUI owner)
     {
         this.owner = owner;
 
-        GetComponent<Button>().onClick.AddListener(OnClickElement);
-        objAddButotn.GetComponent<Button>().onClick.AddListener(OnClickAdd);
-        objRemove.GetComponent<Button>().onClick.AddListener(OnClickRemove);
+        btInfo.onClick.AddListener(OnClickInfo);
+        btEquipPet.onClick.AddListener(OnClickAdd);
+        btRemovePet.onClick.AddListener(OnClickRemove);
     }
 
     // data null = slot equip trống.
@@ -60,6 +66,7 @@ public class ElementPetEquimentUI : MonoBehaviour
         CompanionModel model = user.GetModel(data.assetName);
         bool isOwned = model != null;
         bool isEquipped = isOwned && user.IsEquipped(data.assetName);
+        bool canEquip = isOwned && isEquipped == false && user.GetEquipped().Count < UserCompanionData.MAX_EQUIPPED;
 
         objAddArea.SetActive(false);
         imgIcon.gameObject.SetActive(true);
@@ -69,7 +76,7 @@ public class ElementPetEquimentUI : MonoBehaviour
         objNew.SetActive(isOwned && model.isNew);
         objEquip.SetActive(isEquipped);
         objRemove.SetActive(isEquipped);
-        objAddButotn.SetActive(isOwned && isEquipped == false);
+        objAddButotn.SetActive(canEquip);
 
         txtLv.gameObject.SetActive(isOwned);
         txtProcess.gameObject.SetActive(isOwned);
@@ -110,11 +117,11 @@ public class ElementPetEquimentUI : MonoBehaviour
         imgProcess.fillAmount = Mathf.Clamp01((float)model.cardCount / need);
     }
 
-    private void OnClickElement()
+    private void OnClickInfo()
     {
         if (data != null)
         {
-            owner.OnClickPet(data);
+            owner.OnClickInfo(data);
         }
     }
 

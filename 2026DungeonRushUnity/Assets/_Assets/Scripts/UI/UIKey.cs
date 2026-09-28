@@ -4,6 +4,7 @@ public class UIKey
 {
     public const string InfoGear = "UiInfoGer";
     public const string LootGearInfo = "UiLootGearInfo";
+    public const string PetInfo = "UIPetInfo";
 
     // TODO(follow-stick): bổ sung key theo từng feature khi port UI màn hình.
 }

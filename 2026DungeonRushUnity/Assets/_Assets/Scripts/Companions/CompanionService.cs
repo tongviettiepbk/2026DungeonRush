@@ -123,6 +123,55 @@ public static class CompanionService
         return levelsGained;
     }
 
+    // ----- Own Effect (buff hero khi SỞ HỮU) -----
+
+    // 1 con: gốc lu.got / lu.gou = OwnBase + OwnScaler × level.
+    public static float GetOwnAttack(CompanionData data, int level)
+    {
+        return data.ownAttackBase + data.ownAttackScaler * level;
+    }
+
+    public static float GetOwnHealth(CompanionData data, int level)
+    {
+        return data.ownHealthBase + data.ownHealthScaler * level;
+    }
+
+    // Gốc lu.gov (gọi từ Soldier.ewc): cộng Own Effect của MỌI pet ĐÃ SỞ HỮU (equip hay không) thành
+    // 2 modifier FLAT Attack/MaxHp → HeroUnit cộng ở pass flat, TRƯỚC khi áp % substat (Soldier.eyv).
+    public static List<StatModifier> BuildOwnEffectModifiers()
+    {
+        List<StatModifier> result = new List<StatModifier>();
+        if (GameData.userData == null || GameData.staticData == null || User == null || Static == null)
+        {
+            return result;
+        }
+
+        double attack = 0;
+        double health = 0;
+        for (int i = 0; i < User.owned.Count; i++)
+        {
+            CompanionModel model = User.owned[i];
+            CompanionData data = model != null ? Static.GetData(model.companionId) : null;
+            if (data == null)
+            {
+                continue;
+            }
+
+            attack += GetOwnAttack(data, model.level);
+            health += GetOwnHealth(data, model.level);
+        }
+
+        if (attack > 0)
+        {
+            result.Add(new StatModifier(StatModifierSource.Companion, StatModifierType.Attack, attack, true));
+        }
+        if (health > 0)
+        {
+            result.Add(new StatModifier(StatModifierSource.Companion, StatModifierType.MaxHp, health, true));
+        }
+        return result;
+    }
+
     // ----- Trang bị -----
 
     // Trang bị nhanh 3 con tốt nhất: rarity giảm dần, cùng rarity thì level giảm dần (comparer gốc UserController.ep.dnc).

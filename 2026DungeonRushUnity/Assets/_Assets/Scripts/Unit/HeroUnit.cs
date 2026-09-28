@@ -36,12 +36,14 @@ public class HeroUnit : BaseUnit
     {
         base.OnEnable();
         EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnEquipmentChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.CompanionOwnedChanged, OnEquipmentChanged);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
         EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnEquipmentChanged);
+        EventDispatcher.Instance.RemoveListener(EventID.CompanionOwnedChanged, OnEquipmentChanged);
     }
 
     // Dựng lại hình trang bị từ save — gọi sau khi người chơi đổi đồ ở menu.
@@ -52,15 +54,18 @@ public class HeroUnit : BaseUnit
 
     // ===== CHỈ SỐ (luồng StickIdle: LoadPermanentModifiers → CalculateCurrentStats) =====
 
-    // Modifier "vĩnh viễn" của Hero = chỉ số đồ đang mặc (save). Nạp vào list để CalculateCurrentStats dùng.
+    // Modifier "vĩnh viễn" của Hero = chỉ số đồ đang mặc (save) + Own Effect của mọi pet đã sở hữu (flat,
+    // gốc lu.gov trong Soldier.ewc). Nạp vào list để CalculateCurrentStats dùng.
     protected override void LoadPermanentModifiers()
     {
         UserEquipmentData equipment = GameData.userData != null ? GameData.userData.equipment : null;
         AddModifier(EquipmentStatResolver.BuildModifiers(equipment));
+        AddModifier(CompanionService.BuildOwnEffectModifiers());
     }
 
-    // Chỉ số cuối = NỀN PlayerBase + Σ CHỈ SỐ CHÍNH đồ (flat) rồi ÁP SUBSTAT (%).
-    //   Pass 1 (flat): attack = PlayerBaseDamage + Σ main(Damage); maxHp = PlayerBaseHealth + Σ main(Health).
+    // Chỉ số cuối = NỀN PlayerBase + Σ CHỈ SỐ CHÍNH đồ + Own Effect pet (flat) rồi ÁP SUBSTAT (%).
+    //   Pass 1 (flat): attack = PlayerBaseDamage + Σ main(Damage) + Σ ownAttack;
+    //                  maxHp  = PlayerBaseHealth + Σ main(Health) + Σ ownHealth.
     //   Pass 2 (%):    gom substat theo đích rồi nhân/cộng lên kết quả pass 1 (xem EquipmentStatResolver).
     // Đúng mô hình game gốc (main cộng dồn) + mô hình % chuẩn genre cho substat (công thức tổng hợp
     // substat gốc chưa reverse — nếu sau này có thì chỉ sửa phần gom % dưới đây).
@@ -158,7 +163,8 @@ public class HeroUnit : BaseUnit
         }
     }
 
-    // Đổi đồ khi Hero đang sống → tính lại chỉ số ngay (ReloadStats tự áp lại vũ khí: tầm đánh/đạn).
+    // Đổi đồ / pet sở hữu đổi (summon, nâng cấp) khi Hero đang sống → tính lại chỉ số ngay
+    // (ReloadStats tự áp lại vũ khí: tầm đánh/đạn).
     // Bản sao MirrorClone bỏ qua (chỉ số chụp lúc sinh).
     private void OnEquipmentChanged(object param)
     {
