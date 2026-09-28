@@ -3,7 +3,7 @@ name: dungonrush-companion-save-upgrade
 description: Save/nâng cấp/summon-level companion + UI CompanionUI — bảng whn & whm ĐÃ trích, nâng cấp THỦ CÔNG
 metadata:
   type: project
-  modified: 2026-09-25
+  modified: 2026-09-28
 ---
 
 Save + level + summon companion (reverse il2cpp v41, xem DecodedData/COMPANION_MODEL.md §7-8). Khác hệ meta
@@ -24,6 +24,15 @@ EquippedCompanions (tối đa 3) ; `TotalCompanionSummons` (→ `UserCompanionDa
 `UserCompanionData` (AddCards không level, Upgrade, ClearNew, totalSummons), `CompanionUpgradeConfig` (bảng whn),
 UI `UI/Companions/CompanionUI.cs` + `ElementPetEquimentUI.cs` (clone template trong Content; slot trống=objAddArea).
 
-**CÒN LẠI:** ads thật + giới hạn/ngày ad summon; panel kết quả summon; btInfo (popup tỉ lệ — CompanionUpgradeInfoPopup);
+**Popup info pet + nút ô pet (2026-09-28):** ô pet: btInfo (cả ô) → `UIPetInfo` (Resources/Prefabs/UI, key `UIKey.PetInfo`);
+nút Add chỉ hiện khi sở hữu + chưa equip + CÒN slot; Remove khi đang equip. Click ô KHÔNG còn tự nâng cấp — nâng ở nút
+Upgrade trong popup. Popup gốc = `CompanionInfoPopup.grk`; mô tả gốc do `lu.gox(CompanionData,level,float)` dựng
+(CHƯA disasm) → map `<Value>` theo CompanionType là SUY LUẬN từ field các lớp PetCompanion*, đã khớp 2 ảnh game thật
+(Flame Wing lv1=252/Dmg47 HP63, Magic Wool lv6=78/Dmg6 HP65). Giá trị hiển thị = Base+Scaler×lv, KHÔNG nhân CompanionDamage;
+số cắt phần lẻ, ≥1000 rút gọn k/M/B/T; màu số `#E5F36B` (từ prefab). Own Effect → [[dungonrush-companion-own-effect]].
+
+**CÒN LẠI:** màu chữ rarity trong popup (chưa có bảng màu 10 rarity — cần ảnh/màu từ user);
+NRE CompanionUI.RefreshInventory khi OnEnable lúc GameData.staticData chưa Load (có sẵn, chưa sửa);
+ ads thật + giới hạn/ngày ad summon; panel kết quả summon; btInfo (popup tỉ lệ — CompanionUpgradeInfoPopup);
 ObjDownArrow; imgProcess summon ở scene đang Image Type=Sliced (phải đổi Filled mới chạy fillAmount);
 spawn theo EquippedCompanions thật.

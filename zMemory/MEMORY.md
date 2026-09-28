@@ -34,4 +34,6 @@
 - [Companion unlock/summon](dungonrush-companion-unlock-summon.md) — pet unlock PlayerLevel 5; nguyên liệu Bone (Zombie Outbreak); summon ad x12 / Bone 100→16 / 200→36; công thức guc+eby
 - [Companion battle classes](dungonrush-companion-battle-classes.md) — ĐỦ 16 pet: mỗi type 1 lớp PetCompanion* + effect dùng chung (Unit/Pet/Effects); bảng type→strategy đã sửa; chưa test Unity
 - [Hệ Mastery (G1)](dungonrush-mastery-feature.md) — 10 nhánh buff vĩnh viễn tiêu Gem; data+service+save+2 hook+UI mở khoá XONG; mở TUẦN TỰ theo MasteryConfig.Upgrades (phí 0,0,30..240 tăng dần); iuf dead code
-- [Companion save/upgrade/summon-level + UI](dungonrush-companion-save-upgrade.md) — whn/whm ĐÃ trích; nâng cấp THỦ CÔNG; CompanionService + CompanionUI xong
+- [Companion save/upgrade/summon-level + UI](dungonrush-companion-save-upgrade.md) — whn/whm ĐÃ trích; nâng cấp THỦ CÔNG; CompanionService + CompanionUI + UIPetInfo xong; màu rarity popup còn thiếu
+- [Own Effect pet = buff hero khi SỞ HỮU](dungonrush-companion-own-effect.md) — lu.gov cộng OwnAttack/OwnHealth của MỌI pet owned (không cần equip) vào hero; ĐÃ áp ở HeroUnit
+- [Test logic bằng UnityMCP edit mode](dungonrush-unity-mcp-editmode-test.md) — staticData chưa load phải gọi Load(); codedom C#6; backup/restore userData, không Save

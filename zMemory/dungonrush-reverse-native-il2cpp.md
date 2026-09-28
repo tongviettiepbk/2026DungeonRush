@@ -23,3 +23,10 @@ Khi cần logic/công thức THẬT của 1 hàm game (không phải chỉ field
 **Dump hiện có (2026-09) ở scratchpad `...\claude\...\77eac08e-...\scratchpad\`**: libil2cpp.so + global-metadata.dat + dump/ + disasm.py + compile_check.py (Unity csc). Đồ nghề bản sạch trong repo: `tools/il2cpp_reverse/`. Python: `C:\Users\StarGear\AppData\Local\Programs\Python\Python312\python.exe`.
 
 Artefact dump nằm ở scratchpad TẠM (mất sau session) → cần thì bung + dump lại (~1 phút). Xem [[dungonrush-item-stats-source]], [[dungeonrush-config-format]].
+
+**Trên máy MAC (2026-09-28):** xapk ở gốc repo `Dungeon+Rush_41_APKPure.xapk`. `/usr/bin/python3` ĐÃ có lief+capstone (chạy disasm.py);
+`tools/.venv/bin/python` có Pillow (đọc ảnh). Dump gần nhất ở `/private/tmp/claude-501/-Volumes-Work-Project-2026DungeonRush/<session>/scratchpad/il2cpp/`
+(libil2cpp.so + dump/{dump.cs,script.json} + disasm.py; TẠM, có thể mất) — `find` theo tên libil2cpp.so trước khi dump lại.
+**Mẹo tìm ai dùng 1 field:** tra offset trong dump.cs → quét MỌI ScriptMethod (script.json) tìm `ldr s?,[x?,#off]`;
+tìm caller của hàm = quét `bl #<VA>`. Cách này ra lu.gov / Soldier.ewc cho Own Effect ([[dungonrush-companion-own-effect]]).
+
