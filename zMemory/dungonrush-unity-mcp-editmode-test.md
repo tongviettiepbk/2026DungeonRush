@@ -13,3 +13,5 @@ Khi verify logic bằng `mcp__UnityMCP__execute_code` (không vào Play mode):
 - Hàm private: gọi qua reflection (BindingFlags.NonPublic) trên component AddComponent tạm rồi DestroyImmediate.
 - Console còn 3 lỗi Inspector editor (MissingReference m_Targets / SerializedObjectNotCreatable) — vô hại, không phải lỗi code.
 Xem [[dungonrush-rebuild-progress]].
+- Hàm gọi `GameData.Save()` (VD CompanionService.Summon): bật `UserData.isDisableSaveDataLocal = true` → Save no-op; tráo module (`GameData.userData.companions = new UserCompanionData(); InitData()`) rồi `finally` trả object thật + tắt cờ.
+- Test trong PLAY mode có bật `isDisableSaveDataLocal`: cờ static KHÔNG tự về false khi dừng Play (Unity chỉ reload domain lúc VÀO Play) → sau `manage_editor stop` phải set tay `UserData.isDisableSaveDataLocal = false` và kiểm tra lại.

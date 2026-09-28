@@ -37,3 +37,4 @@
 - [Companion save/upgrade/summon-level + UI](dungonrush-companion-save-upgrade.md) — whn/whm ĐÃ trích; nâng cấp THỦ CÔNG; CompanionService + CompanionUI + UIPetInfo xong; màu rarity popup còn thiếu
 - [Own Effect pet = buff hero khi SỞ HỮU](dungonrush-companion-own-effect.md) — lu.gov cộng OwnAttack/OwnHealth của MỌI pet owned (không cần equip) vào hero; ĐÃ áp ở HeroUnit
 - [Test logic bằng UnityMCP edit mode](dungonrush-unity-mcp-editmode-test.md) — staticData chưa load phải gọi Load(); codedom C#6; backup/restore userData, không Save
+- [Companion TODO còn thiếu](dungonrush-companion-todo.md) — 6 việc chưa làm của summon pet (Ads free vô hạn, tab Pet chưa khoá lv5, multiplier Bone, IsNew, màu rarity, event)

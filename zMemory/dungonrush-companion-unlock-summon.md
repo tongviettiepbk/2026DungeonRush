@@ -23,3 +23,5 @@ Reverse từ libil2cpp v41 (Il2CppDumper + capstone) + GameplayScene.unity + sav
 **ĐÃ ĐƯA VÀO GAME DATA (2026-09-22, compile sạch):** `Companions/CompanionSummonConfig.cs` (nhúng hằng số + công thức guc/eby, kiểu StaticExperienceData), nối qua `StaticCompanionData.summonConfig`; thêm `ItemType.BONE=5` (GameEnums). CHƯA có: Bone currency trong UserData, mastery system, tab-unlock system (companion mới ở mức data+battle). Config chỉ mới là data/formula, chưa wiring runtime.
 
 Xem [[dungonrush-reverse-native-il2cpp]] (pipeline), [[dungonrush-genre-rpg-action]], [[dungonrush-mainmap-gameplay-spec]]. Đồ nghề reverse: tools/il2cpp_reverse/ (disasm.py); xapk ở repo root.
+
+**Roll summon GỐC — đã disasm (2026-09-29):** `ly.gpt` = `Random.Range(0f,100f)` bản FLOAT, `roll < acc` cộng dồn Mythic→Uncommon, còn lại Common (code khớp, test 200k lượt ra đúng bảng). `UserController.edi`: nếu `TotalCompanionSummons == 52` → ÉP Uncommon (không roll) — đã code (`GUARANTEED_UNCOMMON_AT`). `GameResources.jhm(rarity)`: rarity rỗng → random trong TOÀN BỘ list (đã code). edi trả `CompanionSummonResult{Data, IsNew}` và bắn event `co.cvd(rarity)` (chưa làm).
