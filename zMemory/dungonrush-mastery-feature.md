@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 05782737-faab-46cc-83c2-411a347173d2
-  modified: 2026-09-22T09:16:25.172Z
+  modified: 2026-09-29T00:00:00.000Z
 ---
 
 Hệ Mastery (G1): 10 nhánh buff toàn cục vĩnh viễn, tiêu GEM. Data gốc ở DecodedData/tables/MasteryUpgradeData.json + MasteryConfig.json (chính xác 100%). Làm theo pattern StickIdle/Companion — xem [[dungonrush-follow-stickidle]].
@@ -27,6 +27,16 @@ Hệ Mastery (G1): 10 nhánh buff toàn cục vĩnh viễn, tiêu GEM. Data gố
 **Thứ tự mở khoá GỐC (đọc MasteryConfig.Upgrades từ xapk, 2026-09-25):** mở TUẦN TỰ theo list: AutoLoot(0) → AdBoostWorth(0) → GemOfferChance(30) → CompanionSummon(60) → MaxOffline(90) → MaxPickaxe(120) → ForgeMaxItemLevel(150) → AdBoostDuration(180) → OfflineEarning(210) → MoveSpeed(240) — phí = unlockGemCost nhánh kế, tăng dần. Đã chốt vào StaticMasteryData.ORDER.
 **UI (2026-09-25):** MasteryUI (lưới + nút mở nhánh kế, cờ isTestFree) + ElementMasteryUI XONG; chưa có click nâng cấp từng ô.
 
-**Chưa làm:** click nâng cấp nhánh trong UI; nối các consumer còn lại (AutoLoot/GemOffer/AdBoost/Offline/MoveSpeed/Mining — các hệ đó chưa có trong game).
+**✅ CHỐT theo ảnh game thật (2026-09-29, 6 ảnh khớp 100%):**
+- Mở khoá xong = **Lvl 1** (save level=1, value=levels[0]); max = levels.Count. ValidateData tự nâng save cũ 0→1.
+- Phí nâng Lvl k→k+1 = **levels[k-1].gemCost** (entry cấp HIỆN TẠI). VD MaxOffline Lvl1→10, AutoLoot Lvl3→60. (Ghi chú cũ "cost ở cấp đích" là SAI.)
+- Hiển thị: prefix+số+suffix, " > " giữa; số nguyên in không lẻ, số lẻ "0.00" theo culture ("x1,10"); text "Lvl N" (loc Common.Level.Abbrev).
+- Tên/mô tả lấy localization EN (Items.Mastery.Name/Desc.<enum>) — JSON gốc ghi nhầm MaxPickaxe = "Max Item Level".
+- Icon: AutoLoot=mastery_10 (hộp+), MaxPickaxe=AssetRipper mastery_13, ForgeMaxItemLevel=mastery_14 (kiếm+, suy đoán). AutoLoot suffix "<sprite=0> " + TMP_SpriteAsset IsBox (sinh từ rip, _ResourceGame/MasteryIcons). Generator giữ guid khi chạy lại.
+- UI: popup MasterUpgradeUI (MateryPopupUpgrade trong MainGame.unity) chỉ mở cho nhánh ĐÃ unlock; thiếu Gem → chữ phí đỏ, nút vẫn bấm (toast).
+
+**Consumer đã nối (rà 2026-09-29):** ForgeMaxItemLevel → ForgeController cap=100+round(v); CompanionSummonCount → CompanionSummonConfig (Lvl1 → 12/16/36 khớp số thật); PlayerMovementSpeed → HeroUnit.CalculateCurrentStats `moveSpeed *= v` (suy từ data prefix x, CHƯA reverse). EventID.MasteryChanged → Hero ReloadStats.
+
+**Chưa làm:** nối các consumer còn lại (AutoLoot/GemOffer/AdBoost/Offline/MoveSpeed/Mining — các hệ đó chưa có trong game).
 
 KHÁC với StatModifierSource.MasteryCommon/MasteryPromotion (MechanicEnums) = bậc mastery của CARD trong battle, không liên quan.
