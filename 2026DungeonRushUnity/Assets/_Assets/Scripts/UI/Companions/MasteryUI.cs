@@ -14,13 +14,17 @@ public class MasteryUI : MonoBehaviour
     // Template ô mastery (nằm sẵn trong Content) — clone ra mỗi nhánh 1 ô, bản gốc ẩn đi.
     public GameObject objPrefabElementMastery;
 
+    public MasterUpgradeUI infoMasterUpgradeUI;
+
     // TEST: true = mở khoá miễn phí (bỏ qua trừ Gem).
     public bool isTestFree = true;
 
     private List<ElementMasteryUI> listElementMastery;
+    private Color colorEnough;
 
     private void Awake()
     {
+        colorEnough = txtQuantityGem.color;
         BtSummonMastery.onClick.AddListener(OnClickSummonMastery);
         CreateElements();
     }
@@ -44,7 +48,7 @@ public class MasteryUI : MonoBehaviour
             obj.SetActive(true);
 
             ElementMasteryUI element = obj.GetComponent<ElementMasteryUI>();
-            element.SetData(upgrades[i]);
+            element.SetData(upgrades[i], OnClickInfoMastery);
             listElementMastery.Add(element);
         }
     }
@@ -66,13 +70,18 @@ public class MasteryUI : MonoBehaviour
         if (next == null)
         {
             txtQuantityGem.text = "MAX";
+            txtQuantityGem.color = colorEnough;
             BtSummonMastery.interactable = false;
             return;
         }
 
+        // Game gốc: nút vẫn bấm được, thiếu Gem thì phí hiện chữ đỏ.
+        // Luôn hiện phí thật; cờ TEST chỉ bỏ qua việc trừ Gem.
         int cost = MasteryService.GetUnlockCost(next.upgradeType);
-        txtQuantityGem.text = isTestFree ? "0" : cost.ToString();
-        BtSummonMastery.interactable = isTestFree || MasteryService.CanUnlock(next.upgradeType);
+        bool isEnough = isTestFree || MasteryService.CanUnlock(next.upgradeType);
+        txtQuantityGem.text = cost.ToString();
+        txtQuantityGem.color = isEnough ? colorEnough : Color.red;
+        BtSummonMastery.interactable = true;
     }
 
     // Nhánh chưa mở khoá đầu tiên theo thứ tự gốc (null = đã mở hết).
@@ -89,6 +98,12 @@ public class MasteryUI : MonoBehaviour
         }
 
         return null;
+    }
+
+    // Mở popup chi tiết/nâng cấp; nâng xong thì refresh lại lưới.
+    private void OnClickInfoMastery(MasteryUpgradeData data)
+    {
+        infoMasterUpgradeUI.Show(data, isTestFree, Refresh);
     }
 
     private void OnClickSummonMastery()
@@ -112,6 +127,7 @@ public class MasteryUI : MonoBehaviour
             return;
         }
 
+        this.PostEvent(EventID.MasteryChanged);
         Refresh();
     }
 }

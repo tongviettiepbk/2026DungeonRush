@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 // Config 1 nhánh Mastery (G1). Asset đặt trong Resources/Scriptable Objects/Mastery/,
 // sinh từ tool tools/gen_mastery_assets.py (data gốc DecodedData/tables/MasteryUpgradeData.json).
 //
-// Theo pattern CompanionData: layer data CHỈ giữ số cân bằng + icon để hiển thị. Đã bỏ
-// reference của bản gốc: ValueSpriteAsset (TMP_SpriteAsset) — không cần cho logic.
+// Theo pattern CompanionData: layer data CHỈ giữ số cân bằng + icon/sprite để hiển thị.
+// Tên/mô tả lấy theo localization EN gốc (Items.Mastery.Name/Desc.<enum>).
+//
+// Quy ước level (đối chiếu game thật): mở khoá xong = Lvl 1 (value = levels[0]); max = levels.Count.
 [CreateAssetMenu(fileName = "Mastery-", menuName = "DungOnRush/Mastery Upgrade Data")]
 public class MasteryUpgradeData : ScriptableObject
 {
@@ -30,7 +33,8 @@ public class MasteryUpgradeData : ScriptableObject
 
     [Header("Hiển thị")]
     public string valuePrefix;             // "x" / "%" / "+" / null
-    public string valueSuffix;             // "s" / null (bỏ chuỗi <sprite=...>)
+    public string valueSuffix;             // "s" / "<sprite=0> " / null
+    public TMP_SpriteAsset valueSpriteAsset; // sprite cho "<sprite=0>" trong suffix (AutoLoot = hộp loot)
 
     [Header("Thang cấp")]
     public List<MasteryLevelEntry> levels; // mỗi cấp: GemCost + Value.
@@ -53,16 +57,16 @@ public class MasteryUpgradeData : ScriptableObject
     }
 
     // Phí Ngọc để nâng TỪ level hiện tại lên level+1 (chưa tính phí mở khoá nhánh).
-    // GemCost lưu ở entry của cấp ĐÍCH: nâng lên cấp k → tốn levels[k-1].gemCost.
+    // GemCost lưu ở entry của cấp HIỆN TẠI: đang Lvl k → tốn levels[k-1].gemCost.
+    // Đối chiếu game thật: Max Offline Lvl1 → 10 (levels[0]), Auto-Loot Lvl3 → 60 (levels[2]).
     public int GetUpgradeGemCost(int currentLevel)
     {
-        if (levels == null || currentLevel >= levels.Count)
+        if (levels == null || currentLevel < 1 || currentLevel >= levels.Count)
         {
-            return -1; // đã max
+            return -1; // chưa mở khoá hoặc đã max
         }
 
-        int nextIdx = Mathf.Max(currentLevel, 0);
-        return levels[nextIdx].gemCost;
+        return levels[currentLevel - 1].gemCost;
     }
 }
 

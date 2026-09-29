@@ -58,7 +58,7 @@ public class StaticMasteryData
         return null;
     }
 
-    // Giá trị đang có của 1 nhánh theo cấp (level 0 = chưa nâng → default).
+    // Giá trị đang có của 1 nhánh theo cấp (level 0 = chưa mở khoá → default).
     public float GetValue(MasteryUpgradeType type, int level)
     {
         MasteryUpgradeData data = GetUpgrade(type);

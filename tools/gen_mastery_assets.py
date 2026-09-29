@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # Sinh 10 MasteryUpgradeData asset (G1) tu data GOC (DecodedData/tables/MasteryUpgradeData.json),
-# giu nguyen moi so. Chi giu stat + icon; bo TMP_SpriteAsset. Theo pattern gen_companion_assets.py.
+# giu nguyen moi so. Theo pattern gen_companion_assets.py.
+#   - Ten/mo ta: localization EN goc (Items.Mastery.Name/Desc.<enum>) — JSON ghi nham cua MaxPickaxe.
+#   - ValueSuffix "<sprite=0> " giu nguyen + sinh TMP_SpriteAsset (AutoLoot = hop loot IsBox).
+#   - Chay lai KHONG doi guid: meta da co thi dung lai guid cu.
 #
-# Chay tren mac. Icon lay tu cac PNG da crop san trong DecodedData/_img_tmp_gh/mastery_NN.png
-# (mapping enum -> mastery_NN suy doan theo hinh, giong tools/upload_images_gh.py).
+# Chay tren mac. Icon: PNG crop trong DecodedData/_img_tmp_gh + Texture2D cua AssetRipper
+# (mapping enum -> PNG doi chieu anh game that 2026-09-29).
 import os, json, uuid, shutil, re
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -12,24 +15,35 @@ PROJ = os.path.join(ROOT, "2026DungeonRushUnity", "Assets", "_Assets")
 OUT = os.path.join(PROJ, "Resources", "Scriptable Objects", "Mastery")
 ICON_DIR = os.path.join(PROJ, "_ResourceGame", "MasteryIcons")
 IMG_DIR = os.path.join(ROOT, "DecodedData", "_img_tmp_gh")
+RIP_TEX = os.path.join(ROOT, "AssetRipper", "ExportedProject", "Assets", "Texture2D")
+RIP_SHEETS = os.path.join(ROOT, "AssetRipper", "ExportedProject", "Assets", "Resources", "spritesheets")
+LOCALIZATION = os.path.join(ROOT, "DecodedData", "localization", "strings_en.json")
+# TMP_SpriteAsset mau cua TMP Essentials (lay header + material nhung).
+TMP_SPRITE_TEMPLATE = os.path.join(PROJ, "..", "TextMesh Pro", "Resources", "Sprite Assets", "EmojiOne.asset")
 TEMPLATE_META = os.path.join(PROJ, "_ResourceGame", "Avatar", "angel.png.meta")
 
 # = guid trong Mastery/MasteryUpgradeData.cs.meta
 SCRIPT_GUID = "bb8ede901b5248dab77d845e4d8b6d54"
 
-# enum UpgradeType__enum -> ten file PNG da crop trong _img_tmp_gh (bo .png).
-# MiningMaxPickaxe: PNG rieng "pickaxe" nam trong AssetRipper Texture2D, khong co trong _img_tmp_gh
-# -> de fileID:0 (icon Mining se bo sung khi lam UI).
+# enum UpgradeType__enum -> duong dan PNG nguon.
+# Doi chieu anh game that: AutoLoot = hop + (mastery_10), MaxPickaxe = cuoc + (mastery_13).
+# ForgeMaxItemLevel = kiem + (mastery_14) — suy theo hinh, chua co anh game that.
 ICON_PNG = {
-    "AutoLootHammerCount": "mastery_01",
-    "GemOfferChance":      "mastery_03",
-    "AdBoostDuration":     "mastery_04",
-    "AdBoostWorth":        "mastery_05",
-    "MaxOfflineTime":      "mastery_06",
-    "OfflineEarningWorth": "mastery_07",
-    "PlayerMovementSpeed": "mastery_08",
-    "CompanionSummonCount": "mastery_09",
-    "ForgeMaxItemLevel":   "mastery_10",
+    "AutoLootHammerCount": os.path.join(IMG_DIR, "mastery_10.png"),
+    "GemOfferChance":      os.path.join(IMG_DIR, "mastery_03.png"),
+    "AdBoostDuration":     os.path.join(IMG_DIR, "mastery_04.png"),
+    "AdBoostWorth":        os.path.join(IMG_DIR, "mastery_05.png"),
+    "MaxOfflineTime":      os.path.join(IMG_DIR, "mastery_06.png"),
+    "OfflineEarningWorth": os.path.join(IMG_DIR, "mastery_07.png"),
+    "PlayerMovementSpeed": os.path.join(IMG_DIR, "mastery_08.png"),
+    "CompanionSummonCount": os.path.join(IMG_DIR, "mastery_09.png"),
+    "ForgeMaxItemLevel":   os.path.join(RIP_TEX, "mastery_14.png"),
+    "MiningMaxPickaxe":    os.path.join(RIP_TEX, "mastery_13.png"),
+}
+
+# guid ValueSpriteAsset trong JSON goc -> ten TMP_SpriteAsset trong spritesheets cua AssetRipper.
+SPRITE_ASSETS = {
+    "84698602950e4d84ab3679ea0cd2fab8": "IsBox",
 }
 
 os.makedirs(OUT, exist_ok=True)
@@ -55,37 +69,65 @@ def yaml_str(s):
     return s
 
 
-def make_icon(enum_name):
-    png_name = ICON_PNG.get(enum_name)
-    if not png_name:
-        return "{fileID: 0}"
-    png = os.path.join(IMG_DIR, png_name + ".png")
-    if not os.path.exists(png):
-        return "{fileID: 0}"
-    dst_name = "mastery_" + enum_name
+def existing_guid(meta_path):
+    # Meta da co -> dung lai guid (chay lai tool khong lam gay reference).
+    if os.path.exists(meta_path):
+        return re.search(r"^guid: ([0-9a-f]+)", open(meta_path, encoding="utf-8").read(), re.M).group(1)
+    return uuid.uuid4().hex
+
+
+def copy_texture(png, dst_name):
     shutil.copyfile(png, os.path.join(ICON_DIR, dst_name + ".png"))
-    guid = uuid.uuid4().hex
+    meta_path = os.path.join(ICON_DIR, dst_name + ".png.meta")
+    guid = existing_guid(meta_path)
     sid = guid[:24] + "00000000"
     meta = template.replace(old_guid, guid).replace(old_spriteid, sid)
-    open(os.path.join(ICON_DIR, dst_name + ".png.meta"), "w", encoding="utf-8", newline="\n").write(meta)
+    open(meta_path, "w", encoding="utf-8", newline="\n").write(meta)
+    return guid
+
+
+def make_icon(enum_name):
+    png = ICON_PNG.get(enum_name)
+    if not png or not os.path.exists(png):
+        return "{fileID: 0}"
+    guid = copy_texture(png, "mastery_" + enum_name)
     return "{fileID: 21300000, guid: %s, type: 3}" % guid
 
 
+def make_sprite_asset(ref):
+    # TMP_SpriteAsset: header + material lay tu EmojiOne (dung version TMP cua project),
+    # bang glyph/character lay nguyen tu asset rip; texture = spriteSheet cua asset rip.
+    name = SPRITE_ASSETS.get((ref or {}).get("guid"))
+    if not name:
+        return "{fileID: 0}"
+    rip = open(os.path.join(RIP_SHEETS, name + ".asset"), encoding="utf-8").read()
+    char_name = re.search(r"m_SpriteCharacterTable:.*?m_Name: (\S+)", rip, re.S).group(1)
+    tex_guid = copy_texture(os.path.join(RIP_TEX, char_name + ".png"), char_name)
+
+    tpl = open(TMP_SPRITE_TEMPLATE, encoding="utf-8").read()
+    tpl = re.sub(r"(_MainTex:\n\s+m_Texture: )\{[^}]*\}", r"\g<1>{fileID: 2800000, guid: %s, type: 3}" % tex_guid, tpl)
+    head = tpl[:tpl.index("  m_Name: EmojiOne")]
+    face = tpl[tpl.index("  m_EditorClassIdentifier:"):tpl.index("  spriteSheet:")]
+    face = re.sub(r"hashCode: -?\d+", "hashCode: " + re.search(r"\n  hashCode: (-?\d+)", rip).group(1), face, count=1)
+    tables = rip[rip.index("  m_SpriteCharacterTable:"):]
+    body = (head + "  m_Name: " + name + "\n" + face
+            + "  spriteSheet: {fileID: 2800000, guid: %s, type: 3}\n" % tex_guid + tables)
+
+    apath = os.path.join(ICON_DIR, name + ".asset")
+    open(apath, "w", encoding="utf-8", newline="\n").write(body)
+    write_asset_meta(apath)
+    return "{fileID: 11400000, guid: %s, type: 2}" % existing_guid(apath + ".meta")
+
+
 def write_asset_meta(apath):
-    g = uuid.uuid4().hex
+    g = existing_guid(apath + ".meta")
     open(apath + ".meta", "w", encoding="utf-8", newline="\n").write(
         "fileFormatVersion: 2\nguid: %s\nNativeFormatImporter:\n  externalObjects: {}\n"
         "  mainObjectFileID: 11400000\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n" % g)
 
 
-def suffix_val(s):
-    # Bo chuoi hien thi dang <sprite=...> (khong dung cho logic/hien thi text thuong).
-    if s and s.strip().startswith("<sprite"):
-        return None
-    return s
-
-
 data = json.load(open(JSON, encoding="utf-8"))
+loc = json.load(open(LOCALIZATION, encoding="utf-8"))
 count = 0
 for r in data:
     name = r["_name"]
@@ -99,8 +141,8 @@ for r in data:
              "  m_Name: " + name, "  m_EditorClassIdentifier:",
              "  assetName: " + name,
              "  upgradeType: %d" % int(r["UpgradeType"]),
-             "  upgradeName: " + yaml_str(r["UpgradeName"]),
-             "  description: " + yaml_str(r["Description"]),
+             "  upgradeName: " + yaml_str(loc.get("Items.Mastery.Name." + enum_name, r["UpgradeName"])),
+             "  description: " + yaml_str(loc.get("Items.Mastery.Desc." + enum_name, r["Description"])),
              "  icon: " + make_icon(enum_name),
              "  unlockGemCost: %d" % int(r["UnlockGemCost"]),
              "  addedLater: %d" % (1 if r["AddedLater"] else 0),
@@ -109,7 +151,8 @@ for r in data:
              "  applyDefaultBeforeFeatureUnlock: %d" % (1 if r["ApplyDefaultBeforeFeatureUnlock"] else 0),
              "  applyDefaultBeforeCardUnlock: %d" % (1 if r["ApplyDefaultBeforeCardUnlock"] else 0),
              "  valuePrefix: " + yaml_str(r.get("ValuePrefix")),
-             "  valueSuffix: " + yaml_str(suffix_val(r.get("ValueSuffix"))),
+             "  valueSuffix: " + yaml_str(r.get("ValueSuffix")),
+             "  valueSpriteAsset: " + make_sprite_asset(r.get("ValueSpriteAsset")),
              "  levels:"]
     for lv in r["Levels"]:
         lines.append("  - gemCost: %d" % int(lv["GemCost"]))

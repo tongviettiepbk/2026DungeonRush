@@ -16,5 +16,8 @@ public enum EventID
     // Companion: danh sách pet SỞ HỮU / level đổi (summon, nâng cấp) → Hero tính lại Own Effect.
     CompanionOwnedChanged,
 
+    // Mastery: mở khoá / nâng cấp nhánh → Hero tính lại chỉ số (Movement Speed).
+    MasteryChanged,
+
     // TODO(follow-stick): thêm dần event khi port các hệ thống khác từ StickIdle.
 }

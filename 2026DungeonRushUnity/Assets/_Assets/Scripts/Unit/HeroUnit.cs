@@ -37,6 +37,7 @@ public class HeroUnit : BaseUnit
         base.OnEnable();
         EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnEquipmentChanged);
         EventDispatcher.Instance.RegisterListener(EventID.CompanionOwnedChanged, OnEquipmentChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.MasteryChanged, OnEquipmentChanged);
     }
 
     protected override void OnDisable()
@@ -44,6 +45,7 @@ public class HeroUnit : BaseUnit
         base.OnDisable();
         EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnEquipmentChanged);
         EventDispatcher.Instance.RemoveListener(EventID.CompanionOwnedChanged, OnEquipmentChanged);
+        EventDispatcher.Instance.RemoveListener(EventID.MasteryChanged, OnEquipmentChanged);
     }
 
     // Dựng lại hình trang bị từ save — gọi sau khi người chơi đổi đồ ở menu.
@@ -138,6 +140,10 @@ public class HeroUnit : BaseUnit
         stats.blockChance = blockPct * 100f;
         stats.lifesteal = lifestealPct * 100f;
 
+        // Mastery "Movement Speed" (PlayerMovementSpeed): hệ số NHÂN tốc chạy (data gốc prefix "x",
+        // default 1 = chưa mở khoá; Lvl1 x1.05 ... Lvl20 x2).
+        stats.moveSpeed *= MasteryService.GetCurrentValue(MasteryUpgradeType.PlayerMovementSpeed);
+
         // Bản sao MirrorClone: máu tối đa = maxHp hero × cloneHealthPercent/100 (gốc lt.gon).
         if (IsMirrorClone)
         {
@@ -163,7 +169,7 @@ public class HeroUnit : BaseUnit
         }
     }
 
-    // Đổi đồ / pet sở hữu đổi (summon, nâng cấp) khi Hero đang sống → tính lại chỉ số ngay
+    // Đổi đồ / pet sở hữu đổi (summon, nâng cấp) / mastery đổi khi Hero đang sống → tính lại chỉ số ngay
     // (ReloadStats tự áp lại vũ khí: tầm đánh/đạn).
     // Bản sao MirrorClone bỏ qua (chỉ số chụp lúc sinh).
     private void OnEquipmentChanged(object param)
