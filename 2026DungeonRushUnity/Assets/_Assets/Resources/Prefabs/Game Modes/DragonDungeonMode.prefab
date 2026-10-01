@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1173943323480216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4173943323480216}
+  - component: {fileID: 11573943323480216}
+  m_Layer: 0
+  m_Name: DragonDungeonMode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4173943323480216
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173943323480216}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &11573943323480216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1173943323480216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7975f5f36d4a445ea4ceaa1aa3a77fcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DragonDungeonMode
+  type: 2
+  bgm: {fileID: 0}
+  defaultBattleTime: 0
+  delayEndGame: 1.5
+  overrideStageId: 0
+  centerHorizontally: 1
+  mapPrefab: {fileID: 1548981632888807, guid: 145c018c5748ee0ac5775a3adb3af52f, type: 3}
+  obstaclePrefab: {fileID: 0}
+  heroPrefab: {fileID: 3403766416944055713, guid: 6064135f06d2db646a620667854dd70c, type: 3}
+  enemyPrefab: {fileID: 8958350495719512557, guid: 046c7c2105759488e819af1db46fcf4a, type: 3}
+  petMaxHp: 400
+  petAttack: 25
+  petAttackSpeed: 1
+  petAttackRange: 1.3
+  petMoveSpeed: 3.2
+  dungeonType: 0

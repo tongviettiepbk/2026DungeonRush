@@ -15,12 +15,30 @@ public enum TypeMenuLobby
 
 public class UIMainLobby : BaseUI
 {
+    [Space(20)]
+    [Header(" Top")]
+    public TMP_Text txtNamePlayer;
+    public TMP_Text txtPower;
+    public TMP_Text txtLevelMap;
+    public TMP_Text txtGem;
+
+    [Space(20)]
+    [Header("MID")]
     public Button btAutoPet;
     public TMP_Text txtAutoPet;
     public List<ElementPetUILobby> listElementPet;
 
+    public TMP_Text txtLevelPlayer;
+    public Image imgProcessPlayer;
+    public TMP_Text txtProcess;
+
     [Space(20)]
+    [Header("Loop")]
     public List<ElementEquipmentUILobby> listElementEquipment;
+    public Button btAutoLoot;
+    public Button btLoot;
+    public Button btBoost;
+    public TMP_Text txtLootTicket;
 
     [Space(20)]
     public List<ElementTabMenuUILobby> listElementMenu;
@@ -29,22 +47,19 @@ public class UIMainLobby : BaseUI
     public List<GameObject> listObjTab = new List<GameObject>();
 
     [Space(20)]
-    [Header(" Top")]
-    public TMP_Text txtLevelMap;
-    public TMP_Text txtPower;
-    public TMP_Text txtGem;
-
-    public TMP_Text txtLevelPlayer;
-    public Image imgProcessPlayer;
-    public TMP_Text txtProcess;
+    public GameObject objDungeonUI;
+    public Button btExitDungeon;
 
     [Space(20)]
-    public Button btAutoLoot;
-    public Button btLoot;
-    public Button btBoost;
+    public GameObject objBossRushUI;
+    public TMP_Text txtTimeBoss;
+    public TMP_Text txtHpRemainBoss;
+    public Image imgProcessRed;
+    public Image imgProcessWhite;
 
     [Space(20)]
-    public TMP_Text txtLootTicket;
+    public GameObject objPvpUI;
+    public TMP_Text txtTimePvp;
 
     private string petAuto = "Auto On";
     private string petOff = "Auto Off";
@@ -149,7 +164,7 @@ public class UIMainLobby : BaseUI
 
     }
 
-    private void UpdateLootTicketText()
+    public void UpdateLootTicketText()
     {
         if (txtLootTicket != null)
             txtLootTicket.text = GameData.userData.items.GetQuantityHave(ItemType.LOOT_TICKET).ToString("0");
@@ -210,8 +225,8 @@ public class UIMainLobby : BaseUI
 
     private static PetUnit GetBattlePet(string assetName)
     {
-        CampaignMode campaign = GameController.Instance.mode as CampaignMode;
-        return campaign != null ? campaign.GetPet(assetName) : null;
+        BaseMode mode = GameController.Instance.mode;
+        return mode != null ? mode.GetPet(assetName) : null;
     }
 
     // Bấm ô pet: khoá → báo level mở; trống → mở tab Pet; có pet → kích hoạt ra đòn (khi đã hồi).

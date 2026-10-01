@@ -121,11 +121,16 @@ ZombieHorde (melee):
 | 50 | 152 | 12 | 5,907  | 17,720 |
 | 100| 302 | 12 | 701,995| 2,105,984 |
 
-DragonBoss (1 boss, ratio 10):
+DragonBoss — SỬA 2026-10-01: rồng là role **Range (1)**, KHÔNG phải Boss (4).
+`rs.irj` tạo đúng 1 `sx{id=DragonBossCharacterId 999999, role=1, combatLevel=jgm(lv,0)}`;
+preset `hpy` nhánh Dragon = `new ArmyPreset{Melee 0, Ranged 1, Lancaster 1.0}` → r = 2, damage ×0.8:
 | dLvl | combat | dmg | hp |
 |---|---|---|---|
-| 1 | 1 | 7 | 75 |
-| 10| 28| 35| 354 |
-| 50|148|9,612|96,121 |
+| 1 | 1 | 13 | 33 |
+| 5 | 13 | 27 | 67 |
+| 10| 28| 63 | 158 |
+| 20| 58| 357 | 891 |
+| 50|148|17,195|42,987 |
+(Bảng cũ "ratio 10: 7/75, 35/354..." là SAI.)
 ```
 ```

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // Bản rút gọn so với StickIdle (GamePlay/GameController.cs). Chỉ giữ registry unit + tham chiếu
@@ -10,9 +11,13 @@ public class GameController : Singleton<GameController>
     public UIMainLobby uiLobby;
 
     public ModeType modeType;
-    // Mode đang chơi (BaseMode giữ luôn state trận: isPause + teamA/teamB). Do chính mode
-    // tự đăng ký khi Awake. Map/wall/di chuyển nằm ở MapController.Instance.
+    // Mode đang chơi (BaseMode giữ luôn state trận: isPause + teamA/teamB). Gán sẵn trong scene
+    // hoặc để trống → tạo từ prefab theo modeType. Map/wall/di chuyển nằm ở MapController.Instance.
     public BaseMode mode;
+
+    // Prefab các mode (Resources/Prefabs/Game Modes) — đổi mode = huỷ mode cũ, Instantiate prefab mới (như StickIdle).
+    public static List<BaseMode> modePrefabs;
+    public bool isChangingMode { get; private set; }
 
     // battleId -> unit đang hoạt động trong trận.
     public Dictionary<int, BaseUnit> activeUnits { get; private set; } = new Dictionary<int, BaseUnit>();
@@ -27,20 +32,76 @@ public class GameController : Singleton<GameController>
 
     private void Awake()
     {
+        if (modePrefabs == null)
+        {
+            modePrefabs = Resources.LoadAll<BaseMode>("Prefabs/Game Modes").ToList();
+        }
+
         if (mode == null)
         {
-            Debug.LogError("GameController: mode chưa được gán trong inspector!");
+            CreateCurrentMode();
         }
         else
         {
             InitGame();
         }
-
     }
+
     public void InitGame()
     {
         mode.Init(this, modeType);
         uiLobby.Refresh();
+    }
+
+    // Đổi mode chơi (VD campaign → dungeon). Fade màn hình, giữa lúc tối thì huỷ mode cũ + dựng mode mới.
+    public void ChangeMode(ModeType type)
+    {
+        if (isChangingMode)
+        {
+            return;
+        }
+
+        DebugCustom.Log("[ChangeMode] Begin=" + type);
+        isChangingMode = true;
+        modeType = type;
+
+        UIManager.Instance.Fade(
+            toMaxCallback: () =>
+            {
+                ResetMode();
+                CreateCurrentMode();
+                DebugCustom.Log("[ChangeMode] Done=" + type);
+            },
+            toMinCallback: () =>
+            {
+                isChangingMode = false;
+            });
+    }
+
+    private void ResetMode()
+    {
+        if (mode == null)
+        {
+            return;
+        }
+
+        mode.Reset();
+        Destroy(mode.gameObject);
+        mode = null;
+        EventDispatcher.Instance.PostEvent(EventID.ResetMode);
+    }
+
+    private void CreateCurrentMode()
+    {
+        BaseMode prefab = modePrefabs.Find(x => x.type == modeType);
+        if (prefab == null)
+        {
+            Debug.LogError("GameController: không có prefab mode cho " + modeType + " (Resources/Prefabs/Game Modes)");
+            return;
+        }
+
+        mode = Instantiate(prefab, transform);
+        InitGame();
     }
 
     public int NextBattleId()

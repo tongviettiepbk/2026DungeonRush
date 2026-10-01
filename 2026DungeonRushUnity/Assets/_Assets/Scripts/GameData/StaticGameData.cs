@@ -16,6 +16,7 @@ public class StaticGameData
     public StaticForgeData forge;
     public StaticCompanionData companions;
     public StaticMasteryData mastery;
+    public StaticDungeonData dungeons;
 
     public void Load()
     {
@@ -30,5 +31,6 @@ public class StaticGameData
         if (forge == null) forge = new StaticForgeData();
         if (companions == null) companions = new StaticCompanionData();
         if (mastery == null) mastery = new StaticMasteryData();
+        if (dungeons == null) dungeons = new StaticDungeonData();
     }
 }

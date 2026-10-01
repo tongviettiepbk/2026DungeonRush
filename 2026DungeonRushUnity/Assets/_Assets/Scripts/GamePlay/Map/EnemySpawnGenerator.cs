@@ -30,6 +30,11 @@ public static class EnemySpawnGenerator
 
     private const int PRESET_SEED = 42;                      // GameResources.PresetSeed
 
+    // Dungeon Dragon's Hoard (GameResources.DragonLevelBase / DragonLevelToCombatLevelMultiplier).
+    private const int DRAGON_LEVEL_BASE = 1;
+    private const int DRAGON_LEVEL_MULT = 3;
+    private const float DRAGON_ATTACK_RANGE = 100f;          // DragonWeapon.AttackDistance (bắn cả map)
+
     // army_power_segments: (Threshold, LevelScaler) — dùng cho hck.
     private static readonly (int threshold, float scaler)[] SEGMENTS =
     {
@@ -109,6 +114,25 @@ public static class EnemySpawnGenerator
             });
         }
         return result;
+    }
+
+    // Dungeon Dragon's Hoard — reverse rs.irj + LevelController.hpy (DecodedData/DUNGEON_MODEL.md):
+    // đúng 1 con, role RANGE (không phải Boss), preset {Melee 0, Ranged 1, Lancaster 1.0},
+    // combatLevel = jgm(level, DragonBoss) = 1 + (level-1)×3. Rồng đứng yên (EnemyCanMove = false).
+    public static EnemySpawnInfo GenerateDragon(int dungeonLevel, Vector2Int cell)
+    {
+        int combatLevel = DRAGON_LEVEL_BASE + (dungeonLevel - 1) * DRAGON_LEVEL_MULT;
+        float power = TotalArmyPower(combatLevel);               // 1 unit, Lancaster 1 → perUnit = total
+
+        return new EnemySpawnInfo
+        {
+            cell = cell, level = combatLevel,
+            attackPower = Mathf.Max(1f, Round(Mathf.Sqrt(power / RATIO_RANGED) * RANGED_DMG_MULT)),
+            health = Mathf.Max(1f, Round(Mathf.Sqrt(power * RATIO_RANGED))),
+            attackSpeed = 1f, moveSpeed = 0f,
+            attackRange = DRAGON_ATTACK_RANGE,
+            isRanged = true, isBoss = true,                      // isBoss: EnemyUnit dùng bossWeaponData (đạn rồng)
+        };
     }
 
     // GameResources.jgx: level≤10 → ManualPresets[level-1]; level>10 → ArmyPresets shuffle (jhe).

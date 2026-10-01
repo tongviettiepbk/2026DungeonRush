@@ -65,6 +65,11 @@ public class BaseMode : MonoBehaviour
 
     protected int remainingEnemies;
 
+    // Quân người chơi (team A) — dùng chung mọi mode: Hero + Pet đang equip.
+    protected HeroUnit hero;
+    public HeroUnit Hero => hero;
+    private readonly List<PetUnit> pets = new List<PetUnit>();
+
     protected GameController GameController;
 
     // Level đang dựng (map procedural + enemy) + gốc chứa object đã spawn — dùng chung cho spawn team.
@@ -278,6 +283,12 @@ public class BaseMode : MonoBehaviour
             DestroyChild(container.gameObject);
             container = null;
         }
+
+        GameController.Instance.ResetBattle();
+        hero = null;
+        alliesGroup = null;
+        pets.Clear();
+        isEndMode = false;
     }
 
     protected virtual void OnResetMode(object obj)
@@ -350,10 +361,10 @@ public class BaseMode : MonoBehaviour
         }
     }
 
-    // Mặc định: hết sạch quân team A → thua. Mode con tinh chỉnh (vd chỉ tính Hero).
+    // Thua khi HERO chết — bản sao hero (companion Clone) cũng ở team A nhưng không giữ trận.
     protected virtual void OnAllyDie(int battleId)
     {
-        if (CountAlive(teamA) == 0)
+        if (hero == null || !hero.isTargetable)
         {
             EndGame(false);
         }
@@ -389,6 +400,137 @@ public class BaseMode : MonoBehaviour
             }
         }
         return count;
+    }
+
+    // ===== SPAWN QUÂN NGƯỜI CHƠI (Hero + Pet) =====
+
+    protected void SpawnHeroAndPets()
+    {
+        if (heroPrefab == null)
+        {
+            DebugCustom.LogWarning("[BaseMode] Chưa gán heroPrefab — bỏ qua spawn Hero/Pet.");
+            return;
+        }
+
+        // Hero đứng giữa hàng spawn DƯỚI cùng (row = 0).
+        Vector2Int heroCell = new Vector2Int(0, MapController.Instance.Cols / 2);
+        Vector3 heroPos = MapController.Instance.CellToWorld(heroCell);
+
+        alliesGroup = NewGroup("Allies");
+        hero = SpawnUnit<HeroUnit>(heroPrefab, heroPos, alliesGroup);
+        hero.SpawnInBattle(BuildHeroStats(), StaticValue.TAG_TEAM_A, heroPos);
+
+        SyncPets();
+    }
+
+    private Transform alliesGroup;
+
+    // Đồng bộ pet trong trận với danh sách equip (save UserCompanionData, tối đa 3), đi theo hero.
+    // Gọi lúc dựng màn VÀ ngay khi đổi equip ở CompanionUI (không phải chờ màn sau):
+    //   • Pet đang trong trận mà đã bỏ equip → gỡ khỏi trận.
+    //   • Pet mới equip chưa có trong trận → spawn quanh vị trí hero hiện tại.
+    // Prefab riêng từng con load theo assetName (CompanionData.LoadPrefab) — SetupCompanion đổ
+    // data của con đang equip vào (chỉ số + cooldown + level trong save).
+    public void SyncPets()
+    {
+        if (hero == null || isEndMode)
+        {
+            return;
+        }
+
+        UserCompanionData user = GameData.userData.companions;
+        List<string> equipped = user.GetEquipped();
+
+        for (int i = pets.Count - 1; i >= 0; i--)
+        {
+            PetUnit pet = pets[i];
+            if (pet != null && pet.Data != null && equipped.Contains(pet.Data.assetName))
+            {
+                continue;
+            }
+
+            if (pet != null)
+            {
+                pet.Deactive();
+                Destroy(pet.gameObject);
+            }
+            pets.RemoveAt(i);
+        }
+
+        Vector3 heroPos = hero.transform.position;
+        for (int i = 0; i < equipped.Count; i++)
+        {
+            if (GetPet(equipped[i]) != null)
+            {
+                continue;
+            }
+
+            CompanionData data = GameData.staticData.companions.GetData(equipped[i]);
+            if (data == null)
+            {
+                continue;
+            }
+
+            GameObject petPrefab = data.LoadPrefab();
+            if (petPrefab == null)
+            {
+                DebugCustom.LogWarning("[BaseMode] Không tìm thấy prefab companion: " + CompanionData.PREFAB_PATH + data.assetName);
+                continue;
+            }
+
+            // Rải pet quanh hero.
+            float angle = (360f / equipped.Count) * i * Mathf.Deg2Rad;
+            Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 0.8f;
+            Vector3 petPos = MapController.Instance.ClampPointInMap(heroPos + offset);
+
+            PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, alliesGroup);
+            pet.SetupCompanion(data, hero, user.GetLevel(data.assetName), petPos);
+            pets.Add(pet);
+        }
+    }
+
+    // Pet trong trận hiện tại theo assetName (UI lobby đọc cooldown / bấm kích hoạt). null nếu không có.
+    public PetUnit GetPet(string assetName)
+    {
+        for (int i = 0; i < pets.Count; i++)
+        {
+            if (pets[i] != null && pets[i].Data != null && pets[i].Data.assetName == assetName)
+            {
+                return pets[i];
+            }
+        }
+        return null;
+    }
+
+    protected T SpawnUnit<T>(GameObject prefab, Vector3 pos, Transform parent) where T : BaseUnit
+    {
+        GameObject go = Instantiate(prefab, pos, Quaternion.identity, parent);
+        T unit = go.GetComponent<T>();
+        if (unit == null)
+        {
+            unit = go.AddComponent<T>();
+        }
+        return unit;
+    }
+
+    // Chỉ số hero = tầng NỀN gốc (PlayerBase*) từ GearStatConfig. Hero trần (chưa đồ) = Damage 10/HP 50.
+    // (Cộng dồn main stat đồ đang mặc để ở bước hệ trang bị đầy đủ.)
+    private static GearStatConfigData gearStatConfig;
+
+    protected BaseStats BuildHeroStats()
+    {
+        if (gearStatConfig == null)
+        {
+            gearStatConfig = Resources.Load<GearStatConfigData>("Scriptable Objects/Gears/GearStatConfig");
+        }
+
+        if (gearStatConfig == null)
+        {
+            DebugCustom.LogError("[BaseMode] Thiếu GearStatConfig — dùng BaseStats rỗng cho Hero.");
+            return new BaseStats();
+        }
+
+        return gearStatConfig.GetPlayerBaseStats();
     }
 
     // ===== HELPER DỰNG MÀN =====

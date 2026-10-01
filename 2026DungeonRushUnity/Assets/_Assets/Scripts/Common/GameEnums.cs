@@ -7,6 +7,7 @@ public enum ItemType
     ENERGY = 3,
     LOOT_TICKET = 4,
     BONE = 5,           // Nguyên liệu triệu hồi Companion (reward dungeon Zombie Outbreak). Xem DecodedData/COMPANION_MODEL.md
+    VIAL = 6,           // Reward dungeon Cultist Ritual (VialCurrency gốc).
 }
 
 // Loại môi trường map. Giá trị = EnvironmentType trong MapConfig gốc của DungeonRush.

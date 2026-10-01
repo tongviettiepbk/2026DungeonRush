@@ -158,8 +158,12 @@ public class CompanionUI : MonoBehaviour
 
     private void OnClickSummonAds()
     {
-        // TODO: chưa có hệ quảng cáo + giới hạn/ngày (CompanionAdSummonDailyCount gốc) → summon thẳng.
-        OnSummonDone(CompanionService.Summon(CompanionService.GetAdSummonCount()));
+        // TODO: giới hạn/ngày (CompanionAdSummonDailyCount gốc) chưa có.
+        MediationAds.Instance.ShowRewardedVideoAd("summon_companion", (result) =>
+        {
+            if (result == ShowResultADS.Finished)
+                OnSummonDone(CompanionService.Summon(CompanionService.GetAdSummonCount()));
+        });
     }
 
     private void OnClickSummonX100()
@@ -283,10 +287,10 @@ public class CompanionUI : MonoBehaviour
     {
         GameController.Instance.uiLobby.RefreshPets();
 
-        CampaignMode campaign = GameController.Instance.mode as CampaignMode;
-        if (campaign != null)
+        BaseMode mode = GameController.Instance.mode;
+        if (mode != null)
         {
-            campaign.SyncPets();
+            mode.SyncPets();
         }
     }
 }
