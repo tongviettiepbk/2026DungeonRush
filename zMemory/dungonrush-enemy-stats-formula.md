@@ -21,7 +21,7 @@ Chỉ số enemy game gốc KHÔNG phải bảng tĩnh mà tính runtime bằng 
 
 Preset theo dungeon: Zombie 6/8/10/12 melee (Lanc 1.0); Cultist mix melee+ranged (Lanc 1.5). `jha`/`jgz` chỉ chọn weapon HIỂN THỊ + tier, KHÔNG ảnh hưởng số damage/health.
 
-VD Zombie: L1(6M)→dmg7/hp21; L20(10M)→145/435; L100(12M)→702k/2.1M. Dragon boss L1→7/75.
+VD Zombie: L1(6M)→dmg7/hp21; L20(10M)→145/435; L100(12M)→702k/2.1M. Dragon L1→13/33 (rồng là role RANGE r=2 dmg×0.8, 1 unit Lancaster 1 — bản cũ "boss 7/75" SAI, sửa 2026-10-01).
 
 CAMPAIGN ≠ DUNGEON (user xác nhận đã chơi gốc): campaign là mạch LIÊN TỤC (1-1..1-10,2-1=level11...), combatLevel = level THÔ (KHÔNG base+×3), CHỈ lính melee/ranged (KHÔNG dragon/cultist/boss). Preset = jgx: level≤10 → ManualPresets[level-1]; level>10 → ArmyPresets Fisher-Yates bằng System.Random(42+(n-1)/9), n=level-10. Dungeon (Zombie/Dragon/Cultist) là chế độ RIÊNG dùng jgm base+×3 + preset dungeon.
 

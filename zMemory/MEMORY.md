@@ -38,3 +38,5 @@
 - [Own Effect pet = buff hero khi SỞ HỮU](dungonrush-companion-own-effect.md) — lu.gov cộng OwnAttack/OwnHealth của MỌI pet owned (không cần equip) vào hero; ĐÃ áp ở HeroUnit
 - [Test logic bằng UnityMCP edit mode](dungonrush-unity-mcp-editmode-test.md) — staticData chưa load phải gọi Load(); codedom C#6; backup/restore userData, không Save
 - [Companion TODO còn thiếu](dungonrush-companion-todo.md) — 6 việc chưa làm của summon pet (Ads free vô hạn, tab Pet chưa khoá lv5, multiplier Bone, IsNew, màu rarity, event)
+- [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
+- [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; Dragon's Hoard chơi được (ChangeMode+DragonDungeonMode, rồng = role Range); Zombie/Cultist chưa có trận

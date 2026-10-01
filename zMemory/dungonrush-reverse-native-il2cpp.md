@@ -30,3 +30,4 @@ Artefact dump nằm ở scratchpad TẠM (mất sau session) → cần thì bung
 **Mẹo tìm ai dùng 1 field:** tra offset trong dump.cs → quét MỌI ScriptMethod (script.json) tìm `ldr s?,[x?,#off]`;
 tìm caller của hàm = quét `bl #<VA>`. Cách này ra lu.gov / Soldier.ewc cho Own Effect ([[dungonrush-companion-own-effect]]).
 
+**Mac 2026-10-01:** Il2CppDumper-net7 v6.7.46 chạy bằng `DOTNET_ROLL_FORWARD=LatestMajor dotnet Il2CppDumper.dll ... < /dev/null` (dotnet ở /usr/local/share/dotnet). Dump nằm ở scratchpad session 07cba016 (TẠM).
