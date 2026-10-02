@@ -47,5 +47,7 @@ public class PopupToastMessage : BaseUI
     {
         textContent.text = string.Empty;
         isAnimating = false;
+        // Tắt thông báo xong → ẩn hẳn object (Show bật lại khi có toast mới).
+        gameObject.SetActive(false);
     }
 }
