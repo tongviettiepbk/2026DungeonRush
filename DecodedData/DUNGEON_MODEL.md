@@ -70,6 +70,32 @@ Chuỗi: `LevelController.hpv(level)` → `rs.ejz/irj` (generator Dragon) → `E
 - Không tìm thấy bộ đếm thời gian riêng cho dungeon.
 - Save có thêm `DragonDungeonFailCount`, `IsRateUsFirstDragonWinShown` (rate-us/analytics — bỏ qua).
 
+## Trận Zombie Outbreak (reverse 2026-10-02)
+
+Generator `ru.irk(level)` (rt interface, `ru.ejz` đặt tên màn `"{(level-1)/10+1}-{(level-1)%10+1}"` như Dragon):
+
+- **Preset**: `GameResources.jgn(level)` = `ZombiePresets[(level-1) % 4]` → 6 / 8 / 10 / 12 melee (Lancaster 1.0), xoay vòng.
+- **Quái**: `MeleeCount` con `sx{ CharacterId = 1, Role = Melee (2), combatLevel = jgm(level, 1) = 5 + (level-1)×3 }`
+  (không có ranged). Chỉ số qua `hcm` như mọi dungeon (r = 3) — bảng ở `ENEMY_STATS_MODEL.md`.
+- **Theme** `ZombieInvasionData` (DungeonType 1, đọc raw xapk): EnemyAnimator = `ZombieAnimatorController`
+  (override CharacterAnimatorController: Attack → ZombieAttackAnimation, Idle → ZombieIdleAnimation, clip đổi sprite 2 tay
+  thành tay zombie), ColliderRadiusMultiplier 1.0, **EnemyCanMove = true**, EnemyWeapon = **null** (tay không),
+  EnemyHelmet = ZombieHelmetData (đầu zombie), EnemyGloves = ZombieGloveData (tay zombie), bộ Ranged* = null.
+- **Vị trí**: `GridManager.ijx(count)` như Dragon — ô trống nửa trên (y ≥ 5), liên thông, bốc ngẫu nhiên không trùng.
+- **Map** (MapConfig ZombieHordeDungeon): 9×12, có cửa, **SpawnObstacles = true**, ObstaclePrefabs = [ZombieObstacle], ortho +0.5.
+  Obstacle dựng qua `hpv → hpx → LevelLoader.itp(level) → rw.itr(level)`: seed `System.Random(level×7912 + 1000×lần thử)`
+  với **level = level dungeon** (không phải màn campaign) ⇒ mỗi level dungeon 1 layout cố định.
+- **Popup thắng**: thưởng hiển thị bằng `GameResources.BoneSpriteAsset` (project: `_ResourceGame/Currency/IsBone.asset`).
+- `hcd` vẫn cộng thưởng + tăng level kể cả khi `dtv` không trừ được key (chỉ bỏ qua event `co.cvj`).
+- AI: Character thường (đi tới đánh cận chiến), không class riêng.
+
+**Code (2026-10-02):** `ZombieDungeonMode : DungeonMode` (prefab `Resources/Prefabs/Game Modes/ZombieDungeonMode`,
+type 3, dungeonType 1, map ZombieMapPrefab + obstacle ZombieObstacle, enemy `Prefabs/Units/Enemies/ZombieEnemy` =
+variant 00Enemy: đầu/2 tay zombie + animator `Animations/Zombie/ZombieAnimatorController`, weaponData trống).
+Chỉ số `EnemySpawnGenerator.GenerateZombies`; ô đứng `DungeonMode.PickEnemyCells` (ijx + flood-fill, Dragon dùng chung);
+layout map seed theo level dungeon (`DungeonMode.GetMapSeedKey` → `CampaignLevelBuilder.Build(..., mapSeedKey)`; thuật toán
+MapGenerator là bản tự viết nên layout không trùng hệt gốc, chỉ khớp quy tắc "theo level").
+
 ## Soát lại (2026-10-01, đối chiếu binary + StarterScene/GameplayScene)
 
 - `hcd(type)` (gọi khi `GameState.Completed` = 6 trong dungeon): `hcc`→`UserController.dtv` tiêu key (Daily trước, hết mới Bonus;
@@ -88,3 +114,5 @@ Chuỗi: `LevelController.hpv(level)` → `rs.ejz/irj` (generator Dragon) → `E
 - Mở khoá: tab Dungeon PlayerLevel 4 (`TabData` "Dungeon" trong GameplayScene), Zombie 5, Cultist 20; Dragon theo tab.
 - Popup: `kch` Enter/Ad chung chỗ (còn key → Enter; hết key + còn lượt ads → Ad, interactable khi ads sẵn sàng; hết cả hai → Enter khoá).
   `kci` Sweep: key ≥ 1 và HighestLevel > 1 → `dtv` + thưởng màn HighestLevel-1. `kcw` ads: BonusKeys +1, WatchCount +1 (≤ 3).
+- Exp: quái dungeon được `SpawnController.huu` bật `Character.IsDungeonEnemy` (0x15C) khi `GameController` đang ở dungeon;
+  `LootDropController.hsk` bỏ qua rơi exp-shard với quái có cờ này ⇒ dungeon KHÔNG cho exp người chơi (chỉ thưởng tài nguyên).

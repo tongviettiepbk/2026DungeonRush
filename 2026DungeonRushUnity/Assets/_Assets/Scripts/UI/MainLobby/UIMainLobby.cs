@@ -76,6 +76,9 @@ public class UIMainLobby : BaseUI
         if (btLoot != null)
             btLoot.onClick.AddListener(OnClickLoot);
 
+        if (btExitDungeon != null)
+            btExitDungeon.onClick.AddListener(OnClickExitDungeon);
+
         btAutoPet.onClick.AddListener(ClickTooglePet);
         for (int i = 0; i < listElementPet.Count; i++)
             listElementPet[i].Init(this);
@@ -443,13 +446,35 @@ public class UIMainLobby : BaseUI
 
     private void LoadInfoMap()
     {
-        // Màn campaign đang đánh: stageIdCurrent (101, 102...) hiển thị dạng "chương-màn" = "1-1".
+        // Đang trong dungeon: bật objDungeonUI (có nút Exit), txtLevelMap = độ khó dungeon "1-1".
+        DungeonMode dungeon = GameController.Instance.mode as DungeonMode;
+        SetActiveDungeonUI(dungeon != null);
         if (txtLevelMap == null)
             return;
 
+        if (dungeon != null)
+        {
+            txtLevelMap.text = StaticDungeonData.GetDifficultyText(dungeon.DungeonLevel);
+            return;
+        }
+
+        // Màn campaign đang đánh: stageIdCurrent (101, 102...) hiển thị dạng "chương-màn" = "1-1".
         int stageId = GameData.userData.campaign.stageIdCurrent;
         StaticCampaignData campaign = GameData.staticData.campaign;
         txtLevelMap.text = campaign.GetChapter(stageId) + "-" + campaign.GetStageIndex(stageId);
+    }
+
+    public void SetActiveDungeonUI(bool isOn)
+    {
+        if (objDungeonUI != null)
+            objDungeonUI.SetActive(isOn);
+    }
+
+    private void OnClickExitDungeon()
+    {
+        DungeonMode dungeon = GameController.Instance.mode as DungeonMode;
+        if (dungeon != null)
+            dungeon.Exit();
     }
 
     // Level người chơi (hệ exp) = INDEX bảng rarity loot. OnClickLoot roll rarity theo playerLevel - 1.

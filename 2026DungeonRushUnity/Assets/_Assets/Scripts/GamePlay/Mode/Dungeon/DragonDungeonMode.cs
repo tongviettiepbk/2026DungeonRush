@@ -7,9 +7,6 @@ using UnityEngine;
 // hình quay 180°, collider ×1.1, vũ khí DragonWeapon — gán sẵn trên prefab rồng.
 public class DragonDungeonMode : DungeonMode
 {
-    // GridManager.ijx: chỉ xét ô có row ≥ 5 (nửa trên lưới).
-    private const int ENEMY_MIN_ROW = 5;
-
     protected override void CreateTeamB()
     {
         if (enemyPrefab == null)
@@ -18,29 +15,13 @@ public class DragonDungeonMode : DungeonMode
             return;
         }
 
-        Vector2Int cell = PickEnemyCell();
+        List<Vector2Int> cells = PickEnemyCells(1);
+        MapController map = MapController.Instance;
+        Vector2Int cell = cells.Count > 0 ? cells[0] : new Vector2Int(map.Rows - 1, map.Cols / 2);
         EnemySpawnGenerator.EnemySpawnInfo info = EnemySpawnGenerator.GenerateDragon(dungeonLevel, cell);
-        Vector3 pos = MapController.Instance.CellToWorld(cell);
+        Vector3 pos = map.CellToWorld(cell);
 
         EnemyUnit dragon = SpawnUnit<EnemyUnit>(enemyPrefab, pos, NewGroup("Enemies"));
         dragon.SpawnEnemy(info, pos);
-    }
-
-    private Vector2Int PickEnemyCell()
-    {
-        MapController map = MapController.Instance;
-        var cells = new List<Vector2Int>();
-        for (int row = ENEMY_MIN_ROW; row < map.Rows; row++)
-        {
-            for (int col = 0; col < map.Cols; col++)
-            {
-                if (map.Grid[row, col] == 0)
-                {
-                    cells.Add(new Vector2Int(row, col));
-                }
-            }
-        }
-
-        return cells.Count > 0 ? cells[Random.Range(0, cells.Count)] : new Vector2Int(map.Rows - 1, map.Cols / 2);
     }
 }

@@ -23,6 +23,8 @@ public class BaseMode : MonoBehaviour
     [Header("Thời gian trận (0 = không giới hạn)")]
     public int defaultBattleTime;
     public float delayEndGame = 3f;
+    [Tooltip("Dựng màn xong đứng yên bao lâu (giây) cho người chơi quan sát rồi mới bắt đầu trận.")]
+    public float waitStartTime = 2f;
 
     [Header("Màn")]
     [Tooltip("0 = dùng stageIdCurrent của người chơi; >0 = ép build stage này.")]
@@ -53,6 +55,8 @@ public class BaseMode : MonoBehaviour
     public bool isEndMode { get; protected set; }
     public bool isPause { get; set; }
     public bool isWin { get; protected set; }
+    // Đang chờ bắt đầu (WaitStart): màn đã dựng, unit đứng yên trong waitStartTime giây.
+    public bool isWaitStart { get; protected set; }
     public bool flagBattleTimer { get; protected set; }
     public float battleTimer { get; protected set; }
 
@@ -121,6 +125,37 @@ public class BaseMode : MonoBehaviour
         CreateTeamA();
         CreateTeamB();
         InitModeDone();
+
+        // Ngoài Play mode (ContextMenu Rebuild) coroutine không chạy → bắt đầu luôn.
+        if (Application.isPlaying)
+        {
+            StartCoroutine(RoutineWaitStart());
+        }
+        else
+        {
+            StartGame();
+        }
+    }
+
+    // WaitStart: giữ pause (GameController bỏ qua AI unit) trong waitStartTime giây rồi mới StartGame.
+    protected virtual IEnumerator RoutineWaitStart()
+    {
+        isWaitStart = true;
+        isPause = true;
+
+        if (waitStartTime > 0f)
+        {
+            yield return new WaitForSeconds(waitStartTime);
+        }
+
+        isWaitStart = false;
+
+        // Đã kết thúc/thoát trong lúc chờ (VD bấm Exit dungeon) → không bắt đầu trận nữa.
+        if (isEndMode)
+        {
+            yield break;
+        }
+
         StartGame();
     }
 
@@ -134,7 +169,7 @@ public class BaseMode : MonoBehaviour
         EnsureGameDataLoaded();
 
         int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.stageIdCurrent;
-        currentLevel = CampaignLevelBuilder.Build(stageId, type);
+        currentLevel = CampaignLevelBuilder.Build(stageId, type, GetMapSeedKey());
 
         container = new GameObject("_Combat").transform;
         container.SetParent(transform, false);
@@ -148,6 +183,12 @@ public class BaseMode : MonoBehaviour
         isPause = false;
 
         SpawnObstacles(map, currentLevel.obstacles);
+    }
+
+    // Khoá seed layout map: 0 = theo stage campaign. Dungeon override (layout theo level dungeon).
+    protected virtual int GetMapSeedKey()
+    {
+        return 0;
     }
 
     // Dựng environment (mapPrefab mang MapController + PointStart). Đặt prefab tại transform.position;
@@ -285,6 +326,7 @@ public class BaseMode : MonoBehaviour
         }
 
         GameController.Instance.ResetBattle();
+        isWaitStart = false;
         hero = null;
         alliesGroup = null;
         pets.Clear();

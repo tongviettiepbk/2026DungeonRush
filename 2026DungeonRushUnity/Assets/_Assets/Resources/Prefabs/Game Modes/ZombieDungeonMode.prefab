@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1273943323480217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4273943323480217}
+  - component: {fileID: 11673943323480217}
+  m_Layer: 0
+  m_Name: ZombieDungeonMode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4273943323480217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273943323480217}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &11673943323480217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273943323480217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9df55efb0c14602a98810e0739f6d91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ZombieDungeonMode
+  type: 3
+  bgm: {fileID: 0}
+  defaultBattleTime: 0
+  delayEndGame: 1.5
+  overrideStageId: 0
+  centerHorizontally: 1
+  mapPrefab: {fileID: 1519070491304036, guid: 367104f0883a6bb215e39665bbb12b5c, type: 3}
+  obstaclePrefab: {fileID: 1213758009208735, guid: 18cf30010753b0af8b383d8d74facf2f, type: 3}
+  heroPrefab: {fileID: 3403766416944055713, guid: 6064135f06d2db646a620667854dd70c, type: 3}
+  enemyPrefab: {fileID: 6173838118916314854, guid: 55675466e1f849239bfaeacdca30d96b, type: 3}
+  petMaxHp: 400
+  petAttack: 25
+  petAttackSpeed: 1
+  petAttackRange: 1.3
+  petMoveSpeed: 3.2
+  dungeonType: 1

@@ -88,7 +88,7 @@ dạng + kiểu đánh cận/xa). Damage/HP thật hoàn toàn do `hcm` (Lancast
 
 ## 5. Preset theo dungeon (ArmyPreset: MeleeCount, RangedCount, LancasterCoefficient)
 
-- **ZombiePresets** (toàn melee): 6M / 8M / 10M / 12M  (Lancaster 1.0)
+- **ZombiePresets** (toàn melee): 6M / 8M / 10M / 12M  (Lancaster 1.0) — chọn `jgn(level)` = `[(level-1) % 4]`
 - **CultistPresets** (melee+ranged, Lancaster 1.5): 2M3R / 3M4R / 3M3R / 3M2R / …
 - **ManualPresets / ArmyPresets**: dùng cho progression chung/PvP; chọn theo level qua `jgx`.
 
@@ -111,14 +111,18 @@ base: MeleeWeapon=9 RangedWeapon=7 Gloves=6 Helmet=45 Backpack=30 Necklace=20 Ri
 
 ## 8. Bảng ví dụ (tính bằng scratchpad/enemy_calc.py)
 
-ZombieHorde (melee):
+ZombieHorde (melee) — SỬA 2026-10-02: preset = `jgn(level)` = ZombiePresets[(level-1) % 4]
+(reverse `ru.irk`), số con xoay vòng 6/8/10/12 theo level (bảng cũ ghi số con sai):
 | dLvl | combat | units | damage | health |
 |---|---|---|---|---|
 | 1  | 5   | 6  | 7      | 21 |
+| 2  | 8   | 8  | 7      | 22 |
+| 3  | 11  | 10 | 8      | 23 |
+| 4  | 14  | 12 | 8      | 25 |
 | 5  | 17  | 6  | 14     | 42 |
 | 10 | 32  | 8  | 29     | 86 |
-| 20 | 62  | 10 | 145    | 435 |
-| 50 | 152 | 12 | 5,907  | 17,720 |
+| 20 | 62  | 12 | 132    | 397 |
+| 50 | 152 | 8  | 7,234  | 21,702 |
 | 100| 302 | 12 | 701,995| 2,105,984 |
 
 DragonBoss — SỬA 2026-10-01: rồng là role **Range (1)**, KHÔNG phải Boss (4).

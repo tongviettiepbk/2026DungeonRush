@@ -8,7 +8,6 @@ public class UIKey
     public const string UpgradePet = "uiUpgradePet";
     public const string SummonPet = "UiSumonPet";
     public const string DungeonPopup = "UIDungeonPopup";
-    public const string DungeonHud = "UIDungeonHud";
     public const string DungeonEndPopup = "UIDungeonEndPopup";
 
     // TODO(follow-stick): bổ sung key theo từng feature khi port UI màn hình.

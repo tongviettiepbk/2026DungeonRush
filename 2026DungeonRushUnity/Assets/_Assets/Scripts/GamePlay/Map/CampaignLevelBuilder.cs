@@ -24,7 +24,8 @@ public static class CampaignLevelBuilder
         public List<EnemySpawnGenerator.EnemySpawnInfo> enemies;
     }
 
-    public static CampaignLevel Build(int stageId, ModeType environment = ModeType.DefaultLevel)
+    // mapSeedKey > 0: seed layout theo khoá riêng thay cho stageId (dungeon dùng level dungeon — gốc rw.itr(level)).
+    public static CampaignLevel Build(int stageId, ModeType environment = ModeType.DefaultLevel, int mapSeedKey = 0)
     {
         StaticMapData.MapEnvironmentConfig envCfg = GameData.staticData.map.GetConfig(environment);
 
@@ -48,7 +49,7 @@ public static class CampaignLevelBuilder
         {
             cols = cols,
             rows = rows,
-            seed = SeedFromStage(stageId),   // cùng màn → cùng layout
+            seed = SeedFromStage(mapSeedKey > 0 ? mapSeedKey : stageId),   // cùng màn → cùng layout
             minWalls = minWalls,
             maxWalls = maxWalls,
             start = start,

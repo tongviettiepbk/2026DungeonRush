@@ -35,6 +35,11 @@ public static class EnemySpawnGenerator
     private const int DRAGON_LEVEL_MULT = 3;
     private const float DRAGON_ATTACK_RANGE = 100f;          // DragonWeapon.AttackDistance (bắn cả map)
 
+    // Dungeon Zombie Outbreak (GameResources.ZombieLevelBase / ZombieLevelToCombatLevelMultiplier / ZombiePresets).
+    private const int ZOMBIE_LEVEL_BASE = 5;
+    private const int ZOMBIE_LEVEL_MULT = 3;
+    private static readonly int[] ZOMBIE_PRESETS = { 6, 8, 10, 12 };   // toàn melee, Lancaster 1.0
+
     // army_power_segments: (Threshold, LevelScaler) — dùng cho hck.
     private static readonly (int threshold, float scaler)[] SEGMENTS =
     {
@@ -133,6 +138,41 @@ public static class EnemySpawnGenerator
             attackRange = DRAGON_ATTACK_RANGE,
             isRanged = true, isBoss = true,                      // isBoss: EnemyUnit dùng bossWeaponData (đạn rồng)
         };
+    }
+
+    // Dungeon Zombie Outbreak — reverse ru.irk (DecodedData/DUNGEON_MODEL.md):
+    // preset = jgn(level) = ZombiePresets[(level-1) % 4] (6/8/10/12 melee, Lancaster 1.0),
+    // combatLevel = jgm(level, ZombieHorde) = 5 + (level-1)×3; mỗi con sx{CharacterId 1, role Melee}.
+    // Zombie đi được (EnemyCanMove = true), tay không (theme EnemyWeapon = null). cells = ô đã chọn sẵn.
+    public static List<EnemySpawnInfo> GenerateZombies(int dungeonLevel, List<Vector2Int> cells)
+    {
+        var result = new List<EnemySpawnInfo>();
+        int combatLevel = ZOMBIE_LEVEL_BASE + (dungeonLevel - 1) * ZOMBIE_LEVEL_MULT;
+        int unitCount = ZombieCount(dungeonLevel);
+        float perUnitPower = TotalArmyPower(combatLevel) / unitCount;   // Lancaster 1.0 → chia thẳng
+
+        float damage = Mathf.Max(1f, Round(Mathf.Sqrt(perUnitPower / RATIO_MELEE)));
+        float health = Mathf.Max(1f, Round(Mathf.Sqrt(perUnitPower * RATIO_MELEE)));
+
+        int total = Mathf.Min(unitCount, cells.Count);
+        for (int i = 0; i < total; i++)
+        {
+            result.Add(new EnemySpawnInfo
+            {
+                cell = cells[i], level = combatLevel,
+                attackPower = damage, health = health,
+                attackSpeed = 1f, moveSpeed = ENEMY_MOVE_SPEED,
+                attackRange = MELEE_ATTACK_RANGE,
+                isRanged = false, isBoss = false,
+            });
+        }
+        return result;
+    }
+
+    // Số zombie của màn = MeleeCount của ZombiePresets[(level-1) % 4].
+    public static int ZombieCount(int dungeonLevel)
+    {
+        return ZOMBIE_PRESETS[(dungeonLevel - 1) % ZOMBIE_PRESETS.Length];
     }
 
     // GameResources.jgx: level≤10 → ManualPresets[level-1]; level>10 → ArmyPresets shuffle (jhe).
