@@ -3472,6 +3472,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4733396850569990008}
+  - component: {fileID: 4733396850569990009}
   m_Layer: 5
   m_Name: BossRushUI
   m_TagString: Untagged
@@ -3562,7 +3563,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -93.53, y: 71}
-  m_SizeDelta: {x: 86.37, y: 89.27}
+  m_SizeDelta: {x: 0, y: 89.27}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1059632289373100589
 MonoBehaviour:
@@ -5158,7 +5159,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.095}
   m_AnchorMax: {x: 1, y: 0.165}
-  m_AnchoredPosition: {x: 0, y: -54.999817}
+  m_AnchoredPosition: {x: 0, y: -54.9998}
   m_SizeDelta: {x: -32, y: -8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1581819587655607447
@@ -5614,7 +5615,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -93.53, y: 71}
-  m_SizeDelta: {x: 86.37, y: 89.27}
+  m_SizeDelta: {x: 0, y: 89.27}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &1649568321572870632
 RectTransform:
@@ -14433,6 +14434,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 26.916016}
   m_SizeDelta: {x: 0, y: -263.45}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4733396850569990009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998010900192866698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ad64cb42d084fd9b0eca0ede43c13d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIBossRushHud
+  txtBossName: {fileID: 318851725523566690}
+  txtBossHp: {fileID: 925155640832989534}
+  imgHpFill: {fileID: 8840091388198086594}
+  imgWhiteFill: {fileID: 4096753661630498078}
+  txtRemainingTime: {fileID: 4540457690925160365}
+  hpAnimationDuration: 0.15
+  whiteSliderDelay: 0.3
+  whiteAnimationDuration: 0.4
 --- !u!114 &4753935698935865205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16490,7 +16511,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -93.53, y: 71}
-  m_SizeDelta: {x: 86.37, y: 89.27}
+  m_SizeDelta: {x: 0, y: 89.27}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5603457980433548910
 GameObject:
@@ -28392,7 +28413,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &8747061758359608133
 MonoBehaviour:
   m_ObjectHideFlags: 0

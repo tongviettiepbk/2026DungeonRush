@@ -9,6 +9,10 @@ public class UIKey
     public const string SummonPet = "UiSumonPet";
     public const string DungeonPopup = "UIDungeonPopup";
     public const string DungeonEndPopup = "UIDungeonEndPopup";
+    public const string BossRushJoinPopup = "UIBossRushJoinPopup";
+    public const string BossRushPopup = "UIBossRushPopup";
+    public const string BossRushEndPopup = "UIBossRushEndPopup";
+    public const string BossRushClaimPopup = "UIBossRushClaimPopup";
 
     // TODO(follow-stick): bổ sung key theo từng feature khi port UI màn hình.
 }

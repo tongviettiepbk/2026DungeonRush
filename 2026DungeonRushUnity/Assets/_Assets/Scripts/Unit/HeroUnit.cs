@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // Hero (quân người chơi, TeamA). Hành vi CHỦ ĐỘNG đúng spec:
@@ -20,6 +21,26 @@ public class HeroUnit : BaseUnit
     {
         cloneHealthPercent = Mathf.Max(0.01f, healthPercent);
     }
+
+    // Ghost Boss Rush (Soldier.IsGhost gốc): đồng đội ảo dựng từ snapshot đồ + pet sở hữu của người chơi khác.
+    // Gọi TRƯỚC SpawnInBattle. Ghost không nhận sự kiện đổi đồ của save mình.
+    private UserEquipmentData ghostEquipment;
+    private List<CompanionModel> ghostCompanions;
+    public bool IsGhost => ghostEquipment != null;
+    public string GhostName { get; private set; }
+
+    public void SetupAsGhost(string playerName, UserEquipmentData equipment, List<CompanionModel> ownedCompanions)
+    {
+        GhostName = playerName;
+        ghostEquipment = equipment ?? new UserEquipmentData();
+        ghostCompanions = ownedCompanions ?? new List<CompanionModel>();
+        if (heroVisual != null)
+        {
+            heroVisual.SetOverrideEquipment(ghostEquipment);
+        }
+    }
+
+    private UserEquipmentData EquipmentSource => ghostEquipment ?? (GameData.userData != null ? GameData.userData.equipment : null);
 
     protected override void Awake()
     {
@@ -60,9 +81,8 @@ public class HeroUnit : BaseUnit
     // gốc lu.gov trong Soldier.ewc). Nạp vào list để CalculateCurrentStats dùng.
     protected override void LoadPermanentModifiers()
     {
-        UserEquipmentData equipment = GameData.userData != null ? GameData.userData.equipment : null;
-        AddModifier(EquipmentStatResolver.BuildModifiers(equipment));
-        AddModifier(CompanionService.BuildOwnEffectModifiers());
+        AddModifier(EquipmentStatResolver.BuildModifiers(EquipmentSource));
+        AddModifier(IsGhost ? CompanionService.BuildOwnEffectModifiers(ghostCompanions) : CompanionService.BuildOwnEffectModifiers());
     }
 
     // Chỉ số cuối = NỀN PlayerBase + Σ CHỈ SỐ CHÍNH đồ + Own Effect pet (flat) rồi ÁP SUBSTAT (%).
@@ -174,7 +194,7 @@ public class HeroUnit : BaseUnit
     // Bản sao MirrorClone bỏ qua (chỉ số chụp lúc sinh).
     private void OnEquipmentChanged(object param)
     {
-        if (IsMirrorClone)
+        if (IsMirrorClone || IsGhost)
         {
             return;
         }
@@ -203,7 +223,7 @@ public class HeroUnit : BaseUnit
     // Vũ khí ở slot WEAPON (từ save) → WeaponData tĩnh. Null nếu chưa mặc / không tra được.
     private WeaponData ResolveEquippedWeapon()
     {
-        UserEquipmentData equip = GameData.userData != null ? GameData.userData.equipment : null;
+        UserEquipmentData equip = EquipmentSource;
         if (equip == null || GameData.staticData == null || GameData.staticData.weapons == null)
         {
             return null;

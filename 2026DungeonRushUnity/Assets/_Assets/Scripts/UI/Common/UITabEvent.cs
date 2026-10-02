@@ -62,7 +62,13 @@ public class UITabEvent : MonoBehaviour
             return;
         }
 
-        // TODO: chưa có mode PvP / Boss Rush → khi có thì mở popup join tương ứng.
+        if (element.Type == EventModeType.BossRush)
+        {
+            UIManager.Instance.LoadUI(UIKey.BossRushJoinPopup);
+            return;
+        }
+
+        // TODO: chưa có mode PvP → khi có thì mở popup join tương ứng.
         UIManager.Instance.ShowToastMessage(data.displayName + " coming soon", isLocalize: false);
     }
 }

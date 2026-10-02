@@ -1,0 +1,10 @@
+rules_version = '2';
+// Mọi dữ liệu Boss Rush chỉ đọc/ghi qua Cloud Functions (Admin SDK bỏ qua rules).
+// Client KHÔNG được đọc/ghi trực tiếp → chống sửa máu boss / damage / vé.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

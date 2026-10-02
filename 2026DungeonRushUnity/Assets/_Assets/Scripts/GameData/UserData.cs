@@ -22,6 +22,7 @@ public class UserData
     public const string DATA_KEY_COMPANION = "key_user_companion";
     public const string DATA_KEY_DUNGEON = "key_user_dungeon";
     public const string DATA_KEY_EVENT = "key_user_event";
+    public const string DATA_KEY_BOSS_RUSH = "key_user_boss_rush";
 
     public UserProfileData profile { get; set; } = new UserProfileData();
     public UserPlayerData player { get; set; } = new UserPlayerData();
@@ -33,6 +34,7 @@ public class UserData
     public UserCompanionData companions { get; set; } = new UserCompanionData();
     public UserDungeonData dungeons { get; set; } = new UserDungeonData();
     public UserEventData events { get; set; } = new UserEventData();
+    public UserBossRushData bossRush { get; set; } = new UserBossRushData();
 
     private List<BaseUserData> listData;
     private float lastTimeSaveData;
@@ -68,6 +70,7 @@ public class UserData
         companions = LoadModule<UserCompanionData>(DATA_KEY_COMPANION, out _);
         dungeons = LoadModule<UserDungeonData>(DATA_KEY_DUNGEON, out _);
         events = LoadModule<UserEventData>(DATA_KEY_EVENT, out _);
+        bossRush = LoadModule<UserBossRushData>(DATA_KEY_BOSS_RUSH, out _);
 
         LoadDone();
     }
@@ -132,6 +135,7 @@ public class UserData
             listData.Add(companions);
             listData.Add(dungeons);
             listData.Add(events);
+            listData.Add(bossRush);
         }
 
         for (int i = 0; i < listData.Count; i++)

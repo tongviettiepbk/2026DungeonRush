@@ -143,17 +143,27 @@ public static class CompanionService
     // 2 modifier FLAT Attack/MaxHp → HeroUnit cộng ở pass flat, TRƯỚC khi áp % substat (Soldier.eyv).
     public static List<StatModifier> BuildOwnEffectModifiers()
     {
+        if (GameData.userData == null || User == null)
+        {
+            return new List<StatModifier>();
+        }
+        return BuildOwnEffectModifiers(User.owned);
+    }
+
+    // Bản nhận danh sách pet sở hữu bất kỳ (ghost Boss Rush dựng từ snapshot người chơi khác).
+    public static List<StatModifier> BuildOwnEffectModifiers(List<CompanionModel> owned)
+    {
         List<StatModifier> result = new List<StatModifier>();
-        if (GameData.userData == null || GameData.staticData == null || User == null || Static == null)
+        if (GameData.staticData == null || Static == null || owned == null)
         {
             return result;
         }
 
         double attack = 0;
         double health = 0;
-        for (int i = 0; i < User.owned.Count; i++)
+        for (int i = 0; i < owned.Count; i++)
         {
-            CompanionModel model = User.owned[i];
+            CompanionModel model = owned[i];
             CompanionData data = model != null ? Static.GetData(model.companionId) : null;
             if (data == null)
             {

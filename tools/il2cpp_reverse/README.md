@@ -37,3 +37,9 @@ Bộ script đã dùng để reverse công thức chỉ số enemy DungeonRush t
 - `LevelController.hpv` : entry — phân nhánh CAMPAIGN vs DUNGEON
 - `GameResources.jgw` : HealthToDamageRatio theo role (3/2/10)
 - `GameResources.jgu` : item stat = base * tierScaler^tier * (1 + levelScaler*level)
+
+## Chuỗi bị mã hoá (2026-10-02, dùng cho Boss Rush)
+Game gốc obfuscate string (tên endpoint server, key save...). `decstr.py` giải toàn bộ (~5455 chuỗi) → `decstr.json`;
+`dis3.py` disasm kèm chú thích `DSTR=` tại các lệnh gọi getter. Mảng `static readonly T[]` của class thường:
+slot usage trong `.so` là RELATIVE reloc → token `(4<<29)|(idx<<1)|1` = FieldInfo → bảng `fieldRefs` (cặp header thứ 23) → field thứ N
+của `<PrivateImplementationDetails>` trong dump.cs → "Metadata offset" = blob dữ liệu. Kết quả: `DecodedData/BOSS_RUSH_MODEL.md`.

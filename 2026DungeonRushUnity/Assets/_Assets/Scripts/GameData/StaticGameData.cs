@@ -18,6 +18,7 @@ public class StaticGameData
     public StaticMasteryData mastery;
     public StaticDungeonData dungeons;
     public StaticEventData events;
+    public StaticBossRushData bossRush;
 
     public void Load()
     {
@@ -34,5 +35,6 @@ public class StaticGameData
         if (mastery == null) mastery = new StaticMasteryData();
         if (dungeons == null) dungeons = new StaticDungeonData();
         if (events == null) events = new StaticEventData();
+        if (bossRush == null) bossRush = new StaticBossRushData();
     }
 }

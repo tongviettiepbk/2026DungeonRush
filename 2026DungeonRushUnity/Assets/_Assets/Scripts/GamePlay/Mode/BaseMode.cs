@@ -467,6 +467,9 @@ public class BaseMode : MonoBehaviour
 
     private Transform alliesGroup;
 
+    // Mode có mang pet ra trận không (Boss Rush gốc KHÔNG mang — CompanionController.OnStateChanged bỏ qua khi IsBossRush).
+    protected virtual bool AllowPets => true;
+
     // Đồng bộ pet trong trận với danh sách equip (save UserCompanionData, tối đa 3), đi theo hero.
     // Gọi lúc dựng màn VÀ ngay khi đổi equip ở CompanionUI (không phải chờ màn sau):
     //   • Pet đang trong trận mà đã bỏ equip → gỡ khỏi trận.
@@ -475,7 +478,7 @@ public class BaseMode : MonoBehaviour
     // data của con đang equip vào (chỉ số + cooldown + level trong save).
     public void SyncPets()
     {
-        if (hero == null || isEndMode)
+        if (hero == null || isEndMode || !AllowPets)
         {
             return;
         }

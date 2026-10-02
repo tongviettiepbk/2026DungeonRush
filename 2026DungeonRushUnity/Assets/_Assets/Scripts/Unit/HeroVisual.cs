@@ -45,6 +45,12 @@ public class HeroVisual : MonoBehaviour
     // Người chơi đổi đồ (VD vừa loot ra) → mặc lại đúng slot đó từ save. param = GearSlotType.
     private void OnEquipmentChanged(object param)
     {
+        // Ghost Boss Rush mặc đồ người chơi khác — không theo save của mình.
+        if (overrideData != null)
+        {
+            return;
+        }
+
         if (param is GearSlotType slot)
         {
             UserEquipmentData data = GameData.userData != null ? GameData.userData.equipment : null;
@@ -56,11 +62,20 @@ public class HeroVisual : MonoBehaviour
     }
 
     // Dựng lại toàn bộ hình từ save. Gọi lúc Hero khởi tạo và sau khi người chơi đổi đồ.
+    // Đồ override (ghost Boss Rush). null = dùng save người chơi.
+    private UserEquipmentData overrideData;
+
+    public void SetOverrideEquipment(UserEquipmentData data)
+    {
+        overrideData = data;
+        RefreshAll();
+    }
+
     public void RefreshAll()
     {
         CacheHandDefaults();
 
-        UserEquipmentData data = GameData.userData != null ? GameData.userData.equipment : null;
+        UserEquipmentData data = overrideData ?? (GameData.userData != null ? GameData.userData.equipment : null);
         if (data == null)
         {
             return;
