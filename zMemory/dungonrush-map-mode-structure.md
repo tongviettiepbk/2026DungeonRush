@@ -20,3 +20,5 @@ Tóm tắt kiến trúc sau refactor (2026-07-30):
 - Đã bỏ `MapGenerator.GeneratedMap` + enum `MapCellType`. Spawn/cửa suy từ `StaticMapData` helper (`GetDoorCell/GetPlayerSpawnCells/GetEnemySpawnCells/GetKeepClearCells`, giờ nhận `(int cols,int rows[,grid])` thay vì MapConfig). Nested config đổi tên `StaticMapData.MapConfig` → `MapEnvironmentConfig`.
 
 Còn treo: `FindPath` CHƯA nối vào AI di chuyển (unit mới chỉ `ResolveMove` trôi thẳng). Build 0 error (chỉ warning System.Net.Http của Unity). Compile-check: `dotnet build Assembly-CSharp.csproj` trong 2026DungeonRushUnity.
+
+**WaitStart (2026-10-02):** BaseMode.Initialize dựng xong → RoutineWaitStart giữ isPause `waitStartTime` (mặc định 2s, Inspector) rồi mới StartGame; áp mọi mode. Exit/EndGame trong lúc chờ → không StartGame. Ngoài Play mode bắt đầu luôn.
