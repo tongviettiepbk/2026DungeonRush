@@ -30,6 +30,13 @@ public enum DungeonType
     Cultist = 2,
 }
 
+// Event ở tab Events (EventsTabPage gốc). Co-op chưa làm.
+public enum EventModeType
+{
+    PvP = 0,
+    BossRush = 1,
+}
+
 // Trạng thái hiển thị trên CombatText (Effects). Port từ StickIdle.
 public enum TextDamageStatus
 {

@@ -17,6 +17,7 @@ public class StaticGameData
     public StaticCompanionData companions;
     public StaticMasteryData mastery;
     public StaticDungeonData dungeons;
+    public StaticEventData events;
 
     public void Load()
     {
@@ -32,5 +33,6 @@ public class StaticGameData
         if (companions == null) companions = new StaticCompanionData();
         if (mastery == null) mastery = new StaticMasteryData();
         if (dungeons == null) dungeons = new StaticDungeonData();
+        if (events == null) events = new StaticEventData();
     }
 }
