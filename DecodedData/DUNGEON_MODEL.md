@@ -96,6 +96,30 @@ Chỉ số `EnemySpawnGenerator.GenerateZombies`; ô đứng `DungeonMode.PickEn
 layout map seed theo level dungeon (`DungeonMode.GetMapSeedKey` → `CampaignLevelBuilder.Build(..., mapSeedKey)`; thuật toán
 MapGenerator là bản tự viết nên layout không trùng hệt gốc, chỉ khớp quy tắc "theo level").
 
+## Trận Cultist Ritual (reverse 2026-10-02)
+
+Generator `rq.irg(level)` (tên màn `rq.ejz` cùng format "c-s"):
+
+- **Preset**: `GameResources.jgo(level)` = `CultistPresets[(level-1) % 5]` = 2M3R / 3M4R / 3M3R / 3M2R / 4M3R (Lancaster 1.5);
+  `hpy` nhánh type 2 cũng gọi `jgo` ⇒ cùng preset cho chia sức mạnh.
+- **Quái**: `MeleeCount` con `sx{CharacterId 1, Role Melee}` TRƯỚC, rồi `RangedCount` con `sx{CharacterId 1, Role Range}`;
+  `combatLevel = jgm(level, 2) = 60 + (level-1)×3`. Ranged: r = 2, damage ×0.8.
+- **Theme** `CultistDungeonThemeData`: EnemyAnimator = CharacterAnimatorController (gốc), collider 1.0, EnemyCanMove = true.
+  Melee: CultistWeaponData_Melee (dao, tầm 1.5, WeaponAnimator `Weapon_Karambit_AnimatorController` = Weapon_Knife_Attack/Idle,
+  sprite `cultist_dungeon_melee_weapon`) + CultistHelmet/GloveData_Melee. Ranged (`huy` chọn bộ Ranged* khi role = Range):
+  CultistWeaponData_Ranged (cung, tầm 3.5, ProjectileSpeed 15, đạn `Projectile_Weapon_Cultist`, WeaponAnimator
+  `Weapon_BasicBow_AnimatorController` = Weapon_BasicBow_Attack/Idle (dây cung `bow_string_straight`), sprite
+  `cultist_dungeon_range_weapon`) + CultistHelmet/GloveData_Ranged.
+- **Gắn đồ** `Soldier.fbb(weapon, role, helmet, gloves, animator, backpack)`: animator theme (`ezn`) TRƯỚC, rồi vũ khí (`fai`)
+  ghi đè bằng `WeaponAnimator`, đặt sprite Weapon = `WeaponSprite`, ProjectilePart = sprite của prefab đạn.
+- **Map** CultistMap: 9×12, có cửa, SpawnObstacles = true, ObstaclePrefabs = [CultistDungeonObstacle], ortho +0.5;
+  seed layout theo level dungeon như Zombie. Vị trí quái = `GridManager.ijx` (chung).
+- Thưởng Vial 100 + 2×(level-1); mở PlayerLevel 20; popup thắng dùng `VialSpriteAsset` (project: `IsVial.asset`).
+
+**Code (2026-10-02):** `CultistDungeonMode : DungeonMode` (prefab mode type 6, dungeonType 2, enemyPrefab = `CultistMeleeEnemy`,
+`rangedEnemyPrefab` = `CultistRangedEnemy` — 2 variant 00Enemy, bật sẵn object Weapon), `EnemySpawnGenerator.GenerateCultists`,
+anim/override ở `Animations/Weapons/`. Đạn `Projectile_Weapon_Cultist` speed 5 → 15.
+
 ## Soát lại (2026-10-01, đối chiếu binary + StarterScene/GameplayScene)
 
 - `hcd(type)` (gọi khi `GameState.Completed` = 6 trong dungeon): `hcc`→`UserController.dtv` tiêu key (Daily trước, hết mới Bonus;

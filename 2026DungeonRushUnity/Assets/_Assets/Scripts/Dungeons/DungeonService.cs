@@ -45,6 +45,11 @@ public static class DungeonService
 
     public static bool IsUnlocked(DungeonType type)
     {
+#if UNITY_EDITOR
+        // Editor: mở sẵn Cultist (gốc cần PlayerLevel 20) để test trận.
+        if (type == DungeonType.Cultist)
+            return true;
+#endif
         DungeonConfig data = Static.GetData(type);
         return data != null && GameData.userData.player.playerLevel >= data.unlockPlayerLevel;
     }

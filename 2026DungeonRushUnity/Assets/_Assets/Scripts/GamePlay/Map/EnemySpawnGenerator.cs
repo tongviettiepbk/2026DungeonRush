@@ -58,6 +58,15 @@ public static class EnemySpawnGenerator
         new Preset(5, 0, 1.0f),
     };
 
+    // CultistPresets (GameResources): chọn [(level-1) % 5].
+    private const int CULTIST_LEVEL_BASE = 60;
+    private const int CULTIST_LEVEL_MULT = 3;
+    private static readonly Preset[] CULTIST_PRESETS =
+    {
+        new Preset(2, 3, 1.5f), new Preset(3, 4, 1.5f), new Preset(3, 3, 1.5f),
+        new Preset(3, 2, 1.5f), new Preset(4, 3, 1.5f),
+    };
+
     // ArmyPresets: pool cho campaign level > 10 (chọn bằng shuffle seeded, xem jhe).
     private static readonly Preset[] ARMY_PRESETS =
     {
@@ -173,6 +182,52 @@ public static class EnemySpawnGenerator
     public static int ZombieCount(int dungeonLevel)
     {
         return ZOMBIE_PRESETS[(dungeonLevel - 1) % ZOMBIE_PRESETS.Length];
+    }
+
+    // Dungeon Cultist Ritual — reverse rq.irg (DecodedData/DUNGEON_MODEL.md):
+    // preset = jgo(level) = CultistPresets[(level-1) % 5] (melee+ranged, Lancaster 1.5),
+    // combatLevel = jgm(level, Cultist) = 60 + (level-1)×3; sinh melee TRƯỚC rồi ranged (CharacterId 1).
+    // Tầm đánh/đạn lấy từ vũ khí theme (CultistWeaponData_Melee/_Ranged) gán trên prefab.
+    public static List<EnemySpawnInfo> GenerateCultists(int dungeonLevel, List<Vector2Int> cells)
+    {
+        var result = new List<EnemySpawnInfo>();
+        int combatLevel = CULTIST_LEVEL_BASE + (dungeonLevel - 1) * CULTIST_LEVEL_MULT;
+        Preset preset = CultistPreset(dungeonLevel);
+        int unitCount = preset.melee + preset.ranged;
+        float perUnitPower = TotalArmyPower(combatLevel) / Mathf.Pow(unitCount, preset.lancaster);
+
+        float meleeDmg = Mathf.Max(1f, Round(Mathf.Sqrt(perUnitPower / RATIO_MELEE)));
+        float meleeHp = Mathf.Max(1f, Round(Mathf.Sqrt(perUnitPower * RATIO_MELEE)));
+        float rangedDmg = Mathf.Max(1f, Round(Mathf.Sqrt(perUnitPower / RATIO_RANGED) * RANGED_DMG_MULT));
+        float rangedHp = Mathf.Max(1f, Round(Mathf.Sqrt(perUnitPower * RATIO_RANGED)));
+
+        int total = Mathf.Min(unitCount, cells.Count);
+        for (int i = 0; i < total; i++)
+        {
+            bool ranged = i >= preset.melee;                       // melee trước, ranged sau
+            result.Add(new EnemySpawnInfo
+            {
+                cell = cells[i], level = combatLevel,
+                attackPower = ranged ? rangedDmg : meleeDmg,
+                health = ranged ? rangedHp : meleeHp,
+                attackSpeed = 1f, moveSpeed = ENEMY_MOVE_SPEED,
+                attackRange = ranged ? RANGED_ATTACK_RANGE : MELEE_ATTACK_RANGE,
+                isRanged = ranged, isBoss = false,
+            });
+        }
+        return result;
+    }
+
+    // Tổng số cultist của màn (melee + ranged).
+    public static int CultistCount(int dungeonLevel)
+    {
+        Preset preset = CultistPreset(dungeonLevel);
+        return preset.melee + preset.ranged;
+    }
+
+    private static Preset CultistPreset(int dungeonLevel)
+    {
+        return CULTIST_PRESETS[(dungeonLevel - 1) % CULTIST_PRESETS.Length];
     }
 
     // GameResources.jgx: level≤10 → ManualPresets[level-1]; level>10 → ArmyPresets shuffle (jhe).

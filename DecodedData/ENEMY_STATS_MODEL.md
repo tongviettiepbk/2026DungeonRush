@@ -89,7 +89,7 @@ dạng + kiểu đánh cận/xa). Damage/HP thật hoàn toàn do `hcm` (Lancast
 ## 5. Preset theo dungeon (ArmyPreset: MeleeCount, RangedCount, LancasterCoefficient)
 
 - **ZombiePresets** (toàn melee): 6M / 8M / 10M / 12M  (Lancaster 1.0) — chọn `jgn(level)` = `[(level-1) % 4]`
-- **CultistPresets** (melee+ranged, Lancaster 1.5): 2M3R / 3M4R / 3M3R / 3M2R / …
+- **CultistPresets** (melee+ranged, Lancaster 1.5): 2M3R / 3M4R / 3M3R / 3M2R / 4M3R — chọn `jgo(level)` = `[(level-1) % 5]`
 - **ManualPresets / ArmyPresets**: dùng cho progression chung/PvP; chọn theo level qua `jgx`.
 
 `hpy(level)` chọn preset cho stage (index theo level trong list preset của dungeon).
@@ -124,6 +124,18 @@ ZombieHorde (melee) — SỬA 2026-10-02: preset = `jgn(level)` = ZombiePresets[
 | 20 | 62  | 12 | 132    | 397 |
 | 50 | 152 | 8  | 7,234  | 21,702 |
 | 100| 302 | 12 | 701,995| 2,105,984 |
+
+CultistRitual (2026-10-02, reverse `rq.irg`): preset `[(level-1) % 5]`, melee r=3 / ranged r=2 (dmg ×0.8), Lancaster 1.5:
+| dLvl | combat | preset | melee dmg/hp | ranged dmg/hp |
+|---|---|---|---|---|
+| 1 | 60 | 2M3R | 122/366 | 120/299 |
+| 2 | 63 | 3M4R | 113/338 | 110/276 |
+| 3 | 66 | 3M3R | 150/451 | 147/368 |
+| 4 | 69 | 3M2R | 205/615 | 201/502 |
+| 5 | 72 | 4M3R | 189/568 | 185/464 |
+| 10 | 87 | 4M3R | 392/1,177 | 385/961 |
+| 20 | 117 | 4M3R | 1,241/3,723 | 1,216/3,040 |
+| 50 | 207 | 4M3R | 36,694/110,083 | 35,953/89,883 |
 
 DragonBoss — SỬA 2026-10-01: rồng là role **Range (1)**, KHÔNG phải Boss (4).
 `rs.irj` tạo đúng 1 `sx{id=DragonBossCharacterId 999999, role=1, combatLevel=jgm(lv,0)}`;
