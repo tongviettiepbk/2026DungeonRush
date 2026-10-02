@@ -41,3 +41,4 @@
 - [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
 - [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; cả 3 dungeon có trận (Dragon/Zombie/CultistDungeonMode)
 - [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé local reset 0h UTC (PvP 5, BossRush 3, mở lv15), icon IsTicket/IsBossTicket; chưa có mode
+- [Boss Rush online](dungonrush-boss-rush-model.md) — Cloud Functions+Firestore ở server/ (emulator test pass), client Scripts/BossRush+Network chạy Play mode; còn hình Lich/Ogre/Hag + deploy thật

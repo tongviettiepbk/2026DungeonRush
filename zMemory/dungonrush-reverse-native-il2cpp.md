@@ -31,3 +31,5 @@ Artefact dump nằm ở scratchpad TẠM (mất sau session) → cần thì bung
 tìm caller của hàm = quét `bl #<VA>`. Cách này ra lu.gov / Soldier.ewc cho Own Effect ([[dungonrush-companion-own-effect]]).
 
 **Mac 2026-10-01:** Il2CppDumper-net7 v6.7.46 chạy bằng `DOTNET_ROLL_FORWARD=LatestMajor dotnet Il2CppDumper.dll ... < /dev/null` (dotnet ở /usr/local/share/dotnet). Dump nằm ở scratchpad session 07cba016 (TẠM).
+
+**Chuỗi bị mã hoá + fieldRef (2026-10-02):** string game (endpoint, key) gọi qua getter `<PrivateImplementationDetails>{88089A81...}.a$$xxx` → giải bằng `tools/il2cpp_reverse/decstr.py` (XOR `(i&0xFF)^0xAA`, blob metadata @0x7AD340); `dis3.py` in `DSTR=`. Slot usage trong .so là RELATIVE reloc (đọc addend bằng lief) → token type 4 = FieldInfo → bảng fieldRefs (cặp header thứ 23) → biết CHÍNH XÁC blob nào của mảng static. Dùng cho [[dungonrush-boss-rush-model]].

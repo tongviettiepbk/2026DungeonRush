@@ -1,0 +1,20 @@
+---
+name: dungonrush-boss-rush-model
+description: Boss Rush ONLINE đã chạy (Cloud Functions+Firestore ở server/, client Scripts/BossRush+Network, test emulator pass, Play mode OK); gốc reverse ở DecodedData/BOSS_RUSH_MODEL.md; còn thiếu hình Lich/Ogre/Hag + deploy project thật
+metadata:
+  type: project
+  modified: 2026-10-02
+---
+
+**Reverse** → `DecodedData/BOSS_RUSH_MODEL.md` (server gốc Cloud Functions `https://{fn}-umgnfrxyuq-uc.a.run.app/`, DTO, HP 10×20, BossDamageByTier, lịch tuần T3→CN UTC/T2 chốt, pool 8 theo TIER không theo power, ghost ≤7, damage đội(IsHome) vs mình(IsMainCharacter), Power = Attack×HP (rm.iqj), asset 10 boss mục 8).
+**User chốt 2026-10-02:** làm Cloud Functions + Firestore online; vé/HP bám data gốc (3 free + 3 ads, bảng HP gốc); thưởng làm sau → để data-driven (Firestore `config/bossRush`, mặc định = BossRushLeagueConfig gốc 1000 Bone hạng 1-100, promotion tắt).
+
+**Server `server/`** (TS, firebase-functions v2, us-central1): 6 callable joinbossrush/getbossrushpool/startbossrushfight/reportbossrushdamage/claimbossrushrewards/updatebossrushplayer + admin seed/remove bot + cron finalize T2 00:10. Máu boss chung trừ theo totalDamage (đội), điểm xếp hạng = damage hero. `npm test` + `npm run test:emulator` PASS. Project hiện `demo-dungeonrush` (emulator); Firestore emulator port **8085** (8080 = UnityMCP). README hướng dẫn deploy.
+**Tool máy Mac:** brew Tier 3 hỏng → Node 20 ở `~/.local/tools/node-v20.18.1-darwin-arm64/bin`, JDK 21 `~/.local/tools/jdk-21.0.12.1+1/Contents/Home` (export PATH/JAVA_HOME), firebase-tools 15 cài global trong node đó. Chưa `firebase login`.
+
+**Client:** `Scripts/Network/` FirebaseSettings (USE_EMULATOR trong Editor) + FirebaseManager (Auth REST ẩn danh, nhánh SDK khi có define FIREBASE_SDK — user tự import SDK). `Scripts/BossRush/` StaticBossRushData, DTOs, Schedule, UserBossRushData (key_user_boss_rush), BossRushController (+FightSession), BossRushPower, BossRushMode (prefab Resources/Prefabs/Game Modes), BossRushBossUnit (prefab đổi m_Script vì BaseUnit DisallowMultiple + DragonEnemy là variant). Ghost = HeroUnit.SetupAsGhost (HeroVisual.SetOverrideEquipment, CompanionService.BuildOwnEffectModifiers(list)). UI `Scripts/UI/BossRush/` + prefab Resources/Prefabs/UI/UIBossRush{Join,,End,Claim}Popup; HUD UIBossRushHud trên objBossRushUI (scene MainGame KHÔNG phải prefab instance → gắn riêng). Tab Events → JoinPopup.
+**KHÔNG có pet trong Boss Rush (gốc, 2026-10-02):** CompanionController.OnStateChanged return khi GameController.IsBossRush(+0x140); ghost (SpawnController.hvl) chỉ enchantment+đồ(hvp)+cánh+áo choàng — hvp là MẶC ĐỒ, không phải spawn pet. Own Effect pet vẫn cộng chỉ số. Code: BaseMode.AllowPets (BossRushMode=false). Vào trận gọi uiLobby.CloseAllTabs() như dungeon.
+**Play mode test OK:** join→seed bot→fight (7 ghost, 0 pet)→report→EndPopup→về campaign mở lại sảnh; server trừ máu đúng.
+**CHƯA:** prefab boss Lich×3/Ogre×2/Hag×2 (cần import animator Lych/Ogre/Witch + Lych*Data) — đang dùng rồng đỏ; 3 rồng đã đúng bộ đồ+đạn. Thưởng/lên-xuống tier thật. Hiệu ứng bay thưởng ClaimPopup. Deploy project thật (user tạo project + Blaze).
+**PHIÊN SAU (dừng 2026-10-02):** code CHƯA commit (Boss Rush client+server+prefab+scene MainGame HUD). Việc tiếp: (1) hỏi user có ẩn ô kỹ năng pet ở thanh dưới khi Boss Rush không → check gốc; (2) prefab boss Lich×3/Ogre×2/Hag×2 (import animator Lych/Ogre/Witch + Lych*Data, asset map ở BOSS_RUSH_MODEL mục 8); (3) deploy thật khi user tạo project (Blaze, firebase login, sửa .firebaserc + FirebaseSettings). Chạy emulator: `export PATH=~/.local/tools/node-v20.18.1-darwin-arm64/bin:$HOME/.local/tools/jdk-21.0.12.1+1/Contents/Home/bin:$PATH; export JAVA_HOME=$HOME/.local/tools/jdk-21.0.12.1+1/Contents/Home; cd server && firebase emulators:start --only auth,functions,firestore`. Test Play phải bắt đầu từ scene Root (Play từ MainGame thiếu UIManager → lỗi Fade); có thể đặt EditorSceneManager.playModeStartScene=Root tạm rồi trả null.
+Xem [[dungonrush-events-tab]], [[dungonrush-reverse-native-il2cpp]].
