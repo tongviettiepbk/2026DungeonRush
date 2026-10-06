@@ -85,6 +85,9 @@ public class UIMainLobby : BaseUI
 
         UpdateLootTicketText();
         InitTabMenu();
+
+        // Gốc GameplayUI → BossRushController.ekp lúc vào game: gửi lại snapshot đồ Boss Rush (1 lần/ngày UTC).
+        BossRushController.Instance.OnGameStarted();
     }
 
     #region Tab menu

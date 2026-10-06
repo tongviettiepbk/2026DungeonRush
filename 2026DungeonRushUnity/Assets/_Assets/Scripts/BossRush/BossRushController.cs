@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,9 +44,10 @@ public class BossRushController : Singleton<BossRushController>
     public const string FN_UPDATE_PLAYER = "updatebossrushplayer";
     public const string FN_SEED_BOTS = "seedbossrushdummyplayers";
 
-    // Gửi lại snapshot đồ tối đa 1 lần / 15 phút (BossRushController.ujo = 15 gốc).
-    private const int UPDATE_PLAYER_INTERVAL_SECONDS = 15 * 60;
     private const int MAX_PENDING_ATTEMPTS = 5;
+    private const int SECONDS_PER_DAY = 24 * 60 * 60;
+    // Chờ hero campaign spawn xong (Power tính từ hero trong trận) trước khi gửi snapshot lúc vào game.
+    private const float WAIT_HERO_TIMEOUT = 10f;
 
     public static event Action<BossRushPoolModel> PoolUpdated;
 
@@ -357,21 +359,40 @@ public class BossRushController : Singleton<BossRushController>
 
     // ===== Update player (elm/eln) =====
 
-    // Gọi khi đổi đồ/pet: chỉ gửi khi đang ở trong nhóm và đã quá 15 phút từ lần gửi trước.
-    public void UpdatePlayerIfNeeded(bool force = false)
+    // ekp/ekq gốc: GameplayUI gọi lúc vào game → elm. Chờ hero spawn để có Power rồi mới gửi.
+    public void OnGameStarted()
     {
-        if (string.IsNullOrEmpty(User.currentPoolId) || !IsEventActive)
+        StartCoroutine(RoutineUpdateOnGameStarted());
+    }
+
+    private IEnumerator RoutineUpdateOnGameStarted()
+    {
+        float waited = 0f;
+        while (waited < WAIT_HERO_TIMEOUT && (GameController.Instance.mode == null || GameController.Instance.mode.Hero == null))
+        {
+            waited += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        UpdatePlayerIfNeeded();
+    }
+
+    // elm gốc: đang ở trong nhóm → gửi lại snapshot đồ tối đa 1 lần / NGÀY UTC (chưa gửi bao giờ hoặc ngày
+    // hiện tại khác ngày lần gửi trước). Gốc KHÔNG gửi khi đổi đồ; Join cũng gửi snapshot.
+    public void UpdatePlayerIfNeeded()
+    {
+        if (string.IsNullOrEmpty(User.currentPoolId))
         {
             return;
         }
-        if (!force && Now() - User.lastItemUpdateTime < UPDATE_PLAYER_INTERVAL_SECONDS)
+        long now = Now();
+        if (User.lastItemUpdateTime >= 1 && now / SECONDS_PER_DAY == User.lastItemUpdateTime / SECONDS_PER_DAY)
         {
             return;
         }
 
         BossRushUpdateRequestDTO request = new BossRushUpdateRequestDTO { poolId = User.currentPoolId };
         FillSnapshot(request);
-        User.lastItemUpdateTime = Now();
+        User.lastItemUpdateTime = now;
         User.isDataChanged = true;
         FirebaseManager.Instance.Call<object>(FN_UPDATE_PLAYER, request, (ok, res, raw) =>
         {

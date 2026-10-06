@@ -8,7 +8,7 @@ using UnityEngine;
 //     CompanionController.OnStateChanged return khi GameController.IsBossRush; SpawnController.hvl dựng ghost chỉ
 //     gồm enchantment + đồ + cánh + áo choàng. Own Effect của pet sở hữu vẫn cộng vào chỉ số.
 //   • Boss: máu CHUNG của nhóm (server), boss chết → "Boss Defeated", boss kế = BossHPTable[tier][boss+1] spawn ngay.
-//   • Đồng hồ FightDuration = 30s; hết giờ (hoặc hero chết) → báo server
+//   • Đồng hồ FightDuration = 30s; CHỈ hết giờ mới kết thúc (hero chết vẫn chờ) → báo server
 //     damageDealt = damage của HERO CHÍNH (IsMainCharacter), totalDamageDealt = damage CẢ ĐỘI (IsHome).
 //   • Popup "Fight Complete!" (Team Damage + Damage Dealt) → Continue về campaign + mở lại sảnh Boss Rush.
 public class BossRushMode : BaseMode
@@ -215,13 +215,10 @@ public class BossRushMode : BaseMode
         }
     }
 
-    // Thua khi hero chính chết → kết thúc trận sớm (vẫn báo damage).
+    // Hero chính chết KHÔNG kết thúc trận: gốc chỉ gọi GameController.hij khi hết FightDuration (GameController.Update
+    // là nơi gọi duy nhất) → ghost đánh tiếp tới hết giờ, damage của họ vẫn cộng vào teamDamage.
     protected override void OnAllyDie(int battleId)
     {
-        if (hero == null || !hero.isTargetable)
-        {
-            EndGame(false);
-        }
     }
 
     // ===== Đồng hồ / HUD =====
