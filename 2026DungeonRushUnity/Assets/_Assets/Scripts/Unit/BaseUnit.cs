@@ -265,7 +265,21 @@ public class BaseUnit : MonoBehaviour
         {
             UpdateBattleState();
             animationController.UpdateSortingOrder();
+            TickHpRegen();
         }
+    }
+
+    // GỐC Character.ewf: mỗi frame, còn sống và chưa đầy máu → hp += hồi máu/giây × deltaTime × tốc game
+    // (không hiện số, không FX). Hồi máu/giây = stats.hpRecovery (Hero: MaxHp × Regen% × HealthRegenMultiplier).
+    private void TickHpRegen()
+    {
+        double regen = GetHpRegenPerSecond();
+        if (regen <= 0 || isDead || hp <= 0 || hp >= GetMaxHp())
+        {
+            return;
+        }
+
+        GetHeal(this, regen * Time.deltaTime * GameController.Instance.gameSpeed, showFx: false, showText: false);
     }
     #endregion
 

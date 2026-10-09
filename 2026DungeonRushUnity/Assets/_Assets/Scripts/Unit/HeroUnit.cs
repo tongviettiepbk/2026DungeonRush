@@ -96,9 +96,9 @@ public class HeroUnit : BaseUnit
     // Chỉ số cuối = mỗi slot (món đang mặc, slot trống dùng nền PlayerBase) + Own Effect pet (flat) rồi ÁP SUBSTAT (%).
     //   Pass 1 (flat): attack = PlayerBaseDamage + Σ (main(Damage) − nền slot đó) + Σ ownAttack;
     //                  maxHp  = PlayerBaseHealth + Σ (main(Health) − nền slot đó) + Σ ownHealth.
-    //   Pass 2 (%):    gom substat theo đích rồi nhân/cộng lên kết quả pass 1 (xem EquipmentStatResolver).
-    // Đúng mô hình game gốc (main cộng dồn) + mô hình % chuẩn genre cho substat (công thức tổng hợp
-    // substat gốc chưa reverse — nếu sau này có thì chỉ sửa phần gom % dưới đây).
+    //   Pass 2 (%):    gom substat theo đích rồi nhân (1 + tổng) / cộng thô — GỐC Soldier.eyw/eyv:
+    //                  AttackSpeed/Damage/Health/Melee/Ranged → nhân (1 + Σ%); CritChance/Block/Double/Regen/
+    //                  Lifesteal/CompanionCooldown/CompanionDamage → cộng thô; CritDamage = 1 + 5% nền + Σ%.
     protected override void CalculateCurrentStats()
     {
         base.CalculateCurrentStats();
@@ -157,9 +157,15 @@ public class HeroUnit : BaseUnit
         stats.attackSpeed *= (1f + atkSpeedPct);
         stats.companionDamage *= (1f + compDmgPct);
         stats.critRate += critRateAdd;
-        stats.critDamage += critDmgAdd;
         stats.doubleShot += doubleShotAdd;
-        stats.hpRecovery += stats.maxHp * hpRegenPct;   // hồi máu = % máu tối đa (sau khi đã áp Health%).
+
+        // GỐC Soldier.eyv: CritDamage = 1 + BaseCriticalDamagePercent/100 (5% → x1.05) + Σ substat CritDamage/100
+        // (không dùng nền 1.2 kế thừa StickIdle). Hồi máu (Character.ewf): MaxHp × Regen%/100 × HealthRegenMultiplier mỗi giây.
+        GearStatConfigData config = EquipmentStatResolver.LoadConfig();
+        float baseCritDamagePercent = config != null ? config.baseCriticalDamagePercent : 5f;
+        float regenMultiplier = config != null ? config.healthRegenMultiplier : 0.5f;
+        stats.critDamage = 1f + baseCritDamagePercent / 100f + critDmgAdd;
+        stats.hpRecovery = stats.maxHp * hpRegenPct * regenMultiplier;
 
         // GỐC (Soldier.eyw @0x2A1D320): substat CompanionCooldown / BlockChance / Lifesteal cộng dồn THÔ %
         // của mọi món vào Character.CompanionCooldownReduction / BlockChance / Lifesteal, không trần.
@@ -214,6 +220,29 @@ public class HeroUnit : BaseUnit
             hp = stats.maxHp;
         }
         UpdateHealthBar();
+    }
+
+    // ===== Đánh đôi (DoubleChance) =====
+    // GỐC MeleeAttackState/RangeAttackState.ewu: đầu mỗi đòn của phe người chơi roll rm.ioz(DoubleChance)
+    // (Random.Range(0,100) <= %); trúng thì animation đánh chạy x2 và ra 2 đòn trong cùng 1 nhịp. Project ra
+    // đòn ở cuối nhịp (OnAttackEnd) nên đòn thứ 2 tung ở GIỮA nhịp, đòn còn lại vẫn ở cuối nhịp.
+    protected override void BeginAttack()
+    {
+        base.BeginAttack();
+
+        if (!isAttacking || stats.doubleShot <= 0f || Random.Range(0f, 100f) > stats.doubleShot * 100f)
+        {
+            return;
+        }
+
+        float halfDelay = 0.5f / (stats.attackSpeed * GameController.Instance.gameSpeed);
+        this.StartDelayAction(halfDelay, () =>
+        {
+            if (!isDead && isAttacking && stateCurrent == BattleState.Attack)
+            {
+                ReleaseAttack();
+            }
+        });
     }
 
     protected override void FindNearestTarget()

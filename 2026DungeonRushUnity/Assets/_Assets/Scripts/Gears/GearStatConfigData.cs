@@ -35,6 +35,8 @@ public class GearStatConfigData : ScriptableObject
     public float playerBaseAttackSpeed = 1f;     // PlayerBaseAttackSpeed
     public float playerBaseMoveSpeed = 2f;       // PlayerBaseMoveSpeed
     public float playerBaseAttackDistance = 1.5f;// PlayerBaseAttackDistance
+    public float baseCriticalDamagePercent = 5f; // BaseCriticalDamagePercent: CritDamage nền = 1 + 5/100 (Soldier.eyv)
+    public float healthRegenMultiplier = 0.5f;   // HealthRegenMultiplier: hồi máu/giây = MaxHp × Regen%/100 × 0.5 (Character.ewf)
 
     [Header("Base 5 slot trang bị (C2..C6)")]
     public List<GearBaseStatEntry> gearBaseStats = new List<GearBaseStatEntry>
