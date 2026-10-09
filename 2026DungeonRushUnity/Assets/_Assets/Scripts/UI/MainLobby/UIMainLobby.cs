@@ -520,6 +520,13 @@ public class UIMainLobby : BaseUI
             if (element == null)
                 continue;
 
+            // Wing/Cape không phải đồ loot (RefreshWingSlot/RefreshCapeSlot lo phần hiển thị).
+            if (element.typeEquipment == GearSlotType.WING || element.typeEquipment == GearSlotType.CAPE)
+            {
+                element.SetLayout(null);
+                continue;
+            }
+
             string equipId = GameData.userData.equipment.GetEquipped(element.typeEquipment);
             LootResult result = LootService.BuildFromEquipId(element.typeEquipment, equipId);
             element.SetLayout(result);

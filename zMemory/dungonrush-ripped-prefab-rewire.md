@@ -27,4 +27,5 @@ CÒN THIẾU (không phải ảnh, để nguyên): TMP `m_spriteAsset`/`GemSprit
 **Bẫy hay gặp khi chuyển prefab rip sang project (2026-10-09, trang Wing):**
 - Component **Mask** của UGUI (rip guid `728f81b5…`, fileID 1798567259) bị RƠI MẤT → shine/glow/pattern tràn ra ngoài. So với prefab rip gốc (`m_ShowMaskGraphic`, `m_Enabled`) rồi thêm lại bằng script guid `31a19414c41e5ae4aae2af33fee712f6`.
 - Texture FX (VD `_ResourceGame/Fx/Glow_Circle01.png`, `shine.png`) import kiểu Default (`textureType: 0`) → Image gắn sprite fileID 21300000 hiện Ô TRẮNG/màu đặc. Sửa meta `textureType: 8`, `spriteMode: 1`.
+- Canvas LỒNG có override sorting (ClaimPage, panel kết quả…) giữ `m_SortingLayerID: 0` (Default) trong khi UIManager/UiMainGame dùng layer "UI" (id -124519691) → bị vẽ + raycast PHÍA SAU trang. Đổi sorting layer canvas lồng về UI.
 - Cách dò: parse YAML lấy m_Sprite guid của mọi Image → tra .meta xem textureType/spriteMode (script tạm, viết lại khi cần).

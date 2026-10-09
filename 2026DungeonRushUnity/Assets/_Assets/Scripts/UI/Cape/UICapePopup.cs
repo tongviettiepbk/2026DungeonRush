@@ -36,8 +36,7 @@ public class UICapePopup : BaseUI
     public TMP_Text txtShowCloak;
 
     [Header("Kết quả summon nhiều")]
-    public GameObject objSummonPanel;
-    public GameObject objSummonPanelClick;   // vùng bấm để đóng (Scroll View — TapToCloseExtension gốc)
+    public GameObject objSummonPanel;        // bấm bất kỳ đâu trên panel để đóng (TapToCloseExtension gốc)
     public Transform transSummonContent;
 
     [Header("Claim (New Cloak Obtained)")]
@@ -63,10 +62,10 @@ public class UICapePopup : BaseUI
         btShowCloak.onClick.AddListener(OnClickShowCloak);
         btClaim.onClick.AddListener(() => objClaimPage.SetActive(false));
 
-        Button panelButton = objSummonPanelClick.GetComponent<Button>();
+        Button panelButton = objSummonPanel.GetComponent<Button>();
         if (panelButton == null)
         {
-            panelButton = objSummonPanelClick.AddComponent<Button>();
+            panelButton = objSummonPanel.AddComponent<Button>();
             panelButton.transition = Selectable.Transition.None;
         }
         panelButton.onClick.AddListener(() => objSummonPanel.SetActive(false));
@@ -281,7 +280,7 @@ public class UICapePopup : BaseUI
 
     // ----- Kết quả summon -----
 
-    // eth: bảng các cape vừa ra (ô không bấm được — bấm vùng bảng để đóng).
+    // eth: bảng các cape vừa ra (nút ô bị tắt để click nổi lên panel → đóng).
     private void ShowSummonPanel(List<CapeModel> results)
     {
         CapeModel equipped = CapeService.GetEquipped();
