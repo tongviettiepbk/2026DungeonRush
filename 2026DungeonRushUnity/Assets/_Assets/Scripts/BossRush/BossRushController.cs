@@ -419,6 +419,38 @@ public class BossRushController : Singleton<BossRushController>
         request.power = BossRushPower.GetPlayerPower();
         request.items = BuildItems(GameData.userData.equipment);
         request.companions = BuildCompanions(GameData.userData.companions);
+        request.enchantmentTiers = BuildEnchantmentTiers(GameData.userData.enchantments);
+    }
+
+    // Gốc UserController.edn: bản sao EquippedEnchantmentTiers. Project: index = (int)GearSlotType.
+    public static List<int> BuildEnchantmentTiers(UserEnchantmentData enchantments)
+    {
+        List<int> list = new List<int>();
+        for (int slot = 0; slot <= (int)GearSlotType.WEAPON; slot++)
+        {
+            list.Add(enchantments != null ? enchantments.GetEquipped((GearSlotType)slot) : 0);
+        }
+        return list;
+    }
+
+    // Snapshot relic → save tạm để ghost tính chỉ số (Soldier.eyn gốc đọc EnchantmentTiers của ghost).
+    public static UserEnchantmentData ToEnchantmentData(List<int> tiers)
+    {
+        UserEnchantmentData data = new UserEnchantmentData();
+        if (tiers == null)
+        {
+            return data;
+        }
+
+        for (int slot = 0; slot < tiers.Count; slot++)
+        {
+            int tier = UnityEngine.Mathf.Clamp(tiers[slot], 0, EnchantmentConfig.MAX_TIER);
+            if (tier > 0)
+            {
+                data.SetEquipped((GearSlotType)slot, tier);
+            }
+        }
+        return data;
     }
 
     public static List<BossRushItemModel> BuildItems(UserEquipmentData equipment)

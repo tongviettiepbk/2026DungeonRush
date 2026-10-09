@@ -559,7 +559,7 @@ public class BaseMode : MonoBehaviour
     }
 
     // Chỉ số hero = tầng NỀN gốc (PlayerBase*) từ GearStatConfig. Hero trần (chưa đồ) = Damage 10/HP 50.
-    // (Cộng dồn main stat đồ đang mặc để ở bước hệ trang bị đầy đủ.)
+    // Đồ đang mặc THAY nền slot tương ứng (EquipmentStatResolver cộng main − nền slot).
     private static GearStatConfigData gearStatConfig;
 
     protected BaseStats BuildHeroStats()

@@ -61,6 +61,7 @@ function newPlayerDoc(uid: string, now: Date): PlayerDoc {
     power: 0,
     items: [],
     companions: [],
+    enchantmentTiers: [],
     tier: START_TIER,
     currentPoolId: "",
     lastJoinEventKey: "",
@@ -99,6 +100,12 @@ function sanitizeCompanions(list: BossRushCompanionModel[] | undefined): BossRus
   }));
 }
 
+// Tier relic (Enchantment) đang đeo theo slot: số nguyên 0..11 (gốc qm.xkk = 11), tối đa 16 slot.
+function sanitizeEnchantmentTiers(list: number[] | undefined): number[] {
+  if (!Array.isArray(list)) return [];
+  return list.slice(0, 16).map((t) => Math.min(11, Math.max(0, Math.floor(Number(t) || 0))));
+}
+
 function applySnapshot(player: PlayerDoc, data: PlayerSnapshotRequest): void {
   if (typeof data.playerName === "string" && data.playerName.length > 0) {
     player.playerName = data.playerName.substring(0, 24);
@@ -108,6 +115,7 @@ function applySnapshot(player: PlayerDoc, data: PlayerSnapshotRequest): void {
   }
   if (data.items !== undefined) player.items = sanitizeItems(data.items);
   if (data.companions !== undefined) player.companions = sanitizeCompanions(data.companions);
+  if (data.enchantmentTiers !== undefined) player.enchantmentTiers = sanitizeEnchantmentTiers(data.enchantmentTiers);
 }
 
 function toPoolPlayer(player: PlayerDoc, prev: BossRushPlayerModel | undefined, now: Date): BossRushPlayerModel {
@@ -119,6 +127,7 @@ function toPoolPlayer(player: PlayerDoc, prev: BossRushPlayerModel | undefined, 
     TotalDamagePoints: prev?.TotalDamagePoints ?? 0,
     Items: player.items,
     Companions: player.companions,
+    EnchantmentTiers: player.enchantmentTiers ?? [],
     IsBot: false,
     JoinedAt: prev?.JoinedAt ?? now.getTime(),
   };

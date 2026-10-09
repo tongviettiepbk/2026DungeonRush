@@ -22,7 +22,8 @@ public class GearStatConfigData : ScriptableObject
     public float weaponBaseRange = 7f;       // ItemStatBaseRangedWeapon
 
     // Chỉ số NỀN của hero (có sẵn dù CHƯA mặc đồ) — trích từ GameResources.PlayerBase* (libil2cpp v41).
-    // Chỉ số cuối = PlayerBase(nền) + Σ(main stat món đang mặc); slot trống góp 0.
+    // Gốc (Soldier.ewc / rm.iqr): mỗi slot dùng main stat món đang mặc, slot TRỐNG mới dùng nền PlayerBase của slot đó
+    // (đồ THAY nền, không cộng dồn).
     // Hero trần (chưa đồ): Damage = 6+4+0 = 10 ; Health = 30+20+0 = 50 (khớp in-game).
     [Header("Chỉ số nền hero (PlayerBase* — không cần đồ)")]
     public float playerBaseWeaponDamage = 6f;    // PlayerBaseWeaponDamage
@@ -77,7 +78,7 @@ public class GearStatConfigData : ScriptableObject
     // ---- Lookup ----
 
     // Chỉ số NỀN hero khi CHƯA mặc đồ (gộp 3 nguồn Damage → attack, 3 nguồn Health → maxHp).
-    // Mặc đồ vào sẽ cộng thêm main stat mỗi món (làm ở bước hệ trang bị đầy đủ).
+    // Mặc đồ: EquipmentStatResolver cộng (main món − GetPlayerBaseMain(slot)) → đồ thay nền slot đó.
     public BaseStats GetPlayerBaseStats()
     {
         return new BaseStats
@@ -88,6 +89,21 @@ public class GearStatConfigData : ScriptableObject
             attackRange = playerBaseAttackDistance,
             moveSpeed = playerBaseMoveSpeed,
         };
+    }
+
+    // Nền PlayerBase của 1 slot (Damage cho Weapon/Gloves/Ring, Health cho Helmet/Backpack/Necklace).
+    public float GetPlayerBaseMain(GearSlotType slot)
+    {
+        switch (slot)
+        {
+            case GearSlotType.WEAPON: return playerBaseWeaponDamage;
+            case GearSlotType.GLOVES: return playerBaseGlovesDamage;
+            case GearSlotType.RING: return playerBaseRingDamage;
+            case GearSlotType.HELMET: return playerBaseHelmetHealth;
+            case GearSlotType.BACKPACK: return playerBaseBackpackHealth;
+            case GearSlotType.NECKLACE: return playerBaseNecklaceHealth;
+            default: return 0f;
+        }
     }
 
     public GearBaseStatEntry GetGearBase(GearSlotType slot)

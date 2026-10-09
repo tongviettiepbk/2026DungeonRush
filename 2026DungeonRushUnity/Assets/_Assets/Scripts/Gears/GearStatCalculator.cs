@@ -27,6 +27,31 @@ public static class GearStatCalculator
         return Compute(config, baseValue, rarity, level);
     }
 
+    // Wing (C8) — vh.lak / vh.lal gốc: round(Base × TierScaler^(rarity+1) × (1 + Scaler × level)).
+    // Tính bằng float như gốc rồi Math.Round (về số chẵn khi đúng .5).
+    public static float GetWingDamage(WingData wing, int level)
+    {
+        float raw = (1f + wing.damageScaler * level) * (wing.damageBase * Mathf.Pow(wing.damageTierScaler, (int)wing.rarity + 1));
+        return (float)System.Math.Round(raw, System.MidpointRounding.ToEven);
+    }
+
+    public static float GetWingHealth(WingData wing, int level)
+    {
+        float raw = (1f + wing.healthScaler * level) * (wing.healthBase * Mathf.Pow(wing.healthTierScaler, (int)wing.rarity + 1));
+        return (float)System.Math.Round(raw, System.MidpointRounding.ToEven);
+    }
+
+    // Cape (C7) — fu.eqx / fu.eqy gốc: chỉ số dạng % = Base × (1 + Scaler × (level − 1)) (đơn vị %, VD 14.4 = +14.4%).
+    public static float GetCapeDamagePercent(CapeData cape, int level)
+    {
+        return cape.damageBase * (1f + cape.damageScaler * (level - 1));
+    }
+
+    public static float GetCapeHealthPercent(CapeData cape, int level)
+    {
+        return cape.healthBase * (1f + cape.healthScaler * (level - 1));
+    }
+
     // Lõi công thức dùng chung.
     private static double Compute(GearStatConfigData config, float baseValue, Rarity rarity, int level)
     {

@@ -23,7 +23,9 @@ public class UIGearInfo : BaseUI
         btClose.onClick.AddListener(Close);
     }
 
-    public void Show(LootResult result)
+    // enchantmentTier: relic đang đeo ở slot của món (ItemInfoPopup.EnchantmentTier gốc, chỉ khi mở từ ô
+    // đang mặc) → main stat hiển thị × (1 + tier²/100) như ItemInfoPopup.igz. 0 = không có relic.
+    public void Show(LootResult result, int enchantmentTier = 0)
     {
         if (imgIcon != null)
             imgIcon.sprite = result.icon;
@@ -40,7 +42,7 @@ public class UIGearInfo : BaseUI
 
         string mainLabel = result.mainStatKind == GearMainStatKind.Health ? "Máu" : "Sát thương";
         if (txtMainStats != null)
-            txtMainStats.text = mainLabel + ": " + result.mainStat.ToString("0");   // game gốc hiện main stat làm tròn nguyên
+            txtMainStats.text = mainLabel + ": " + (result.mainStat * EnchantmentConfig.GetStatMultiplier(enchantmentTier)).ToString("0");   // game gốc hiện main stat làm tròn nguyên
 
         DebugCustom.ShowLog("subStats:", JsonConvert.SerializeObject(result.subStats));
 

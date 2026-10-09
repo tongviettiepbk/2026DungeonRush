@@ -19,6 +19,7 @@ public class StaticGameData
     public StaticDungeonData dungeons;
     public StaticEventData events;
     public StaticBossRushData bossRush;
+    public StaticEnchantmentData enchantments;
 
     public void Load()
     {
@@ -36,5 +37,6 @@ public class StaticGameData
         if (dungeons == null) dungeons = new StaticDungeonData();
         if (events == null) events = new StaticEventData();
         if (bossRush == null) bossRush = new StaticBossRushData();
+        if (enchantments == null) enchantments = new StaticEnchantmentData();
     }
 }

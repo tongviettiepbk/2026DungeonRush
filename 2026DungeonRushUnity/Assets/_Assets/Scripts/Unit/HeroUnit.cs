@@ -26,14 +26,17 @@ public class HeroUnit : BaseUnit
     // Gọi TRƯỚC SpawnInBattle. Ghost không nhận sự kiện đổi đồ của save mình.
     private UserEquipmentData ghostEquipment;
     private List<CompanionModel> ghostCompanions;
+    private UserEnchantmentData ghostEnchantments;
     public bool IsGhost => ghostEquipment != null;
     public string GhostName { get; private set; }
 
-    public void SetupAsGhost(string playerName, UserEquipmentData equipment, List<CompanionModel> ownedCompanions)
+    public void SetupAsGhost(string playerName, UserEquipmentData equipment, List<CompanionModel> ownedCompanions,
+                             UserEnchantmentData enchantments)
     {
         GhostName = playerName;
         ghostEquipment = equipment ?? new UserEquipmentData();
         ghostCompanions = ownedCompanions ?? new List<CompanionModel>();
+        ghostEnchantments = enchantments ?? new UserEnchantmentData();
         if (heroVisual != null)
         {
             heroVisual.SetOverrideEquipment(ghostEquipment);
@@ -59,6 +62,7 @@ public class HeroUnit : BaseUnit
         EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnEquipmentChanged);
         EventDispatcher.Instance.RegisterListener(EventID.CompanionOwnedChanged, OnEquipmentChanged);
         EventDispatcher.Instance.RegisterListener(EventID.MasteryChanged, OnEquipmentChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.EnchantmentChanged, OnEquipmentChanged);
     }
 
     protected override void OnDisable()
@@ -67,6 +71,7 @@ public class HeroUnit : BaseUnit
         EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnEquipmentChanged);
         EventDispatcher.Instance.RemoveListener(EventID.CompanionOwnedChanged, OnEquipmentChanged);
         EventDispatcher.Instance.RemoveListener(EventID.MasteryChanged, OnEquipmentChanged);
+        EventDispatcher.Instance.RemoveListener(EventID.EnchantmentChanged, OnEquipmentChanged);
     }
 
     // Dựng lại hình trang bị từ save — gọi sau khi người chơi đổi đồ ở menu.
@@ -81,13 +86,16 @@ public class HeroUnit : BaseUnit
     // gốc lu.gov trong Soldier.ewc). Nạp vào list để CalculateCurrentStats dùng.
     protected override void LoadPermanentModifiers()
     {
-        AddModifier(EquipmentStatResolver.BuildModifiers(EquipmentSource));
+        // Ghost: relic lấy từ snapshot Boss Rush (EnchantmentTiers) như Soldier.eyn gốc.
+        UserEnchantmentData enchantments = IsGhost ? ghostEnchantments
+            : (GameData.userData != null ? GameData.userData.enchantments : null);
+        AddModifier(EquipmentStatResolver.BuildModifiers(EquipmentSource, enchantments));
         AddModifier(IsGhost ? CompanionService.BuildOwnEffectModifiers(ghostCompanions) : CompanionService.BuildOwnEffectModifiers());
     }
 
-    // Chỉ số cuối = NỀN PlayerBase + Σ CHỈ SỐ CHÍNH đồ + Own Effect pet (flat) rồi ÁP SUBSTAT (%).
-    //   Pass 1 (flat): attack = PlayerBaseDamage + Σ main(Damage) + Σ ownAttack;
-    //                  maxHp  = PlayerBaseHealth + Σ main(Health) + Σ ownHealth.
+    // Chỉ số cuối = mỗi slot (món đang mặc, slot trống dùng nền PlayerBase) + Own Effect pet (flat) rồi ÁP SUBSTAT (%).
+    //   Pass 1 (flat): attack = PlayerBaseDamage + Σ (main(Damage) − nền slot đó) + Σ ownAttack;
+    //                  maxHp  = PlayerBaseHealth + Σ (main(Health) − nền slot đó) + Σ ownHealth.
     //   Pass 2 (%):    gom substat theo đích rồi nhân/cộng lên kết quả pass 1 (xem EquipmentStatResolver).
     // Đúng mô hình game gốc (main cộng dồn) + mô hình % chuẩn genre cho substat (công thức tổng hợp
     // substat gốc chưa reverse — nếu sau này có thì chỉ sửa phần gom % dưới đây).
@@ -95,7 +103,7 @@ public class HeroUnit : BaseUnit
     {
         base.CalculateCurrentStats();
 
-        // Pass 1: CHỈ SỐ CHÍNH (flat) — cộng dồn lên nền PlayerBase.
+        // Pass 1: CHỈ SỐ CHÍNH (flat) — nền PlayerBase + (main món − nền slot) → đồ thay nền slot.
         for (int i = 0; i < modifiers.Count; i++)
         {
             StatModifier m = modifiers[i];

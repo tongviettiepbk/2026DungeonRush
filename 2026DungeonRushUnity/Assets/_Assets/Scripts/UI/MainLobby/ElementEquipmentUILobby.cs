@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,8 +8,13 @@ public class ElementEquipmentUILobby : MonoBehaviour
     public GearSlotType typeEquipment;
     public Button btEquipment;
     public TMP_Text txtLevel;
-    public TMP_Text txtLevelEquipment;
+    public TMP_Text txtLevelEnchantment;
     public Image imgEquipment;
+
+    public Button btEnchantmentInfo;
+
+    // UIMainLobby gán: bấm nút enchantment → mở trang Enchantment.
+    public Action<GearSlotType> onClickEnchantment;
 
     private LootResult dataGear;
 
@@ -21,12 +27,26 @@ public class ElementEquipmentUILobby : MonoBehaviour
     private void Start()
     {
         btEquipment.onClick.AddListener(ClickBtInfoGear);
+        if (btEnchantmentInfo != null)
+            btEnchantmentInfo.onClick.AddListener(ClickBtEnchantment);
+    }
+
+    private void OnEnable()
+    {
+        EventDispatcher.Instance.RegisterListener(EventID.EnchantmentChanged, OnEnchantmentChanged);
+        RefreshEnchantment();
+    }
+
+    private void OnDisable()
+    {
+        EventDispatcher.Instance.RemoveListener(EventID.EnchantmentChanged, OnEnchantmentChanged);
     }
 
     // Gắn item vừa loot vào slot: icon + level. Null-guard từng ref vì prefab có thể chưa wire hết.
     public void SetLayout(LootResult result)
     {
         this.dataGear = result;
+        RefreshEnchantment();
 
         if (result == null)
             return;
@@ -42,8 +62,35 @@ public class ElementEquipmentUILobby : MonoBehaviour
         string levelText = "Lv." + result.level;
         if (txtLevel != null)
             txtLevel.text = levelText;
-        if (txtLevelEquipment != null)
-            txtLevelEquipment.text = levelText;
+    }
+
+    private void OnEnchantmentChanged(object param)
+    {
+        RefreshEnchantment();
+    }
+
+    // Nhãn "+tier" relic đang đeo ở slot — hiện khi tier >= 1, không xét slot có đồ hay không (ItemElementUI.ict gốc).
+    private void RefreshEnchantment()
+    {
+        if (GameData.userData == null)
+            return;
+
+        if (btEnchantmentInfo != null)
+            btEnchantmentInfo.gameObject.SetActive(EnchantmentService.IsUnlocked());
+
+        if (txtLevelEnchantment == null)
+            return;
+
+        int tier = GameData.userData.enchantments.GetEquipped(typeEquipment);
+        bool isShow = tier >= 1;
+        txtLevelEnchantment.gameObject.SetActive(isShow);
+        if (isShow)
+            txtLevelEnchantment.text = "+" + tier;
+    }
+
+    private void ClickBtEnchantment()
+    {
+        onClickEnchantment?.Invoke(typeEquipment);
     }
 
     private void ClickBtInfoGear()
@@ -56,7 +103,7 @@ public class ElementEquipmentUILobby : MonoBehaviour
         {
             UIGearInfo uiGearInfo = UIManager.Instance.LoadUI(UIKey.InfoGear) as UIGearInfo;
             if (uiGearInfo != null)
-                uiGearInfo.Show(this.dataGear);
+                uiGearInfo.Show(this.dataGear, GameData.userData.enchantments.GetEquipped(typeEquipment));
         }
     }
 }

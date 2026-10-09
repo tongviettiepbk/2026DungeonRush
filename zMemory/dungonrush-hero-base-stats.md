@@ -30,3 +30,5 @@ Công thức: `Chỉ số cuối = PlayerBase(nền) + Σ(main stat món đang m
 
 Reverse pipeline: dotnet KHÔNG có sẵn máy này → cài dotnet-install.ps1 -Channel 8.0 -Runtime dotnet (user-level, no admin) + Il2CppDumper net7 (roll-forward). Giá trị serialize đọc bằng UnityPy từ APK (ghép split .assets), typetree strip → parse raw MonoBehaviour: **mỗi bool serialize chiếm 4 byte (align)**, anchor bằng chuỗi float đã biết (ItemStat 9,7,… và ArmyPowerBase=500) để định vị.
 Xem [[dungonrush-reverse-native-il2cpp]], [[dungonrush-item-stats-source]], [[dungonrush-gears-data-status]].
+
+**Cập nhật 2026-10-09:** gốc (Soldier.ewc) dùng nền PlayerBase của slot CHỈ khi slot trống; mặc đồ thì món THAY nền. Đã sửa EquipmentStatResolver (main − GetPlayerBaseMain(slot)). Xem [[dungonrush-power-model]].

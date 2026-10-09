@@ -154,13 +154,29 @@ public static class CompanionService
     public static List<StatModifier> BuildOwnEffectModifiers(List<CompanionModel> owned)
     {
         List<StatModifier> result = new List<StatModifier>();
+        GetOwnEffectTotals(owned, out double attack, out double health);
+
+        if (attack > 0)
+        {
+            result.Add(new StatModifier(StatModifierSource.Companion, StatModifierType.Attack, attack, true));
+        }
+        if (health > 0)
+        {
+            result.Add(new StatModifier(StatModifierSource.Companion, StatModifierType.MaxHp, health, true));
+        }
+        return result;
+    }
+
+    // Tổng Own Effect (Attack, Health) của mọi pet sở hữu — lu.gov gốc (dùng chung cho chỉ số Hero và Power).
+    public static void GetOwnEffectTotals(List<CompanionModel> owned, out double attack, out double health)
+    {
+        attack = 0;
+        health = 0;
         if (GameData.staticData == null || Static == null || owned == null)
         {
-            return result;
+            return;
         }
 
-        double attack = 0;
-        double health = 0;
         for (int i = 0; i < owned.Count; i++)
         {
             CompanionModel model = owned[i];
@@ -173,16 +189,6 @@ public static class CompanionService
             attack += GetOwnAttack(data, model.level);
             health += GetOwnHealth(data, model.level);
         }
-
-        if (attack > 0)
-        {
-            result.Add(new StatModifier(StatModifierSource.Companion, StatModifierType.Attack, attack, true));
-        }
-        if (health > 0)
-        {
-            result.Add(new StatModifier(StatModifierSource.Companion, StatModifierType.MaxHp, health, true));
-        }
-        return result;
     }
 
     // ----- Trang bị -----

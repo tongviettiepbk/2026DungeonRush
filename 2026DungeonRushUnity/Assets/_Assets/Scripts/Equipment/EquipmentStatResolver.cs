@@ -5,18 +5,20 @@ using UnityEngine;
 // LoadPermanentModifiers → CalculateCurrentStats). Dựng 2 loại modifier:
 //   1. CHỈ SỐ CHÍNH (main): flat (isFlatValue=true). Deterministic từ (slot/weaponType, rarity, level)
 //      qua GearStatCalculator. weapon→Attack; gear Damage-kind→Attack / Health-kind→MaxHp.
+//      Relic Enchantment đeo ở slot nhân main stat của món đó × (1 + tier²/100) (Soldier.ewc → eyo gốc).
 //   2. SUBSTAT (+X% đã roll, lưu trong save): percent (isFlatValue=false), value = phần trăm/100.
 //      Mỗi SubStatType map sang StatModifierType tương ứng (xem MapSubStat). MeleeDamage/RangedDamage
 //      chỉ tính khi vũ khí ĐANG CẦM đúng kiểu (điều kiện toàn cục). Đủ 13 loại substat gốc đều đã map.
 //
-// LƯU Ý mô hình áp: main = cộng dồn (PlayerBase + Σ flat); substat = % áp lên tổng (do HeroUnit gom
+// LƯU Ý mô hình áp: main của món THAY nền PlayerBase của slot (Soldier.ewc gốc) → modifier flat = main − nền slot;
+// substat = % áp lên tổng (do HeroUnit gom
 // theo đích rồi nhân/cộng). Công thức TỔNG HỢP substat gốc chưa reverse → dùng mô hình % chuẩn genre.
 public static class EquipmentStatResolver
 {
     // Bảng công thức chỉ số, cache 1 lần từ Resources (asset Gears/GearStatConfig).
     private static GearStatConfigData gearStatConfig;
 
-    // 5 slot gear có base main stat trong config (WEAPON xử lý riêng; WING/CAPE chưa có base).
+    // 5 slot gear có base main stat trong config (WEAPON, WING, CAPE xử lý riêng).
     private static readonly GearSlotType[] GearSlots =
     {
         GearSlotType.HELMET,
@@ -27,7 +29,8 @@ public static class EquipmentStatResolver
     };
 
     // Dựng list modifier (main flat + substat %) từ đồ đang mặc. Slot trống góp 0 (bỏ qua).
-    public static List<StatModifier> BuildModifiers(UserEquipmentData equipment)
+    // enchantments = relic đang đeo (null → không nhân, VD ghost Boss Rush chưa có snapshot relic).
+    public static List<StatModifier> BuildModifiers(UserEquipmentData equipment, UserEnchantmentData enchantments = null)
     {
         List<StatModifier> result = new List<StatModifier>();
         if (equipment == null)
@@ -44,17 +47,19 @@ public static class EquipmentStatResolver
         // Kiểu vũ khí đang cầm — quyết định substat MeleeDamage/RangedDamage của MỌI món có tính hay không.
         WeaponType? weaponType = GetEquippedWeaponType(equipment);
 
-        AddWeapon(result, equipment, config, weaponType);
+        AddWeapon(result, equipment, enchantments, config, weaponType);
         for (int i = 0; i < GearSlots.Length; i++)
         {
-            AddGear(result, equipment, config, GearSlots[i], weaponType);
+            AddGear(result, equipment, enchantments, config, GearSlots[i], weaponType);
         }
+        AddWing(result, equipment, enchantments, weaponType);
+        AddCape(result, equipment, enchantments, weaponType);
 
         return result;
     }
 
     // Vũ khí (C1): main luôn là Sát thương → Attack (flat) + substat của vũ khí.
-    private static void AddWeapon(List<StatModifier> result, UserEquipmentData equipment, GearStatConfigData config, WeaponType? weaponType)
+    private static void AddWeapon(List<StatModifier> result, UserEquipmentData equipment, UserEnchantmentData enchantments, GearStatConfigData config, WeaponType? weaponType)
     {
         EquippedItemData rec = equipment.GetRecord(GearSlotType.WEAPON);
         if (rec == null || string.IsNullOrEmpty(rec.equipId) || GameData.staticData == null || GameData.staticData.weapons == null)
@@ -68,14 +73,16 @@ public static class EquipmentStatResolver
             return;
         }
 
-        double mainStat = GearStatCalculator.GetWeaponMainStat(config, weapon.weaponType, rec.rarity, rec.level);
+        double mainStat = GearStatCalculator.GetWeaponMainStat(config, weapon.weaponType, rec.rarity, rec.level)
+                          * EnchantmentService.GetStatMultiplier(enchantments, GearSlotType.WEAPON)
+                          - config.GetPlayerBaseMain(GearSlotType.WEAPON);   // đồ thay nền slot
         result.AddOne(new StatModifier(StatModifierSource.Weapon, StatModifierType.Attack, mainStat, isFlatValue: true));
 
         AddSubStats(result, rec.subStats, StatModifierSource.Weapon, weaponType);
     }
 
     // Gear (C2..C6): main là Máu hay Sát thương tùy slot → MaxHp/Attack (flat) + substat của gear.
-    private static void AddGear(List<StatModifier> result, UserEquipmentData equipment, GearStatConfigData config, GearSlotType slot, WeaponType? weaponType)
+    private static void AddGear(List<StatModifier> result, UserEquipmentData equipment, UserEnchantmentData enchantments, GearStatConfigData config, GearSlotType slot, WeaponType? weaponType)
     {
         EquippedItemData rec = equipment.GetRecord(slot);
         if (rec == null || string.IsNullOrEmpty(rec.equipId) || GameData.staticData == null || GameData.staticData.gears == null)
@@ -90,11 +97,59 @@ public static class EquipmentStatResolver
         }
 
         GearMainStatKind kind;
-        double mainStat = GearStatCalculator.GetGearMainStat(config, gear.slot, rec.rarity, rec.level, out kind);
+        double mainStat = GearStatCalculator.GetGearMainStat(config, gear.slot, rec.rarity, rec.level, out kind)
+                          * EnchantmentService.GetStatMultiplier(enchantments, slot)
+                          - config.GetPlayerBaseMain(slot);   // đồ thay nền slot
         StatModifierType mainType = kind == GearMainStatKind.Health ? StatModifierType.MaxHp : StatModifierType.Attack;
         result.AddOne(new StatModifier(SourceOf(slot), mainType, mainStat, isFlatValue: true));
 
         AddSubStats(result, rec.subStats, SourceOf(slot), weaponType);
+    }
+
+    // Wing (C8) — Soldier.ewc gốc: Sát thương/Máu wing × hệ số relic slot Wing cộng thẳng vào tổng phẳng
+    // (wing không thay nền slot nào) + substat wing vào nhóm %.
+    private static void AddWing(List<StatModifier> result, UserEquipmentData equipment, UserEnchantmentData enchantments, WeaponType? weaponType)
+    {
+        EquippedItemData rec = equipment.GetRecord(GearSlotType.WING);
+        if (rec == null || int.TryParse(rec.equipId, out int wingId) == false || GameData.staticData == null || GameData.staticData.wings == null)
+        {
+            return;
+        }
+
+        WingData wing = GameData.staticData.wings.GetData(wingId);
+        if (wing == null)
+        {
+            return;
+        }
+
+        float multiplier = EnchantmentService.GetStatMultiplier(enchantments, GearSlotType.WING);
+        result.AddOne(new StatModifier(StatModifierSource.Wing, StatModifierType.Attack, multiplier * GearStatCalculator.GetWingDamage(wing, rec.level), isFlatValue: true));
+        result.AddOne(new StatModifier(StatModifierSource.Wing, StatModifierType.MaxHp, multiplier * GearStatCalculator.GetWingHealth(wing, rec.level), isFlatValue: true));
+
+        AddSubStats(result, rec.subStats, StatModifierSource.Wing, weaponType);
+    }
+
+    // Cape (C7) — Soldier.eyv gốc: Cape cho % Sát thương / % Máu × hệ số relic slot Cape, cộng chung nhóm %
+    // với substat (HeroUnit gom rồi nhân 1 + tổng) + substat cape.
+    private static void AddCape(List<StatModifier> result, UserEquipmentData equipment, UserEnchantmentData enchantments, WeaponType? weaponType)
+    {
+        EquippedItemData rec = equipment.GetRecord(GearSlotType.CAPE);
+        if (rec == null || int.TryParse(rec.equipId, out int capeId) == false || GameData.staticData == null || GameData.staticData.capes == null)
+        {
+            return;
+        }
+
+        CapeData cape = GameData.staticData.capes.GetData(capeId);
+        if (cape == null)
+        {
+            return;
+        }
+
+        float multiplier = EnchantmentService.GetStatMultiplier(enchantments, GearSlotType.CAPE);
+        result.AddOne(new StatModifier(StatModifierSource.Cape, StatModifierType.Attack, multiplier * GearStatCalculator.GetCapeDamagePercent(cape, rec.level) / 100.0, isFlatValue: false));
+        result.AddOne(new StatModifier(StatModifierSource.Cape, StatModifierType.MaxHp, multiplier * GearStatCalculator.GetCapeHealthPercent(cape, rec.level) / 100.0, isFlatValue: false));
+
+        AddSubStats(result, rec.subStats, StatModifierSource.Cape, weaponType);
     }
 
     // Chuyển các dòng substat (đã roll, lưu save) thành StatModifier percent.
@@ -178,7 +233,7 @@ public static class EquipmentStatResolver
         }
     }
 
-    private static GearStatConfigData LoadConfig()
+    public static GearStatConfigData LoadConfig()
     {
         if (gearStatConfig == null)
         {

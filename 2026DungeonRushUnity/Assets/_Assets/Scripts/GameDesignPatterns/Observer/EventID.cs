@@ -19,5 +19,8 @@ public enum EventID
     // Mastery: mở khoá / nâng cấp nhánh → Hero tính lại chỉ số (Movement Speed).
     MasteryChanged,
 
+    // Enchantment: relic đeo/tháo/merge/dismantle → Hero tính lại chỉ số, lobby cập nhật nhãn "+tier".
+    EnchantmentChanged,
+
     // TODO(follow-stick): thêm dần event khi port các hệ thống khác từ StickIdle.
 }

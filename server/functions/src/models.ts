@@ -29,6 +29,7 @@ export interface BossRushPlayerModel {
   TotalDamagePoints: number;
   Items: BossRushItemModel[];
   Companions: BossRushCompanionModel[];
+  EnchantmentTiers: number[];   // tier relic đang đeo, index = GearSlotType (0 = trống)
   IsBot: boolean;
   JoinedAt: number;    // ms — phá hoà khi xếp hạng (vào trước đứng trên)
 }
@@ -71,6 +72,7 @@ export interface PlayerDoc {
   power: number;
   items: BossRushItemModel[];
   companions: BossRushCompanionModel[];
+  enchantmentTiers: number[];
   tier: number;
   currentPoolId: string;
   lastJoinEventKey: string;
@@ -102,4 +104,5 @@ export interface PlayerSnapshotRequest {
   power?: number;
   items?: BossRushItemModel[];
   companions?: BossRushCompanionModel[];
+  enchantmentTiers?: number[];
 }

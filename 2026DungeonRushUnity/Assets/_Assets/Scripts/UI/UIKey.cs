@@ -13,6 +13,10 @@ public class UIKey
     public const string BossRushPopup = "UIBossRushPopup";
     public const string BossRushEndPopup = "UIBossRushEndPopup";
     public const string BossRushClaimPopup = "UIBossRushClaimPopup";
+    public const string EnchantmentInfo = "UiEnchantmentInfoItem";
+    public const string EnchantmentMerge = "UiEnchantmentMerge";
+    public const string SummonEnchantment = "UiSumonEnchantment";
+    public const string UpgradeEnchantment = "uiUpgradeEnchantment";
 
     // TODO(follow-stick): bổ sung key theo từng feature khi port UI màn hình.
 }

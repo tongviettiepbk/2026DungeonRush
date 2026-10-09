@@ -44,6 +44,10 @@ public class UIMainLobby : BaseUI
     public List<ElementTabMenuUILobby> listElementMenu;
 
     [Space(20)]
+    // Trang Enchantment (ContentPage/PageEnchantment) — mở từ nút enchantment ở ô trang bị.
+    public UITabEnchantment pageEnchantment;
+
+    [Space(20)]
     public List<GameObject> listObjTab = new List<GameObject>();
 
     [Space(20)]
@@ -82,6 +86,17 @@ public class UIMainLobby : BaseUI
         btAutoPet.onClick.AddListener(ClickTooglePet);
         for (int i = 0; i < listElementPet.Count; i++)
             listElementPet[i].Init(this);
+
+        for (int i = 0; i < listElementEquipment.Count; i++)
+            listElementEquipment[i].onClickEnchantment = OpenEnchantment;
+
+        EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnPowerSourceChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.CompanionOwnedChanged, OnPowerSourceChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.EnchantmentChanged, OnPowerSourceChanged);
+        LoadPowerTxt();
+
+        if (pageEnchantment != null)
+            pageEnchantment.onNotEnoughVial = () => OpenTab(TypeMenuLobby.Dungeon);
 
         UpdateLootTicketText();
         InitTabMenu();
@@ -129,6 +144,10 @@ public class UIMainLobby : BaseUI
     // index = -1 -> không tab nào mở.
     private void SetActiveTab(int index)
     {
+        // Mở 1 tab menu thì đóng trang Enchantment (cùng nằm trong ContentPage).
+        if (index >= 0 && pageEnchantment != null)
+            pageEnchantment.Close();
+
         for (int i = 0; i < listElementMenu.Count; i++)
         {
             if (listElementMenu[i] != null)
@@ -140,6 +159,16 @@ public class UIMainLobby : BaseUI
             if (listObjTab[i] != null)
                 listObjTab[i].SetActive(i == index);
         }
+    }
+
+    // Mở trang Enchantment (đóng các tab menu đang mở).
+    private void OpenEnchantment(GearSlotType slot)
+    {
+        if (pageEnchantment == null)
+            return;
+
+        CloseAllTabs();
+        pageEnchantment.Open();
     }
 
     #endregion
@@ -154,6 +183,13 @@ public class UIMainLobby : BaseUI
         {
             GameData.userData.items.Receive(ItemType.LOOT_TICKET, 100);
             UpdateLootTicketText();
+        }
+
+        // test: +2000 Vial để thử summon Enchantment
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            GameData.userData.items.Receive(ItemType.VIAL, 2000);
+            this.PostEvent(EventID.EnchantmentChanged);
         }
 
         // test: mở tất cả pet (sở hữu đủ 16 con, level 1)
@@ -408,6 +444,7 @@ public class UIMainLobby : BaseUI
         SetlevelPlayer();
         UpdateProcessLevel();
         LoadResourceTxt();
+        LoadPowerTxt();
         LoadInfoMap();
     }
 
@@ -440,11 +477,26 @@ public class UIMainLobby : BaseUI
             txtGem.text = GameData.userData.items.GetQuantityHave(ItemType.GEM).ToString("0");
     }
 
+    // Power người chơi (rm.iqm gốc, xem PlayerPower). Cập nhật khi đổi đồ / pet sở hữu / relic.
     private void LoadPowerTxt()
     {
-        // sức mạnh tổng cửa người chơi
-        // update khi user thay đổi trang bị , pet, cần có nơi tính rồi load thông tin ra 
-        txtPower.text = "";
+        if (txtPower != null)
+            txtPower.text = PlayerPower.ToLong(PlayerPower.GetCurrent()).ToLetter();
+    }
+
+    private void OnPowerSourceChanged(object param)
+    {
+        LoadPowerTxt();
+    }
+
+    private void OnDestroy()
+    {
+        if (EventDispatcher.IsNull == false)
+        {
+            EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnPowerSourceChanged);
+            EventDispatcher.Instance.RemoveListener(EventID.CompanionOwnedChanged, OnPowerSourceChanged);
+            EventDispatcher.Instance.RemoveListener(EventID.EnchantmentChanged, OnPowerSourceChanged);
+        }
     }
 
     private void LoadInfoMap()

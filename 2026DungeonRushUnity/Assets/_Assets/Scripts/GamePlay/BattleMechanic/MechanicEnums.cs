@@ -74,6 +74,8 @@ public enum StatModifierSource
     AstrologyEquiped,
     AstrologyLevel,
     SkillUnique,
+    Wing,
+    Cape,
 }
 
 public enum DamageOverTimeType

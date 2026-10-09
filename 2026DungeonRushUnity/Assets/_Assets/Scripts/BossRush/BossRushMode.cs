@@ -104,7 +104,8 @@ public class BossRushMode : BaseMode
                 }
             }
 
-            ghost.SetupAsGhost(ally.PlayerName, BossRushController.ToEquipmentData(ally.Items), owned);
+            ghost.SetupAsGhost(ally.PlayerName, BossRushController.ToEquipmentData(ally.Items), owned,
+                               BossRushController.ToEnchantmentData(ally.EnchantmentTiers));
             ghost.SpawnInBattle(BuildHeroStats(), StaticValue.TAG_TEAM_A, pos);
         }
     }
