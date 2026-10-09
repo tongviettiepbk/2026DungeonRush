@@ -35,10 +35,17 @@ async function patchPoolEventKey(poolId, eventKey) {
   assert.equal(r.status, 200, await r.text());
 }
 
-const snapshot = (name, power) => ({
+// Wing (slot 7) + Cape (slot 6) đi chung Items; relic theo index GearSlotType; showCloak = User.ShowCloak gốc.
+const snapshot = (name, power, showCloak = true) => ({
   server: PROJECT, playerName: name, power,
-  items: [{ Slot: 8, ItemId: "BasicBow", Rarity: 2, ItemLevel: 5, SubStats: [{ Type: 4, Value: 0.12 }] }],
+  items: [
+    { Slot: 8, ItemId: "BasicBow", Rarity: 2, ItemLevel: 5, SubStats: [{ Type: 4, Value: 0.12 }] },
+    { Slot: 7, ItemId: "3", Rarity: 4, ItemLevel: 2, SubStats: [] },
+    { Slot: 6, ItemId: "5", Rarity: 3, ItemLevel: 7, SubStats: [{ Type: 1, Value: 0.05 }] },
+  ],
   companions: [{ CompanionId: "Companion_1", CompanionLevel: 3, Equipped: true }],
+  enchantmentTiers: [0, 2, 0, 0, 0, 0, 5, 0, 99],
+  showCloak,
 });
 
 const isMonday = new Date().getUTCDay() === 1;
@@ -70,10 +77,17 @@ const jb = await call(b, "joinbossrush", snapshot("Bob", 2000));
 assert.equal(jb.poolId, ja.poolId);
 assert.equal(jb.players.length, 2);
 
+// Snapshot đi trọn vòng: wing/cape trong Items, relic kẹp 0..11, ShowCloak.
+const pa = jb.players.find((p) => p.UserId === a.uid);
+assert.deepEqual(pa.Items.map((it) => it.Slot), [8, 7, 6]);
+assert.deepEqual(pa.EnchantmentTiers, [0, 2, 0, 0, 0, 0, 5, 0, 11]);
+assert.equal(pa.ShowCloak, true);
+
 // Join lại → alreadyJoined, không tạo nhóm mới.
-const ja2 = await call(a, "joinbossrush", snapshot("Alice", 1500));
+const ja2 = await call(a, "joinbossrush", snapshot("Alice", 1500, false));
 assert.equal(ja2.alreadyJoined, true);
 assert.equal(ja2.poolId, ja.poolId);
+assert.equal(ja2.players.find((p) => p.UserId === a.uid).ShowCloak, false);
 
 // Lấp bot (emulator = admin).
 const seed = await call(a, "seedbossrushdummyplayers", { count: 8 });

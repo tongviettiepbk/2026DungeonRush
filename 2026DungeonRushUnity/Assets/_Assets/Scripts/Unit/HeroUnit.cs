@@ -31,7 +31,7 @@ public class HeroUnit : BaseUnit
     public string GhostName { get; private set; }
 
     public void SetupAsGhost(string playerName, UserEquipmentData equipment, List<CompanionModel> ownedCompanions,
-                             UserEnchantmentData enchantments)
+                             UserEnchantmentData enchantments, bool showCloak)
     {
         GhostName = playerName;
         ghostEquipment = equipment ?? new UserEquipmentData();
@@ -39,7 +39,7 @@ public class HeroUnit : BaseUnit
         ghostEnchantments = enchantments ?? new UserEnchantmentData();
         if (heroVisual != null)
         {
-            heroVisual.SetOverrideEquipment(ghostEquipment);
+            heroVisual.SetOverrideEquipment(ghostEquipment, showCloak);
         }
     }
 

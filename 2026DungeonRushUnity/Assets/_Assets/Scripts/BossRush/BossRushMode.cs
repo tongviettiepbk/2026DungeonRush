@@ -105,7 +105,7 @@ public class BossRushMode : BaseMode
             }
 
             ghost.SetupAsGhost(ally.PlayerName, BossRushController.ToEquipmentData(ally.Items), owned,
-                               BossRushController.ToEnchantmentData(ally.EnchantmentTiers));
+                               BossRushController.ToEnchantmentData(ally.EnchantmentTiers), ally.ShowCloak);
             ghost.SpawnInBattle(BuildHeroStats(), StaticValue.TAG_TEAM_A, pos);
         }
     }
@@ -242,12 +242,18 @@ public class BossRushMode : BaseMode
         hud.SetBoss(bossModel.BossNumber, bossName, bossModel.CurrentHP, bossModel.MaxHP);
     }
 
+    // HUD boss + tấm phủ EventBlocker bật/tắt cùng nhau (GameplayUI.OnStateChanged gốc: epn + EventBlockerUI.Show).
     private void SetActiveHud(bool isOn)
     {
-        if (GameController.uiLobby != null && GameController.uiLobby.objBossRushUI != null)
+        if (GameController.uiLobby == null)
+        {
+            return;
+        }
+        if (GameController.uiLobby.objBossRushUI != null)
         {
             GameController.uiLobby.objBossRushUI.SetActive(isOn);
         }
+        GameController.uiLobby.SetActiveEventBlocker(isOn);
     }
 
     // ===== Kết thúc (GameController.hij gốc) =====
@@ -287,12 +293,29 @@ public class BossRushMode : BaseMode
         }
     }
 
-    // Về campaign rồi mở lại sảnh Boss Rush.
+    // Về campaign rồi mở lại sảnh Boss Rush (nút Continue của popup kết quả).
     public void Exit()
+    {
+        Leave(true);
+    }
+
+    // Nút Exit trên EventBlocker (GameController.hii gốc): bỏ trận giữa chừng — KHÔNG báo damage (vé đã tiêu
+    // lúc startbossrushfight, fight token tự hết hạn), về campaign, không mở lại sảnh.
+    // Hết giờ rồi (đang báo kết quả) thì bỏ qua. Trả về true nếu đã thoát.
+    public bool ExitMidFight()
+    {
+        if (isEndMode)
+        {
+            return false;
+        }
+        return Leave(false);
+    }
+
+    private bool Leave(bool reopenLobby)
     {
         if (GameController.Instance.isChangingMode)
         {
-            return;
+            return false;
         }
 
         isEndMode = true;
@@ -300,7 +323,11 @@ public class BossRushMode : BaseMode
         BossRushFightSession.Clear();
         SetActiveHud(false);
         GameController.Instance.ChangeMode(ModeType.DefaultLevel);
-        UIBossRushPopup.OpenAfterModeChange();
+        if (reopenLobby)
+        {
+            UIBossRushPopup.OpenAfterModeChange();
+        }
+        return true;
     }
 
     public override void Reset()

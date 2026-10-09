@@ -30,6 +30,7 @@ export interface BossRushPlayerModel {
   Items: BossRushItemModel[];
   Companions: BossRushCompanionModel[];
   EnchantmentTiers: number[];   // tier relic đang đeo, index = GearSlotType (0 = trống)
+  ShowCloak: boolean;           // User.ShowCloak gốc
   IsBot: boolean;
   JoinedAt: number;    // ms — phá hoà khi xếp hạng (vào trước đứng trên)
 }
@@ -73,6 +74,7 @@ export interface PlayerDoc {
   items: BossRushItemModel[];
   companions: BossRushCompanionModel[];
   enchantmentTiers: number[];
+  showCloak?: boolean;   // User.ShowCloak gốc — tắt thì ghost ẩn hình áo choàng (vẫn có chỉ số)
   tier: number;
   currentPoolId: string;
   lastJoinEventKey: string;
@@ -105,4 +107,5 @@ export interface PlayerSnapshotRequest {
   items?: BossRushItemModel[];
   companions?: BossRushCompanionModel[];
   enchantmentTiers?: number[];
+  showCloak?: boolean;
 }

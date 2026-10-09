@@ -58,6 +58,9 @@ public class UIMainLobby : BaseUI
 
     [Space(20)]
     public GameObject objBossRushUI;
+    // Tấm phủ đáy "Battle in progress" + nút Exit (EventBlockerUI gốc) — che thanh pet + tab trong Boss Rush.
+    public GameObject objEventBlockerUI;
+    public Button btExitEventBlocker;
     public TMP_Text txtTimeBoss;
     public TMP_Text txtHpRemainBoss;
     public Image imgProcessRed;
@@ -84,6 +87,9 @@ public class UIMainLobby : BaseUI
 
         if (btExitDungeon != null)
             btExitDungeon.onClick.AddListener(OnClickExitDungeon);
+
+        if (btExitEventBlocker != null)
+            btExitEventBlocker.onClick.AddListener(OnClickExitEventBlocker);
 
         btAutoPet.onClick.AddListener(ClickTooglePet);
         for (int i = 0; i < listElementPet.Count; i++)
@@ -643,6 +649,24 @@ public class UIMainLobby : BaseUI
         DungeonMode dungeon = GameController.Instance.mode as DungeonMode;
         if (dungeon != null)
             dungeon.Exit();
+    }
+
+    public void SetActiveEventBlocker(bool isOn)
+    {
+        if (objEventBlockerUI != null)
+            objEventBlockerUI.SetActive(isOn);
+        if (btExitEventBlocker != null)
+            btExitEventBlocker.interactable = true;
+    }
+
+    // GameplayUI.kjv gốc: bấm Exit khi Boss Rush → khoá nút rồi bỏ trận.
+    private void OnClickExitEventBlocker()
+    {
+        BossRushMode bossRush = GameController.Instance.mode as BossRushMode;
+        if (bossRush == null || bossRush.ExitMidFight() == false)
+            return;
+        if (btExitEventBlocker != null)
+            btExitEventBlocker.interactable = false;
     }
 
     // Level người chơi (hệ exp) = INDEX bảng rarity loot. OnClickLoot roll rarity theo playerLevel - 1.

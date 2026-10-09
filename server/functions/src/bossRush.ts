@@ -62,6 +62,7 @@ function newPlayerDoc(uid: string, now: Date): PlayerDoc {
     items: [],
     companions: [],
     enchantmentTiers: [],
+    showCloak: true,
     tier: START_TIER,
     currentPoolId: "",
     lastJoinEventKey: "",
@@ -116,6 +117,7 @@ function applySnapshot(player: PlayerDoc, data: PlayerSnapshotRequest): void {
   if (data.items !== undefined) player.items = sanitizeItems(data.items);
   if (data.companions !== undefined) player.companions = sanitizeCompanions(data.companions);
   if (data.enchantmentTiers !== undefined) player.enchantmentTiers = sanitizeEnchantmentTiers(data.enchantmentTiers);
+  if (typeof data.showCloak === "boolean") player.showCloak = data.showCloak;
 }
 
 function toPoolPlayer(player: PlayerDoc, prev: BossRushPlayerModel | undefined, now: Date): BossRushPlayerModel {
@@ -128,6 +130,7 @@ function toPoolPlayer(player: PlayerDoc, prev: BossRushPlayerModel | undefined, 
     Items: player.items,
     Companions: player.companions,
     EnchantmentTiers: player.enchantmentTiers ?? [],
+    ShowCloak: player.showCloak ?? true,
     IsBot: false,
     JoinedAt: prev?.JoinedAt ?? now.getTime(),
   };

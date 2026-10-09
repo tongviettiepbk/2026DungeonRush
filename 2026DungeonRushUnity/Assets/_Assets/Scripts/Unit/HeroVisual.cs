@@ -64,10 +64,12 @@ public class HeroVisual : MonoBehaviour
     // Dựng lại toàn bộ hình từ save. Gọi lúc Hero khởi tạo và sau khi người chơi đổi đồ.
     // Đồ override (ghost Boss Rush). null = dùng save người chơi.
     private UserEquipmentData overrideData;
+    private bool overrideShowCloak = true;
 
-    public void SetOverrideEquipment(UserEquipmentData data)
+    public void SetOverrideEquipment(UserEquipmentData data, bool showCloak)
     {
         overrideData = data;
+        overrideShowCloak = showCloak;
         RefreshAll();
     }
 
@@ -193,8 +195,10 @@ public class HeroVisual : MonoBehaviour
         }
 
         CapeData data = EquipVisualResolver.GetCapeData(id);
-        // Nút "Show Cloak" (User.ShowCloak gốc) tắt thì vẫn mặc (vẫn có chỉ số) nhưng ẩn hình — chỉ áp cho hero của mình.
-        bool isHidden = overrideData == null && GameData.userData != null && GameData.userData.capes.showCloak == false;
+        // Nút "Show Cloak" (User.ShowCloak gốc) tắt thì vẫn mặc (vẫn có chỉ số) nhưng ẩn hình.
+        // Ghost Boss Rush theo cờ ShowCloak trong snapshot của người chơi đó.
+        bool isHidden = overrideData != null ? overrideShowCloak == false
+            : GameData.userData != null && GameData.userData.capes.showCloak == false;
         if (isHidden || data == null || data.skeletonData == null || string.IsNullOrEmpty(data.skinName))
         {
             cape.gameObject.SetActive(false);

@@ -13,7 +13,7 @@ Việc còn dở sau phiên 2026-10-09 (Enchantment + Power + chỉ số trận 
 - Wing (2026-10-09): PageWing (UITabWing wire YAML, PageWing set inactive), UIWingCraftPopup (đã đổi script từ UISumonEnchantment), UIWingRerollPopup, WingElementUIPrefab, SubstatUIElementPrefab (+ElementSubStatRerollUI). Test: lên lv6 → bấm ô Wing → phím O (+1000 quặng) → craft → claim → upgrade → reroll (khoá dòng) → equip.
 - Chỉ số trận đổi: đồ THAY nền PlayerBase, Wing/Cape vào chỉ số, CritDamage nền 1.05, HealthRegen tick, đánh đôi → kiểm tra cân bằng màn chơi.
 
-**2. Server Boss Rush**: `server/functions` thêm `enchantmentTiers` — chưa `npm run build` + deploy (máy mac không có node).
+**2. Server Boss Rush**: ĐÃ build + test emulator (2026-10-09, Node ở ~/.local/tools); còn deploy thật.
 
 **3. Hình ảnh (user tự làm / làm sau)**
 - Hiệu ứng relic trên nhân vật (SoldierEnchantmentEffectController: material từ tier 6, particle sau từ 7, trước từ 8; asset rip EnchantmentGlow_Tier_7..11(+_Front), 24 material Enchantment_*, shader Enchant_SpineEnchant/OutlineFlash; cả PreviewCharacter).

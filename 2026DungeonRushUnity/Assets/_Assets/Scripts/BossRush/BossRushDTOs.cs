@@ -59,6 +59,7 @@ public class BossRushPlayerModel
     public List<BossRushItemModel> Items = new List<BossRushItemModel>();
     public List<BossRushCompanionModel> Companions = new List<BossRushCompanionModel>();
     public List<int> EnchantmentTiers = new List<int>();   // tier relic đang đeo, index = GearSlotType (0 = trống)
+    public bool ShowCloak = true;                          // User.ShowCloak gốc: tắt → ghost ẩn hình áo choàng
     public bool IsBot;
 }
 
@@ -94,6 +95,7 @@ public class BossRushJoinRequestDTO
     public List<BossRushItemModel> items;
     public List<BossRushCompanionModel> companions;
     public List<int> enchantmentTiers;
+    public bool showCloak;
 }
 
 public class BossRushUpdateRequestDTO : BossRushJoinRequestDTO

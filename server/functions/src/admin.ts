@@ -45,6 +45,7 @@ export const seedbossrushdummyplayers = onCall(async (request) => {
         Items: player.items,
         Companions: player.companions,
         EnchantmentTiers: player.enchantmentTiers ?? [],
+        ShowCloak: player.showCloak ?? true,
         IsBot: true,
         JoinedAt: now + added,
       };

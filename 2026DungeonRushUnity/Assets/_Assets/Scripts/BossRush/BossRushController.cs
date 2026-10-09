@@ -420,6 +420,7 @@ public class BossRushController : Singleton<BossRushController>
         request.items = BuildItems(GameData.userData.equipment);
         request.companions = BuildCompanions(GameData.userData.companions);
         request.enchantmentTiers = BuildEnchantmentTiers(GameData.userData.enchantments);
+        request.showCloak = GameData.userData.capes.showCloak;
     }
 
     // Gốc UserController.edn: bản sao EquippedEnchantmentTiers. Project: index = (int)GearSlotType.
