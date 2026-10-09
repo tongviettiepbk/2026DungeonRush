@@ -3,8 +3,8 @@ using UnityEngine;
 
 // C8 Cánh — 1 mẫu wing/rarity (10 mẫu). Slot chế tạo bằng quặng (nhóm E Đào mỏ):
 // craft, reroll substat và lên cấp đều tốn quặng. Có base stat + scaler theo level và theo tier.
-// LƯU Ý: subStatType và các *OreType đang lưu dạng int GỐC (chưa map enum) — sẽ map khi
-// làm nhóm E Mining / hệ combat stat. rerollCosts = mảng chi phí quặng cho mỗi lần reroll.
+// subStats = substat KHỞI ĐIỂM khi chế tạo (WingCraftPopup.kye copy sang WingModel). *OreType = MineOreType
+// gốc (asset lưu số int, enum giữ đúng giá trị). rerollCosts[i] = giá reroll khi đang khoá i dòng substat.
 [CreateAssetMenu(fileName = "Wing-", menuName = "DungOnRush/Wing Data")]
 public class WingData : ScriptableObject
 {
@@ -25,15 +25,15 @@ public class WingData : ScriptableObject
     public float healthTierScaler;
     public float damageTierScaler;
 
-    [Header("SubStat cố định")]
+    [Header("SubStat khởi điểm khi craft")]
     public List<WingSubStat> subStats = new List<WingSubStat>();
 
     [Header("Kinh tế chế tạo (quặng)")]
-    public int craftOreType;
+    public MineOreType craftOreType;
     public int craftOreCost;
-    public int rerollOreType;
-    public List<int> rerollCosts = new List<int>();   // chi phí lần reroll thứ 1,2,3...
-    public int levelUpOreType;
+    public MineOreType rerollOreType;
+    public List<int> rerollCosts = new List<int>();   // index = số dòng substat đang khoá
+    public MineOreType levelUpOreType;
     public int levelUpCost;
     public float levelUpCostMultiplier;
     public int maxLevel;
@@ -42,6 +42,6 @@ public class WingData : ScriptableObject
 [System.Serializable]
 public class WingSubStat
 {
-    public int type;    // int gốc của StatType (map enum sau).
+    public SubStatType type;   // = SubStatType gốc (asset lưu số int).
     public float value;
 }

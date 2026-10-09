@@ -17,6 +17,8 @@ public class UIKey
     public const string EnchantmentMerge = "UiEnchantmentMerge";
     public const string SummonEnchantment = "UiSumonEnchantment";
     public const string UpgradeEnchantment = "uiUpgradeEnchantment";
+    public const string WingCraftPopup = "UIWingCraftPopup";
+    public const string WingRerollPopup = "UIWingRerollPopup";
 
     // TODO(follow-stick): bổ sung key theo từng feature khi port UI màn hình.
 }

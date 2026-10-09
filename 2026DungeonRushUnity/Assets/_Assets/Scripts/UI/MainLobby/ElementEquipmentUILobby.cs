@@ -16,6 +16,12 @@ public class ElementEquipmentUILobby : MonoBehaviour
     // UIMainLobby gán: bấm nút enchantment → mở trang Enchantment.
     public Action<GearSlotType> onClickEnchantment;
 
+    // UIMainLobby gán: bấm ô Wing → mở trang Wing (ô Wing không mở popup info gear).
+    public Action onClickWing;
+
+    private Sprite defaultSprite;
+    private bool isDefaultSpriteSaved;
+
     private LootResult dataGear;
 
     // Đồ đang mặc ở slot này (null nếu chưa được set layout trong phiên chơi này).
@@ -93,8 +99,31 @@ public class ElementEquipmentUILobby : MonoBehaviour
         onClickEnchantment?.Invoke(typeEquipment);
     }
 
+    // Ô Wing: icon + "Lv.N" wing đang mặc; null → trả về hình mặc định của ô.
+    public void SetWing(WingData wing, int level)
+    {
+        if (imgEquipment != null)
+        {
+            if (isDefaultSpriteSaved == false)
+            {
+                defaultSprite = imgEquipment.sprite;
+                isDefaultSpriteSaved = true;
+            }
+            imgEquipment.sprite = wing != null ? wing.icon : defaultSprite;
+        }
+
+        if (txtLevel != null)
+            txtLevel.text = wing != null ? "Lv." + level : string.Empty;
+    }
+
     private void ClickBtInfoGear()
     {
+        if (typeEquipment == GearSlotType.WING)
+        {
+            onClickWing?.Invoke();
+            return;
+        }
+
         if (this.dataGear == null)
         {
             UIManager.Instance.ShowToastMessage("Chưa có trang bị", isLocalize: false);

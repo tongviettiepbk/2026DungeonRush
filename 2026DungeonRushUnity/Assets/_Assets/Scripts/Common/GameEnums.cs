@@ -8,6 +8,30 @@ public enum ItemType
     LOOT_TICKET = 4,
     BONE = 5,           // Nguyên liệu triệu hồi Companion (reward dungeon Zombie Outbreak). Xem DecodedData/COMPANION_MODEL.md
     VIAL = 6,           // Reward dungeon Cultist Ritual (VialCurrency gốc).
+
+    // Quặng hệ Mining (MineOreType gốc, ItemType = COAL_ORE + (int)MineOreType) — tiêu cho Wing
+    // craft / reroll / lên cấp. Hệ Mining (nguồn quặng) chưa làm.
+    COAL_ORE = 7,
+    DIAMOND_ORE = 8,
+    EMERALD_ORE = 9,
+    GOLD_ORE = 10,
+    IRON_ORE = 11,
+    RUBY_ORE = 12,
+    DIRT_ORE = 13,
+    STONE_ORE = 14,
+}
+
+// Loại quặng (MineOreType gốc) — giá trị = enum gốc, WingData lưu đúng số này.
+public enum MineOreType
+{
+    CoalMine = 0,
+    DiamondMine = 1,
+    EmeraldMine = 2,
+    GoldMine = 3,
+    IronMine = 4,
+    RubyMine = 5,
+    Dirt = 6,
+    Stone = 7,
 }
 
 // Loại môi trường map. Giá trị = EnvironmentType trong MapConfig gốc của DungeonRush.

@@ -46,6 +46,8 @@ public class UIMainLobby : BaseUI
     [Space(20)]
     // Trang Enchantment (ContentPage/PageEnchantment) — mở từ nút enchantment ở ô trang bị.
     public UITabEnchantment pageEnchantment;
+    // Trang Wing (ContentPage/PageWing) — mở từ ô Wing.
+    public UITabWing pageWing;
 
     [Space(20)]
     public List<GameObject> listObjTab = new List<GameObject>();
@@ -88,11 +90,15 @@ public class UIMainLobby : BaseUI
             listElementPet[i].Init(this);
 
         for (int i = 0; i < listElementEquipment.Count; i++)
+        {
             listElementEquipment[i].onClickEnchantment = OpenEnchantment;
+            listElementEquipment[i].onClickWing = OpenWing;
+        }
 
         EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnPowerSourceChanged);
         EventDispatcher.Instance.RegisterListener(EventID.CompanionOwnedChanged, OnPowerSourceChanged);
         EventDispatcher.Instance.RegisterListener(EventID.EnchantmentChanged, OnPowerSourceChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.WingChanged, OnWingChanged);
         LoadPowerTxt();
 
         if (pageEnchantment != null)
@@ -144,9 +150,11 @@ public class UIMainLobby : BaseUI
     // index = -1 -> không tab nào mở.
     private void SetActiveTab(int index)
     {
-        // Mở 1 tab menu thì đóng trang Enchantment (cùng nằm trong ContentPage).
+        // Mở 1 tab menu thì đóng trang Enchantment / Wing (cùng nằm trong ContentPage).
         if (index >= 0 && pageEnchantment != null)
             pageEnchantment.Close();
+        if (index >= 0 && pageWing != null)
+            pageWing.Close();
 
         for (int i = 0; i < listElementMenu.Count; i++)
         {
@@ -168,7 +176,27 @@ public class UIMainLobby : BaseUI
             return;
 
         CloseAllTabs();
+        if (pageWing != null)
+            pageWing.Close();
         pageEnchantment.Open();
+    }
+
+    // Mở trang Wing (đóng tab menu / trang Enchantment). Chưa tới level mở khoá thì báo.
+    private void OpenWing()
+    {
+        if (pageWing == null)
+            return;
+
+        if (WingService.IsUnlocked() == false)
+        {
+            UIManager.Instance.ShowToastMessage("Mở Wing ở level " + WingService.UNLOCK_PLAYER_LEVEL, isLocalize: false);
+            return;
+        }
+
+        CloseAllTabs();
+        if (pageEnchantment != null)
+            pageEnchantment.Close();
+        pageWing.Open();
     }
 
     #endregion
@@ -190,6 +218,14 @@ public class UIMainLobby : BaseUI
         {
             GameData.userData.items.Receive(ItemType.VIAL, 2000);
             this.PostEvent(EventID.EnchantmentChanged);
+        }
+
+        // test: +1000 mỗi loại quặng để thử Wing craft / reroll / upgrade
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            foreach (MineOreType ore in System.Enum.GetValues(typeof(MineOreType)))
+                GameData.userData.items.Receive(WingService.ToItemType(ore), 1000);
+            this.PostEvent(EventID.WingChanged);
         }
 
         // test: mở tất cả pet (sở hữu đủ 16 con, level 1)
@@ -465,6 +501,29 @@ public class UIMainLobby : BaseUI
             LootResult result = LootService.BuildFromEquipId(element.typeEquipment, equipId);
             element.SetLayout(result);
         }
+
+        RefreshWingSlot();
+    }
+
+    // Ô Wing: Loot không dựng được Wing nên hiện icon/level wing đang mặc riêng.
+    private void RefreshWingSlot()
+    {
+        if (listElementEquipment == null)
+            return;
+
+        EquippedItemData rec = GameData.userData.equipment.GetRecord(GearSlotType.WING);
+        WingData wing = rec != null && int.TryParse(rec.equipId, out int wingId) ? GameData.staticData.wings.GetData(wingId) : null;
+        for (int i = 0; i < listElementEquipment.Count; i++)
+        {
+            if (listElementEquipment[i] != null && listElementEquipment[i].typeEquipment == GearSlotType.WING)
+                listElementEquipment[i].SetWing(wing, rec != null ? rec.level : 1);
+        }
+    }
+
+    private void OnWingChanged(object param)
+    {
+        RefreshWingSlot();
+        LoadPowerTxt();
     }
     #endregion
 
@@ -496,6 +555,7 @@ public class UIMainLobby : BaseUI
             EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnPowerSourceChanged);
             EventDispatcher.Instance.RemoveListener(EventID.CompanionOwnedChanged, OnPowerSourceChanged);
             EventDispatcher.Instance.RemoveListener(EventID.EnchantmentChanged, OnPowerSourceChanged);
+            EventDispatcher.Instance.RemoveListener(EventID.WingChanged, OnWingChanged);
         }
     }
 

@@ -9,6 +9,7 @@ Việc còn dở sau phiên 2026-10-09 (Enchantment + Power + chỉ số trận 
 
 **1. Kiểm tra trong Unity (chưa làm được vì UnityMCP ngắt)**
 - Prefab/scene sửa bằng YAML: PageEnchantment (8 slot), UiEnchantmentInfoItem (3 nút mới), UiEnchantmentMerge, UiSumonEnchantment, uiUpgradeEnchantment, EnchantmentSpriteConfig.asset. Mở console xem lỗi + test: phím V (+2000 Vial) → summon → đeo → merge (kho + đang đeo) → dismantle → quick equip.
+- Wing (2026-10-09): PageWing (UITabWing wire YAML, PageWing set inactive), UIWingCraftPopup (đã đổi script từ UISumonEnchantment), UIWingRerollPopup, WingElementUIPrefab, SubstatUIElementPrefab (+ElementSubStatRerollUI). Test: lên lv6 → bấm ô Wing → phím O (+1000 quặng) → craft → claim → upgrade → reroll (khoá dòng) → equip.
 - Chỉ số trận đổi: đồ THAY nền PlayerBase, Wing/Cape vào chỉ số, CritDamage nền 1.05, HealthRegen tick, đánh đôi → kiểm tra cân bằng màn chơi.
 
 **2. Server Boss Rush**: `server/functions` thêm `enchantmentTiers` — chưa `npm run build` + deploy (máy mac không có node).
@@ -20,7 +21,7 @@ Việc còn dở sau phiên 2026-10-09 (Enchantment + Power + chỉ số trận 
 - Đánh đôi: khi có Spine anim event thật thì đổi đòn 2 theo event (gốc anim x2), hiện đặt giữa nhịp.
 
 **4. Tính năng gốc chưa có trong project (có dính relic/Vial)**
-- Wing/Cape: cách nhận/nâng cấp → xem [[dungonrush-wing-cape-todo]].
+- Wing đã có trang (chưa có Mining = nguồn quặng); Cape chưa có → xem [[dungonrush-wing-cape-todo]].
 - BattlePass, ClanWar (thưởng Vial); PvP, Chat, Loadout upload (gửi enchantmentTiers).
 
 **5. Nghi vấn chưa chốt**

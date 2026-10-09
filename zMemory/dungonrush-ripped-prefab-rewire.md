@@ -23,3 +23,8 @@ Cách đã dùng (pet UI, 2026-09-04) để làm 6 prefab Companion (=Pet) hiệ
 Kết quả pet (2026-09-04): **21 sprite** → `_Assets/_ResourceGame/PetUI/` (19 Image + `Button-White-Pressed1` cho m_PressedSprite + `rewarded` cho AdSprite; 2 field script này phân giải bằng cách lấy TẤT CẢ sprite trong MB của node rồi loại sprite đã map). **86 `m_fontAsset` + 86 `m_sharedMaterial`** → trỏ hết về `_Assets/Fonts/NotoSans/NotoSans-SemiBold SDF` (font `{fileID:11400000, guid:c72fd0b1e013ab24aa65be3fd6e6a194}`, material `{fileID:5133364889018529741, cùng guid}`) — game xài Noto, khớp convention project, KHÔNG dựng lại TMP font ripped. Scripts scratchpad: build_map.py, apply2.py, extra_map.py, apply3.py.
 
 CÒN THIẾU (không phải ảnh, để nguyên): TMP `m_spriteAsset`/`GemSpriteAsset` (icon inline gem/emoji trong text, ~12 ref) → cần dựng TMP_SpriteAsset; ref nested prefab/SO (`CompanionElementPrefab`, `CardPrefab`, `_itemPrefab`, `MasteryConfig`). Built-in `0000...f00` (Background/UIMask) giữ nguyên — Unity có sẵn.
+
+**Bẫy hay gặp khi chuyển prefab rip sang project (2026-10-09, trang Wing):**
+- Component **Mask** của UGUI (rip guid `728f81b5…`, fileID 1798567259) bị RƠI MẤT → shine/glow/pattern tràn ra ngoài. So với prefab rip gốc (`m_ShowMaskGraphic`, `m_Enabled`) rồi thêm lại bằng script guid `31a19414c41e5ae4aae2af33fee712f6`.
+- Texture FX (VD `_ResourceGame/Fx/Glow_Circle01.png`, `shine.png`) import kiểu Default (`textureType: 0`) → Image gắn sprite fileID 21300000 hiện Ô TRẮNG/màu đặc. Sửa meta `textureType: 8`, `spriteMode: 1`.
+- Cách dò: parse YAML lấy m_Sprite guid của mọi Image → tra .meta xem textureType/spriteMode (script tạm, viết lại khi cần).
