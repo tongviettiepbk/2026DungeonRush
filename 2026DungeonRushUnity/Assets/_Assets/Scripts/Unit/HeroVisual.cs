@@ -193,7 +193,9 @@ public class HeroVisual : MonoBehaviour
         }
 
         CapeData data = EquipVisualResolver.GetCapeData(id);
-        if (data == null || data.skeletonData == null || string.IsNullOrEmpty(data.skinName))
+        // Nút "Show Cloak" (User.ShowCloak gốc) tắt thì vẫn mặc (vẫn có chỉ số) nhưng ẩn hình — chỉ áp cho hero của mình.
+        bool isHidden = overrideData == null && GameData.userData != null && GameData.userData.capes.showCloak == false;
+        if (isHidden || data == null || data.skeletonData == null || string.IsNullOrEmpty(data.skinName))
         {
             cape.gameObject.SetActive(false);
             return;

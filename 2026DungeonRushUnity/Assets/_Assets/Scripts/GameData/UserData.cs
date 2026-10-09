@@ -25,6 +25,7 @@ public class UserData
     public const string DATA_KEY_BOSS_RUSH = "key_user_boss_rush";
     public const string DATA_KEY_ENCHANTMENT = "key_user_enchantment";
     public const string DATA_KEY_WING = "key_user_wing";
+    public const string DATA_KEY_CAPE = "key_user_cape";
 
     public UserProfileData profile { get; set; } = new UserProfileData();
     public UserPlayerData player { get; set; } = new UserPlayerData();
@@ -39,6 +40,7 @@ public class UserData
     public UserBossRushData bossRush { get; set; } = new UserBossRushData();
     public UserEnchantmentData enchantments { get; set; } = new UserEnchantmentData();
     public UserWingData wings { get; set; } = new UserWingData();
+    public UserCapeData capes { get; set; } = new UserCapeData();
 
     private List<BaseUserData> listData;
     private float lastTimeSaveData;
@@ -77,6 +79,7 @@ public class UserData
         bossRush = LoadModule<UserBossRushData>(DATA_KEY_BOSS_RUSH, out _);
         enchantments = LoadModule<UserEnchantmentData>(DATA_KEY_ENCHANTMENT, out _);
         wings = LoadModule<UserWingData>(DATA_KEY_WING, out _);
+        capes = LoadModule<UserCapeData>(DATA_KEY_CAPE, out _);
 
         LoadDone();
     }
@@ -144,6 +147,7 @@ public class UserData
             listData.Add(bossRush);
             listData.Add(enchantments);
             listData.Add(wings);
+            listData.Add(capes);
         }
 
         for (int i = 0; i < listData.Count; i++)

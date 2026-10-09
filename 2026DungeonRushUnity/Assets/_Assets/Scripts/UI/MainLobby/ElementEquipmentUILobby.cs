@@ -16,8 +16,9 @@ public class ElementEquipmentUILobby : MonoBehaviour
     // UIMainLobby gán: bấm nút enchantment → mở trang Enchantment.
     public Action<GearSlotType> onClickEnchantment;
 
-    // UIMainLobby gán: bấm ô Wing → mở trang Wing (ô Wing không mở popup info gear).
+    // UIMainLobby gán: bấm ô Wing → mở trang Wing; ô Cape → mở popup Cape (2 ô này không mở popup info gear).
     public Action onClickWing;
+    public Action onClickCape;
 
     private Sprite defaultSprite;
     private bool isDefaultSpriteSaved;
@@ -102,6 +103,17 @@ public class ElementEquipmentUILobby : MonoBehaviour
     // Ô Wing: icon + "Lv.N" wing đang mặc; null → trả về hình mặc định của ô.
     public void SetWing(WingData wing, int level)
     {
+        SetIcon(wing != null ? wing.icon : null, level);
+    }
+
+    // Ô Cape: icon + "Lv.N" cape đang mặc; null → hình mặc định.
+    public void SetCape(CapeData cape, int level)
+    {
+        SetIcon(cape != null ? cape.icon : null, level);
+    }
+
+    private void SetIcon(Sprite icon, int level)
+    {
         if (imgEquipment != null)
         {
             if (isDefaultSpriteSaved == false)
@@ -109,11 +121,11 @@ public class ElementEquipmentUILobby : MonoBehaviour
                 defaultSprite = imgEquipment.sprite;
                 isDefaultSpriteSaved = true;
             }
-            imgEquipment.sprite = wing != null ? wing.icon : defaultSprite;
+            imgEquipment.sprite = icon != null ? icon : defaultSprite;
         }
 
         if (txtLevel != null)
-            txtLevel.text = wing != null ? "Lv." + level : string.Empty;
+            txtLevel.text = icon != null ? "Lv." + level : string.Empty;
     }
 
     private void ClickBtInfoGear()
@@ -121,6 +133,12 @@ public class ElementEquipmentUILobby : MonoBehaviour
         if (typeEquipment == GearSlotType.WING)
         {
             onClickWing?.Invoke();
+            return;
+        }
+
+        if (typeEquipment == GearSlotType.CAPE)
+        {
+            onClickCape?.Invoke();
             return;
         }
 

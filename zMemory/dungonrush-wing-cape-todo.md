@@ -1,18 +1,18 @@
 ---
 name: dungonrush-wing-cape-todo
-description: "Wing (C8) ĐÃ có trang craft/upgrade/reroll/equip (2026-10-09, chưa test Unity); quặng = ItemType 7..14 nhưng CHƯA có Mining; Cape (C7) vẫn chưa có cách nhận"
+description: "Wing (C8) + Cape (C7) ĐÃ có UI/logic theo native (2026-10-09, chưa test Unity); quặng Wing chưa có Mining, Cloak (Cape) chưa có nguồn thật — chỉ cheat phím O / K"
 metadata:
   node_type: memory
   type: project
   originSessionId: a7efa578-0468-4619-8603-dbc4649c84e0
-  modified: 2026-10-09T11:27:06.131Z
+  modified: 2026-10-09T12:07:15.228Z
 ---
 
 Trạng thái 2026-10-09:
-- Wing XONG phần code + wire YAML (chưa mở Unity verify): save `UserWingData` (key_user_wing, owned List<WingModel>), `WingService` (craft/level up/reroll/equip theo native), UI `UITabWing` (PageWing trong UiMainGame, carousel + ClaimPage), `UIWingCraftPopup`, `UIWingRerollPopup`, `WingElementUI`, `ElementSubStatRerollUI` (gắn vào Prefabs/UI/Gear/SubstatUIElementPrefab). Ô Wing lobby (GearSlotType.WING=7) bấm → mở trang, mở khoá PlayerLevel ≥ 6. Doc: `DecodedData/WING_MODEL.md`.
-- Wing đang mặc vẫn lưu ở UserEquipmentData slot WING (copy level/subStats) → WingService.SyncEquipped ghi lại khi lên cấp/reroll.
-- Quặng: `ItemType.COAL_ORE + (int)MineOreType` (7..14). **Hệ Mining chưa có** → nút Mining chỉ toast; cheat editor phím O = +1000 mỗi quặng. Text giá đang là "Tên quặng có/cần" (gốc dùng `<sprite=0>` + TMP sprite asset từng quặng — chưa tạo).
-- Bỏ qua so với gốc: nền rarity sprite (GameResources.RarityBackgroundSprites), animation ClaimPage chi tiết, NotificationUI Mining.
-- Cape vẫn CHƯA CÓ: triệu hồi bằng CloakCurrency (SummonCost 20), salvage lấy XP, lên cấp XP (CapeRarityConfig), SubStatCount 2, CapeDetailPopup, mở khoá CapeUnlockPlayerLevel = 15, nút ShowCloak.
+- **Wing** xong code + wire YAML: `UserWingData` (key_user_wing), `WingService`, UI `UITabWing` (PageWing trong UiMainGame), `UIWingCraftPopup`, `UIWingRerollPopup`, `WingElementUI`, `ElementSubStatRerollUI`. Ô Wing lobby (GearSlotType.WING=7) → trang, mở khoá lv6. Doc `DecodedData/WING_MODEL.md`. Quặng = `ItemType.COAL_ORE + (int)MineOreType` (7..14); **Mining chưa có** (nút Mining chỉ toast); cheat phím O.
+- **Cape** xong code + prefab (commit chưa): `CapeSummonConfig` (bảng ft 50 level × 6 rarity), `UserCapeData` (key_user_cape, cape theo INSTANCE Guid), `CapeService` (summon/XP eql-eqm/salvage/equip/show cloak), UI `UICapePopup` + `UICapeDetailPopup` + `UICapeSalvagePopup` + `UICapeUpgradeInfoPopup` (Resources/Prefabs/UI, bọc Canvas+ContentAll từ prefab gốc Prefabs/UI/Cape/), `CapeElementUI` (Prefabs/UINew/Cape). Ô Cape lobby (CAPE=6) → popup, mở khoá lv15. Cloak = `ItemType.CLOAK` (15), **chưa có nguồn thật**; cheat phím K +1000. HeroVisual ẩn áo khi ShowCloak tắt. Doc `DecodedData/CAPE_MODEL.md`.
+- Wing/Cape đang mặc vẫn copy vào UserEquipmentData (slot WING/CAPE: equipId = wingId/capeId, level, subStats) → service đồng bộ khi lên cấp/reroll/salvage.
+- `RarityBackgroundConfig` (Resources/Scriptable Objects/UI) = nền ô item theo rarity, dùng chung (Cape đang dùng; Wing dùng list riêng trên UITabWing).
+- Bỏ qua so với gốc: CloseOnClickDark, animation ClaimPage chi tiết, auto-scroll bảng summon nhiều, NotificationUI, TMP sprite icon tiền tệ (`<sprite=0>`).
 
-**How to apply:** mở Unity kiểm tra PageWing + 2 popup trước khi làm tiếp; Mining là bước kế để có nguồn quặng thật. Xem [[dungonrush-power-model]], [[dungonrush-enchantment-system]], [[dungonrush-reverse-native-il2cpp]].
+**How to apply:** mở Unity kiểm tra 4 popup Cape + PageWing trước khi làm tiếp; nguồn Cloak/quặng (Mining, BattlePass, shop…) là bước kế. Xem [[dungonrush-power-model]], [[dungonrush-enchantment-system]], [[dungonrush-reverse-native-il2cpp]], [[dungonrush-ripped-prefab-rewire]].

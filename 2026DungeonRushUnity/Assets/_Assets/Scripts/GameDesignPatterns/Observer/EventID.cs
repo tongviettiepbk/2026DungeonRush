@@ -26,5 +26,9 @@ public enum EventID
     // (Wing đang mặc đổi chỉ số thì nơi gọi post thêm EquipmentChanged(WING) để Hero tính lại.)
     WingChanged,
 
+    // Cape: summon / salvage / mặc-cởi / ẩn-hiện áo choàng → popup Cape + ô Cape lobby cập nhật.
+    // (Cape đang mặc đổi chỉ số / hình thì nơi gọi post thêm EquipmentChanged(CAPE).)
+    CapeChanged,
+
     // TODO(follow-stick): thêm dần event khi port các hệ thống khác từ StickIdle.
 }

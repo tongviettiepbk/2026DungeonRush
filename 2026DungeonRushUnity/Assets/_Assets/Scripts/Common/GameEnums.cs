@@ -19,6 +19,8 @@ public enum ItemType
     RUBY_ORE = 12,
     DIRT_ORE = 13,
     STONE_ORE = 14,
+
+    CLOAK = 15,         // CloakCurrency gốc — tiêu để summon Cape (CapeConfig.SummonCost / lượt).
 }
 
 // Loại quặng (MineOreType gốc) — giá trị = enum gốc, WingData lưu đúng số này.

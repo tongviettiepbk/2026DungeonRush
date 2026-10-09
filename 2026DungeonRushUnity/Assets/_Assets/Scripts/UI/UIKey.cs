@@ -19,6 +19,10 @@ public class UIKey
     public const string UpgradeEnchantment = "uiUpgradeEnchantment";
     public const string WingCraftPopup = "UIWingCraftPopup";
     public const string WingRerollPopup = "UIWingRerollPopup";
+    public const string CapePopup = "UICapePopup";
+    public const string CapeDetailPopup = "UICapeDetailPopup";
+    public const string CapeSalvagePopup = "UICapeSalvagePopup";
+    public const string CapeUpgradeInfoPopup = "UICapeUpgradeInfoPopup";
 
     // TODO(follow-stick): bổ sung key theo từng feature khi port UI màn hình.
 }

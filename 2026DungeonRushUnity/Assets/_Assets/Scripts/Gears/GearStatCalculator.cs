@@ -64,8 +64,13 @@ public static class GearStatCalculator
     // (không trùng), giá trị random trong [1 .. maxValue] theo phân bố chuẩn cắt (xem RollSubStatValue).
     public static List<GearSubStat> RollSubStats(GearStatConfigData config, Rarity rarity)
     {
+        return RollSubStats(config, config.GetSubStatCount(rarity));
+    }
+
+    // Roll `count` dòng substat không trùng loại (GameResources.jht gốc — Cape dùng CapeData.SubStatCount).
+    public static List<GearSubStat> RollSubStats(GearStatConfigData config, int count)
+    {
         List<GearSubStat> result = new List<GearSubStat>();
-        int count = config.GetSubStatCount(rarity);
         if (count <= 0)
         {
             return result;

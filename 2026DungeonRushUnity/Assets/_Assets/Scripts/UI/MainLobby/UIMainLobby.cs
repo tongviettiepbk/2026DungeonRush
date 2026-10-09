@@ -93,12 +93,14 @@ public class UIMainLobby : BaseUI
         {
             listElementEquipment[i].onClickEnchantment = OpenEnchantment;
             listElementEquipment[i].onClickWing = OpenWing;
+            listElementEquipment[i].onClickCape = OpenCape;
         }
 
         EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnPowerSourceChanged);
         EventDispatcher.Instance.RegisterListener(EventID.CompanionOwnedChanged, OnPowerSourceChanged);
         EventDispatcher.Instance.RegisterListener(EventID.EnchantmentChanged, OnPowerSourceChanged);
         EventDispatcher.Instance.RegisterListener(EventID.WingChanged, OnWingChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.CapeChanged, OnCapeChanged);
         LoadPowerTxt();
 
         if (pageEnchantment != null)
@@ -199,6 +201,20 @@ public class UIMainLobby : BaseUI
         pageWing.Open();
     }
 
+    // Mở popup Cape. Chưa tới level mở khoá thì báo.
+    private void OpenCape()
+    {
+        if (CapeService.IsUnlocked() == false)
+        {
+            UIManager.Instance.ShowToastMessage("Mở Cape ở level " + CapeService.UNLOCK_PLAYER_LEVEL, isLocalize: false);
+            return;
+        }
+
+        UICapePopup ui = UIManager.Instance.LoadUI(UIKey.CapePopup) as UICapePopup;
+        if (ui != null)
+            ui.Show();
+    }
+
     #endregion
 
     private void Update()
@@ -226,6 +242,13 @@ public class UIMainLobby : BaseUI
             foreach (MineOreType ore in System.Enum.GetValues(typeof(MineOreType)))
                 GameData.userData.items.Receive(WingService.ToItemType(ore), 1000);
             this.PostEvent(EventID.WingChanged);
+        }
+
+        // test: +1000 Cloak để thử summon Cape
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            GameData.userData.items.Receive(ItemType.CLOAK, 1000);
+            this.PostEvent(EventID.CapeChanged);
         }
 
         // test: mở tất cả pet (sở hữu đủ 16 con, level 1)
@@ -503,6 +526,28 @@ public class UIMainLobby : BaseUI
         }
 
         RefreshWingSlot();
+        RefreshCapeSlot();
+    }
+
+    // Ô Cape: hiện icon/level cape đang mặc (Loot không dựng được Cape).
+    private void RefreshCapeSlot()
+    {
+        if (listElementEquipment == null)
+            return;
+
+        CapeModel model = CapeService.GetEquipped();
+        CapeData cape = CapeService.GetData(model);
+        for (int i = 0; i < listElementEquipment.Count; i++)
+        {
+            if (listElementEquipment[i] != null && listElementEquipment[i].typeEquipment == GearSlotType.CAPE)
+                listElementEquipment[i].SetCape(cape, model != null ? model.level : 1);
+        }
+    }
+
+    private void OnCapeChanged(object param)
+    {
+        RefreshCapeSlot();
+        LoadPowerTxt();
     }
 
     // Ô Wing: Loot không dựng được Wing nên hiện icon/level wing đang mặc riêng.
@@ -556,6 +601,7 @@ public class UIMainLobby : BaseUI
             EventDispatcher.Instance.RemoveListener(EventID.CompanionOwnedChanged, OnPowerSourceChanged);
             EventDispatcher.Instance.RemoveListener(EventID.EnchantmentChanged, OnPowerSourceChanged);
             EventDispatcher.Instance.RemoveListener(EventID.WingChanged, OnWingChanged);
+            EventDispatcher.Instance.RemoveListener(EventID.CapeChanged, OnCapeChanged);
         }
     }
 

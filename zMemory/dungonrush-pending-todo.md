@@ -9,6 +9,7 @@ Việc còn dở sau phiên 2026-10-09 (Enchantment + Power + chỉ số trận 
 
 **1. Kiểm tra trong Unity (chưa làm được vì UnityMCP ngắt)**
 - Prefab/scene sửa bằng YAML: PageEnchantment (8 slot), UiEnchantmentInfoItem (3 nút mới), UiEnchantmentMerge, UiSumonEnchantment, uiUpgradeEnchantment, EnchantmentSpriteConfig.asset. Mở console xem lỗi + test: phím V (+2000 Vial) → summon → đeo → merge (kho + đang đeo) → dismantle → quick equip.
+- Cape (2026-10-09): UICapePopup/UICapeDetailPopup/UICapeSalvagePopup/UICapeUpgradeInfoPopup (prefab sinh bằng YAML), CapeElementUI, RarityBackgroundConfig.asset. Test: lên lv15 → bấm ô Cape → phím K (+1000 Cloak) → summon x1/x30 → bấm cape → Equip → Upgrade (chọn cape gộp) → Info tỉ lệ → Show Cloak ON/OFF.
 - Wing (2026-10-09): PageWing (UITabWing wire YAML, PageWing set inactive), UIWingCraftPopup (đã đổi script từ UISumonEnchantment), UIWingRerollPopup, WingElementUIPrefab, SubstatUIElementPrefab (+ElementSubStatRerollUI). Test: lên lv6 → bấm ô Wing → phím O (+1000 quặng) → craft → claim → upgrade → reroll (khoá dòng) → equip.
 - Chỉ số trận đổi: đồ THAY nền PlayerBase, Wing/Cape vào chỉ số, CritDamage nền 1.05, HealthRegen tick, đánh đôi → kiểm tra cân bằng màn chơi.
 
@@ -21,7 +22,7 @@ Việc còn dở sau phiên 2026-10-09 (Enchantment + Power + chỉ số trận 
 - Đánh đôi: khi có Spine anim event thật thì đổi đòn 2 theo event (gốc anim x2), hiện đặt giữa nhịp.
 
 **4. Tính năng gốc chưa có trong project (có dính relic/Vial)**
-- Wing đã có trang (chưa có Mining = nguồn quặng); Cape chưa có → xem [[dungonrush-wing-cape-todo]].
+- Wing + Cape đã có UI (chưa có nguồn quặng/Cloak) → xem [[dungonrush-wing-cape-todo]].
 - BattlePass, ClanWar (thưởng Vial); PvP, Chat, Loadout upload (gửi enchantmentTiers).
 
 **5. Nghi vấn chưa chốt**
