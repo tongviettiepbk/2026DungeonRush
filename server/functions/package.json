@@ -9,9 +9,11 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start",
-    "test": "npm run build && node lib/test/scheduleTest.js && node lib/test/bossRushDesignTest.js",
+    "test": "npm run build && node lib/test/scheduleTest.js && node lib/test/pvpConfigTest.js && node lib/test/bossRushDesignTest.js",
     "deploy": "firebase deploy --only functions,firestore",
-    "test:emulator": "npm run build && cd .. && firebase emulators:exec --only auth,functions,firestore \"node functions/scripts/emulatorTest.mjs\""
+    "test:emulator": "npm run build && cd .. && firebase emulators:exec --only auth,functions,firestore \"node functions/scripts/emulatorTest.mjs\"",
+    "test:emulator:pvp": "npm run build && cd .. && firebase emulators:exec --only auth,functions,firestore \"node functions/scripts/pvpEmulatorTest.mjs\"",
+    "test:emulator:clan": "npm run build && cd .. && firebase emulators:exec --only auth,functions,firestore \"node functions/scripts/clanEmulatorTest.mjs\""
   },
   "dependencies": {
     "firebase-admin": "^12.7.0",

@@ -35,7 +35,8 @@ public class PetCompanionClone : PetUnit
 
         float percent = companionData.cloneHealthPercent + companionData.cloneHealthPercentScaler * level;
         clone.SetupAsMirrorClone(percent);
-        clone.SpawnInBattle(owner.GetBaseStats(), StaticValue.TAG_TEAM_A, pos);
+        clone.CopyGhostFrom(owner as HeroUnit);
+        clone.SpawnInBattle(owner.GetBaseStats(), owner.tag, pos);
 
         CompanionCloneTracker.Attach(clone, companionData.cloneLifetime, companionData.cloneAlpha, companionData.cloneBrightness);
     }

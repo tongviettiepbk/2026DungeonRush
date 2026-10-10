@@ -4,18 +4,92 @@
       "collectionGroup": "bossRushPools",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "eventKey", "order": "ASCENDING" },
-        { "fieldPath": "tier", "order": "ASCENDING" },
-        { "fieldPath": "isOpen", "order": "ASCENDING" },
-        { "fieldPath": "realCount", "order": "DESCENDING" }
+        {
+          "fieldPath": "eventKey",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "tier",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isOpen",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "realCount",
+          "order": "DESCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "bossRushPlayers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "lastFoughtEventKey", "order": "ASCENDING" },
-        { "fieldPath": "tier", "order": "ASCENDING" }
+        {
+          "fieldPath": "lastFoughtEventKey",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "tier",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pvpPlayers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "countryCode",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "trophy",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pvpPlayers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "countryCode",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "trophy",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "clans",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "server",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "nameLower",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "clans",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "server",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "totalPower",
+          "order": "DESCENDING"
+        }
       ]
     }
   ],

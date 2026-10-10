@@ -14,7 +14,8 @@ public static class CapeService
 
     public static bool IsUnlocked()
     {
-        return GameData.userData.player.playerLevel >= UNLOCK_PLAYER_LEVEL;
+        // UserController.dtc gốc: mua gói rương ở Store thì mở sớm (IsCapeFeatureEarlyUnlocked).
+        return GameData.userData.shop.isCapeFeatureEarlyUnlocked || GameData.userData.player.playerLevel >= UNLOCK_PLAYER_LEVEL;
     }
 
     public static int GetCloak()
@@ -83,6 +84,8 @@ public static class CapeService
             User.owned.Add(model);
             User.totalSummons++;
             results.Add(model);
+            // Clan War: điểm "Summon {rarity} Cape" (ClanWarController.fzm gốc).
+            ClanWarController.Instance.RecordSummonCape(rarity);
         }
 
         User.isDataChanged = true;

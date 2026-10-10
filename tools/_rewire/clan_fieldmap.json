@@ -1,0 +1,4205 @@
+{
+ "ClanTabPage": [
+  {
+   "class": "ClanTabPage",
+   "path": "",
+   "fields": {
+    "TabSelector": {
+     "path": "MemberBattleSwitcherRoot/TabSelectorUI",
+     "type": "Game:TabSelector"
+    },
+    "MemberBattleSwitcherRoot": {
+     "path": "MemberBattleSwitcherRoot",
+     "type": "GameObject"
+    },
+    "ClanSearchPanel": {
+     "path": "ClanSearchTab",
+     "type": "GameObject"
+    },
+    "SearchTab": {
+     "path": "ClanSearchTab",
+     "type": "Game:ClanSearchTab"
+    },
+    "ClanMembersPanel": {
+     "path": "ClanMembersTab",
+     "type": "GameObject"
+    },
+    "MembersTab": {
+     "path": "ClanMembersTab",
+     "type": "Game:ClanMembersTab"
+    },
+    "ClanBattlePanel": {
+     "path": "ClanBattleTab",
+     "type": "GameObject"
+    },
+    "BattleTab": {
+     "path": "ClanBattleTab",
+     "type": "Game:ClanBattleTab"
+    },
+    "LoadingView": {
+     "path": "ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "CloseButton": {
+     "null": true
+    }
+   }
+  },
+  {
+   "class": "ClanSearchTab",
+   "path": "ClanSearchTab",
+   "fields": {
+    "NameSearchInput": {
+     "path": "ClanSearchTab/TopControls/SearchParent/ClanNameInput",
+     "type": "TMP_InputField"
+    },
+    "AdvancedSearchButton": {
+     "path": "ClanSearchTab/TopControls/ClanTabPageAdvancedSearchButton",
+     "type": "Button"
+    },
+    "CreateClanButton": {
+     "path": "ClanSearchTab/TopControls/CreateClanButton",
+     "type": "Button"
+    },
+    "ScrollRect": {
+     "path": "ClanSearchTab/Results/Scroll View",
+     "type": "ScrollRect"
+    },
+    "ListContent": {
+     "path": "ClanSearchTab/Results/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "CardPrefab": {
+     "external": "a4a7b25d291e29947a7ac5b57b984455",
+     "fileID": "114624493707432321"
+    },
+    "LoadingView": {
+     "path": "ClanSearchTab/Results/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "EmptyState": {
+     "path": "ClanSearchTab/Results/NoClansFound",
+     "type": "GameObject"
+    },
+    "TitleText": {
+     "path": "ClanSearchTab/TopControls/TitleText",
+     "type": "TMP_Text"
+    },
+    "AdvancedSearchButtonText": {
+     "path": "ClanSearchTab/TopControls/ClanTabPageAdvancedSearchButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "CreateClanButtonText": {
+     "path": "ClanSearchTab/TopControls/CreateClanButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "EmptyStateText": {
+     "path": "ClanSearchTab/Results/NoClansFound",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "ClanBattleTab",
+   "path": "ClanBattleTab",
+   "fields": {
+    "ProgressSection": {
+     "path": "ClanBattleTab/Content/WarProgressSection",
+     "type": "Game:ClanWarProgressSection"
+    },
+    "DayActionsSection": {
+     "path": "ClanBattleTab/Content/DayActionsSection",
+     "type": "Game:ClanWarDayActionsSection"
+    },
+    "PvpSection": {
+     "path": "ClanBattleTab/Content/PvPSection",
+     "type": "Game:ClanWarPvpSection"
+    },
+    "ResultSummary": {
+     "path": "ClanBattleTab/Content/ResultSummary",
+     "type": "Game:ClanWarResultSummary"
+    },
+    "ClaimCards": {
+     "path": "ClanBattleTab/Content/ClaimCards",
+     "type": "Game:ClanWarRewardClaimCards"
+    },
+    "WaitingCardRoot": {
+     "path": "ClanBattleTab/Content/WaitingCard",
+     "type": "GameObject"
+    },
+    "LoadingView": {
+     "path": "ClanBattleTab/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "RewardsButton": {
+     "path": "ClanBattleTab/SecondaryButtons/RewardsButton",
+     "type": "Button"
+    },
+    "DaysResultsButton": {
+     "path": "ClanBattleTab/SecondaryButtons/DaysResultsButton",
+     "type": "Button"
+    },
+    "LeaderboardButton": {
+     "null": true
+    },
+    "TitleText": {
+     "path": "ClanBattleTab/TopControls/TitleText",
+     "type": "TMP_Text"
+    },
+    "WaitingTitleText": {
+     "path": "ClanBattleTab/Content/WaitingCard/WaitingTitleText",
+     "type": "TMP_Text"
+    },
+    "WaitingBodyText": {
+     "path": "ClanBattleTab/Content/WaitingCard/WaitingBodyText",
+     "type": "TMP_Text"
+    },
+    "WaitingCountdownText": {
+     "path": "ClanBattleTab/Content/WaitingCard/WaitingCountDownText",
+     "type": "TMP_Text"
+    },
+    "RewardsButtonText": {
+     "path": "ClanBattleTab/SecondaryButtons/RewardsButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "DaysResultsButtonText": {
+     "path": "ClanBattleTab/SecondaryButtons/DaysResultsButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "LeaderboardButtonText": {
+     "null": true
+    }
+   }
+  },
+  {
+   "class": "ClanMembersTab",
+   "path": "ClanMembersTab",
+   "fields": {
+    "Banner": {
+     "path": "ClanMembersTab/Header/ClanBannerView_1",
+     "type": "Game:ClanBannerView"
+    },
+    "ClanNameText": {
+     "path": "ClanMembersTab/Header/NameText",
+     "type": "TMP_Text"
+    },
+    "TierText": {
+     "path": "ClanMembersTab/Header/VerticalLayout/Element_1/TierText",
+     "type": "TMP_Text"
+    },
+    "JoinSettingText": {
+     "path": "ClanMembersTab/Header/VerticalLayout/Element/JoinSettingText",
+     "type": "TMP_Text"
+    },
+    "MemberCountText": {
+     "path": "ClanMembersTab/Header/VerticalLayout/Element_2/MembersText",
+     "type": "TMP_Text"
+    },
+    "TotalPowerText": {
+     "path": "ClanMembersTab/Header/VerticalLayout/Element_3/TotalPowerText",
+     "type": "TMP_Text"
+    },
+    "DescriptionText": {
+     "path": "ClanMembersTab/Header/Description",
+     "type": "TMP_Text"
+    },
+    "SettingsButton": {
+     "path": "ClanMembersTab/Header/SettingsButton",
+     "type": "Button"
+    },
+    "RequestsButton": {
+     "path": "ClanMembersTab/Header/RequestsButton",
+     "type": "Button"
+    },
+    "AnnouncementText": {
+     "path": "ClanMembersTab/Announcement/AnnouncementButton/AnnouncementText",
+     "type": "TMP_Text"
+    },
+    "EditAnnouncementButton": {
+     "path": "ClanMembersTab/Announcement/AnnouncementButton",
+     "type": "Button"
+    },
+    "EditAnnouncementIcon": {
+     "path": "ClanMembersTab/Announcement/AnnouncementButton/AnnouncementEditButton",
+     "type": "GameObject"
+    },
+    "AnnouncementEmpty": {
+     "path": "ClanMembersTab/Announcement/AnnouncementButton/AnnouncementEmpty",
+     "type": "GameObject"
+    },
+    "ScrollRect": {
+     "path": "ClanMembersTab/Roster/Scroll View",
+     "type": "ScrollRect"
+    },
+    "ListContent": {
+     "path": "ClanMembersTab/Roster/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "CardPrefab": {
+     "external": "bf1270ac1d3862243a59f8cc8c2a2ffe",
+     "fileID": "114122912787079252"
+    },
+    "LoadingView": {
+     "path": "ClanMembersTab/Roster/Scroll View/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "TypeLabel": {
+     "path": "ClanMembersTab/Header/VerticalLayout/Element/ClanTypeLabel",
+     "type": "TMP_Text"
+    },
+    "MembersLabel": {
+     "path": "ClanMembersTab/Header/VerticalLayout/Element_2/MembersLabel",
+     "type": "TMP_Text"
+    },
+    "PowerLabel": {
+     "path": "ClanMembersTab/Header/VerticalLayout/Element_3/PowerLabel",
+     "type": "TMP_Text"
+    },
+    "TierLabel": {
+     "path": "ClanMembersTab/Header/VerticalLayout/Element_1/ClanTierLabel",
+     "type": "TMP_Text"
+    },
+    "NoAnnouncementText": {
+     "path": "ClanMembersTab/Announcement/AnnouncementButton/AnnouncementEmpty",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ClanBattleTab/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ClanBattleTab/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ClanBattleTab/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ClanBattleTab/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ClanBattleTab/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ClanBattleTab/ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ClanBattleTab/ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "TabSelector",
+   "path": "MemberBattleSwitcherRoot/TabSelectorUI",
+   "fields": {
+    "_selectorTransform": {
+     "path": "MemberBattleSwitcherRoot/TabSelectorUI/Selector",
+     "type": "RectTransform"
+    },
+    "_itemContainer": {
+     "path": "MemberBattleSwitcherRoot/TabSelectorUI/ItemContainer",
+     "type": "RectTransform"
+    },
+    "_itemPrefab": {
+     "external": "a2a6c8e4f2ea49a4385c4a5041e90c73",
+     "fileID": "114750882731923668"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanSearchTab/TopControls/ClanTabPageAdvancedSearchButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanSearchTab/TopControls/CreateClanButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ClanSearchTab/Results/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ClanSearchTab/Results/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ClanSearchTab/Results/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ClanSearchTab/Results/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ClanSearchTab/Results/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ClanSearchTab/Results/ClanLoadingView/ErrorRoot/ClanTabPageRetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ClanSearchTab/Results/ClanLoadingView/ErrorRoot/ClanTabPageRetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "ClanWarProgressSection",
+   "path": "ClanBattleTab/Content/WarProgressSection",
+   "fields": {
+    "NormalHeaderRoot": {
+     "path": "ClanBattleTab/Content/WarProgressSection/Header/NormalHeaderRoot",
+     "type": "GameObject"
+    },
+    "LeadershipHeaderRoot": {
+     "path": "ClanBattleTab/Content/WarProgressSection/Header/LeadershipHeaderRoot",
+     "type": "GameObject"
+    },
+    "BarBackgroundImage": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/BarBackground",
+     "type": "RectTransform"
+    },
+    "MyFillRect": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/BarBackground/Blue",
+     "type": "RectTransform"
+    },
+    "EnemyFillRect": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/BarBackground/Red",
+     "type": "RectTransform"
+    },
+    "MyDailyTotalText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/BarBackground/MyDailyTotalText",
+     "type": "TMP_Text"
+    },
+    "EnemyDailyTotalText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/BarBackground/EnemyDailyTotalText",
+     "type": "TMP_Text"
+    },
+    "MyBanner": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "EnemyBanner": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView_1",
+     "type": "Game:ClanBannerView"
+    },
+    "MyBannerButton": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView",
+     "type": "Button"
+    },
+    "EnemyBannerButton": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView_1",
+     "type": "Button"
+    },
+    "MyClanNameText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/IdentityBlock/MyClanNameText",
+     "type": "TMP_Text"
+    },
+    "MyTierText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/IdentityBlock/MyTierText",
+     "type": "TMP_Text"
+    },
+    "MyServerText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/IdentityBlock/MyServerText",
+     "type": "TMP_Text"
+    },
+    "EnemyClanNameText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/IdentityBlock/EnemyClanNameText",
+     "type": "TMP_Text"
+    },
+    "EnemyTierText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/IdentityBlock/EnemyTierText",
+     "type": "TMP_Text"
+    },
+    "EnemyServerText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/IdentityBlock/EnemyServerText",
+     "type": "TMP_Text"
+    },
+    "MyMvpCard": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/MyMvpCard",
+     "type": "Game:ClanWarMvpCard"
+    },
+    "EnemyMvpCard": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/EnemyMvpCard",
+     "type": "Game:ClanWarMvpCard"
+    },
+    "ProgressTitleText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/Header/ProgressTitleText",
+     "type": "TMP_Text"
+    },
+    "ProgressDayText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/Header/ProgressDayText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "ClanWarDayActionsSection",
+   "path": "ClanBattleTab/Content/DayActionsSection",
+   "fields": {
+    "CardPrefab": {
+     "external": "725a178029a40f0438692cb02c170eda",
+     "fileID": "114449805676013892"
+    },
+    "ListContent": {
+     "path": "ClanBattleTab/Content/DayActionsSection/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "ActionsTitleText": {
+     "path": "ClanBattleTab/Content/DayActionsSection/Header/ActionsTitleText",
+     "type": "TMP_Text"
+    },
+    "ActionsTimeLeftText": {
+     "path": "ClanBattleTab/Content/DayActionsSection/Header/ActionsTimeLeftText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "ClanWarPvpSection",
+   "path": "ClanBattleTab/Content/PvPSection",
+   "fields": {
+    "HeaderRoot": {
+     "path": "ClanBattleTab/Content/PvPSection/HeaderRoot",
+     "type": "GameObject"
+    },
+    "ListRoot": {
+     "path": "ClanBattleTab/Content/PvPSection/ListRoot",
+     "type": "GameObject"
+    },
+    "NoEnemiesRoot": {
+     "path": "ClanBattleTab/Content/PvPSection/NoEnemiesRoot",
+     "type": "GameObject"
+    },
+    "EnemyCardPrefab": {
+     "external": "9ec32bb464bce7f45a8aef46bf4df223",
+     "fileID": "114579355856163842"
+    },
+    "ListContent": {
+     "path": "ClanBattleTab/Content/PvPSection/ListRoot/Scroll View/Viewport/ListContent",
+     "type": "RectTransform"
+    },
+    "PvpTitleText": {
+     "path": "ClanBattleTab/Content/PvPSection/HeaderRoot/HeaderRow/PvpTitleText",
+     "type": "TMP_Text"
+    },
+    "PvpTimeLeftText": {
+     "path": "ClanBattleTab/Content/PvPSection/HeaderRoot/HeaderRow/PvpTimeLeftText",
+     "type": "TMP_Text"
+    },
+    "PvpTicketText": {
+     "path": "ClanBattleTab/Content/PvPSection/HeaderRoot/HeaderRow/PvpTicketText",
+     "type": "TMP_Text"
+    },
+    "PvpDefeatedProgressText": {
+     "path": "ClanBattleTab/Content/PvPSection/HeaderRoot/HeaderRow/PvpDefeatedProgressText",
+     "type": "TMP_Text"
+    },
+    "PvpHelperText": {
+     "path": "ClanBattleTab/Content/PvPSection/HeaderRoot/HeaderRow/PvpHelperText",
+     "type": "TMP_Text"
+    },
+    "NoEnemiesText": {
+     "path": "ClanBattleTab/Content/PvPSection/NoEnemiesRoot/NoEnemiesText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "ClanWarResultSummary",
+   "path": "ClanBattleTab/Content/ResultSummary",
+   "fields": {
+    "NormalHeaderRoot": {
+     "path": "ClanBattleTab/Content/ResultSummary/Header/NormalHeaderRoot",
+     "type": "GameObject"
+    },
+    "LeadershipHeaderRoot": {
+     "path": "ClanBattleTab/Content/ResultSummary/Header/LeadershipHeaderRoot",
+     "type": "GameObject"
+    },
+    "MyBanner": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/MyClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "MyClanNameText": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/IdentityBlock/MyClanNameText",
+     "type": "TMP_Text"
+    },
+    "MyTierText": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/IdentityBlock/MyTierText",
+     "type": "TMP_Text"
+    },
+    "MyServerText": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/IdentityBlock/MyServerText",
+     "type": "TMP_Text"
+    },
+    "EnemyBanner": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/EnemyClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "EnemyClanNameText": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/IdentityBlock/EnemyClanNameText",
+     "type": "TMP_Text"
+    },
+    "EnemyTierText": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/IdentityBlock/EnemyTierText",
+     "type": "TMP_Text"
+    },
+    "EnemyServerText": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/IdentityBlock/EnemyServerText",
+     "type": "TMP_Text"
+    },
+    "ResultTitleText": {
+     "path": "ClanBattleTab/Content/ResultSummary/Header/ResultTitleText",
+     "type": "TMP_Text"
+    },
+    "ResultSubtitleText": {
+     "path": "ClanBattleTab/Content/ResultSummary/Header/ResultSubtitleText",
+     "type": "TMP_Text"
+    },
+    "OutcomeText": {
+     "path": "ClanBattleTab/Content/ResultSummary/Scoreboard/OutcomeText",
+     "type": "TMP_Text"
+    },
+    "ResultScoreText": {
+     "path": "ClanBattleTab/Content/ResultSummary/Scoreboard/ResultScoreText",
+     "type": "TMP_Text"
+    },
+    "CooldownTimeLeftText": {
+     "path": "ClanBattleTab/Content/ResultSummary/CooldownTimeLeftText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "ClanWarRewardClaimCards",
+   "path": "ClanBattleTab/Content/ClaimCards",
+   "fields": {
+    "PersonalCardRoot": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot",
+     "type": "GameObject"
+    },
+    "PersonalRewardsView": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanWarRewardsGridView",
+     "type": "Game:ClanWarRewardsGridView"
+    },
+    "PersonalClaimButton": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/PersonalClaimButton",
+     "type": "Button"
+    },
+    "PersonalClaimLoadingView": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanLoadingView_1",
+     "type": "Game:ClanLoadingView"
+    },
+    "PersonalClaimedRoot": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/PersonalClaimedStateText",
+     "type": "GameObject"
+    },
+    "ClanCardRoot": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot",
+     "type": "GameObject"
+    },
+    "ClanRewardsView": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanWarRewardsGridView",
+     "type": "Game:ClanWarRewardsGridView"
+    },
+    "ClanClaimButton": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanClaimButton",
+     "type": "Button"
+    },
+    "ClanClaimLoadingView": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "ClanClaimedRoot": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanClaimedStateText",
+     "type": "GameObject"
+    },
+    "CollectFlyTarget": {
+     "path": "ClanBattleTab/Content/ClaimCards/FlyTransform",
+     "type": "RectTransform"
+    },
+    "LootBoxIcon": {
+     "external": "b3aeed3fe4702de44a3029761e0a4564",
+     "fileID": "21300000"
+    },
+    "BonesIcon": {
+     "external": "9309189c4c8eded499cf25ce2990ff3c",
+     "fileID": "21300000"
+    },
+    "PickaxeIcon": {
+     "external": "0ad6ace160c3d544ab07bafcc730cac6",
+     "fileID": "21300000"
+    },
+    "ExperienceIcon": {
+     "external": "61dca40a036033a48972b7ccd9cb0add",
+     "fileID": "21300000"
+    },
+    "CloakCurrencyIcon": {
+     "external": "2b8745db4871a6740b0b47205e7c9f00",
+     "fileID": "21300000"
+    },
+    "GoldenPickaxeIcon": {
+     "null": true
+    },
+    "DrillIcon": {
+     "null": true
+    },
+    "VialIcon": {
+     "null": true
+    },
+    "PersonalCardTitleText": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/PersonalCardTitleText",
+     "type": "TMP_Text"
+    },
+    "PersonalClaimButtonText": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/PersonalClaimButton/Content/PersonalClaimButtonText",
+     "type": "TMP_Text"
+    },
+    "PersonalClaimedStateText": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/PersonalClaimedStateText",
+     "type": "TMP_Text"
+    },
+    "ClanCardTitleText": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanCardTitleText",
+     "type": "TMP_Text"
+    },
+    "ClanClaimButtonText": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanClaimButton/Content/ClanClaimButtonText",
+     "type": "TMP_Text"
+    },
+    "ClanClaimedStateText": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanClaimedStateText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanBattleTab/SecondaryButtons/RewardsButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanBattleTab/SecondaryButtons/DaysResultsButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanMembersTab/Header/RequestsButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanMembersTab/Header/SettingsButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ClanMembersTab/Header/ClanBannerView_1",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ClanMembersTab/Header/ClanBannerView_1/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ClanMembersTab/Header/ClanBannerView_1/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ClanMembersTab/Header/ClanBannerView_1/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ClanMembersTab/Header/ClanBannerView_1/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "LocalizedLabel",
+   "path": "ClanMembersTab/Header/NameText",
+   "fields": {
+    "Table": "Popup",
+    "Key": "Clan.ClanSettingsPopup.ClanSettings"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanSearchTab/TopControls/SearchParent/ClanTabPageSearchButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanBattleTab/ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanMembersTab/Header/JoinSection/JoinButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanMembersTab/Header/JoinSection/JoinSectionRequestButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "LocalizedLabel",
+   "path": "ClanMembersTab/Header/JoinSection/Requested",
+   "fields": {
+    "Table": "UI",
+    "Key": "UI.Clan.ClanSearchCard.Requested"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ClanMembersTab/Roster/Scroll View/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ClanMembersTab/Roster/Scroll View/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ClanMembersTab/Roster/Scroll View/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ClanMembersTab/Roster/Scroll View/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ClanMembersTab/Roster/Scroll View/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ClanMembersTab/Roster/Scroll View/ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ClanMembersTab/Roster/Scroll View/ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanSearchTab/Results/ClanLoadingView/ErrorRoot/ClanTabPageRetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView_1",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView_1/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView_1/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView_1/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ClanBattleTab/Content/WarProgressSection/ComparisonBar/ClanBannerView_1/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "ClanWarMvpCard",
+   "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/MyMvpCard",
+   "fields": {
+    "CardButton": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/MyMvpCard",
+     "type": "Button"
+    },
+    "ContentRoot": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/MyMvpCard/ContentRoot",
+     "type": "GameObject"
+    },
+    "ProfileImage": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/MyMvpCard/ContentRoot/AvatarImage",
+     "type": "Image"
+    },
+    "NameText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/MyMvpCard/ContentRoot/NicknameText",
+     "type": "TMP_Text"
+    },
+    "PlaceholderRoot": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/MyMvpCard/PlaceholderRoot",
+     "type": "GameObject"
+    },
+    "MvpLabelText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/MyMvpCard/ContentRoot/MvpLabelText",
+     "type": "TMP_Text"
+    },
+    "MvpNoMembersText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/MyMvpCard/PlaceholderRoot/MvpNoMembersText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "ClanWarMvpCard",
+   "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/EnemyMvpCard",
+   "fields": {
+    "CardButton": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/EnemyMvpCard",
+     "type": "Button"
+    },
+    "ContentRoot": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/EnemyMvpCard/ContentRoot",
+     "type": "GameObject"
+    },
+    "ProfileImage": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/EnemyMvpCard/ContentRoot/AvatarImage",
+     "type": "Image"
+    },
+    "NameText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/EnemyMvpCard/ContentRoot/NicknameText",
+     "type": "TMP_Text"
+    },
+    "PlaceholderRoot": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/EnemyMvpCard/PlaceholderRoot",
+     "type": "GameObject"
+    },
+    "MvpLabelText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/EnemyMvpCard/ContentRoot/MvpLabelText",
+     "type": "TMP_Text"
+    },
+    "MvpNoMembersText": {
+     "path": "ClanBattleTab/Content/WarProgressSection/MvpRow/EnemyMvpCard/PlaceholderRoot/MvpNoMembersText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ClanBattleTab/Content/ResultSummary/Clans/MyClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/MyClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/MyClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/MyClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/MyClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ClanBattleTab/Content/ResultSummary/Clans/EnemyClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/EnemyClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/EnemyClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/EnemyClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ClanBattleTab/Content/ResultSummary/Clans/EnemyClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "NotificationUI",
+   "path": "ClanMembersTab/Header/RequestsButton/Content/NotificationUI",
+   "fields": {
+    "ImageRectTransform": {
+     "path": "ClanMembersTab/Header/RequestsButton/Content/NotificationUI/Image",
+     "type": "RectTransform"
+    },
+    "AdSprite": {
+     "external": "8d9d52b1a905bfe45917fbf807df82d2",
+     "fileID": "21300000"
+    },
+    "NotificationSprite": {
+     "external": "e52baa4a6f5447f439d29b8f540aa6a8",
+     "fileID": "21300000"
+    },
+    "Image": {
+     "path": "ClanMembersTab/Header/RequestsButton/Content/NotificationUI/Image",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "LocalizedLabel",
+   "path": "ClanMembersTab/Header/VerticalLayout/Element_3/TotalPowerText",
+   "fields": {
+    "Table": "Popup",
+    "Key": "Clan.CreateClanPopup.PublicLabel"
+   }
+  },
+  {
+   "class": "LocalizedLabel",
+   "path": "ClanMembersTab/Header/VerticalLayout/Element_1/TierText",
+   "fields": {
+    "Table": "Popup",
+    "Key": "Clan.CreateClanPopup.PublicLabel"
+   }
+  },
+  {
+   "class": "LocalizedLabel",
+   "path": "ClanMembersTab/Header/VerticalLayout/Element_2/MembersText",
+   "fields": {
+    "Table": "Popup",
+    "Key": "Clan.CreateClanPopup.PublicLabel"
+   }
+  },
+  {
+   "class": "ClanWarRewardsGridView",
+   "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanWarRewardsGridView",
+   "fields": {
+    "Grid": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanWarRewardsGridView",
+     "type": "GridLayoutGroup"
+    },
+    "CellPrefab": {
+     "external": "b00fc14067584c34fafa32b142f2f1eb",
+     "fileID": "114326266737826247"
+    },
+    "LootBoxIcon": {
+     "external": "a9c3d1572fb214d4c9d5f2fac5b9d5bb",
+     "fileID": "21300000"
+    },
+    "BonesIcon": {
+     "external": "9309189c4c8eded499cf25ce2990ff3c",
+     "fileID": "21300000"
+    },
+    "PickaxeIcon": {
+     "external": "0ad6ace160c3d544ab07bafcc730cac6",
+     "fileID": "21300000"
+    },
+    "ExperienceIcon": {
+     "external": "61dca40a036033a48972b7ccd9cb0add",
+     "fileID": "21300000"
+    },
+    "CloakCurrencyIcon": {
+     "external": "2b8745db4871a6740b0b47205e7c9f00",
+     "fileID": "21300000"
+    },
+    "GoldenPickaxeIcon": {
+     "external": "11fc74139be296945bf7b5f6431d7717",
+     "fileID": "21300000"
+    },
+    "DrillIcon": {
+     "external": "e8279ad9c1310f646be69c82da972b0d",
+     "fileID": "21300000"
+    },
+    "VialIcon": {
+     "external": "86e6abdb49392f94fb16bd95dc5de42c",
+     "fileID": "21300000"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/PersonalClaimButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanLoadingView_1",
+   "fields": {
+    "ContentRoot": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/PersonalClaimButton",
+     "type": "GameObject"
+    },
+    "Blocker": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanLoadingView_1/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanLoadingView_1/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanLoadingView_1/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanLoadingView_1/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanLoadingView_1/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanLoadingView_1/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "ClanWarRewardsGridView",
+   "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanWarRewardsGridView",
+   "fields": {
+    "Grid": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanWarRewardsGridView",
+     "type": "GridLayoutGroup"
+    },
+    "CellPrefab": {
+     "external": "b00fc14067584c34fafa32b142f2f1eb",
+     "fileID": "114326266737826247"
+    },
+    "LootBoxIcon": {
+     "external": "a9c3d1572fb214d4c9d5f2fac5b9d5bb",
+     "fileID": "21300000"
+    },
+    "BonesIcon": {
+     "external": "9309189c4c8eded499cf25ce2990ff3c",
+     "fileID": "21300000"
+    },
+    "PickaxeIcon": {
+     "external": "0ad6ace160c3d544ab07bafcc730cac6",
+     "fileID": "21300000"
+    },
+    "ExperienceIcon": {
+     "external": "61dca40a036033a48972b7ccd9cb0add",
+     "fileID": "21300000"
+    },
+    "CloakCurrencyIcon": {
+     "external": "2b8745db4871a6740b0b47205e7c9f00",
+     "fileID": "21300000"
+    },
+    "GoldenPickaxeIcon": {
+     "external": "11fc74139be296945bf7b5f6431d7717",
+     "fileID": "21300000"
+    },
+    "DrillIcon": {
+     "external": "e8279ad9c1310f646be69c82da972b0d",
+     "fileID": "21300000"
+    },
+    "VialIcon": {
+     "external": "86e6abdb49392f94fb16bd95dc5de42c",
+     "fileID": "21300000"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanClaimButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanClaimButton",
+     "type": "GameObject"
+    },
+    "Blocker": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "LocalizedLabel",
+   "path": "ClanMembersTab/Header/JoinSection/JoinButton/Content/Text",
+   "fields": {
+    "Table": "Popup",
+    "Key": "Clan.ClanSettingsPopup.Save"
+   }
+  },
+  {
+   "class": "LocalizedLabel",
+   "path": "ClanMembersTab/Header/JoinSection/JoinSectionRequestButton/Content/Text",
+   "fields": {
+    "Table": "Popup",
+    "Key": "Clan.ClanSettingsPopup.Save"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanMembersTab/Roster/Scroll View/ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/PersonalCardRoot/ClanLoadingView_1/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanBattleTab/Content/ClaimCards/HorizontalLayoutGroup/ClanCardRoot/ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanBannerEditorPopup": [
+  {
+   "class": "ClanBannerEditorPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "Preview": {
+     "path": "ContentTransform/ClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundTypeContent": {
+     "path": "ContentTransform/VerticalLayout/Element/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "BackgroundColorContent": {
+     "path": "ContentTransform/VerticalLayout/Element_1/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "ImageTypeContent": {
+     "path": "ContentTransform/VerticalLayout/Element_2/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "ImageColorContent": {
+     "path": "ContentTransform/VerticalLayout/Element_3/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "OptionPrefab": {
+     "external": "4426c80feb2eb7141a9117b3a109b3f5",
+     "fileID": "114392782498129341"
+    },
+    "ApplyButton": {
+     "path": "ContentTransform/ApplyButton",
+     "type": "Button"
+    },
+    "CloseButton": {
+     "path": "ContentTransform/CloseButton",
+     "type": "Button"
+    },
+    "TitleText": {
+     "path": "ContentTransform/TitleText",
+     "type": "TMP_Text"
+    },
+    "ShapeLabel": {
+     "path": "ContentTransform/VerticalLayout/Element/BackgroundTypeLabel",
+     "type": "TMP_Text"
+    },
+    "BackgroundColorLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_1/BackgroundTypeLabel",
+     "type": "TMP_Text"
+    },
+    "EmblemShapeLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_2/BackgroundTypeLabel",
+     "type": "TMP_Text"
+    },
+    "EmblemColorLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_3/BackgroundTypeLabel",
+     "type": "TMP_Text"
+    },
+    "ApplyButtonText": {
+     "path": "ContentTransform/ApplyButton/Content/Text",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/CloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ContentTransform/ClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ContentTransform/ClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ContentTransform/ClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ContentTransform/ClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ContentTransform/ClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ApplyButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanBannerOptionItem": [
+  {
+   "class": "ClanBannerOptionItem",
+   "path": "",
+   "fields": {
+    "ColorPreviewImage": {
+     "path": "ColorPreviewImage",
+     "type": "Image"
+    },
+    "SpritePreviewImage": {
+     "path": "SpritePreviewImage",
+     "type": "Image"
+    },
+    "SelectedIndicator": {
+     "path": "SelectedIndicator",
+     "type": "GameObject"
+    },
+    "Button": {
+     "path": "",
+     "type": "Button"
+    }
+   }
+  }
+ ],
+ "ClanContributionLeaderboardPopup": [
+  {
+   "class": "ClanContributionLeaderboardPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "CloseButton": {
+     "path": "ContentTransform/ClanContributionLeaderboardPopupCloseButton",
+     "type": "Button"
+    },
+    "Banner": {
+     "path": "ContentTransform/Header/ClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "ClanNameText": {
+     "path": "ContentTransform/Header/ClanNameText",
+     "type": "TMP_Text"
+    },
+    "ModeSelector": {
+     "path": "ContentTransform/ModeSelector",
+     "type": "Game:TabSelector"
+    },
+    "CardPrefab": {
+     "external": "f8af5209c78928e489f569db3b940ec5",
+     "fileID": "114761416392841657"
+    },
+    "ListContent": {
+     "path": "ContentTransform/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "LoadingView": {
+     "path": "ContentTransform/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "SubheaderText": {
+     "path": "ContentTransform/SubheaderText",
+     "type": "TMP_Text"
+    },
+    "DelayInfoText": {
+     "path": "ContentTransform/DelayInfoText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanContributionLeaderboardPopupCloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "TabSelector",
+   "path": "ContentTransform/ModeSelector",
+   "fields": {
+    "_selectorTransform": {
+     "path": "ContentTransform/ModeSelector/Selector",
+     "type": "RectTransform"
+    },
+    "_itemContainer": {
+     "path": "ContentTransform/ModeSelector/ItemContainer",
+     "type": "RectTransform"
+    },
+    "_itemPrefab": {
+     "external": "a2a6c8e4f2ea49a4385c4a5041e90c73",
+     "fileID": "114750882731923668"
+    }
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ContentTransform/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ContentTransform/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ContentTransform/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ClanContributionLeaderboardPopupRetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ClanContributionLeaderboardPopupRetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ContentTransform/Header/ClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ContentTransform/Header/ClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ContentTransform/Header/ClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ContentTransform/Header/ClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ContentTransform/Header/ClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanLoadingView/ErrorRoot/ClanContributionLeaderboardPopupRetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanInfoPopup": [
+  {
+   "class": "ClanInfoPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "Banner": {
+     "path": "ContentTransform/ClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "NameText": {
+     "path": "ContentTransform/ContentRoot/ClanInfoBackground/NameText",
+     "type": "TMP_Text"
+    },
+    "DescriptionText": {
+     "path": "ContentTransform/ContentRoot/ClanInfoBackground/Description",
+     "type": "TMP_Text"
+    },
+    "JoinSettingText": {
+     "path": "ContentTransform/ContentRoot/ClanInfoBackground/VerticalLayout/Element/PublicText",
+     "type": "TMP_Text"
+    },
+    "MemberCountText": {
+     "path": "ContentTransform/ContentRoot/ClanInfoBackground/VerticalLayout/Element_2/MembersText",
+     "type": "TMP_Text"
+    },
+    "TotalPowerText": {
+     "path": "ContentTransform/ContentRoot/ClanInfoBackground/VerticalLayout/Element_3/TotalPowerText",
+     "type": "TMP_Text"
+    },
+    "TierText": {
+     "path": "ContentTransform/ContentRoot/ClanInfoBackground/VerticalLayout/Element_1/TierText",
+     "type": "TMP_Text"
+    },
+    "ScrollRect": {
+     "path": "ContentTransform/ContentRoot/Scroll View",
+     "type": "ScrollRect"
+    },
+    "ListContent": {
+     "path": "ContentTransform/ContentRoot/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "MemberCardPrefab": {
+     "external": "bf1270ac1d3862243a59f8cc8c2a2ffe",
+     "fileID": "114122912787079252"
+    },
+    "LoadingView": {
+     "path": "ContentTransform/ContentRoot/Scroll View/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "ActionLoadingView": {
+     "path": "ContentTransform/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "JoinRequestSection": {
+     "path": "ContentTransform/JoinSection",
+     "type": "GameObject"
+    },
+    "JoinButton": {
+     "path": "ContentTransform/JoinSection/JoinButton",
+     "type": "Button"
+    },
+    "RequestButton": {
+     "path": "ContentTransform/JoinSection/RequestButton",
+     "type": "Button"
+    },
+    "RequestedState": {
+     "path": "ContentTransform/JoinSection/Requested",
+     "type": "GameObject"
+    },
+    "CloseButton": {
+     "path": "ContentTransform/CloseButton",
+     "type": "Button"
+    },
+    "TypeLabel": {
+     "path": "ContentTransform/ContentRoot/ClanInfoBackground/VerticalLayout/Element/ClanTypeLabel",
+     "type": "TMP_Text"
+    },
+    "MembersLabel": {
+     "path": "ContentTransform/ContentRoot/ClanInfoBackground/VerticalLayout/Element_2/MembersLabel",
+     "type": "TMP_Text"
+    },
+    "PowerLabel": {
+     "path": "ContentTransform/ContentRoot/ClanInfoBackground/VerticalLayout/Element_3/PowerLabel",
+     "type": "TMP_Text"
+    },
+    "TierLabel": {
+     "path": "ContentTransform/ContentRoot/ClanInfoBackground/VerticalLayout/Element_1/ClanTierLabel",
+     "type": "TMP_Text"
+    },
+    "JoinButtonText": {
+     "path": "ContentTransform/JoinSection/JoinButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "RequestButtonText": {
+     "path": "ContentTransform/JoinSection/RequestButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "RequestedText": {
+     "path": "ContentTransform/JoinSection/Requested",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/CloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ContentTransform/ClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ContentTransform/ClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ContentTransform/ClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ContentTransform/ClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ContentTransform/ClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ContentTransform/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ContentTransform/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ContentTransform/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/JoinSection/JoinButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/JoinSection/RequestButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ContentTransform/ContentRoot/Scroll View/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ContentTransform/ContentRoot/Scroll View/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ContentTransform/ContentRoot/Scroll View/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ContentTransform/ContentRoot/Scroll View/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ContentTransform/ContentRoot/Scroll View/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ContentTransform/ContentRoot/Scroll View/ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ContentTransform/ContentRoot/Scroll View/ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ContentRoot/Scroll View/ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanMemberCard": [
+  {
+   "class": "ClanMemberCard",
+   "path": "",
+   "fields": {
+    "AvatarImage": {
+     "path": "AvatarImage",
+     "type": "Image"
+    },
+    "NameText": {
+     "path": "NicknameText",
+     "type": "TMP_Text"
+    },
+    "PowerText": {
+     "path": "PowerText",
+     "type": "TMP_Text"
+    },
+    "RoleText": {
+     "path": "RoleText",
+     "type": "TMP_Text"
+    },
+    "LeaderIcon": {
+     "path": "LeaderIcon",
+     "type": "GameObject"
+    },
+    "CaptainIcon": {
+     "path": "CaptainIcon",
+     "type": "GameObject"
+    },
+    "CardButton": {
+     "path": "",
+     "type": "Button"
+    },
+    "RowBackground": {
+     "path": "",
+     "type": "Image"
+    },
+    "NormalColor": "{r: 0.09411766, g: 0.09411766, b: 0.09411766, a: 1}",
+    "SelfColor": "{r: 0.20784315, g: 0.6, b: 0.86666673, a: 1}"
+   }
+  }
+ ],
+ "ClanPlayerPopup": [
+  {
+   "class": "ClanPlayerPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "AvatarImage": {
+     "path": "Content/Loaded/AvatarParent/AvatarImage",
+     "type": "Image"
+    },
+    "AvatarButton": {
+     "path": "Content/Loaded/AvatarParent",
+     "type": "Button"
+    },
+    "HiddenPlayerButton": {
+     "path": "Content/Loaded/ClanPlayerPopupHiddenPlayerButton",
+     "type": "Button"
+    },
+    "NameText": {
+     "path": "Content/Loaded/VerticalLayout/NicknameText",
+     "type": "TMP_Text"
+    },
+    "PowerText": {
+     "path": "Content/Loaded/VerticalLayout/PowerText",
+     "type": "TMP_Text"
+    },
+    "RoleText": {
+     "path": "Content/Loaded/VerticalLayout/RoleText",
+     "type": "TMP_Text"
+    },
+    "PromoteDemoteButton": {
+     "path": "Content/Loaded/ClanPlayerPopupPromoteButton",
+     "type": "Button"
+    },
+    "PromoteDemoteLabel": {
+     "path": "Content/Loaded/ClanPlayerPopupPromoteButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "KickButton": {
+     "path": "Content/Loaded/ClanPlayerPopupKickButton",
+     "type": "Button"
+    },
+    "LeaveButton": {
+     "path": "Content/Loaded/ClanPlayerPopupLeaveButton",
+     "type": "Button"
+    },
+    "CloseButton": {
+     "path": "Content/CloseButton",
+     "type": "Button"
+    },
+    "LoadingView": {
+     "path": "Content/Loaded/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "KickButtonText": {
+     "path": "Content/Loaded/ClanPlayerPopupKickButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "LeaveButtonText": {
+     "path": "Content/Loaded/ClanPlayerPopupLeaveButton/Content/Text",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "Content/CloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "Content/Loaded/ClanPlayerPopupPromoteButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-18"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "Content/Loaded/ClanPlayerPopupKickButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-18"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "Content/Loaded/ClanPlayerPopupLeaveButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-18"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "Content/Loaded/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "Content/Loaded/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "Content/Loaded/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "Content/Loaded/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "Content/Loaded/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "Content/Loaded/ClanLoadingView/ErrorRoot/ClanPlayerPopupRetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "Content/Loaded/ClanLoadingView/ErrorRoot/ClanPlayerPopupRetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "Content/Loaded/ClanLoadingView/ErrorRoot/ClanPlayerPopupRetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanRequestCard": [
+  {
+   "class": "ClanRequestCard",
+   "path": "",
+   "fields": {
+    "AvatarImage": {
+     "path": "AvatarImage",
+     "type": "Image"
+    },
+    "NameText": {
+     "path": "NicknameText",
+     "type": "TMP_Text"
+    },
+    "PowerText": {
+     "path": "PowerText",
+     "type": "TMP_Text"
+    },
+    "AcceptButton": {
+     "path": "AcceptButton",
+     "type": "Button"
+    },
+    "DenyButton": {
+     "path": "DenyButton",
+     "type": "Button"
+    },
+    "CardButton": {
+     "path": "",
+     "type": "Button"
+    },
+    "AcceptButtonText": {
+     "path": "AcceptButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "DenyButtonText": {
+     "path": "DenyButton/Content/Text",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "AcceptButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "DenyButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanRequestsPopup": [
+  {
+   "class": "ClanRequestsPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "ScrollRect": {
+     "path": "ContentTransform/Scroll View",
+     "type": "ScrollRect"
+    },
+    "ListContent": {
+     "path": "ContentTransform/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "CardPrefab": {
+     "external": "c04f0235b3f57424bbd6fc4baeae3202",
+     "fileID": "114029118170604851"
+    },
+    "LoadingView": {
+     "path": "ContentTransform/Scroll View/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "EmptyState": {
+     "path": "ContentTransform/NoPendingRequestsLabel",
+     "type": "GameObject"
+    },
+    "CloseButton": {
+     "path": "ContentTransform/ClanRequestsPopupCloseButton",
+     "type": "Button"
+    },
+    "TitleText": {
+     "path": "ContentTransform/TitleText",
+     "type": "TMP_Text"
+    },
+    "EmptyStateText": {
+     "path": "ContentTransform/NoPendingRequestsLabel",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanRequestsPopupCloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ContentTransform/Scroll View/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ContentTransform/Scroll View/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ContentTransform/Scroll View/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ContentTransform/Scroll View/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ContentTransform/Scroll View/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ContentTransform/Scroll View/ClanLoadingView/ErrorRoot/ClanRequestsPopupRetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ContentTransform/Scroll View/ClanLoadingView/ErrorRoot/ClanRequestsPopupRetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/Scroll View/ClanLoadingView/ErrorRoot/ClanRequestsPopupRetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanSearchCard": [
+  {
+   "class": "ClanSearchCard",
+   "path": "",
+   "fields": {
+    "Banner": {
+     "path": "ClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "NameText": {
+     "path": "NameText",
+     "type": "TMP_Text"
+    },
+    "MembersText": {
+     "path": "MembersText",
+     "type": "TMP_Text"
+    },
+    "PowerText": {
+     "path": "PowerText",
+     "type": "TMP_Text"
+    },
+    "TierText": {
+     "path": "TierText",
+     "type": "TMP_Text"
+    },
+    "JoinButton": {
+     "path": "Buttons/JoinButton",
+     "type": "Button"
+    },
+    "RequestButton": {
+     "path": "Buttons/RequestButton",
+     "type": "Button"
+    },
+    "RequestedState": {
+     "path": "Buttons/Requested",
+     "type": "GameObject"
+    },
+    "CardButton": {
+     "path": "",
+     "type": "Button"
+    },
+    "ActionLoading": {
+     "path": "ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "MembersLabel": {
+     "path": "MembersInfoText",
+     "type": "TMP_Text"
+    },
+    "JoinButtonText": {
+     "path": "Buttons/JoinButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "RequestButtonText": {
+     "path": "Buttons/RequestButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "RequestedText": {
+     "path": "Buttons/Requested",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "path": "Buttons",
+     "type": "GameObject"
+    },
+    "Blocker": {
+     "path": "ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "Buttons/JoinButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "Buttons/RequestButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanSettingsPopup": [
+  {
+   "class": "ClanSettingsPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "ClanNameLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_4/ClanName",
+     "type": "TMP_Text"
+    },
+    "DescriptionInput": {
+     "path": "ContentTransform/VerticalLayout/Element_5/AnnouncementInput",
+     "type": "TMP_InputField"
+    },
+    "ApprovalOnlyToggle": {
+     "path": "ContentTransform/VerticalLayout/Element_2/CheckButton",
+     "type": "Game:CheckButton"
+    },
+    "BannerPreview": {
+     "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "BannerButton": {
+     "path": "ContentTransform/VerticalLayout/Element_3/BrowseButton",
+     "type": "Button"
+    },
+    "SaveButton": {
+     "path": "ContentTransform/SaveButton",
+     "type": "Button"
+    },
+    "CloseButton": {
+     "path": "ContentTransform/CloseButton",
+     "type": "Button"
+    },
+    "LoadingView": {
+     "path": "ContentTransform/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "TitleText": {
+     "path": "ContentTransform/TitleText",
+     "type": "TMP_Text"
+    },
+    "NameLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_4/ClanNameLabel",
+     "type": "TMP_Text"
+    },
+    "DescriptionLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_5/Description",
+     "type": "TMP_Text"
+    },
+    "BannerLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_3/BannerLabel",
+     "type": "TMP_Text"
+    },
+    "BrowseButtonText": {
+     "path": "ContentTransform/VerticalLayout/Element_3/BrowseButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "PublicLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_2/ApprovalOnly",
+     "type": "TMP_Text"
+    },
+    "SaveButtonText": {
+     "path": "ContentTransform/SaveButton/Content/Text",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/CloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/SaveButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ContentTransform/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ContentTransform/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ContentTransform/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "CheckButton",
+   "path": "ContentTransform/VerticalLayout/Element_2/CheckButton",
+   "fields": {
+    "CheckImage": {
+     "path": "ContentTransform/VerticalLayout/Element_2/CheckButton/CheckImage",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/VerticalLayout/Element_3/BrowseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "CreateClanPopup": [
+  {
+   "class": "CreateClanPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "NameInput": {
+     "path": "ContentTransform/VerticalLayout/Element/ClanNameInput",
+     "type": "TMP_InputField"
+    },
+    "ApprovalOnlyToggle": {
+     "path": "ContentTransform/VerticalLayout/Element_2/CheckButton",
+     "type": "Game:CheckButton"
+    },
+    "BannerPreview": {
+     "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "BannerButton": {
+     "path": "ContentTransform/VerticalLayout/Element_3/BrowseButton",
+     "type": "Button"
+    },
+    "DefaultCatalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "CreateButton": {
+     "path": "ContentTransform/CreateButton",
+     "type": "Button"
+    },
+    "CloseButton": {
+     "path": "ContentTransform/CloseButton",
+     "type": "Button"
+    },
+    "LoadingView": {
+     "path": "ContentTransform/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "TitleText": {
+     "path": "ContentTransform/TitleText",
+     "type": "TMP_Text"
+    },
+    "NameLabel": {
+     "path": "ContentTransform/VerticalLayout/Element/ClanName",
+     "type": "TMP_Text"
+    },
+    "BannerLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_3/BannerLabel",
+     "type": "TMP_Text"
+    },
+    "BrowseButtonText": {
+     "path": "ContentTransform/VerticalLayout/Element_3/BrowseButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "PublicLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_2/PublicLabel",
+     "type": "TMP_Text"
+    },
+    "CreateButtonText": {
+     "path": "ContentTransform/CreateButton/Content/Text",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/CloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/CreateButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ContentTransform/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ContentTransform/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ContentTransform/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "CheckButton",
+   "path": "ContentTransform/VerticalLayout/Element_2/CheckButton",
+   "fields": {
+    "CheckImage": {
+     "path": "ContentTransform/VerticalLayout/Element_2/CheckButton/CheckImage",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ContentTransform/VerticalLayout/Element_3/ClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/VerticalLayout/Element_3/BrowseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "EditAnnouncementPopup": [
+  {
+   "class": "EditAnnouncementPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "AnnouncementInput": {
+     "path": "ContentTransform/AnnouncementInput",
+     "type": "TMP_InputField"
+    },
+    "CharCounter": {
+     "path": "ContentTransform/CharCounterText",
+     "type": "TMP_Text"
+    },
+    "SaveButton": {
+     "path": "ContentTransform/EditAnnouncementPopupSaveButton",
+     "type": "Button"
+    },
+    "CloseButton": {
+     "path": "ContentTransform/EditAnnouncementPopupCloseButton",
+     "type": "Button"
+    },
+    "LoadingView": {
+     "path": "ContentTransform/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "TitleText": {
+     "path": "ContentTransform/TitleText",
+     "type": "TMP_Text"
+    },
+    "SaveButtonText": {
+     "path": "ContentTransform/EditAnnouncementPopupSaveButton/Content/Text",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/EditAnnouncementPopupCloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/EditAnnouncementPopupSaveButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ContentTransform/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ContentTransform/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ContentTransform/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/EditAnnouncementPopupRetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/EditAnnouncementPopupRetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanLoadingView/ErrorRoot/EditAnnouncementPopupRetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "AdvancedSearchPopup": [
+  {
+   "class": "AdvancedSearchPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "NameInput": {
+     "path": "ContentTransform/VerticalLayout/Element/ClanNameInput",
+     "type": "TMP_InputField"
+    },
+    "MinMemberText": {
+     "path": "ContentTransform/VerticalLayout/Element_4/MinMemberCount",
+     "type": "TMP_Text"
+    },
+    "MinDecrementButton": {
+     "path": "ContentTransform/VerticalLayout/Element_4/MinDecrementButton",
+     "type": "Game:PressButtonUI"
+    },
+    "MinIncrementButton": {
+     "path": "ContentTransform/VerticalLayout/Element_4/MinIncrementButton",
+     "type": "Game:PressButtonUI"
+    },
+    "MaxMemberText": {
+     "path": "ContentTransform/VerticalLayout/Element_5/MaxMemberCount",
+     "type": "TMP_Text"
+    },
+    "MaxDecrementButton": {
+     "path": "ContentTransform/VerticalLayout/Element_5/MaxDecrementButton",
+     "type": "Game:PressButtonUI"
+    },
+    "MaxIncrementButton": {
+     "path": "ContentTransform/VerticalLayout/Element_5/MaxIncrementButton",
+     "type": "Game:PressButtonUI"
+    },
+    "HideApprovalToggle": {
+     "path": "ContentTransform/VerticalLayout/Element_2/AdvancedSearchPopupCheckButton",
+     "type": "Game:CheckButton"
+    },
+    "SearchButton": {
+     "path": "ContentTransform/AdvancedSearchPopupSearchButton",
+     "type": "Button"
+    },
+    "CloseButton": {
+     "path": "ContentTransform/AdvancedSearchPopupCloseButton",
+     "type": "Button"
+    },
+    "ClearButton": {
+     "null": true
+    },
+    "TitleText": {
+     "path": "ContentTransform/TitleText",
+     "type": "TMP_Text"
+    },
+    "NameLabel": {
+     "path": "ContentTransform/VerticalLayout/Element/ClanName",
+     "type": "TMP_Text"
+    },
+    "MinMemberLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_4/MinMemberLabel",
+     "type": "TMP_Text"
+    },
+    "MaxMemberLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_5/MaxMemberLabel",
+     "type": "TMP_Text"
+    },
+    "HideApprovalLabel": {
+     "path": "ContentTransform/VerticalLayout/Element_2/PublicLabel",
+     "type": "TMP_Text"
+    },
+    "SearchButtonText": {
+     "path": "ContentTransform/AdvancedSearchPopupSearchButton/Content/Text",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/AdvancedSearchPopupCloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/AdvancedSearchPopupSearchButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "CheckButton",
+   "path": "ContentTransform/VerticalLayout/Element_2/AdvancedSearchPopupCheckButton",
+   "fields": {
+    "CheckImage": {
+     "path": "ContentTransform/VerticalLayout/Element_2/AdvancedSearchPopupCheckButton/CheckImage",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/VerticalLayout/Element_4/MinDecrementButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/VerticalLayout/Element_4/MinIncrementButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/VerticalLayout/Element_5/MaxDecrementButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/VerticalLayout/Element_5/MaxIncrementButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanWarActionCard": [
+  {
+   "class": "ClanWarActionCard",
+   "path": "",
+   "fields": {
+    "ActionLabelText": {
+     "path": "ActionLabelText",
+     "type": "TMP_Text"
+    },
+    "PointValueText": {
+     "path": "PointValueText",
+     "type": "TMP_Text"
+    }
+   }
+  }
+ ],
+ "ClanWarClanRowCard": [
+  {
+   "class": "ClanWarClanRowCard",
+   "path": "",
+   "fields": {
+    "CardButton": {
+     "path": "",
+     "type": "Button"
+    },
+    "RankText": {
+     "path": "RankText",
+     "type": "TMP_Text"
+    },
+    "Banner": {
+     "path": "ClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "NameText": {
+     "path": "NameText",
+     "type": "TMP_Text"
+    },
+    "TierText": {
+     "path": "TierText",
+     "type": "TMP_Text"
+    },
+    "TotalPowerText": {
+     "path": "PowerText",
+     "type": "TMP_Text"
+    },
+    "ServerText": {
+     "path": "ServerText",
+     "type": "TMP_Text"
+    },
+    "BackgroundImage": {
+     "path": "",
+     "type": "Image"
+    },
+    "NormalColor": "{r: 0.09411766, g: 0.09411766, b: 0.09411766, a: 1}",
+    "HighlightColor": "{r: 0.078431375, g: 0.62352943, b: 0.9921569, a: 1}"
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  }
+ ],
+ "ClanWarContributionCard": [
+  {
+   "class": "ClanWarContributionCard",
+   "path": "",
+   "fields": {
+    "CardButton": {
+     "path": "",
+     "type": "Button"
+    },
+    "RankText": {
+     "path": "RankText",
+     "type": "TMP_Text"
+    },
+    "ProfileImage": {
+     "path": "AvatarImage",
+     "type": "Image"
+    },
+    "NameText": {
+     "path": "NicknameText",
+     "type": "TMP_Text"
+    },
+    "PointsText": {
+     "path": "PointsText",
+     "type": "TMP_Text"
+    },
+    "CardBackground": {
+     "path": "",
+     "type": "Image"
+    },
+    "NormalColor": "{r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}",
+    "SelfColor": "{r: 0.16470589, g: 0.5647059, b: 0.95294124, a: 1}"
+   }
+  }
+ ],
+ "ClanWarDayCard": [
+  {
+   "class": "ClanWarDayCard",
+   "path": "",
+   "fields": {
+    "WarScoreValueText": {
+     "path": "WarScoreValueText",
+     "type": "TMP_Text"
+    },
+    "WinnerNameText": {
+     "path": "WinnerClanNameText",
+     "type": "TMP_Text"
+    },
+    "PlayerNameText": {
+     "path": "MVPNameText",
+     "type": "TMP_Text"
+    },
+    "PlayerButton": {
+     "path": "MVPNameText",
+     "type": "Button"
+    },
+    "DayLabelText": {
+     "path": "DayLabelText",
+     "type": "TMP_Text"
+    },
+    "StateLabelText": {
+     "null": true
+    },
+    "StatusColorTarget": {
+     "path": "",
+     "type": "Image"
+    },
+    "WinColor": "{r: 0.20784314, g: 0.6, b: 0.8666667, a: 1}",
+    "LoseColor": "{r: 1, g: 0.23921569, b: 0.27058825, a: 1}",
+    "NotConcludedColor": "{r: 0.18039216, g: 0.17254902, b: 0.17254902, a: 1}"
+   }
+  }
+ ],
+ "ClanWarDaysAndResultPopup": [
+  {
+   "class": "ClanWarDaysAndResultsPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "CloseButton": {
+     "path": "ContentTransform/CloseButton",
+     "type": "Button"
+    },
+    "LoadingView": {
+     "path": "ContentTransform/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "MyBanner": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/MyClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "MyClanNameText": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/IdentityBlock/MyClanNameText",
+     "type": "TMP_Text"
+    },
+    "MyTierText": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/IdentityBlock/MyTierText",
+     "type": "TMP_Text"
+    },
+    "MyServerText": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/IdentityBlock/MyServerText",
+     "type": "TMP_Text"
+    },
+    "EnemyBanner": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/EnemyClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "EnemyClanNameText": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/IdentityBlock/EnemyClanNameText",
+     "type": "TMP_Text"
+    },
+    "EnemyTierText": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/IdentityBlock/EnemyTierText",
+     "type": "TMP_Text"
+    },
+    "EnemyServerText": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/IdentityBlock/EnemyServerText",
+     "type": "TMP_Text"
+    },
+    "DayCardPrefab": {
+     "external": "131ced07fb43b5f4887513ef0a91f4b2",
+     "fileID": "114548021416639101"
+    },
+    "DaysContent": {
+     "path": "ContentTransform/ContentRoot/Content",
+     "type": "RectTransform"
+    },
+    "TitleText": {
+     "path": "ContentTransform/TitleText",
+     "type": "TMP_Text"
+    },
+    "SubtitleText": {
+     "path": "ContentTransform/ContentRoot/SubtitleText",
+     "type": "TMP_Text"
+    },
+    "ScoreboardText": {
+     "path": "ContentTransform/ContentRoot/ClansRow/ScoreboardText",
+     "type": "TMP_Text"
+    },
+    "DailyScoresHeaderText": {
+     "path": "ContentTransform/ContentRoot/DailyScoresHeaderText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/CloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ContentTransform/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "path": "ContentTransform/ContentRoot",
+     "type": "GameObject"
+    },
+    "Blocker": {
+     "path": "ContentTransform/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ContentTransform/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ContentTransform/ContentRoot/ClansRow/Clans/MyClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/MyClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/MyClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/MyClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/MyClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ContentTransform/ContentRoot/ClansRow/Clans/EnemyClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/EnemyClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/EnemyClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/EnemyClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ContentTransform/ContentRoot/ClansRow/Clans/EnemyClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  }
+ ],
+ "ClanWarEnemyCard": [
+  {
+   "class": "ClanWarEnemyCard",
+   "path": "",
+   "fields": {
+    "CardButton": {
+     "path": "",
+     "type": "Button"
+    },
+    "ProfileImage": {
+     "path": "AvatarImage",
+     "type": "Image"
+    },
+    "NameText": {
+     "path": "NicknameText",
+     "type": "TMP_Text"
+    },
+    "PowerText": {
+     "path": "PowerText",
+     "type": "TMP_Text"
+    },
+    "BattleButton": {
+     "path": "BattleButton",
+     "type": "Button"
+    },
+    "BattleIconRoot": {
+     "path": "BattleButton/Content/RewardValueText",
+     "type": "GameObject"
+    },
+    "RewardValueText": {
+     "path": "BattleButton/Content/RewardValueText",
+     "type": "TMP_Text"
+    },
+    "BattleButtonText": {
+     "path": "BattleButton/Content/BattleButtonText",
+     "type": "TMP_Text"
+    },
+    "DefeatedText": {
+     "path": "DefeatedText",
+     "type": "TMP_Text"
+    },
+    "BattleLoading": {
+     "path": "ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "BattleButtonBackground": {
+     "path": "BattleButton",
+     "type": "Image"
+    },
+    "BattleButtonNormalColor": "{r: 0.20784315, g: 0.6, b: 0.86666673, a: 1}",
+    "BattleButtonDisabledColor": "{r: 0.6, g: 0.6, b: 0.6, a: 1}"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "BattleButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "path": "BattleButton",
+     "type": "GameObject"
+    },
+    "Blocker": {
+     "path": "ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanWarLeaderboardPopup": [
+  {
+   "class": "ClanWarLeaderboardPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "CloseButton": {
+     "path": "ContentTransform/ClanWarLeaderboardCloseButton",
+     "type": "Button"
+    },
+    "LoadingView": {
+     "path": "ContentTransform/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "LeaderRowRoot": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot",
+     "type": "GameObject"
+    },
+    "LeaderRow": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard",
+     "type": "Game:ClanWarClanRowCard"
+    },
+    "NoLeaderRoot": {
+     "path": "ContentTransform/Content/LeaderSlotArea/NoLeaderRoot",
+     "type": "GameObject"
+    },
+    "ChampionClanInfoButton": {
+     "path": "ContentTransform/Content/LeaderSlotArea/ChampionClanInfoButton",
+     "type": "Button"
+    },
+    "RowPrefab": {
+     "external": "f74461b0813439b4daceb735019898e6",
+     "fileID": "114716867097290854"
+    },
+    "ListContent": {
+     "path": "ContentTransform/Content/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "TitleText": {
+     "path": "ContentTransform/Content/TitleText",
+     "type": "TMP_Text"
+    },
+    "NoLeaderText": {
+     "path": "ContentTransform/Content/LeaderSlotArea/NoLeaderRoot/NoLeaderTExt",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanWarLeaderboardCloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ContentTransform/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "path": "ContentTransform/Content",
+     "type": "GameObject"
+    },
+    "Blocker": {
+     "path": "ContentTransform/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ContentTransform/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ClanwarLeaderboardPopupRetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ClanwarLeaderboardPopupRetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanLoadingView/ErrorRoot/ClanwarLeaderboardPopupRetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanWarClanRowCard",
+   "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard",
+   "fields": {
+    "CardButton": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard",
+     "type": "Button"
+    },
+    "RankText": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/RankText",
+     "type": "TMP_Text"
+    },
+    "Banner": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/ClanBannerView",
+     "type": "Game:ClanBannerView"
+    },
+    "NameText": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/NameText",
+     "type": "TMP_Text"
+    },
+    "TierText": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/TierText",
+     "type": "TMP_Text"
+    },
+    "TotalPowerText": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/PowerText",
+     "type": "TMP_Text"
+    },
+    "ServerText": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/ServerText",
+     "type": "TMP_Text"
+    },
+    "BackgroundImage": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard",
+     "type": "Image"
+    },
+    "NormalColor": "{r: 0.09411766, g: 0.09411766, b: 0.09411766, a: 1}",
+    "HighlightColor": "{r: 0.078431375, g: 0.62352943, b: 0.9921569, a: 1}"
+   }
+  },
+  {
+   "class": "ClanBannerView",
+   "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/ClanBannerView",
+   "fields": {
+    "Catalog": {
+     "external": "e6a86a51c64a5d54891a38669a78a3e0",
+     "fileID": "11400000"
+    },
+    "BackgroundImage": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/ClanBannerView/BackgroundImage",
+     "type": "Image"
+    },
+    "BackgroundOverlayImage": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/ClanBannerView/BackgroundImage/ColorOverlay",
+     "type": "Image"
+    },
+    "ImageLayer": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/ClanBannerView/Icon",
+     "type": "Image"
+    },
+    "CrownImage": {
+     "path": "ContentTransform/Content/LeaderSlotArea/LeaderRowRoot/ClanWarClanRowCard/ClanBannerView/Crown",
+     "type": "Image"
+    }
+   }
+  }
+ ],
+ "ClanWarMilestoneCard": [
+  {
+   "class": "ClanWarMilestoneCard",
+   "path": "",
+   "fields": {
+    "ThresholdText": {
+     "path": "ThresholdText",
+     "type": "TMP_Text"
+    },
+    "RewardsView": {
+     "path": "ClanWarRewardsView",
+     "type": "Game:ClanWarRewardsView"
+    },
+    "ClaimButton": {
+     "path": "",
+     "type": "Button"
+    },
+    "BackgroundImage": {
+     "path": "",
+     "type": "Image"
+    },
+    "ClaimLoading": {
+     "path": "ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "UnreachedColor": "{r: 0.69803923, g: 0.69803923, b: 0.69803923, a: 1}",
+    "ReachedColor": "{r: 0.20784315, g: 0.6, b: 0.86666673, a: 1}",
+    "CollectedColor": "{r: 0.16862746, g: 0.16862746, b: 0.16862746, a: 1}"
+   }
+  },
+  {
+   "class": "ClanWarRewardsView",
+   "path": "ClanWarRewardsView",
+   "fields": {
+    "LootBoxRow": {
+     "path": "ClanWarRewardsView/LootBoxRow",
+     "type": "GameObject"
+    },
+    "LootBoxAmountText": {
+     "path": "ClanWarRewardsView/LootBoxRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "BonesRow": {
+     "path": "ClanWarRewardsView/BonesRow",
+     "type": "GameObject"
+    },
+    "BonesAmountText": {
+     "path": "ClanWarRewardsView/BonesRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "PickaxeRow": {
+     "path": "ClanWarRewardsView/PickaxeRow",
+     "type": "GameObject"
+    },
+    "PickaxeAmountText": {
+     "path": "ClanWarRewardsView/PickaxeRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "ExperienceRow": {
+     "path": "ClanWarRewardsView/ExperienceRow",
+     "type": "GameObject"
+    },
+    "ExperienceAmountText": {
+     "path": "ClanWarRewardsView/ExperienceRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "CloakCurrencyRow": {
+     "path": "ClanWarRewardsView/CloakCurrencyRow",
+     "type": "GameObject"
+    },
+    "CloakCurrencyAmountText": {
+     "path": "ClanWarRewardsView/CloakCurrencyRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "GoldenPickaxeRow": {
+     "null": true
+    },
+    "GoldenPickaxeAmountText": {
+     "null": true
+    },
+    "DrillRow": {
+     "null": true
+    },
+    "DrillAmountText": {
+     "null": true
+    },
+    "VialRow": {
+     "null": true
+    },
+    "VialAmountText": {
+     "null": true
+    }
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "null": true
+    },
+    "Blocker": {
+     "path": "ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "ClanWarRewardCell": [
+  {
+   "class": "ClanWarRewardCell",
+   "path": "",
+   "fields": {
+    "IconImage": {
+     "path": "Icon",
+     "type": "Image"
+    },
+    "AmountText": {
+     "path": "AmountText",
+     "type": "TMP_Text"
+    }
+   }
+  }
+ ],
+ "ClanWarRewardsPopup": [
+  {
+   "class": "ClanWarRewardsPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "CloseButton": {
+     "path": "ContentTransform/ClanWarRewardsPopupCloseButton",
+     "type": "Button"
+    },
+    "WinRewardsView": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView",
+     "type": "Game:ClanWarRewardsView"
+    },
+    "LoseRewardsView": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView",
+     "type": "Game:ClanWarRewardsView"
+    },
+    "MilestoneCardPrefab": {
+     "external": "a41283ad67b9cf341b2bf2a0df96c87c",
+     "fileID": "114283879261836342"
+    },
+    "TrackScrollRect": {
+     "path": "ContentTransform/TrackScroll/Scroll View",
+     "type": "ScrollRect"
+    },
+    "TrackContent": {
+     "path": "ContentTransform/TrackScroll/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "TrackProgressBackgroundRect": {
+     "path": "ContentTransform/TrackScroll/Scroll View/Viewport/Content/Image",
+     "type": "RectTransform"
+    },
+    "TrackProgressFillRect": {
+     "path": "ContentTransform/TrackScroll/Scroll View/Viewport/Content/Image/TrackProgressFillImage",
+     "type": "RectTransform"
+    },
+    "ClaimLoadingView": {
+     "null": true
+    },
+    "CollectFlyTarget": {
+     "path": "ContentTransform/GameObject",
+     "type": "RectTransform"
+    },
+    "LootBoxIcon": {
+     "external": "b3aeed3fe4702de44a3029761e0a4564",
+     "fileID": "21300000"
+    },
+    "BonesIcon": {
+     "external": "9309189c4c8eded499cf25ce2990ff3c",
+     "fileID": "21300000"
+    },
+    "PickaxeIcon": {
+     "external": "0ad6ace160c3d544ab07bafcc730cac6",
+     "fileID": "21300000"
+    },
+    "ExperienceIcon": {
+     "external": "61dca40a036033a48972b7ccd9cb0add",
+     "fileID": "21300000"
+    },
+    "CloakCurrencyIcon": {
+     "external": "2b8745db4871a6740b0b47205e7c9f00",
+     "fileID": "21300000"
+    },
+    "GoldenPickaxeIcon": {
+     "null": true
+    },
+    "DrillIcon": {
+     "null": true
+    },
+    "VialIcon": {
+     "null": true
+    },
+    "CollectClanCardRoot": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot",
+     "type": "GameObject"
+    },
+    "CollectClanRewardsView": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView",
+     "type": "Game:ClanWarRewardsView"
+    },
+    "CollectClanButton": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsPopupClanClaimButton",
+     "type": "Button"
+    },
+    "CollectClanClaimedRoot": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/CollectClanClaimedRoot",
+     "type": "GameObject"
+    },
+    "CollectPersonalCardRoot": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot",
+     "type": "GameObject"
+    },
+    "CollectPersonalRewardsView": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView",
+     "type": "Game:ClanWarRewardsView"
+    },
+    "CollectPersonalButton": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsPopupClanClaimButton",
+     "type": "Button"
+    },
+    "CollectPersonalClaimedRoot": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/CollectPersonalClaimedRoot",
+     "type": "GameObject"
+    },
+    "TitleText": {
+     "path": "ContentTransform/TitleText",
+     "type": "TMP_Text"
+    },
+    "TierHeaderText": {
+     "path": "ContentTransform/TierSummary/TierHeaderText",
+     "type": "TMP_Text"
+    },
+    "WinCardLabelText": {
+     "path": "ContentTransform/TierSummary/WinCard/WinCardLabelText",
+     "type": "TMP_Text"
+    },
+    "LoseCardLabelText": {
+     "path": "ContentTransform/TierSummary/LoseCard/LoseCardLabelText",
+     "type": "TMP_Text"
+    },
+    "CollectClanTitleText": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/CollectClanTitleText",
+     "type": "TMP_Text"
+    },
+    "CollectPersonalTitleText": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/CollectPersonalTitleText",
+     "type": "TMP_Text"
+    },
+    "CollectClanCardText": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsPopupClanClaimButton/Content/ClanClaimButtonText",
+     "type": "TMP_Text"
+    },
+    "CollectPersonalCardText": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsPopupClanClaimButton/Content/PersonalClaimButtonText",
+     "type": "TMP_Text"
+    },
+    "CollectClanClaimedText": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/CollectClanClaimedRoot/CollectClanClaimedText",
+     "type": "TMP_Text"
+    },
+    "CollectPersonalClaimedText": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/CollectPersonalClaimedRoot/CollectPersonalClaimedText",
+     "type": "TMP_Text"
+    },
+    "DelayInfoText": {
+     "path": "ContentTransform/DelayInfoText",
+     "type": "TMP_Text"
+    },
+    "MyScoreText": {
+     "path": "ContentTransform/MyScoreText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanWarRewardsPopupCloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "ClanWarRewardsView",
+   "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView",
+   "fields": {
+    "LootBoxRow": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView/LootBoxRow",
+     "type": "GameObject"
+    },
+    "LootBoxAmountText": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView/LootBoxRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "BonesRow": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView/BonesRow",
+     "type": "GameObject"
+    },
+    "BonesAmountText": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView/BonesRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "PickaxeRow": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView/PickaxeRow",
+     "type": "GameObject"
+    },
+    "PickaxeAmountText": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView/PickaxeRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "ExperienceRow": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView/ExperienceRow",
+     "type": "GameObject"
+    },
+    "ExperienceAmountText": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView/ExperienceRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "CloakCurrencyRow": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView/CloakCurrencyRow",
+     "type": "GameObject"
+    },
+    "CloakCurrencyAmountText": {
+     "path": "ContentTransform/TierSummary/WinCard/ClanWarRewardsView/CloakCurrencyRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "GoldenPickaxeRow": {
+     "null": true
+    },
+    "GoldenPickaxeAmountText": {
+     "null": true
+    },
+    "DrillRow": {
+     "null": true
+    },
+    "DrillAmountText": {
+     "null": true
+    },
+    "VialRow": {
+     "null": true
+    },
+    "VialAmountText": {
+     "null": true
+    }
+   }
+  },
+  {
+   "class": "ClanWarRewardsView",
+   "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView",
+   "fields": {
+    "LootBoxRow": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView/LootBoxRow",
+     "type": "GameObject"
+    },
+    "LootBoxAmountText": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView/LootBoxRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "BonesRow": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView/BonesRow",
+     "type": "GameObject"
+    },
+    "BonesAmountText": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView/BonesRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "PickaxeRow": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView/PickaxeRow",
+     "type": "GameObject"
+    },
+    "PickaxeAmountText": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView/PickaxeRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "ExperienceRow": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView/ExperienceRow",
+     "type": "GameObject"
+    },
+    "ExperienceAmountText": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView/ExperienceRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "CloakCurrencyRow": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView/CloakCurrencyRow",
+     "type": "GameObject"
+    },
+    "CloakCurrencyAmountText": {
+     "path": "ContentTransform/TierSummary/LoseCard/ClanWarRewardsView/CloakCurrencyRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "GoldenPickaxeRow": {
+     "null": true
+    },
+    "GoldenPickaxeAmountText": {
+     "null": true
+    },
+    "DrillRow": {
+     "null": true
+    },
+    "DrillAmountText": {
+     "null": true
+    },
+    "VialRow": {
+     "null": true
+    },
+    "VialAmountText": {
+     "null": true
+    }
+   }
+  },
+  {
+   "class": "ClanWarRewardsView",
+   "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView",
+   "fields": {
+    "LootBoxRow": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView/LootBoxRow",
+     "type": "GameObject"
+    },
+    "LootBoxAmountText": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView/LootBoxRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "BonesRow": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView/BonesRow",
+     "type": "GameObject"
+    },
+    "BonesAmountText": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView/BonesRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "PickaxeRow": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView/PickaxeRow",
+     "type": "GameObject"
+    },
+    "PickaxeAmountText": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView/PickaxeRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "ExperienceRow": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView/ExperienceRow",
+     "type": "GameObject"
+    },
+    "ExperienceAmountText": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView/ExperienceRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "CloakCurrencyRow": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView/CloakCurrencyRow",
+     "type": "GameObject"
+    },
+    "CloakCurrencyAmountText": {
+     "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsView/CloakCurrencyRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "GoldenPickaxeRow": {
+     "null": true
+    },
+    "GoldenPickaxeAmountText": {
+     "null": true
+    },
+    "DrillRow": {
+     "null": true
+    },
+    "DrillAmountText": {
+     "null": true
+    },
+    "VialRow": {
+     "null": true
+    },
+    "VialAmountText": {
+     "null": true
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/CooldownCollect/CollectClanCardRoot/ClanWarRewardsPopupClanClaimButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  },
+  {
+   "class": "ClanWarRewardsView",
+   "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView",
+   "fields": {
+    "LootBoxRow": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView/LootBoxRow",
+     "type": "GameObject"
+    },
+    "LootBoxAmountText": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView/LootBoxRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "BonesRow": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView/BonesRow",
+     "type": "GameObject"
+    },
+    "BonesAmountText": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView/BonesRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "PickaxeRow": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView/PickaxeRow",
+     "type": "GameObject"
+    },
+    "PickaxeAmountText": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView/PickaxeRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "ExperienceRow": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView/ExperienceRow",
+     "type": "GameObject"
+    },
+    "ExperienceAmountText": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView/ExperienceRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "CloakCurrencyRow": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView/CloakCurrencyRow",
+     "type": "GameObject"
+    },
+    "CloakCurrencyAmountText": {
+     "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsView/CloakCurrencyRow/AmountText",
+     "type": "TMP_Text"
+    },
+    "GoldenPickaxeRow": {
+     "null": true
+    },
+    "GoldenPickaxeAmountText": {
+     "null": true
+    },
+    "DrillRow": {
+     "null": true
+    },
+    "DrillAmountText": {
+     "null": true
+    },
+    "VialRow": {
+     "null": true
+    },
+    "VialAmountText": {
+     "null": true
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/CooldownCollect/CollectPersonalCardRoot/ClanWarRewardsPopupClanClaimButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "LeadershipRankPopup": [
+  {
+   "class": "LeadershipRankPopup",
+   "path": "",
+   "fields": {
+    "CloseOnClickDark": "1",
+    "HomeScreenOnly": "0",
+    "CloseButton": {
+     "path": "ContentTransform/CloseButton",
+     "type": "Button"
+    },
+    "LoadingView": {
+     "path": "ContentTransform/ClanLoadingView",
+     "type": "Game:ClanLoadingView"
+    },
+    "RowPrefab": {
+     "external": "f74461b0813439b4daceb735019898e6",
+     "fileID": "114716867097290854"
+    },
+    "ListContent": {
+     "path": "ContentTransform/Content/Scroll View/Viewport/Content",
+     "type": "RectTransform"
+    },
+    "TitleText": {
+     "path": "ContentTransform/Content/TitleText",
+     "type": "TMP_Text"
+    },
+    "DescriptionText": {
+     "path": "ContentTransform/Content/DescriptionText",
+     "type": "TMP_Text"
+    },
+    "UpdateInfoText": {
+     "path": "ContentTransform/Content/UpdateInfoText",
+     "type": "TMP_Text"
+    },
+    "NoRankingsText": {
+     "path": "ContentTransform/Content/NoRankText",
+     "type": "TMP_Text"
+    }
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/CloseButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-8"
+   }
+  },
+  {
+   "class": "ClanLoadingView",
+   "path": "ContentTransform/ClanLoadingView",
+   "fields": {
+    "ContentRoot": {
+     "path": "ContentTransform/Content",
+     "type": "GameObject"
+    },
+    "Blocker": {
+     "path": "ContentTransform/ClanLoadingView/Blocker",
+     "type": "GameObject"
+    },
+    "LoadingImage": {
+     "path": "ContentTransform/ClanLoadingView/LoadingImage",
+     "type": "Image"
+    },
+    "ErrorRoot": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot",
+     "type": "GameObject"
+    },
+    "ErrorText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/ErrorText",
+     "type": "TMP_Text"
+    },
+    "RetryButton": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton",
+     "type": "Button"
+    },
+    "RetryButtonText": {
+     "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton/Content/Text",
+     "type": "TMP_Text"
+    },
+    "SpinSeconds": "1"
+   }
+  },
+  {
+   "class": "PressButtonUI",
+   "path": "ContentTransform/ClanLoadingView/ErrorRoot/RetryButton",
+   "fields": {
+    "IsHoldEnabled": "0",
+    "PressYValue": "-20"
+   }
+  }
+ ],
+ "TabSelectorItemUI": [
+  {
+   "class": "TabSelectorItem",
+   "path": "",
+   "fields": {
+    "_button": {
+     "path": "",
+     "type": "Button"
+    },
+    "_label": {
+     "path": "LevelProgressText_1",
+     "type": "TMP_Text"
+    },
+    "_icon": {
+     "null": true
+    },
+    "_selectedColor": "{r: 1, g: 1, b: 1, a: 1}",
+    "_normalColor": "{r: 1, g: 1, b: 1, a: 1}",
+    "_disabledColor": "{r: 0.5377358, g: 0.5377358, b: 0.5377358, a: 1}"
+   }
+  }
+ ]
+}

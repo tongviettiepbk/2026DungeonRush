@@ -62,3 +62,22 @@ Document `config/bossRush`:
 ```
 `Type` = RewardType gốc: Bone 0, Gem 1, DragonBossDungeonKey 2, ZombieHordeDungeonKey 3, Lootbox 4, Exp 5, …, Vial 11.
 Chưa có document → mặc định = `BossRushLeagueConfig` gốc (hạng 1–100 nhận 1000 Bone), không lên/xuống tier.
+
+## PvP Arena (`functions/src/pvp.ts`, `pvpConfig.ts`)
+
+Mô hình gốc: `DecodedData/PVP_MODEL.md`. Endpoint (callable, tên viết thường như gốc): `initpvpprofile`, `openpvp`,
+`findpvpopponents`, `startpvpbattle`, `reportpvpbattle`, `grantpvpadticket`, `getpvpleaderboard`; admin
+`seedpvpdummyplayers` / `removepvpdummyplayers` / `removeallpvpplayers` (emulator hoặc uid trong `config/admins`).
+Dữ liệu: `pvpPlayers/{uid}` (trophy Elo, vé 5 free + 4 ads/ngày UTC, roster 600s, battle token 180s, snapshot đồ).
+
+Test: `npm test` (công thức Elo) và `npm run test:emulator:pvp` (luồng đầy đủ trên emulator; nếu emulator đã chạy sẵn thì
+`node functions/scripts/pvpEmulatorTest.mjs`).
+
+Thưởng thắng/thua theo league — **chưa có số gốc** (server gốc giấu), mặc định là placeholder. Sửa ở Firestore `config/pvp`:
+```json
+{ "rewardTable": [
+  { "leagueIndex": 1, "winRewards": [{ "Type": "Bone", "Amount": 100 }], "loseRewards": [{ "Type": "Bone", "Amount": 30 }] }
+] }
+```
+`Type` là TÊN `RewardType` (Bone, Gem, DragonBossDungeonKey, ZombieHordeDungeonKey, Lootbox, Exp, CloakCurrency, CultistDungeonKey, Vial…).
+Deploy thật cần tạo index `pvpPlayers(countryCode, trophy)` (đã khai trong `firestore.indexes.json`).

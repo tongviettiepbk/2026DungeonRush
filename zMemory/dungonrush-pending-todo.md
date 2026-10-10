@@ -23,7 +23,7 @@ Việc còn dở sau phiên 2026-10-09 (Enchantment + Power + chỉ số trận 
 
 **4. Tính năng gốc chưa có trong project (có dính relic/Vial)**
 - Wing + Cape đã có UI (chưa có nguồn quặng/Cloak) → xem [[dungonrush-wing-cape-todo]].
-- BattlePass, ClanWar (thưởng Vial); PvP, Chat, Loadout upload (gửi enchantmentTiers).
+- BattlePass, ClanWar (thưởng Vial); Chat, Loadout upload (gửi enchantmentTiers). PvP ĐÃ dựng 2026-10-10 — còn số thưởng gốc, xem [[dungonrush-pvp-mode]].
 
 **5. Nghi vấn chưa chốt**
 - Substat Melee/Ranged khi CHƯA cầm vũ khí: Power gốc coi như Melee; chỉ số trận project hiện bỏ qua (Soldier[0x264] chưa xác minh).

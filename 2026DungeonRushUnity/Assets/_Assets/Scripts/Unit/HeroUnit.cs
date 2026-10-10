@@ -27,6 +27,7 @@ public class HeroUnit : BaseUnit
     private UserEquipmentData ghostEquipment;
     private List<CompanionModel> ghostCompanions;
     private UserEnchantmentData ghostEnchantments;
+    private bool ghostShowCloak = true;
     public bool IsGhost => ghostEquipment != null;
     public string GhostName { get; private set; }
 
@@ -37,10 +38,21 @@ public class HeroUnit : BaseUnit
         ghostEquipment = equipment ?? new UserEquipmentData();
         ghostCompanions = ownedCompanions ?? new List<CompanionModel>();
         ghostEnchantments = enchantments ?? new UserEnchantmentData();
+        ghostShowCloak = showCloak;
         if (heroVisual != null)
         {
             heroVisual.SetOverrideEquipment(ghostEquipment, showCloak);
         }
+    }
+
+    // Bản sao MirrorClone của 1 ghost/đối thủ PvP: mặc cùng snapshot với chủ (không lấy đồ save của mình).
+    public void CopyGhostFrom(HeroUnit source)
+    {
+        if (source == null || !source.IsGhost)
+        {
+            return;
+        }
+        SetupAsGhost(source.GhostName, source.ghostEquipment, source.ghostCompanions, source.ghostEnchantments, source.ghostShowCloak);
     }
 
     private UserEquipmentData EquipmentSource => ghostEquipment ?? (GameData.userData != null ? GameData.userData.equipment : null);
@@ -176,7 +188,11 @@ public class HeroUnit : BaseUnit
 
         // Mastery "Movement Speed" (PlayerMovementSpeed): hệ số NHÂN tốc chạy (data gốc prefix "x",
         // default 1 = chưa mở khoá; Lvl1 x1.05 ... Lvl20 x2).
-        stats.moveSpeed *= MasteryService.GetCurrentValue(MasteryUpgradeType.PlayerMovementSpeed);
+        // Đối thủ PvP (phe B): snapshot gốc không mang mastery → không áp mastery của save mình.
+        if (!CompareTag(StaticValue.TAG_TEAM_B))
+        {
+            stats.moveSpeed *= MasteryService.GetCurrentValue(MasteryUpgradeType.PlayerMovementSpeed);
+        }
 
         // Bản sao MirrorClone: máu tối đa = maxHp hero × cloneHealthPercent/100 (gốc lt.gon).
         if (IsMirrorClone)

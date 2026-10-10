@@ -59,6 +59,9 @@ public class UserPlayerData : BaseUserData
             playerExperience -= config.GetXpRequired(playerLevel);
             playerLevel++;
             levelsGained++;
+            // Clan War: điểm "Level Up" = New Level × 100 (ClanWarController.fzo gốc).
+            if (UnityEngine.Application.isPlaying)
+                ClanWarController.Instance.RecordLevelUp(playerLevel);
         }
 
         return levelsGained;

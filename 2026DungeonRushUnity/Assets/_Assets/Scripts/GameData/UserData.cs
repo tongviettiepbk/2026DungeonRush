@@ -26,6 +26,9 @@ public class UserData
     public const string DATA_KEY_ENCHANTMENT = "key_user_enchantment";
     public const string DATA_KEY_WING = "key_user_wing";
     public const string DATA_KEY_CAPE = "key_user_cape";
+    public const string DATA_KEY_PVP = "key_user_pvp";
+    public const string DATA_KEY_CLAN = "key_user_clan";
+    public const string DATA_KEY_SHOP = "key_user_shop";
 
     public UserProfileData profile { get; set; } = new UserProfileData();
     public UserPlayerData player { get; set; } = new UserPlayerData();
@@ -41,6 +44,9 @@ public class UserData
     public UserEnchantmentData enchantments { get; set; } = new UserEnchantmentData();
     public UserWingData wings { get; set; } = new UserWingData();
     public UserCapeData capes { get; set; } = new UserCapeData();
+    public UserPvPData pvp { get; set; } = new UserPvPData();
+    public UserClanData clan { get; set; } = new UserClanData();
+    public UserShopData shop { get; set; } = new UserShopData();
 
     private List<BaseUserData> listData;
     private float lastTimeSaveData;
@@ -80,6 +86,9 @@ public class UserData
         enchantments = LoadModule<UserEnchantmentData>(DATA_KEY_ENCHANTMENT, out _);
         wings = LoadModule<UserWingData>(DATA_KEY_WING, out _);
         capes = LoadModule<UserCapeData>(DATA_KEY_CAPE, out _);
+        pvp = LoadModule<UserPvPData>(DATA_KEY_PVP, out _);
+        clan = LoadModule<UserClanData>(DATA_KEY_CLAN, out _);
+        shop = LoadModule<UserShopData>(DATA_KEY_SHOP, out _);
 
         LoadDone();
     }
@@ -148,6 +157,9 @@ public class UserData
             listData.Add(enchantments);
             listData.Add(wings);
             listData.Add(capes);
+            listData.Add(pvp);
+            listData.Add(clan);
+            listData.Add(shop);
         }
 
         for (int i = 0; i < listData.Count; i++)

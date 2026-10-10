@@ -40,10 +40,13 @@
 - [Companion TODO còn thiếu](dungonrush-companion-todo.md) — 6 việc chưa làm của summon pet (Ads free vô hạn, tab Pet chưa khoá lv5, multiplier Bone, IsNew, màu rarity, event)
 - [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
 - [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; cả 3 dungeon có trận (Dragon/Zombie/CultistDungeonMode)
-- [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé local reset 0h UTC (PvP 5, BossRush 3, mở lv15), icon IsTicket/IsBossTicket; chưa có mode
+- [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé reset 0h UTC (PvP 5+4 ads, BossRush), mở lv15, icon IsTicket/IsBossTicket; cả 2 mode đã có
 - [Boss Rush online](dungonrush-boss-rush-model.md) — ĐÃ code theo server/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); còn botBank Unity, popup hồ sơ, hình Lich/Ogre/Hag, deploy
 - [Hệ Enchantment (Relic)](dungonrush-enchantment-system.md) — tier 1..11 ×(1+tier²/100) main stat slot; summon Vial 50 lv; merge 3→1; code+UI+scene đã dựng, CHƯA test Unity
 - [Power người chơi](dungonrush-power-model.md) — rm.iqm/iqr reverse + PlayerPower.cs; HeroUnit đã sửa: đồ thay nền PlayerBase slot + có Wing/Cape
 - [Wing/Cape trạng thái](dungonrush-wing-cape-todo.md) — Wing + Cape đã có UI/logic theo native (chưa test Unity); quặng/Cloak chưa có nguồn thật (cheat O/K)
 - [Substat trong combat](dungonrush-substat-combat.md) — 13 substat đối chiếu native; sửa CritDamage nền 1.05, thêm tick HealthRegen ×0.5, thêm đánh đôi DoubleChance
 - [VIỆC CÒN DỞ](dungonrush-pending-todo.md) — checklist sau đợt Enchantment/Power/Substat: test Unity, deploy server, hình ảnh, Wing/Cape, BattlePass/PvP; đọc khi user nói "làm tiếp"
+- [PvP Arena](dungonrush-pvp-mode.md) — ĐÃ dựng client+server theo gốc (Elo trophy, snapshot+pet đối thủ, 30s); thưởng win/lose chưa có số gốc
+- [Clan + Clan War](dungonrush-clan-clanwar.md) — dựng 2026-10-10: server+client+builder nối field gốc; CHƯA test Play
+- [Store / Shop](dungonrush-shop-system.md) — dựng 2026-10-10 theo gốc: rương+pity, Daily Deals, boost exp, gói gem; PurchaseController BASE chưa có SDK; còn OfferPopup/RewardedChest

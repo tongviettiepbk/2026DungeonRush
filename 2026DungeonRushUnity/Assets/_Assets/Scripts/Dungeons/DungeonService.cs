@@ -97,6 +97,13 @@ public static class DungeonService
         GameData.Save(true);
     }
 
+    // Key mua ở Store (gói Dungeon Keys / Daily Deal) — cộng vào bonus key, không reset theo ngày.
+    public static void AddBonusKeys(DungeonType type, int amount)
+    {
+        GetProgress(type).bonusKeys += amount;
+        User.isDataChanged = true;
+    }
+
     // Thắng màn dungeon (DungeonController.hcd): tiêu 1 key, nhận thưởng màn hiện tại, level + 1.
     // Thua/thoát KHÔNG gọi hàm này (không tiêu key). Mode chơi dungeon sẽ gọi khi có.
     public static int CompleteDungeon(DungeonType type)
@@ -121,6 +128,8 @@ public static class DungeonService
             progress.bonusKeys--;
 
         User.isDataChanged = true;
+        // Clan War: điểm "Use Dungeon Key" (ClanWarController.fzn gốc).
+        ClanWarController.Instance.RecordDungeonKey(1);
     }
 
     private static int GrantReward(DungeonType type, int level)

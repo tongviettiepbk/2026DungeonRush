@@ -63,6 +63,8 @@ public static class CompanionService
 
             User.totalSummons++;
             results.Add(data);
+            // Clan War: điểm "Summon {rarity} Companion" (ClanWarController.fzl gốc).
+            ClanWarController.Instance.RecordSummonCompanion(data.rarity);
         }
 
         User.isDataChanged = true;

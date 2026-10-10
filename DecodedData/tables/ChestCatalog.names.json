@@ -1,0 +1,259 @@
+{
+ "ChestData": [
+  {
+   "m_Name": "Chest_Epic",
+   "ChestId": "epic",
+   "ChestName": "Epic Chest",
+   "GemCost": 80,
+   "RequireRarityCompletion": 0,
+   "RequiredCompletedRarity": 3,
+   "ItemCount": 6,
+   "Rarity": 3,
+   "PityCount": 20,
+   "RarityOdds": [
+    {
+     "Rarity": 0,
+     "Weight": 75.0
+    },
+    {
+     "Rarity": 1,
+     "Weight": 20.0
+    },
+    {
+     "Rarity": 2,
+     "Weight": 4.0
+    },
+    {
+     "Rarity": 3,
+     "Weight": 1.0
+    }
+   ],
+   "Icon": "epic_chest",
+   "OpenIcon": "epic_chest_opened",
+   "MainIcon": "epic_chest",
+   "ShowcaseSprites": []
+  },
+  {
+   "m_Name": "Chest_Legendary",
+   "ChestId": "legendary",
+   "ChestName": "Legendary Chest",
+   "GemCost": 120,
+   "RequireRarityCompletion": 0,
+   "RequiredCompletedRarity": 3,
+   "ItemCount": 6,
+   "Rarity": 4,
+   "PityCount": 20,
+   "RarityOdds": [
+    {
+     "Rarity": 0,
+     "Weight": 62.5
+    },
+    {
+     "Rarity": 1,
+     "Weight": 30.0
+    },
+    {
+     "Rarity": 2,
+     "Weight": 5.0
+    },
+    {
+     "Rarity": 3,
+     "Weight": 1.0
+    },
+    {
+     "Rarity": 4,
+     "Weight": 0.5
+    }
+   ],
+   "Icon": "legendary_chest",
+   "OpenIcon": "legendary_chest_opened",
+   "MainIcon": "chest_offer_02",
+   "ShowcaseSprites": [
+    "tier_05_pet_01_icon",
+    "tier_05_pet_02_icon",
+    "tier_05_pet_03_icon",
+    "tier_05_cloak_02_icon",
+    "tier_05_cloak_01_icon"
+   ]
+  },
+  {
+   "m_Name": "Chest_Mythic",
+   "ChestId": "mythic",
+   "ChestName": "Mythic Chest",
+   "GemCost": 200,
+   "RequireRarityCompletion": 1,
+   "RequiredCompletedRarity": 3,
+   "ItemCount": 6,
+   "Rarity": 5,
+   "PityCount": 20,
+   "RarityOdds": [
+    {
+     "Rarity": 0,
+     "Weight": 45.91999816894531
+    },
+    {
+     "Rarity": 1,
+     "Weight": 40.0
+    },
+    {
+     "Rarity": 2,
+     "Weight": 10.0
+    },
+    {
+     "Rarity": 3,
+     "Weight": 3.0
+    },
+    {
+     "Rarity": 4,
+     "Weight": 0.75
+    },
+    {
+     "Rarity": 5,
+     "Weight": 0.33000001311302185
+    }
+   ],
+   "Icon": "mythic_chest",
+   "OpenIcon": "mythic_chest_opened",
+   "MainIcon": "chest_offer_01",
+   "ShowcaseSprites": [
+    "tier_06_cloak_01_icon",
+    "tier_06_cloak_02_icon",
+    "tier_06_pet_03_icon",
+    "tier_06_pet_02_icon",
+    "tier_06_pet_01_icon"
+   ]
+  },
+  {
+   "m_Name": "Chest_Standard",
+   "ChestId": "standard",
+   "ChestName": "Standard Chest",
+   "GemCost": 40,
+   "RequireRarityCompletion": 0,
+   "RequiredCompletedRarity": 3,
+   "ItemCount": 2,
+   "Rarity": 2,
+   "PityCount": 0,
+   "RarityOdds": [
+    {
+     "Rarity": 0,
+     "Weight": 87.0
+    },
+    {
+     "Rarity": 1,
+     "Weight": 9.0
+    },
+    {
+     "Rarity": 2,
+     "Weight": 4.0
+    }
+   ],
+   "Icon": "standart_chest",
+   "OpenIcon": "standart_chest_opened",
+   "MainIcon": "standart_chest",
+   "ShowcaseSprites": []
+  }
+ ],
+ "ChestBundleData": [
+  {
+   "m_Name": "Chest Bundle_Legendary",
+   "BundleId": "lootio.chestbundle_legendary",
+   "StoreId": "lootio.chestbundle_legendary",
+   "GemAmount": 2500,
+   "Icon": "chest_offer_02",
+   "ShowcaseSprites": [
+    "tier_05_pet_01_icon",
+    "tier_05_pet_02_icon",
+    "tier_05_pet_03_icon",
+    "tier_05_cloak_02_icon",
+    "tier_05_cloak_01_icon"
+   ],
+   "Chests": [
+    {
+     "Chest": "Chest_Epic",
+     "Count": 20
+    },
+    {
+     "Chest": "Chest_Legendary",
+     "Count": 10
+    }
+   ]
+  },
+  {
+   "m_Name": "Chest Bundle_Mythic",
+   "BundleId": "lootio.chestbundle_mythic",
+   "StoreId": "lootio.chestbundle_mythic",
+   "GemAmount": 3000,
+   "Icon": "chest_offer_01",
+   "ShowcaseSprites": [
+    "tier_06_cloak_01_icon",
+    "tier_06_cloak_02_icon",
+    "tier_06_pet_03_icon",
+    "tier_06_pet_02_icon",
+    "tier_06_pet_01_icon"
+   ],
+   "Chests": [
+    {
+     "Chest": "Chest_Legendary",
+     "Count": 20
+    },
+    {
+     "Chest": "Chest_Mythic",
+     "Count": 10
+    }
+   ]
+  },
+  {
+   "m_Name": "Chest_Bundle_1",
+   "BundleId": "lootio.chestbundle_1",
+   "StoreId": "lootio.chestbundle_1",
+   "GemAmount": 500,
+   "Icon": "legendary_chest",
+   "ShowcaseSprites": [],
+   "Chests": [
+    {
+     "Chest": "Chest_Legendary",
+     "Count": 2
+    }
+   ]
+  },
+  {
+   "m_Name": "Chest_Bundle_2",
+   "BundleId": "lootio.chestbundle_2",
+   "StoreId": "lootio.chestbundle_2",
+   "GemAmount": 400,
+   "Icon": "legendary_chest",
+   "ShowcaseSprites": [
+    "tier_06_cloak_01_icon",
+    "tier_06_cloak_02_icon",
+    "tier_06_pet_03_icon",
+    "tier_06_pet_02_icon",
+    "tier_06_pet_01_icon"
+   ],
+   "Chests": [
+    {
+     "Chest": "Chest_Mythic",
+     "Count": 2
+    }
+   ]
+  }
+ ],
+ "ChestConfig": [
+  {
+   "m_Name": "ChestConfig",
+   "Chests": [
+    "Chest_Standard",
+    "Chest_Epic",
+    "Chest_Legendary",
+    "Chest_Mythic"
+   ],
+   "Bundles": [
+    "Chest_Bundle_1",
+    "Chest Bundle_Legendary",
+    "Chest_Bundle_2",
+    "Chest Bundle_Mythic"
+   ],
+   "LegendaryFeaturedBundle": "Chest Bundle_Legendary",
+   "MythicFeaturedBundle": "Chest Bundle_Mythic"
+  }
+ ]
+}

@@ -70,13 +70,19 @@ public class PetUnit : BaseUnit
     // ===== Spawn từ CompanionData =====
 
     // Vào trận: gán chủ + data, quy đổi data → hành vi/chỉ số rồi kích hoạt tại vị trí.
+    // Pet theo phe của chủ (PvP: pet đối thủ đứng TeamB, gốc SpawnController.hvh) — pet không phải của
+    // người chơi thì do AI điều khiển: luôn tự ra chiêu, bỏ qua nút Auto/bấm tay của lobby.
     public virtual void SetupCompanion(CompanionData data, BaseUnit owner, int level, Vector3 position)
     {
         companionData = data;
         this.owner = owner;
+        string teamTag = owner != null && owner.CompareTag(StaticValue.TAG_TEAM_B) ? StaticValue.TAG_TEAM_B : StaticValue.TAG_TEAM_A;
+        isAiControlled = teamTag == StaticValue.TAG_TEAM_B;
         ApplyCompanionData(data, level);
-        SpawnInBattle(BuildCompanionStats(data), StaticValue.TAG_TEAM_A, position);
+        SpawnInBattle(BuildCompanionStats(data), teamTag, position);
     }
+
+    private bool isAiControlled;
 
     // Quy đổi các field "di chuyển/nhịp" của companion sang tham số hành vi của PetUnit.
     protected void ApplyCompanionData(CompanionData data, int level)
@@ -119,7 +125,7 @@ public class PetUnit : BaseUnit
     private static bool IsAutoActive => GameData.userData.companions.isAutoActive;
 
     // Được ra đòn ngay chưa: đã hồi + (đang auto hoặc người chơi đã bấm).
-    private bool CanReleaseAbility => IsReady && (IsAutoActive || isActivateRequested);
+    private bool CanReleaseAbility => IsReady && (isAiControlled || IsAutoActive || isActivateRequested);
 
     // Người chơi bấm kích hoạt (chế độ thủ công). Chưa hồi xong → bỏ qua. Bấm rồi mà chưa có enemy
     // trong tầm thì giữ lệnh, gặp enemy là ra đòn.

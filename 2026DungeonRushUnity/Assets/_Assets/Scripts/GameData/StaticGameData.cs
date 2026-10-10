@@ -20,6 +20,8 @@ public class StaticGameData
     public StaticEventData events;
     public StaticBossRushData bossRush;
     public StaticEnchantmentData enchantments;
+    public StaticPvPData pvp;
+    public StaticShopData shop;
 
     public void Load()
     {
@@ -38,5 +40,7 @@ public class StaticGameData
         if (events == null) events = new StaticEventData();
         if (bossRush == null) bossRush = new StaticBossRushData();
         if (enchantments == null) enchantments = new StaticEnchantmentData();
+        if (pvp == null) pvp = new StaticPvPData();
+        if (shop == null) shop = new StaticShopData();
     }
 }

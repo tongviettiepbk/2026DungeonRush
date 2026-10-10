@@ -408,6 +408,8 @@ public class UIMainLobby : BaseUI
         DebugCustom.ShowLog("subStats:", JsonConvert.SerializeObject(result.subStats));
 
         GameData.userData.items.Consume(ItemType.LOOT_TICKET, 1);
+        // Clan War: điểm "Loot {rarity} Equipment" (ClanWarController.fzk gốc).
+        ClanWarController.Instance.RecordLoot(result.rarity);
         UpdateLootTicketText();
 
         ElementEquipmentUILobby targetElement = null;
@@ -659,11 +661,13 @@ public class UIMainLobby : BaseUI
             btExitEventBlocker.interactable = true;
     }
 
-    // GameplayUI.kjv gốc: bấm Exit khi Boss Rush → khoá nút rồi bỏ trận.
+    // GameplayUI.kjv gốc: bấm Exit khi Boss Rush / PvP → khoá nút rồi bỏ trận (PvP: xử thua, GameController.hio).
     private void OnClickExitEventBlocker()
     {
         BossRushMode bossRush = GameController.Instance.mode as BossRushMode;
-        if (bossRush == null || bossRush.ExitMidFight() == false)
+        PvPMode pvp = GameController.Instance.mode as PvPMode;
+        bool exited = bossRush != null ? bossRush.ExitMidFight() : pvp != null && pvp.GiveUp();
+        if (!exited)
             return;
         if (btExitEventBlocker != null)
             btExitEventBlocker.interactable = false;

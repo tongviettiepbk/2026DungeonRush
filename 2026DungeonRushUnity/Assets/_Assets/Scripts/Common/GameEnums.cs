@@ -21,6 +21,11 @@ public enum ItemType
     STONE_ORE = 14,
 
     CLOAK = 15,         // CloakCurrency gốc — tiêu để summon Cape (CapeConfig.SummonCost / lượt).
+
+    // Dụng cụ Mining (MiningData.Pickaxe/Drill/GoldenPickaxe gốc) — mua ở Store / Daily Deal. Hệ Mining (nơi tiêu) chưa làm.
+    PICKAXE = 16,
+    DRILL = 17,
+    GOLDEN_PICKAXE = 18,
 }
 
 // Loại quặng (MineOreType gốc) — giá trị = enum gốc, WingData lưu đúng số này.

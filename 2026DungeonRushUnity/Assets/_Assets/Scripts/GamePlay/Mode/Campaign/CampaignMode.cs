@@ -61,7 +61,8 @@ public class CampaignMode : BaseMode
             // Exp thắng màn = round(49 + level) (clear sạch quái, xem DecodedData/EXP_MODEL.md).
             // Cộng vào playerExperience → có thể lên playerLevel (rarity table tự tốt lên).
             int level = GameData.staticData.campaign.GetLevel(stageId);
-            int expReward = GameData.staticData.experience.GetStageExp(level);
+            // Boost exp mua ở Store (lifetime ×2, 20 phút ×1.5, 5 phút ×2 — ExperienceController.hdq gốc).
+            int expReward = ShopService.ApplyExpBoost(GameData.staticData.experience.GetStageExp(level));
             int oldPlayerLevel = GameData.userData.player.playerLevel;
             int levelsGained = GameData.userData.player.AddExperience(expReward);
 
