@@ -49,6 +49,8 @@ public class BossRushCompanionModel
     public bool Equipped;
 }
 
+// Dòng trong bảng xếp hạng sảnh KHÔNG kèm bộ đồ (Items/Companions/EnchantmentTiers rỗng): server chỉ gửi bộ đồ cho
+// 7 người hỗ trợ lúc vào trận (BossRushStartFightResponseDTO.allies). Client không biết ai là bot.
 public class BossRushPlayerModel
 {
     public string UserId;
@@ -60,7 +62,7 @@ public class BossRushPlayerModel
     public List<BossRushCompanionModel> Companions = new List<BossRushCompanionModel>();
     public List<int> EnchantmentTiers = new List<int>();   // tier relic đang đeo, index = GearSlotType (0 = trống)
     public bool ShowCloak = true;                          // User.ShowCloak gốc: tắt → ghost ẩn hình áo choàng
-    public bool IsBot;
+    public int AvatarId;
 }
 
 public class BossRushTicketsDTO
@@ -132,6 +134,7 @@ public class BossRushJoinResponseDTO
     public bool success;
     public bool alreadyJoined;
     public bool inactive;
+    public bool preparing;      // server đang chốt mùa cũ / dựng sảnh mùa mới — thử lại sau ít giây
     public string poolId;
     public int tier;
     public string eventKey;
@@ -179,6 +182,7 @@ public class BossRushStartFightResponseDTO
     public double bossHP;
     public double maxBossHP;
     public long fightExpiresAt;
+    public List<BossRushPlayerModel> allies;   // 7 người hỗ trợ server chọn ngẫu nhiên từ sảnh, kèm bộ đồ
     public BossRushTicketsDTO tickets;
 }
 

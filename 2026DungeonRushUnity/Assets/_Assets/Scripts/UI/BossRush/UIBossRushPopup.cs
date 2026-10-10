@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Sảnh nhóm Boss Rush (BossRushPopup gốc): tier, đếm ngược đợt, boss chung "Boss #{0}: {1}" + HP, danh sách 8 người
+// Sảnh nhóm Boss Rush (BossRushPopup gốc): tier, đếm ngược đợt, boss chung "Boss #{0}: {1}" + HP, danh sách tới 100 người
 // theo damage (dòng mình highlight), nút Fight "{0}/{1}\nFight", bảng thưởng. Tự làm mới định kỳ từ server.
 public class UIBossRushPopup : BaseUI
 {

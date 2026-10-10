@@ -42,7 +42,6 @@ public class BossRushController : Singleton<BossRushController>
     public const string FN_REPORT_DAMAGE = "reportbossrushdamage";
     public const string FN_CLAIM = "claimbossrushrewards";
     public const string FN_UPDATE_PLAYER = "updatebossrushplayer";
-    public const string FN_SEED_BOTS = "seedbossrushdummyplayers";
 
     private const int MAX_PENDING_ATTEMPTS = 5;
     private const int SECONDS_PER_DAY = 24 * 60 * 60;
@@ -145,7 +144,7 @@ public class BossRushController : Singleton<BossRushController>
 
     // ===== Start fight (ekt + fi.eki) =====
 
-    // Thành công → dựng BossRushFightSession (≤7 người khác làm ghost) rồi đổi sang BossRushMode.
+    // Thành công → dựng BossRushFightSession (7 người hỗ trợ server trả về làm ghost) rồi đổi sang BossRushMode.
     public void StartFight(Action<bool, string> callback)
     {
         if (Pool == null)
@@ -180,39 +179,13 @@ public class BossRushController : Singleton<BossRushController>
                 MaxHP = res.maxBossHP,
                 AttackPower = Static.GetBossDamage(Pool.Tier),
             };
-            BossRushFightSession.Begin(PickAllies(StaticBossRushData.MAX_GHOSTS), boss, Pool.PoolId, res.fightToken, Pool.Tier);
+            BossRushFightSession.Begin(res.allies, boss, Pool.PoolId, res.fightToken, Pool.Tier);
             GameData.Save();
             callback?.Invoke(true, null);
 
             GameController.Instance.uiLobby.CloseAllTabs();
             GameController.Instance.ChangeMode(ModeType.BossRush);
         });
-    }
-
-    // ekz(7): chọn ngẫu nhiên tối đa n người khác (không phải mình) trong nhóm.
-    public List<BossRushPlayerModel> PickAllies(int count)
-    {
-        List<BossRushPlayerModel> others = new List<BossRushPlayerModel>();
-        string myId = FirebaseManager.Instance.Uid;
-        if (Pool != null)
-        {
-            for (int i = 0; i < Pool.Players.Count; i++)
-            {
-                if (Pool.Players[i].UserId != myId)
-                {
-                    others.Add(Pool.Players[i]);
-                }
-            }
-        }
-
-        List<BossRushPlayerModel> result = new List<BossRushPlayerModel>();
-        while (result.Count < count && others.Count > 0)
-        {
-            int index = UnityEngine.Random.Range(0, others.Count);
-            result.Add(others[index]);
-            others.RemoveAt(index);
-        }
-        return result;
     }
 
     // ===== Report damage (eku/ekw/ekx) =====
@@ -350,11 +323,23 @@ public class BossRushController : Singleton<BossRushController>
                 case RewardType.Gem: GameData.userData.items.Receive(ItemType.GEM, r.Amount); break;
                 case RewardType.Vial: GameData.userData.items.Receive(ItemType.VIAL, r.Amount); break;
                 case RewardType.Exp: GameData.userData.player.AddExperience(r.Amount); break;
+                case RewardType.CloakCurrency: GameData.userData.items.Receive(ItemType.CLOAK, r.Amount); break;
+                case RewardType.Lootbox: GameData.userData.items.Receive(ItemType.LOOT_TICKET, r.Amount); break;
+                case RewardType.DragonBossDungeonKey: AddDungeonKeys(DungeonType.DragonBoss, r.Amount); break;
+                case RewardType.ZombieHordeDungeonKey: AddDungeonKeys(DungeonType.ZombieHorde, r.Amount); break;
+                case RewardType.CultistDungeonKey: AddDungeonKeys(DungeonType.Cultist, r.Amount); break;
                 default:
                     DebugCustom.LogWarning("[BossRush] RewardType chưa hỗ trợ: " + r.Type + " x" + r.Amount);
                     break;
             }
         }
+    }
+
+    // Key dungeon thưởng → bonusKeys (không reset theo ngày, như key từ ads).
+    private static void AddDungeonKeys(DungeonType type, int amount)
+    {
+        GameData.userData.dungeons.Get(type).bonusKeys += amount;
+        GameData.userData.dungeons.isDataChanged = true;
     }
 
     // ===== Update player (elm/eln) =====
@@ -397,16 +382,6 @@ public class BossRushController : Singleton<BossRushController>
         FirebaseManager.Instance.Call<object>(FN_UPDATE_PLAYER, request, (ok, res, raw) =>
         {
             if (!ok) DebugCustom.LogWarning("[BossRush] Failed to update Boss Rush player data | response=" + raw);
-        });
-    }
-
-    // Admin/test: lấp nhóm bằng bot (chỉ chạy được trên emulator hoặc uid admin).
-    public void SeedBots(Action<bool> callback)
-    {
-        FirebaseManager.Instance.Call<object>(FN_SEED_BOTS, new { count = StaticBossRushData.POOL_SIZE }, (ok, res, raw) =>
-        {
-            DebugCustom.Log("[BossRush] Seed bots: " + ok + " | " + raw);
-            callback?.Invoke(ok);
         });
     }
 

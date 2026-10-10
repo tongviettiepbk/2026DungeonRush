@@ -24,8 +24,6 @@ public enum BossRushEnemyBehaviorType
 // Server (server/functions/src/config.ts) giữ bản sao y hệt. Chi tiết: DecodedData/BOSS_RUSH_MODEL.md.
 public class StaticBossRushData
 {
-    public const int POOL_SIZE = 8;                 // "Fight with an 8-player team"
-    public const int MAX_GHOSTS = 7;                // BossRushController.ekz(7)
     public const int MAX_BOSS_COUNT = 20;
     public const int MAX_TIER = 10;
     public const float FIGHT_DURATION = 30f;        // FightDuration

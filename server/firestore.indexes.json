@@ -6,7 +6,16 @@
       "fields": [
         { "fieldPath": "eventKey", "order": "ASCENDING" },
         { "fieldPath": "tier", "order": "ASCENDING" },
-        { "fieldPath": "isOpen", "order": "ASCENDING" }
+        { "fieldPath": "isOpen", "order": "ASCENDING" },
+        { "fieldPath": "realCount", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "bossRushPlayers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "lastFoughtEventKey", "order": "ASCENDING" },
+        { "fieldPath": "tier", "order": "ASCENDING" }
       ]
     }
   ],

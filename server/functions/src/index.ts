@@ -7,6 +7,6 @@ setGlobalOptions({ region: "us-central1", maxInstances: 10 });
 
 export {
   joinbossrush, getbossrushpool, startbossrushfight, reportbossrushdamage,
-  claimbossrushrewards, updatebossrushplayer, finalizebossrushendedevents,
+  claimbossrushrewards, updatebossrushplayer, getbossrushprofile, finalizebossrushendedevents,
 } from "./bossRush";
 export { seedbossrushdummyplayers, removebossrushdummyplayers, finalizebossrushnow } from "./admin";

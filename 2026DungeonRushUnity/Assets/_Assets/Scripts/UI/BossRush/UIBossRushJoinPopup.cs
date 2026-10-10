@@ -79,7 +79,9 @@ public class UIBossRushJoinPopup : BaseUI
             SetLoading(false);
             if (!ok || res == null)
             {
-                UIManager.Instance.ShowToastMessage("Failed to join Boss Rush. Please try again.", isLocalize: false);
+                // Popup.BossRush.ResultsPreparing gốc: server đang chốt mùa cũ / dựng sảnh mùa mới.
+                string message = res != null && res.preparing ? "Results are being prepared" : "Failed to join Boss Rush. Please try again.";
+                UIManager.Instance.ShowToastMessage(message, isLocalize: false);
                 return;
             }
 

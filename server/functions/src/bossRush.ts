@@ -1,24 +1,27 @@
 import { randomBytes } from "crypto";
-import { getFirestore, Firestore, Transaction, DocumentReference } from "firebase-admin/firestore";
+import { FieldPath, getFirestore, Firestore, Transaction, DocumentReference } from "firebase-admin/firestore";
 import { CallableRequest, HttpsError, onCall } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
+import { botLoadout, loadBank } from "./bots";
+import { RankEntry, botParams, isPoolOpen, poolBossState, poolCount, previousEventKey, rankPool, seasonBounds, toRows } from "./bossRushPool";
+import { DAILY_AD_TICKETS, DAILY_FREE_TICKETS, FIGHT_TOKEN_TTL_SECONDS, MAX_GHOSTS, START_TIER } from "./config";
 import {
-  DAILY_AD_TICKETS, DAILY_FREE_TICKETS, FIGHT_TOKEN_TTL_SECONDS, POOL_SIZE, START_TIER, getBossHp,
-} from "./config";
-import {
-  BossRushCompanionModel, BossRushItemModel, BossRushPlayerModel, PlayerDoc, PlayerSnapshotRequest, PoolDoc, TicketsDTO,
+  BossRushCompanionModel, BossRushItemModel, BossRushPlayerModel, BotSeed, PlayerDoc, PlayerSnapshotRequest, PoolDoc, PoolResult,
+  TicketsDTO,
 } from "./models";
 import { computeNewTier, computeRewards, getRewardTable, loadRemoteConfig } from "./rewardConfig";
 import { getDayKey, getEventKey, getNextEventKey, isEventActive } from "./schedule";
+import {
+  PLAYERS, POOLS, createPool, ensureCurrentSeason, entryOf, finalizePool, isPoolEnded, prepareSeason, readTierStat,
+  recordFightStats, statsRef,
+} from "./season";
 
-// 6 endpoint giống server gốc (Cloud Functions v2, tên hàm viết thường như URL gốc
-// https://{fn}-umgnfrxyuq-uc.a.run.app/): joinbossrush, getbossrushpool, startbossrushfight,
-// reportbossrushdamage, claimbossrushrewards, updatebossrushplayer. Lỗi nghiệp vụ trả {success:false, message}
-// như DTO gốc; chỉ lỗi xác thực mới ném HttpsError.
+// Endpoint Boss Rush — tên hàm viết thường như URL server gốc (https://{fn}-umgnfrxyuq-uc.a.run.app/): joinbossrush,
+// getbossrushpool, startbossrushfight, reportbossrushdamage, claimbossrushrewards, updatebossrushplayer; thêm
+// getbossrushprofile (bấm avatar xem hồ sơ). Luật chơi: server/BOSS_RUSH_DESIGN.md. Lỗi nghiệp vụ trả
+// {success:false, message} như DTO gốc; chỉ lỗi xác thực mới ném HttpsError.
 
-const PLAYERS = "bossRushPlayers";
-const POOLS = "bossRushPools";
-const MAX_BOSS_LOOP = 1000;
+const AVG_WEIGHT = 0.3;
 
 function db(): Firestore {
   return getFirestore();
@@ -63,6 +66,7 @@ function newPlayerDoc(uid: string, now: Date): PlayerDoc {
     companions: [],
     enchantmentTiers: [],
     showCloak: true,
+    avatarId: 0,
     tier: START_TIER,
     currentPoolId: "",
     lastJoinEventKey: "",
@@ -79,7 +83,7 @@ async function readPlayer(tx: Transaction, ref: DocumentReference, uid: string, 
 
 // ===== Snapshot đồ =====
 
-function sanitizeItems(items: BossRushItemModel[] | undefined): BossRushItemModel[] {
+export function sanitizeItems(items: BossRushItemModel[] | undefined): BossRushItemModel[] {
   if (!Array.isArray(items)) return [];
   return items.slice(0, 16).map((it) => ({
     Slot: Number(it.Slot) || 0,
@@ -92,7 +96,7 @@ function sanitizeItems(items: BossRushItemModel[] | undefined): BossRushItemMode
   }));
 }
 
-function sanitizeCompanions(list: BossRushCompanionModel[] | undefined): BossRushCompanionModel[] {
+export function sanitizeCompanions(list: BossRushCompanionModel[] | undefined): BossRushCompanionModel[] {
   if (!Array.isArray(list)) return [];
   return list.slice(0, 64).map((c) => ({
     CompanionId: String(c.CompanionId ?? ""),
@@ -102,7 +106,7 @@ function sanitizeCompanions(list: BossRushCompanionModel[] | undefined): BossRus
 }
 
 // Tier relic (Enchantment) đang đeo theo slot: số nguyên 0..11 (gốc qm.xkk = 11), tối đa 16 slot.
-function sanitizeEnchantmentTiers(list: number[] | undefined): number[] {
+export function sanitizeEnchantmentTiers(list: number[] | undefined): number[] {
   if (!Array.isArray(list)) return [];
   return list.slice(0, 16).map((t) => Math.min(11, Math.max(0, Math.floor(Number(t) || 0))));
 }
@@ -118,65 +122,64 @@ function applySnapshot(player: PlayerDoc, data: PlayerSnapshotRequest): void {
   if (data.companions !== undefined) player.companions = sanitizeCompanions(data.companions);
   if (data.enchantmentTiers !== undefined) player.enchantmentTiers = sanitizeEnchantmentTiers(data.enchantmentTiers);
   if (typeof data.showCloak === "boolean") player.showCloak = data.showCloak;
+  if (typeof data.avatarId === "number" && isFinite(data.avatarId)) player.avatarId = Math.max(0, Math.floor(data.avatarId));
 }
 
-function toPoolPlayer(player: PlayerDoc, prev: BossRushPlayerModel | undefined, now: Date): BossRushPlayerModel {
+// Đưa tên/power/avatar mới nhất của người chơi vào dòng của họ trong sảnh (điểm và số trận giữ nguyên).
+function syncEntry(pool: PoolDoc, player: PlayerDoc): void {
+  const entry = pool.players[player.uid];
+  entry.PlayerName = player.playerName;
+  entry.AvatarId = player.avatarId ?? 0;
+  entry.Power = player.power;
+  entry.Joined = true;
+}
+
+// ===== Hồ sơ đầy đủ (bộ đồ) — chỉ gửi cho 7 người hỗ trợ lúc vào trận và khi bấm xem hồ sơ =====
+
+function playerModel(p: PlayerDoc, e: RankEntry | undefined): BossRushPlayerModel {
   return {
-    UserId: player.uid,
-    PlayerName: player.playerName,
-    Position: 0,
-    Power: player.power,
-    TotalDamagePoints: prev?.TotalDamagePoints ?? 0,
-    Items: player.items,
-    Companions: player.companions,
-    EnchantmentTiers: player.enchantmentTiers ?? [],
-    ShowCloak: player.showCloak ?? true,
-    IsBot: false,
-    JoinedAt: prev?.JoinedAt ?? now.getTime(),
+    UserId: p.uid, PlayerName: p.playerName, AvatarId: p.avatarId ?? 0, Position: e?.position ?? 0, Power: p.power,
+    TotalDamagePoints: e?.score ?? 0, Items: p.items ?? [], Companions: p.companions ?? [],
+    EnchantmentTiers: p.enchantmentTiers ?? [], ShowCloak: p.showCloak ?? true,
   };
 }
 
-// ===== Xếp hạng =====
-
-// Danh sách người chơi theo TotalDamagePoints giảm dần (hoà → vào trước đứng trên), Position 1-based.
-function sortedPlayers(pool: PoolDoc): BossRushPlayerModel[] {
-  const list = Object.values(pool.players ?? {}).map((p) => ({ ...p }));
-  list.sort((a, b) => (b.TotalDamagePoints - a.TotalDamagePoints) || (a.JoinedAt - b.JoinedAt));
-  list.forEach((p, i) => (p.Position = i + 1));
-  return list;
+// Bot lấy bộ đồ từ ngân hàng. Ngân hàng chưa có (functions/data/botBank.json) → TẠM mượn bộ đồ của người gọi.
+function botModel(bot: BotSeed, pool: PoolDoc, now: number, e: RankEntry | undefined, fallback: PlayerDoc): BossRushPlayerModel {
+  const step = botLoadout(bot, botParams(pool), now, loadBank());
+  return {
+    UserId: bot.id, PlayerName: bot.name, AvatarId: bot.avatarId, Position: e?.position ?? 0, Power: e?.power ?? bot.basePower,
+    TotalDamagePoints: e?.score ?? 0,
+    Items: step ? step.items : fallback.items ?? [],
+    Companions: step ? step.companions : fallback.companions ?? [],
+    EnchantmentTiers: step ? step.enchantmentTiers : fallback.enchantmentTiers ?? [],
+    ShowCloak: step ? step.showCloak : true,
+  };
 }
 
-function rankOf(pool: PoolDoc, uid: string): number {
-  const p = sortedPlayers(pool).find((x) => x.UserId === uid);
-  return p ? p.Position : 0;
-}
-
-// Pool thuộc đợt đã kết thúc (đang Thứ 2 hoặc đã sang đợt mới) → chờ nhận thưởng.
-function isPoolEnded(pool: PoolDoc, now: Date): boolean {
-  return pool.eventKey !== getEventKey(now);
-}
-
-// Pool cũ chưa nhận thưởng của người chơi (gốc: hasUnclaimed/unclaimedPoolId).
+// Sảnh cũ còn thưởng chưa nhận (gốc: hasUnclaimed/unclaimedPoolId). Người không đánh trận nào thì không có thưởng.
 async function findUnclaimedPoolId(tx: Transaction, player: PlayerDoc, now: Date): Promise<string> {
   if (!player.currentPoolId) return "";
   const snap = await tx.get(db().collection(POOLS).doc(player.currentPoolId));
   if (!snap.exists) return "";
   const pool = snap.data() as PoolDoc;
-  if (isPoolEnded(pool, now) && !pool.claimed?.[player.uid] && pool.players?.[player.uid]) {
+  const entry = pool.players?.[player.uid];
+  if (isPoolEnded(pool, now) && !pool.claimed?.[player.uid] && entry && (entry.Fights ?? 0) > 0) {
     return pool.poolId;
   }
   return "";
 }
 
-function poolState(pool: PoolDoc) {
+function poolState(pool: PoolDoc, now: Date) {
+  const boss = poolBossState(pool, now.getTime());
   return {
     poolId: pool.poolId,
     tier: pool.tier,
     eventKey: pool.eventKey,
-    players: sortedPlayers(pool),
-    bossNumber: pool.bossNumber,
-    bossHP: pool.bossHP,
-    maxBossHP: pool.maxBossHP,
+    players: toRows(rankPool(pool, now.getTime(), loadBank())),
+    bossNumber: boss.bossNumber,
+    bossHP: boss.bossHP,
+    maxBossHP: boss.maxBossHP,
     isFinalized: pool.isFinalized,
   };
 }
@@ -189,6 +192,8 @@ export const joinbossrush = onCall(async (request) => {
   const now = new Date();
   const eventKey = getEventKey(now);
   const config = await loadRemoteConfig(db());
+  // Dự phòng khi tác vụ Thứ Hai chưa chạy: lượt Join đầu tiên của mùa sẽ chốt mùa cũ + dựng sảnh mùa mới.
+  const seasonReady = await ensureCurrentSeason(db(), now);
 
   return db().runTransaction(async (tx) => {
     const playerRef = db().collection(PLAYERS).doc(uid);
@@ -205,77 +210,67 @@ export const joinbossrush = onCall(async (request) => {
       unclaimedPoolId,
     };
 
-    // Ngoài giờ (Thứ 2) hoặc còn thưởng đợt trước chưa nhận → chưa cho vào nhóm mới.
+    // Ngoài giờ (Thứ 2) hoặc còn thưởng mùa trước chưa nhận → chưa cho vào sảnh mới.
     if (!isEventActive(now) || unclaimedPoolId !== "") {
       player.updatedAt = now.getTime();
       tx.set(playerRef, player);
       return { ...base, inactive: !isEventActive(now), alreadyJoined: false, tier: player.tier };
     }
-
-    // Đã vào nhóm của đợt này → cập nhật snapshot, trả nhóm cũ.
-    if (player.lastJoinEventKey === eventKey && player.currentPoolId) {
-      const poolRef = db().collection(POOLS).doc(player.currentPoolId);
-      const poolSnap = await tx.get(poolRef);
-      if (poolSnap.exists) {
-        const pool = poolSnap.data() as PoolDoc;
-        pool.players[uid] = toPoolPlayer(player, pool.players[uid], now);
-        player.updatedAt = now.getTime();
-        tx.set(poolRef, pool);
-        tx.set(playerRef, player);
-        return {
-          ...base, ...poolState(pool), alreadyJoined: true, inactive: false,
-          rewardTable: getRewardTable(config, pool.tier),
-        };
-      }
-    }
-
-    // Ghép nhóm: nhóm còn chỗ cùng đợt + cùng tier; không có → tạo nhóm mới (boss #1).
-    const openQuery = db().collection(POOLS)
-      .where("eventKey", "==", eventKey)
-      .where("tier", "==", player.tier)
-      .where("isOpen", "==", true)
-      .limit(1);
-    const openSnap = await tx.get(openQuery);
-
-    let pool: PoolDoc;
-    let poolRef: DocumentReference;
-    if (!openSnap.empty) {
-      poolRef = openSnap.docs[0].ref;
-      pool = openSnap.docs[0].data() as PoolDoc;
-    } else {
-      poolRef = db().collection(POOLS).doc();
-      const hp = getBossHp(1, player.tier);
-      pool = {
-        poolId: poolRef.id,
-        eventKey,
-        tier: player.tier,
-        isOpen: true,
-        playerCount: 0,
-        players: {},
-        bossNumber: 1,
-        bossHP: hp,
-        maxBossHP: hp,
-        bossesKilled: 0,
-        isFinalized: false,
-        claimed: {},
-        createdAt: now.getTime(),
+    if (!seasonReady) {
+      player.updatedAt = now.getTime();
+      tx.set(playerRef, player);
+      return {
+        ...base, success: false, preparing: true, message: "Results are being prepared", inactive: false,
+        alreadyJoined: false, tier: player.tier,
       };
     }
 
-    pool.players[uid] = toPoolPlayer(player, undefined, now);
-    pool.playerCount = Object.keys(pool.players).length;
-    pool.isOpen = pool.playerCount < POOL_SIZE;
-
-    player.currentPoolId = pool.poolId;
-    player.lastJoinEventKey = eventKey;
-    player.updatedAt = now.getTime();
-
-    tx.set(poolRef, pool);
-    tx.set(playerRef, player);
-    return {
-      ...base, ...poolState(pool), alreadyJoined: false, inactive: false,
-      rewardTable: getRewardTable(config, pool.tier),
+    const joined = (pool: PoolDoc, poolRef: DocumentReference, alreadyJoined: boolean) => {
+      syncEntry(pool, player);
+      pool.realCount = Object.keys(pool.players).length;
+      pool.isOpen = isPoolOpen(pool);
+      player.currentPoolId = pool.poolId;
+      player.lastJoinEventKey = eventKey;
+      player.updatedAt = now.getTime();
+      tx.set(poolRef, pool);
+      tx.set(playerRef, player);
+      return {
+        ...base, ...poolState(pool, now), alreadyJoined, inactive: false,
+        rewardTable: getRewardTable(config, pool.tier),
+      };
     };
+
+    // 1. Đã ở trong một sảnh của mùa này, hoặc được giữ chỗ từ đầu mùa → vào đúng sảnh đó.
+    const knownPoolId = player.lastJoinEventKey === eventKey && player.currentPoolId ? player.currentPoolId
+      : player.reservedEventKey === eventKey && player.reservedPoolId ? player.reservedPoolId : "";
+    if (knownPoolId) {
+      const poolRef = db().collection(POOLS).doc(knownPoolId);
+      const poolSnap = await tx.get(poolRef);
+      const pool = poolSnap.data() as PoolDoc | undefined;
+      if (pool?.players?.[uid]) {
+        return joined(pool, poolRef, player.lastJoinEventKey === eventKey);
+      }
+    }
+
+    // 2. Sảnh cùng league còn chỗ → ưu tiên sảnh nhiều người thật nhất.
+    const openSnap = await tx.get(db().collection(POOLS)
+      .where("eventKey", "==", eventKey)
+      .where("tier", "==", player.tier)
+      .where("isOpen", "==", true)
+      .orderBy("realCount", "desc")
+      .limit(1));
+    if (!openSnap.empty && isPoolOpen(openSnap.docs[0].data() as PoolDoc)) {
+      const pool = openSnap.docs[0].data() as PoolDoc;
+      pool.players[uid] = entryOf(player, now.getTime(), true);
+      return joined(pool, openSnap.docs[0].ref, false);
+    }
+
+    // 3. Không còn sảnh nào → sảnh mới: 1 người + bot cho đủ 60.
+    const stats = (await tx.get(statsRef(db(), eventKey))).data();
+    const prevStats = (await tx.get(statsRef(db(), previousEventKey(eventKey)))).data();
+    const stat = readTierStat(stats, player.tier) ?? readTierStat(prevStats, player.tier);
+    const poolRef = db().collection(POOLS).doc();
+    return joined(createPool(poolRef.id, eventKey, player.tier, [player], true, now.getTime(), stat), poolRef, false);
   });
 });
 
@@ -313,7 +308,7 @@ export const getbossrushpool = onCall(async (request) => {
       autoLoss: false,
       nextEventKey: getNextEventKey(now),
       message: "",
-      ...poolState(pool),
+      ...poolState(pool, now),
       isFinalized: pool.isFinalized || ended,
       tickets: player.tickets,
       rewardTable: getRewardTable(config, pool.tier),
@@ -323,6 +318,15 @@ export const getbossrushpool = onCall(async (request) => {
 });
 
 // ===== startBossRushFight =====
+
+function pickRandom<T>(list: T[], count: number): T[] {
+  const rest = [...list];
+  const out: T[] = [];
+  while (out.length < count && rest.length > 0) {
+    out.push(rest.splice(Math.floor(Math.random() * rest.length), 1)[0]);
+  }
+  return out;
+}
 
 export const startbossrushfight = onCall(async (request) => {
   const uid = requireUid(request);
@@ -344,22 +348,39 @@ export const startbossrushfight = onCall(async (request) => {
     if (!poolSnap.exists || !(poolSnap.data() as PoolDoc).players?.[uid]) return fail("Pool not found");
     const pool = poolSnap.data() as PoolDoc;
     if (!isEventActive(now) || isPoolEnded(pool, now)) return fail("Event ended");
+    if (player.tickets.freeRemaining <= 0 && player.tickets.adRemaining <= 0) return fail("No fights remaining.");
+
+    // 7 người hỗ trợ lấy ngẫu nhiên từ sảnh (ekz(7) gốc) kèm bộ đồ: người thật đọc từ hồ sơ của họ, bot từ ngân hàng.
+    const ranked = rankPool(pool, now.getTime(), loadBank());
+    const picks = pickRandom(ranked.filter((e) => e.id !== uid), MAX_GHOSTS);
+    const realPicks = picks.filter((e) => !e.isBot);
+    const realSnaps = realPicks.length > 0
+      ? await tx.getAll(...realPicks.map((e) => db().collection(PLAYERS).doc(e.id)))
+      : [];
+    const realDocs = new Map(realSnaps.filter((s) => s.exists).map((s) => [s.id, s.data() as PlayerDoc]));
+    const bots = new Map((pool.bots ?? []).map((b) => [b.id, b]));
+    const allies: BossRushPlayerModel[] = [];
+    for (const e of picks) {
+      const bot = bots.get(e.id);
+      const real = realDocs.get(e.id);
+      if (bot) allies.push(botModel(bot, pool, now.getTime(), e, player));
+      else if (real) allies.push(playerModel(real, e));
+    }
 
     // Tiêu vé free trước, hết free mới dùng vé ads (client đã cho xem ads trước khi gọi).
     if (player.tickets.freeRemaining > 0) {
       player.tickets.freeRemaining--;
-    } else if (player.tickets.adRemaining > 0) {
+    } else {
       player.tickets.adRemaining--;
       player.tickets.adClaimedToday++;
-    } else {
-      return fail("No fights remaining.");
     }
 
+    const boss = poolBossState(pool, now.getTime());
     const expiresAt = now.getTime() + FIGHT_TOKEN_TTL_SECONDS * 1000;
     player.activeFight = {
       token: randomBytes(16).toString("hex"),
       poolId,
-      bossNumber: pool.bossNumber,
+      bossNumber: boss.bossNumber,
       expiresAt,
     };
     player.updatedAt = now.getTime();
@@ -369,10 +390,11 @@ export const startbossrushfight = onCall(async (request) => {
       success: true,
       message: "",
       fightToken: player.activeFight.token,
-      bossNumber: pool.bossNumber,
-      bossHP: pool.bossHP,
-      maxBossHP: pool.maxBossHP,
+      bossNumber: boss.bossNumber,
+      bossHP: boss.bossHP,
+      maxBossHP: boss.maxBossHP,
       fightExpiresAt: Math.floor(expiresAt / 1000),
+      allies,
       tickets: player.tickets,
     };
   });
@@ -385,6 +407,10 @@ function toDamage(v: unknown): number {
   return isFinite(n) && n > 0 ? Math.min(n, Number.MAX_SAFE_INTEGER) : 0;
 }
 
+function average(prev: number | undefined, value: number): number {
+  return prev && prev > 0 ? prev * (1 - AVG_WEIGHT) + value * AVG_WEIGHT : value;
+}
+
 export const reportbossrushdamage = onCall(async (request) => {
   const uid = requireUid(request);
   const body = (request.data ?? {}) as { fightToken?: string; damageDealt?: number; totalDamageDealt?: number };
@@ -392,8 +418,10 @@ export const reportbossrushdamage = onCall(async (request) => {
   const damageDealt = toDamage(body.damageDealt);
   const totalDamageDealt = Math.max(toDamage(body.totalDamageDealt), damageDealt);
   const now = new Date();
+  let counted: { eventKey: string; tier: number } | null = null;
 
-  return db().runTransaction(async (tx) => {
+  const result = await db().runTransaction(async (tx) => {
+    counted = null;
     const playerRef = db().collection(PLAYERS).doc(uid);
     const player = await readPlayer(tx, playerRef, uid, now);
     resetTicketsIfNewDay(player, now);
@@ -409,48 +437,63 @@ export const reportbossrushdamage = onCall(async (request) => {
     player.activeFight = null;
     player.updatedAt = now.getTime();
 
-    // Quá hạn nộp / pool mất / đợt đã kết thúc → không tính (autoLoss như gốc).
+    // Quá hạn nộp / sảnh mất / mùa đã kết thúc → không tính (autoLoss như gốc).
     const pool = poolSnap.exists ? (poolSnap.data() as PoolDoc) : null;
-    if (!pool || !pool.players?.[uid] || now.getTime() > fight.expiresAt || isPoolEnded(pool, now)) {
+    const me = pool?.players?.[uid];
+    if (!pool || !me || now.getTime() > fight.expiresAt || isPoolEnded(pool, now)) {
       tx.set(playerRef, player);
       return { success: true, autoLoss: true, damagePoints: 0, tickets: player.tickets };
     }
 
-    // Điểm xếp hạng = damage của riêng hero; máu boss chung bị trừ bằng damage CẢ ĐỘI (khớp trận local).
-    const me = pool.players[uid];
+    // Bảng xếp hạng chỉ cộng damage của CHÍNH người vào đánh; máu boss chung trừ theo damage CẢ ĐỘI (8 người).
     me.TotalDamagePoints += damageDealt;
+    me.Fights = (me.Fights ?? 0) + 1;
+    pool.realTeamDamage = (pool.realTeamDamage ?? 0) + totalDamageDealt;
 
-    let remaining = totalDamageDealt;
-    let bossKilled = false;
-    for (let i = 0; i < MAX_BOSS_LOOP && remaining >= pool.bossHP; i++) {
-      remaining -= pool.bossHP;
-      pool.bossesKilled++;
-      pool.bossNumber++;
-      pool.maxBossHP = getBossHp(pool.bossNumber, pool.tier);
-      pool.bossHP = pool.maxBossHP;
-      bossKilled = true;
+    if (damageDealt > 0) {
+      // Sảnh chưa có mốc cho bot → lấy trận thật đầu tiên làm mốc, bot bắt đầu hoạt động từ lúc này.
+      if (pool.anchorOwn <= 0) {
+        pool.anchorOwn = damageDealt;
+        pool.anchorTeamRatio = Math.min(Math.max(totalDamageDealt / damageDealt, 1), 12);
+        pool.botStartAt = now.getTime();
+      }
+      player.avgOwn = average(player.avgOwn, damageDealt);
+      player.avgTeam = average(player.avgTeam, totalDamageDealt);
     }
-    pool.bossHP = Math.max(0, pool.bossHP - remaining);
+    player.lastFoughtEventKey = pool.eventKey;
+    counted = { eventKey: pool.eventKey, tier: pool.tier };
 
     tx.set(poolRef, pool);
     tx.set(playerRef, player);
 
-    const players = sortedPlayers(pool);
+    const boss = poolBossState(pool, now.getTime());
+    const players = toRows(rankPool(pool, now.getTime(), loadBank()));
     return {
       success: true,
       autoLoss: false,
       damagePoints: damageDealt,
       totalDamagePoints: me.TotalDamagePoints,
       newPosition: players.find((p) => p.UserId === uid)?.Position ?? 0,
-      bossKilled,
-      newBossNumber: pool.bossNumber,
-      newBossHP: pool.bossHP,
-      newMaxBossHP: pool.maxBossHP,
+      bossKilled: boss.bossNumber > fight.bossNumber,
+      newBossNumber: boss.bossNumber,
+      newBossHP: boss.bossHP,
+      newMaxBossHP: boss.maxBossHP,
       players,
       rewards: [],
       tickets: player.tickets,
     };
   });
+
+  // Số liệu damage trung bình của league — mốc cho bot ở các sảnh tạo sau. Lỗi ở đây không ảnh hưởng kết quả trận.
+  const stat = counted as { eventKey: string; tier: number } | null;
+  if (stat) {
+    try {
+      await recordFightStats(db(), stat.eventKey, stat.tier, damageDealt, totalDamageDealt);
+    } catch {
+      // bỏ qua
+    }
+  }
+  return result;
 });
 
 // ===== claimBossRushRewards =====
@@ -460,12 +503,18 @@ export const claimbossrushrewards = onCall(async (request) => {
   const poolId = String((request.data as { poolId?: string })?.poolId ?? "");
   const now = new Date();
   const config = await loadRemoteConfig(db());
+  const poolRef = db().collection(POOLS).doc(poolId || "_");
+
+  // Chốt sảnh ngay tại đây nếu tác vụ Thứ Hai chưa kịp chạy — nhận thưởng không phụ thuộc lịch.
+  const pre = await poolRef.get();
+  if (pre.exists && isPoolEnded(pre.data() as PoolDoc, now) && !(pre.data() as PoolDoc).isFinalized) {
+    await finalizePool(db(), poolRef, config);
+  }
 
   return db().runTransaction(async (tx) => {
     const playerRef = db().collection(PLAYERS).doc(uid);
     const player = await readPlayer(tx, playerRef, uid, now);
     resetTicketsIfNewDay(player, now);
-    const poolRef = db().collection(POOLS).doc(poolId || "_");
     const poolSnap = await tx.get(poolRef);
 
     if (!poolSnap.exists || !(poolSnap.data() as PoolDoc).players?.[uid]) {
@@ -476,31 +525,34 @@ export const claimbossrushrewards = onCall(async (request) => {
       return { success: false, expired: false, tickets: player.tickets };
     }
 
-    const rank = rankOf(pool, uid);
+    const end = seasonBounds(pool.eventKey).end;
     const tier = pool.tier;
+    let result: PoolResult | undefined = pool.results?.[uid];
+    if (!result) {
+      const e = rankPool(pool, end, loadBank()).find((x) => x.id === uid) as RankEntry;
+      result = { rank: e.position, fights: e.fights, newTier: computeNewTier(config, tier, e.position, poolCount(pool), e.fights, e.score) };
+    }
+    const bossesKilled = pool.finalBossesKilled ?? poolBossState(pool, end).bossesKilled;
     const alreadyClaimed = pool.claimed?.[uid] === true;
-    const rewards = alreadyClaimed ? [] : computeRewards(getRewardTable(config, tier), rank, pool.bossesKilled);
-    const newTier = alreadyClaimed ? player.tier : computeNewTier(config, tier, rank, pool.playerCount);
+    // Chỉ người đã đánh ít nhất 1 trận trong mùa mới có thưởng.
+    const rewards = alreadyClaimed || result.fights <= 0 ? [] : computeRewards(getRewardTable(config, tier), result.rank, bossesKilled);
 
     if (!alreadyClaimed) {
-      pool.claimed = { ...(pool.claimed ?? {}), [uid]: true };
-      pool.isFinalized = true;
-      player.tier = newTier;
       if (player.currentPoolId === poolId) player.currentPoolId = "";
       player.updatedAt = now.getTime();
-      tx.set(poolRef, pool);
+      tx.update(poolRef, new FieldPath("claimed", uid), true);
       tx.set(playerRef, player);
     }
 
     return {
       success: true,
       expired: false,
-      rank,
-      promoted: newTier > tier,
-      demoted: newTier < tier,
-      bossesKilled: pool.bossesKilled,
+      rank: result.rank,
+      promoted: result.newTier > tier,
+      demoted: result.newTier < tier,
+      bossesKilled,
       tier,
-      newTier,
+      newTier: result.newTier,
       rewards,
       tickets: player.tickets,
     };
@@ -528,7 +580,7 @@ export const updatebossrushplayer = onCall(async (request) => {
     if (poolRef && poolSnap?.exists) {
       const pool = poolSnap.data() as PoolDoc;
       if (pool.players?.[uid] && !isPoolEnded(pool, now)) {
-        pool.players[uid] = toPoolPlayer(player, pool.players[uid], now);
+        syncEntry(pool, player);
         tx.set(poolRef, pool);
       }
     }
@@ -536,27 +588,34 @@ export const updatebossrushplayer = onCall(async (request) => {
   });
 });
 
-// ===== Chốt đợt (gốc finalizeBossRushEndedEvents) — 00:10 UTC Thứ 2 =====
+// ===== getBossRushProfile — bấm avatar trong sảnh để xem hồ sơ (bộ đồ, pet, relic) =====
 
-export async function finalizeEndedPools(now: Date): Promise<number> {
-  const currentKey = getEventKey(now);
-  const snap = await db().collection(POOLS).where("isFinalized", "==", false).limit(500).get();
-  const batch = db().batch();
-  let count = 0;
-  for (const doc of snap.docs) {
-    const pool = doc.data() as PoolDoc;
-    if (pool.eventKey !== currentKey) {
-      batch.update(doc.ref, { isFinalized: true, isOpen: false });
-      count++;
-    }
-  }
-  if (count > 0) await batch.commit();
-  return count;
-}
+export const getbossrushprofile = onCall(async (request) => {
+  const uid = requireUid(request);
+  const body = (request.data ?? {}) as { poolId?: string; userId?: string };
+  const targetId = String(body.userId ?? "");
+  const now = new Date();
+
+  const poolSnap = await db().collection(POOLS).doc(String(body.poolId ?? "") || "_").get();
+  const pool = poolSnap.data() as PoolDoc | undefined;
+  if (!pool?.players?.[uid]) return { success: false, message: "Pool not found" };
+
+  const entry = rankPool(pool, now.getTime(), loadBank()).find((e) => e.id === targetId);
+  if (!entry) return { success: false, message: "Player not found" };
+
+  const readDoc = async (id: string) => (await db().collection(PLAYERS).doc(id).get()).data() as PlayerDoc | undefined;
+  const bot = (pool.bots ?? []).find((b) => b.id === targetId);
+  const source = await readDoc(bot ? uid : targetId);
+  if (!source) return { success: false, message: "Player not found" };
+  return { success: true, player: bot ? botModel(bot, pool, now.getTime(), entry, source) : playerModel(source, entry) };
+});
+
+// ===== Chốt mùa + dựng sảnh mùa mới (gốc finalizeBossRushEndedEvents) — 00:10 UTC Thứ 2 =====
 
 export const finalizebossrushendedevents = onSchedule(
   { schedule: "10 0 * * 1", timeZone: "Etc/UTC" },
   async () => {
-    await finalizeEndedPools(new Date());
+    const now = new Date();
+    await prepareSeason(db(), getNextEventKey(now), now);
   },
 );

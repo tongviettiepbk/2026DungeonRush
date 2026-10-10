@@ -41,7 +41,7 @@
 - [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
 - [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; cả 3 dungeon có trận (Dragon/Zombie/CultistDungeonMode)
 - [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé local reset 0h UTC (PvP 5, BossRush 3, mở lv15), icon IsTicket/IsBossTicket; chưa có mode
-- [Boss Rush online](dungonrush-boss-rush-model.md) — Cloud Functions+Firestore ở server/ (emulator test pass), client Scripts/BossRush+Network chạy Play mode; còn hình Lich/Ogre/Hag + deploy thật
+- [Boss Rush online](dungonrush-boss-rush-model.md) — ĐÃ code theo server/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); còn botBank Unity, popup hồ sơ, hình Lich/Ogre/Hag, deploy
 - [Hệ Enchantment (Relic)](dungonrush-enchantment-system.md) — tier 1..11 ×(1+tier²/100) main stat slot; summon Vial 50 lv; merge 3→1; code+UI+scene đã dựng, CHƯA test Unity
 - [Power người chơi](dungonrush-power-model.md) — rm.iqm/iqr reverse + PlayerPower.cs; HeroUnit đã sửa: đồ thay nền PlayerBase slot + có Wing/Cape
 - [Wing/Cape trạng thái](dungonrush-wing-cape-todo.md) — Wing + Cape đã có UI/logic theo native (chưa test Unity); quặng/Cloak chưa có nguồn thật (cheat O/K)
