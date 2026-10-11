@@ -6,9 +6,13 @@ using UnityEngine;
 // Hành vi BossRushBossDefinition: CanMove = false, RepositionAfterAttack — đánh xong chờ RepositionDelay (5s)
 // rồi đổi sang ô trống ngẫu nhiên trong bán kính RepositionSearchRadius (3 ô).
 // Mọi đòn trúng boss được báo về BossRushMode để cộng damage đội / damage của mình (GameController.hif gốc).
+// Animation: rig dùng CharacterAnimatorController gốc (bool IsIdle / IsAttacking). Clip đánh bắn event
+// OnAttackAnimationHit → ra đòn đúng khung hình vung tay, OnAttackAnimationCompleted → về tư thế đứng.
 public class BossRushBossUnit : EnemyUnit
 {
     private const float REPOSITION_MOVE_TIME = 0.35f;
+    private static readonly int ANIM_IS_IDLE = Animator.StringToHash("IsIdle");
+    private static readonly int ANIM_IS_ATTACKING = Animator.StringToHash("IsAttacking");
 
     public BossRushBossDefinition Definition { get; private set; }
     public BossRushBossModel Model { get; private set; }
@@ -17,6 +21,8 @@ public class BossRushBossUnit : EnemyUnit
     private BossRushMode mode;
     private bool pendingReposition;
     private float repositionAtTime;
+    private Animator animator;
+    private bool attackReleased;
 
     public override bool isMoveable
     {
@@ -50,6 +56,50 @@ public class BossRushBossUnit : EnemyUnit
         hp = System.Math.Min(model.CurrentHP, GetMaxHp());
         UpdateHealthBar();
         pendingReposition = false;
+        SetupAnimator();
+    }
+
+    private void SetupAnimator()
+    {
+        animator = GetComponentInChildren<Animator>();
+        if (animator == null)
+        {
+            return;
+        }
+
+        UnitAnimationEventRelay relay = animator.GetComponent<UnitAnimationEventRelay>();
+        if (relay == null)
+        {
+            relay = animator.gameObject.AddComponent<UnitAnimationEventRelay>();
+        }
+        relay.AttackAnimationHit = OnAttackAnimationHit;
+        relay.AttackAnimationCompleted = OnAttackAnimationCompleted;
+    }
+
+    protected override void PlayAnimAttack()
+    {
+        base.PlayAnimAttack();
+        attackReleased = false;
+        if (animator != null)
+        {
+            animator.SetBool(ANIM_IS_IDLE, false);
+            animator.SetBool(ANIM_IS_ATTACKING, true);
+        }
+    }
+
+    private void OnAttackAnimationHit()
+    {
+        if (stateCurrent == BattleState.Attack && !attackReleased)
+        {
+            attackReleased = true;
+            ReleaseAttack();
+        }
+    }
+
+    private void OnAttackAnimationCompleted()
+    {
+        animator.SetBool(ANIM_IS_ATTACKING, false);
+        animator.SetBool(ANIM_IS_IDLE, true);
     }
 
     public override double GetMaxHp()
@@ -75,7 +125,11 @@ public class BossRushBossUnit : EnemyUnit
 
     protected override void OnAttackEnd()
     {
-        base.OnAttackEnd();
+        // Đòn đã ra ở event OnAttackAnimationHit; chỉ ra bù khi rig không có Animator / clip không bắn event.
+        if (!attackReleased)
+        {
+            base.OnAttackEnd();
+        }
         if (Definition != null && Definition.behaviorType == BossRushEnemyBehaviorType.RepositionAfterAttack && !pendingReposition)
         {
             pendingReposition = true;

@@ -41,7 +41,7 @@
 - [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
 - [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; cả 3 dungeon có trận (Dragon/Zombie/CultistDungeonMode)
 - [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé reset 0h UTC (PvP 5+4 ads, BossRush), mở lv15, icon IsTicket/IsBossTicket; cả 2 mode đã có
-- [Boss Rush online](dungonrush-boss-rush-model.md) — ĐÃ code theo server/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); popup hồ sơ người chơi + avatar (22 hình thứ tự gốc) + xem chi tiết đồ/pet XONG (user tự chỉnh layout UIPlayerPopup — đừng chạy lại builder); còn ProfilePopup của mình, hình Lich/Ogre/Hag, deploy
+- [Boss Rush online](dungonrush-boss-rush-model.md) — ĐÃ code theo server/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); popup hồ sơ người chơi + avatar (22 hình thứ tự gốc) + xem chi tiết đồ/pet XONG (user tự chỉnh layout UIPlayerPopup — đừng chạy lại builder); ĐỦ 10 prefab boss + animation đánh theo Animator gốc (2026-10-12); còn ProfilePopup của mình, deploy
 - [Hệ Enchantment (Relic)](dungonrush-enchantment-system.md) — tier 1..11 ×(1+tier²/100) main stat slot; summon Vial 50 lv; merge 3→1; code+UI+scene đã dựng, CHƯA test Unity
 - [Power người chơi](dungonrush-power-model.md) — rm.iqm/iqr reverse + PlayerPower.cs; HeroUnit đã sửa: đồ thay nền PlayerBase slot + có Wing/Cape
 - [Wing/Cape trạng thái](dungonrush-wing-cape-todo.md) — Wing + Cape đã có UI/logic theo native (chưa test Unity); quặng/Cloak chưa có nguồn thật (cheat O/K)
