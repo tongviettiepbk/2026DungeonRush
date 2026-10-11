@@ -2,7 +2,7 @@ import { randomBytes } from "crypto";
 import { FieldPath, getFirestore, Firestore, Transaction, DocumentReference } from "firebase-admin/firestore";
 import { CallableRequest, HttpsError, onCall } from "firebase-functions/v2/https";
 import { onSchedule } from "firebase-functions/v2/scheduler";
-import { botLoadout, loadBank } from "./bots";
+import { botAvatarId, botLoadout, loadBank } from "./bots";
 import { RankEntry, botParams, isPoolOpen, poolBossState, poolCount, previousEventKey, rankPool, seasonBounds, toRows } from "./bossRushPool";
 import { DAILY_AD_TICKETS, DAILY_FREE_TICKETS, FIGHT_TOKEN_TTL_SECONDS, MAX_GHOSTS, START_TIER } from "./config";
 import {
@@ -148,7 +148,7 @@ function playerModel(p: PlayerDoc, e: RankEntry | undefined): BossRushPlayerMode
 function botModel(bot: BotSeed, pool: PoolDoc, now: number, e: RankEntry | undefined, fallback: PlayerDoc): BossRushPlayerModel {
   const step = botLoadout(bot, botParams(pool), now, loadBank());
   return {
-    UserId: bot.id, PlayerName: bot.name, AvatarId: bot.avatarId, Position: e?.position ?? 0, Power: e?.power ?? bot.basePower,
+    UserId: bot.id, PlayerName: bot.name, AvatarId: botAvatarId(bot.seed), Position: e?.position ?? 0, Power: e?.power ?? bot.basePower,
     TotalDamagePoints: e?.score ?? 0,
     Items: step ? step.items : fallback.items ?? [],
     Companions: step ? step.companions : fallback.companions ?? [],

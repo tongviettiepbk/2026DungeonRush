@@ -1,4 +1,4 @@
-import { BankChain, BotParams, botPower, botProgress } from "./bots";
+import { BankChain, BotParams, botAvatarId, botPower, botProgress } from "./bots";
 import { DAILY_AD_TICKETS, DAILY_FREE_TICKETS, POOL_CAPACITY, getBossHp } from "./config";
 import { BossRushPlayerRow, PoolDoc } from "./models";
 
@@ -60,7 +60,7 @@ export function rankPool(pool: PoolDoc, now: number, bank: Map<string, BankChain
   (pool.bots ?? []).forEach((bot, i) => {
     const progress = botProgress(bot.seed, params, now);
     list.push({
-      id: bot.id, name: bot.name, avatarId: bot.avatarId, power: botPower(bot, params, now, bank), score: progress.score,
+      id: bot.id, name: bot.name, avatarId: botAvatarId(bot.seed), power: botPower(bot, params, now, bank), score: progress.score,
       fights: progress.fights, joinedAt: pool.createdAt + 1 + i, isBot: true, position: 0,
     });
   });

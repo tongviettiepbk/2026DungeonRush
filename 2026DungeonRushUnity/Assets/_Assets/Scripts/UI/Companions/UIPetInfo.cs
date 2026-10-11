@@ -35,6 +35,8 @@ public class UIPetInfo : BaseUI
 
     private CompanionUI owner;
     private CompanionData data;
+    // > 0: đang xem pet của NGƯỜI KHÁC ở level này (popup thông tin người chơi) — không đọc save, không có nút.
+    private int viewLevel;
 
     protected override void Awake()
     {
@@ -48,6 +50,16 @@ public class UIPetInfo : BaseUI
     {
         this.data = data;
         this.owner = owner;
+        viewLevel = 0;
+        Refresh();
+        gameObject.SetActive(true);
+    }
+
+    public void ShowOther(CompanionData data, int level)
+    {
+        this.data = data;
+        owner = null;
+        viewLevel = Mathf.Max(1, level);
         Refresh();
         gameObject.SetActive(true);
     }
@@ -56,9 +68,10 @@ public class UIPetInfo : BaseUI
     {
         UserCompanionData user = GameData.userData.companions;
         CompanionModel model = user.GetModel(data.assetName);
-        bool isOwned = model != null;
-        bool isEquipped = isOwned && user.IsEquipped(data.assetName);
-        int level = user.GetLevel(data.assetName); // chưa sở hữu → 1
+        bool isViewOther = viewLevel > 0;
+        bool isOwned = isViewOther || model != null;
+        bool isEquipped = isViewOther == false && isOwned && user.IsEquipped(data.assetName);
+        int level = isViewOther ? viewLevel : user.GetLevel(data.assetName); // chưa sở hữu → 1
 
         txtName.text = data.companionName;
         // TODO: màu chữ theo rarity — chưa có bảng màu gốc, đang giữ màu mặc định của prefab.
@@ -72,17 +85,18 @@ public class UIPetInfo : BaseUI
         imgIcon.gameObject.SetActive(isOwned);
         imgLock.gameObject.SetActive(isOwned == false);
 
+        bool isMine = isOwned && isViewOther == false;
         textLv.gameObject.SetActive(isOwned);
-        textProcess.gameObject.SetActive(isOwned);
-        imgProcess.gameObject.SetActive(isOwned);
-        btEquip.gameObject.SetActive(isOwned);
-        btUpgrade.gameObject.SetActive(isOwned);
-        if (isOwned == false)
+        textProcess.gameObject.SetActive(isMine);
+        imgProcess.gameObject.SetActive(isMine);
+        btEquip.gameObject.SetActive(isMine);
+        btUpgrade.gameObject.SetActive(isMine);
+        textLv.text = "Lvl " + level;
+        if (isMine == false)
         {
             return;
         }
 
-        textLv.text = "Lvl " + model.level;
         if (model.level >= CompanionUpgradeConfig.MAX_LEVEL)
         {
             textProcess.text = "MAX";

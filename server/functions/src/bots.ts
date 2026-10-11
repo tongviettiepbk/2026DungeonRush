@@ -21,6 +21,10 @@ const SALT_TRAIT = 11;
 const SALT_DAY = 23;
 const SALT_LOGIN = 37;
 const SALT_IDENTITY = 51;
+const SALT_AVATAR = 67;
+
+// Số avatar phía client (AvatarConfig, 22 hình của game gốc).
+export const AVATAR_COUNT = 22;
 
 // ===== Số ngẫu nhiên có hạt giống =====
 
@@ -50,6 +54,11 @@ export function hashString(s: string): number {
 }
 
 // mulberry32
+// Avatar của bot suy ra từ seed lúc đọc (không dựa vào giá trị đã lưu) → sảnh tạo trước khi có avatar vẫn có hình.
+export function botAvatarId(seed: number): number {
+  return Math.floor(makeRng(hashSeed(seed, SALT_AVATAR))() * AVATAR_COUNT);
+}
+
 export function makeRng(seed: number): () => number {
   let a = seed >>> 0;
   return () => {
@@ -322,7 +331,7 @@ export function generateBots(
     const target = Math.max(1, anchorPower) * clamp(Math.exp(0.9 * gauss(rng)), 0.25, 8);
     const chain = pickChain(bank, target, rng, usedChains);
     bots.push({
-      id, name, avatarId: 0, seed,
+      id, name, avatarId: botAvatarId(seed), seed,
       chain: chain ? chain.id : "",
       basePower: chain ? chain.steps[0].power : Math.floor(target),
     });

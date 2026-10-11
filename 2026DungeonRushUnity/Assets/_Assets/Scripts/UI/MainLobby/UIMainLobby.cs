@@ -18,6 +18,8 @@ public class UIMainLobby : BaseUI
     [Space(20)]
     [Header(" Top")]
     public TMP_Text txtNamePlayer;
+    public Image imgAvatar;
+    public Button btProfile;   // ô avatar góc trên (ProfileButton gốc) — tạm mở thẳng popup chọn avatar
     public TMP_Text txtPower;
     public TMP_Text txtLevelMap;
     public TMP_Text txtGem;
@@ -107,7 +109,11 @@ public class UIMainLobby : BaseUI
         EventDispatcher.Instance.RegisterListener(EventID.EnchantmentChanged, OnPowerSourceChanged);
         EventDispatcher.Instance.RegisterListener(EventID.WingChanged, OnWingChanged);
         EventDispatcher.Instance.RegisterListener(EventID.CapeChanged, OnCapeChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.AvatarChanged, OnAvatarChanged);
+        if (btProfile != null)
+            btProfile.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.AvatarSelectPopup));
         LoadPowerTxt();
+        LoadAvatar();
 
         if (pageEnchantment != null)
             pageEnchantment.onNotEnoughVial = () => OpenTab(TypeMenuLobby.Dungeon);
@@ -608,6 +614,17 @@ public class UIMainLobby : BaseUI
         LoadPowerTxt();
     }
 
+    private void OnAvatarChanged(object param)
+    {
+        LoadAvatar();
+    }
+
+    private void LoadAvatar()
+    {
+        if (imgAvatar != null)
+            imgAvatar.sprite = AvatarConfig.Get(GameData.userData.profile.avatarId);
+    }
+
     private void OnDestroy()
     {
         if (EventDispatcher.IsNull == false)
@@ -617,6 +634,7 @@ public class UIMainLobby : BaseUI
             EventDispatcher.Instance.RemoveListener(EventID.EnchantmentChanged, OnPowerSourceChanged);
             EventDispatcher.Instance.RemoveListener(EventID.WingChanged, OnWingChanged);
             EventDispatcher.Instance.RemoveListener(EventID.CapeChanged, OnCapeChanged);
+            EventDispatcher.Instance.RemoveListener(EventID.AvatarChanged, OnAvatarChanged);
         }
     }
 

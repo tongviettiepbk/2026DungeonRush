@@ -13,6 +13,8 @@ public class UIKey
     public const string BossRushPopup = "UIBossRushPopup";
     public const string BossRushEndPopup = "UIBossRushEndPopup";
     public const string BossRushClaimPopup = "UIBossRushClaimPopup";
+    public const string PlayerPopup = "UIPlayerPopup";
+    public const string AvatarSelectPopup = "UIAvatarSelectPopup";
     public const string PvPPopup = "UIPvPPopup";
     public const string PvPFindOpponentPopup = "UIPvPFindOpponentPopup";
     public const string PvPEndPopup = "UIPvPEndPopup";

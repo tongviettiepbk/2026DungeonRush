@@ -93,6 +93,7 @@ public class BossRushJoinRequestDTO
 {
     public string server;
     public string playerName;
+    public int avatarId;
     public double power;
     public List<BossRushItemModel> items;
     public List<BossRushCompanionModel> companions;
@@ -125,6 +126,12 @@ public class BossRushFightResultRequestDTO
 public class BossRushClaimRequestDTO
 {
     public string poolId;
+}
+
+public class BossRushProfileRequestDTO
+{
+    public string poolId;
+    public string userId;
 }
 
 // ===== Response =====
@@ -214,6 +221,14 @@ public class BossRushClaimResponseDTO
     public int newTier;
     public List<RewardEntry> rewards;
     public BossRushTicketsDTO tickets;
+}
+
+// Hồ sơ 1 người trong sảnh (bấm vào dòng người chơi): player kèm đủ Items/Companions/EnchantmentTiers.
+public class BossRushProfileResponseDTO
+{
+    public bool success;
+    public string message;
+    public BossRushPlayerModel player;
 }
 
 // ===== Model phía client =====

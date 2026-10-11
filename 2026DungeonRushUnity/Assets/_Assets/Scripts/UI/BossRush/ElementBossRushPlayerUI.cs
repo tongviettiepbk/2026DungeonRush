@@ -15,6 +15,8 @@ public class ElementBossRushPlayerUI : MonoBehaviour
     public Color highlightedBackgroundColor = new Color(1f, 0.85f, 0.4f, 1f);
     public Color defaultBackgroundColor = Color.white;
 
+    public Image imgPlayer;
+
     private BossRushPlayerModel model;
     private Action<BossRushPlayerModel> onClick;
 
@@ -29,8 +31,9 @@ public class ElementBossRushPlayerUI : MonoBehaviour
         this.onClick = onClick;
         txtPosition.text = player.Position.ToString();
         txtPlayerName.text = player.PlayerName;
-        txtDamagePoints.text = "<sprite=0>" + player.TotalDamagePoints.ToLetter();
-        if (txtPower != null) txtPower.text = "<sprite=0>" + player.Power.ToLetter();
+        txtDamagePoints.text = player.TotalDamagePoints.ToLetter();
+        if (txtPower != null) txtPower.text = player.Power.ToLetter();
+        if (imgPlayer != null) imgPlayer.sprite = AvatarConfig.Get(player.AvatarId);
         if (imgBackground != null) imgBackground.color = isMine ? highlightedBackgroundColor : defaultBackgroundColor;
     }
 }

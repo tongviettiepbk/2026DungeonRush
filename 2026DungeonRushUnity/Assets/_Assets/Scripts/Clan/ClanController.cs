@@ -63,7 +63,7 @@ public class ClanController : Singleton<ClanController>
             server = FirebaseSettings.PROJECT_ID,
             playerName = PlayerName(),
             power = Power(),
-            avatarId = 0,
+            avatarId = GameData.userData.profile.avatarId,
         };
         CallClan<ClanResponseDTO>(FN_CREATE, request, "Failed to create clan", (ok, res, error) =>
         {
@@ -297,7 +297,7 @@ public class ClanController : Singleton<ClanController>
             server = FirebaseSettings.PROJECT_ID,
             playerName = PlayerName(),
             power = Power(),
-            avatarId = 0,
+            avatarId = GameData.userData.profile.avatarId,
         };
     }
 

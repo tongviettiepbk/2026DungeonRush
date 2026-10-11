@@ -42,6 +42,7 @@ public class BossRushController : Singleton<BossRushController>
     public const string FN_REPORT_DAMAGE = "reportbossrushdamage";
     public const string FN_CLAIM = "claimbossrushrewards";
     public const string FN_UPDATE_PLAYER = "updatebossrushplayer";
+    public const string FN_GET_PROFILE = "getbossrushprofile";
 
     private const int MAX_PENDING_ATTEMPTS = 5;
     private const int SECONDS_PER_DAY = 24 * 60 * 60;
@@ -139,6 +140,25 @@ public class BossRushController : Singleton<BossRushController>
             GameData.Save();
             SyncEventTickets();
             callback?.Invoke(res.success, res);
+        });
+    }
+
+    // ===== Hồ sơ người chơi trong sảnh =====
+
+    // Chỉ tải khi người chơi bấm xem (dòng trong sảnh không kèm bộ đồ). Lỗi → callback(false, null).
+    public void GetProfile(string userId, Action<bool, BossRushPlayerModel> callback)
+    {
+        string poolId = Pool != null ? Pool.PoolId : User.currentPoolId;
+        BossRushProfileRequestDTO request = new BossRushProfileRequestDTO { poolId = poolId, userId = userId };
+        FirebaseManager.Instance.Call<BossRushProfileResponseDTO>(FN_GET_PROFILE, request, (ok, res, raw) =>
+        {
+            if (!ok || res == null || !res.success || res.player == null)
+            {
+                DebugCustom.LogWarning("[BossRush] Failed to get Boss Rush profile | httpSuccess=" + ok + " | response=" + raw);
+                callback?.Invoke(false, null);
+                return;
+            }
+            callback?.Invoke(true, res.player);
         });
     }
 
@@ -374,10 +394,20 @@ public class BossRushController : Singleton<BossRushController>
         {
             return;
         }
+        UpdatePlayer();
+    }
+
+    // Gửi snapshot ngay, không xét mốc 1 lần/ngày — dùng khi đổi avatar để sảnh thấy hình mới.
+    public void UpdatePlayer()
+    {
+        if (string.IsNullOrEmpty(User.currentPoolId))
+        {
+            return;
+        }
 
         BossRushUpdateRequestDTO request = new BossRushUpdateRequestDTO { poolId = User.currentPoolId };
         FillSnapshot(request);
-        User.lastItemUpdateTime = now;
+        User.lastItemUpdateTime = Now();
         User.isDataChanged = true;
         FirebaseManager.Instance.Call<object>(FN_UPDATE_PLAYER, request, (ok, res, raw) =>
         {
@@ -391,6 +421,7 @@ public class BossRushController : Singleton<BossRushController>
     {
         request.server = FirebaseSettings.PROJECT_ID;
         request.playerName = GameData.userData.profile.userName;
+        request.avatarId = GameData.userData.profile.avatarId;
         request.power = BossRushPower.GetPlayerPower();
         request.items = BuildItems(GameData.userData.equipment);
         request.companions = BuildCompanions(GameData.userData.companions);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class UserProfileData : BaseUserData
 {
     public string userName { get; set; }
+    public int avatarId { get; set; }   // index trong AvatarConfig
 
     public double firstTimeLogin { get; set; } = StaticValue.defaultDateMiliseconds;
     public double lastDayLogin { get; set; } = StaticValue.defaultDateMiliseconds;

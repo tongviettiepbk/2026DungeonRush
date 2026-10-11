@@ -196,15 +196,21 @@ public static class LootService
     // Trả null nếu equipId rỗng hoặc không tra được asset (VD slot Wing/Cape chưa nằm trong pool loot).
     public static LootResult BuildFromEquipId(GearSlotType slot, string equipId)
     {
+        EquippedItemData rec = GameData.userData != null && GameData.userData.equipment != null
+            ? GameData.userData.equipment.GetRecord(slot)
+            : null;
+        return BuildFromRecord(slot, equipId, rec);
+    }
+
+    // Như trên nhưng bản ghi do nơi gọi đưa vào (VD món của người chơi khác lấy từ snapshot server).
+    public static LootResult BuildFromRecord(GearSlotType slot, string equipId, EquippedItemData rec)
+    {
         if (string.IsNullOrEmpty(equipId))
             return null;
 
         if (EnsureStaticLoaded() == false)
             return null;
 
-        EquippedItemData rec = GameData.userData != null && GameData.userData.equipment != null
-            ? GameData.userData.equipment.GetRecord(slot)
-            : null;
         List<GearSubStat> subStats = rec != null ? rec.subStats : new List<GearSubStat>();
 
         if (slot == GearSlotType.WEAPON)

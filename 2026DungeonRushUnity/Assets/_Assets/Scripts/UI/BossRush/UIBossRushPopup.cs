@@ -137,7 +137,7 @@ public class UIBossRushPopup : BaseUI
                 elements.Add(element);
             }
             elements[i].gameObject.SetActive(true);
-            elements[i].Show(players[i], players[i].UserId == myId, null);
+            elements[i].Show(players[i], players[i].UserId == myId, OnClickPlayer);
         }
         for (int i = players.Count; i < elements.Count; i++)
         {
@@ -234,6 +234,28 @@ public class UIBossRushPopup : BaseUI
             if (pool.Players[i].UserId == myId) position = pool.Players[i].Position;
         }
         rewardsPanel.Show(position, Mathf.Max(0, pool.CurrentBossNumber - 1), Controller.RewardTable);
+    }
+
+    // Bấm 1 dòng người chơi → popup thông tin; bộ đồ/pet/relic tải riêng theo từng lần bấm.
+    private void OnClickPlayer(BossRushPlayerModel player)
+    {
+        UIPlayerPopup popup = UIManager.Instance.LoadUI(UIKey.PlayerPopup) as UIPlayerPopup;
+        if (popup == null) return;
+
+        popup.ShowLoading(player.UserId);
+        Controller.GetProfile(player.UserId, (ok, profile) =>
+        {
+            // Popup đã đóng hoặc đã chuyển sang xem người khác → bỏ kết quả này.
+            if (popup == null || !popup.IsShowing(player.UserId)) return;
+
+            if (!ok)
+            {
+                UIManager.Instance.ShowToastMessage("Couldn't load player info. Please try again.", isLocalize: false);
+                popup.Close();
+                return;
+            }
+            popup.Show(profile);
+        });
     }
 
     // Sau trận: chờ đổi mode xong (fade) rồi mở lại sảnh.

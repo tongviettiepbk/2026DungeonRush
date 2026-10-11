@@ -30,5 +30,8 @@ public enum EventID
     // (Cape đang mặc đổi chỉ số / hình thì nơi gọi post thêm EquipmentChanged(CAPE).)
     CapeChanged,
 
+    // Avatar: người chơi chọn avatar mới (UserController.AvatarChanged gốc) → lobby đổi hình.
+    AvatarChanged,
+
     // TODO(follow-stick): thêm dần event khi port các hệ thống khác từ StickIdle.
 }

@@ -420,7 +420,7 @@ public class PvPController : Singleton<PvPController>
             server = FirebaseSettings.PROJECT_ID,
             playerName = GameData.userData.profile.userName,
             countryCode = GetCountryCode(),
-            avatarId = 0,
+            avatarId = GameData.userData.profile.avatarId,
             power = BossRushPower.GetPlayerPower(),
             contentVersion = StaticPvPData.CONTENT_VERSION,
             items = BossRushController.BuildItems(GameData.userData.equipment),
