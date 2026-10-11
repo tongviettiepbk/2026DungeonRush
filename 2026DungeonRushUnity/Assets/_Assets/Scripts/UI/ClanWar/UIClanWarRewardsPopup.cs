@@ -65,7 +65,6 @@ public class UIClanWarRewardsPopup : BaseUI
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
         if (CollectClanButton != null) CollectClanButton.onClick.AddListener(OnCollectClan);
         if (CollectPersonalButton != null) CollectPersonalButton.onClick.AddListener(OnCollectPersonal);
-        if (MilestoneCardPrefab != null) MilestoneCardPrefab.gameObject.SetActive(false);
     }
 
     // eip/gea gốc.

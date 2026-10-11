@@ -47,7 +47,6 @@ public class ClanSearchTab : MonoBehaviour
         {
             searchButton.GetComponent<Button>().onClick.AddListener(() => OnNameSubmitted(NameSearchInput != null ? NameSearchInput.text : string.Empty));
         }
-        if (CardPrefab != null) CardPrefab.gameObject.SetActive(false);
     }
 
     // Show gốc: lần đầu mở → tìm với bộ lọc hiện tại.

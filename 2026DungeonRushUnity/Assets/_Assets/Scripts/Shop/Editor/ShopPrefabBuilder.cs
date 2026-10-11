@@ -19,7 +19,7 @@ public static class ShopPrefabBuilder
 {
     private const string DIR = "Assets/_Assets/Scripts/Shop/Editor/";
     private const string RIP = "Assets/_Assets/Prefabs/UI/Shop/";
-    private const string BUILT = "Assets/_Assets/Prefabs/UI/Shop/Built";
+    private const string BUILT = "Assets/_Assets/Prefabs/UINew/Shop";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/";
     private const string DATA = "Assets/_Assets/Resources/Scriptable Objects/Shop";
     private const string CUR = "Assets/_Assets/_ResourceGame/Currency/";

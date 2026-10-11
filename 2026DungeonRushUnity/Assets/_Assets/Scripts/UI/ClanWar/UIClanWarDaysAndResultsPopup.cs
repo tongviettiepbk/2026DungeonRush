@@ -33,7 +33,6 @@ public class UIClanWarDaysAndResultsPopup : BaseUI
         ClanUIUtil.SetText(SubtitleText, "War Scores earned this week");
         ClanUIUtil.SetText(DailyScoresHeaderText, "Daily Scores");
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
-        if (DayCardPrefab != null) DayCardPrefab.gameObject.SetActive(false);
     }
 
     // eip gốc: tải lại state (kèm dailyResults).

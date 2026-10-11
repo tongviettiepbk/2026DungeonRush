@@ -52,7 +52,6 @@ public class UIClanInfoPopup : BaseUI
         if (JoinButton != null) JoinButton.onClick.AddListener(OnJoinClicked);
         if (RequestButton != null) RequestButton.onClick.AddListener(OnRequestClicked);
         if (CloseButton != null) CloseButton.onClick.AddListener(OnCloseClicked);
-        if (MemberCardPrefab != null) MemberCardPrefab.gameObject.SetActive(false);
     }
 
     // ftq gốc (clan, requested, …).

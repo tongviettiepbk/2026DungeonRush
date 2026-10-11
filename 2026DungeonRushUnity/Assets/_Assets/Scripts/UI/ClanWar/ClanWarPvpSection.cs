@@ -25,7 +25,6 @@ public class ClanWarPvpSection : MonoBehaviour
     {
         if (PvpTitleText != null) PvpTitleText.text = "Day 6 PvP";
         if (NoEnemiesText != null) NoEnemiesText.text = "No Enemy Clan Members";
-        if (EnemyCardPrefab != null) EnemyCardPrefab.gameObject.SetActive(false);
     }
 
     // gdd gốc.

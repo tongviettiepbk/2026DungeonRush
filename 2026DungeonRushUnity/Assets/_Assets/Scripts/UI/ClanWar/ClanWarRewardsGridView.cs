@@ -24,7 +24,6 @@ public class ClanWarRewardsGridView : MonoBehaviour
     public void SetRewards(ClanWarRewardsDTO r)
     {
         Clear();
-        if (CellPrefab != null) CellPrefab.gameObject.SetActive(false);
         if (Grid != null)
         {
             Grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;

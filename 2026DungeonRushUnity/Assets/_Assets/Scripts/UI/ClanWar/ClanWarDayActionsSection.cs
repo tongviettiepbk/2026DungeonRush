@@ -23,7 +23,6 @@ public class ClanWarDayActionsSection : MonoBehaviour
         if (drawnDay == day && cards.Count > 0) return;
         drawnDay = day;
         Clear();
-        if (CardPrefab != null) CardPrefab.gameObject.SetActive(false);
 
         List<string> sources = null;
         if (config?.sourcesByDay != null) config.sourcesByDay.TryGetValue(day.ToString(), out sources);

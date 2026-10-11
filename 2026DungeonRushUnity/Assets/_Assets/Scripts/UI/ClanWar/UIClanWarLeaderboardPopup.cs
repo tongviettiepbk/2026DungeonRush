@@ -27,7 +27,6 @@ public class UIClanWarLeaderboardPopup : BaseUI
         ClanUIUtil.SetText(NoLeaderText, "No champion clan yet");
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
         if (ChampionClanInfoButton != null) ChampionClanInfoButton.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.LeadershipRankPopup));
-        if (RowPrefab != null) RowPrefab.gameObject.SetActive(false);
     }
 
     protected override void OnEnable()

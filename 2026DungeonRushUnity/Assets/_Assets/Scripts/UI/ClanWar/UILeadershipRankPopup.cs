@@ -26,7 +26,6 @@ public class UILeadershipRankPopup : BaseUI
         ClanUIUtil.SetText(UpdateInfoText, "Updates every 10 minutes");
         ClanUIUtil.SetText(NoRankingsText, "Rankings will be displayed when war is active.");
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
-        if (RowPrefab != null) RowPrefab.gameObject.SetActive(false);
     }
 
     protected override void OnEnable()

@@ -17,7 +17,7 @@ using Object = UnityEngine.Object;
 public static class ClanPrefabBuilder
 {
     private const string MAP = "Assets/_Assets/Scripts/Clan/Editor/clan_fieldmap.json";
-    private const string BUILT = "Assets/_Assets/Prefabs/UI/Clan/Built";
+    private const string BUILT = "Assets/_Assets/Prefabs/UINew/Clan";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/";
     private const string CATALOG = "Assets/_Assets/Resources/Scriptable Objects/UI/ClanBannerCatalog.asset";
     private const string RES = "Assets/_Assets/_ResourceGame/";
@@ -31,7 +31,7 @@ public static class ClanPrefabBuilder
     // Component phụ của gốc không port (hiệu ứng nhấn / nhãn localize tĩnh / chấm đỏ — xử lý thẳng trong script).
     private static readonly HashSet<string> SKIP = new HashSet<string> { "PressButtonUI", "LocalizedLabel", "NotificationUI" };
 
-    // Thẻ con dựng trước (được popup/tab tham chiếu làm template).
+    // Thẻ con dựng trước vào Prefabs/UINew/Clan, popup/tab tham chiếu trực tiếp.
     private static readonly string[] CARDS =
     {
         "TabSelectorItemUI", "ClanBannerOptionItem", "ClanMemberCard", "ClanRequestCard", "ClanSearchCard", "ClanWarActionCard",
@@ -237,7 +237,7 @@ public static class ClanPrefabBuilder
         return true;
     }
 
-    // Tham chiếu ra ngoài prefab: catalog banner / sprite icon / template thẻ con.
+    // Tham chiếu ra ngoài prefab: catalog banner / sprite icon / prefab thẻ con.
     private static bool AssignExternal(Component c, FieldInfo fi, string prefabName)
     {
         Type ft = fi.FieldType;
@@ -256,12 +256,8 @@ public static class ClanPrefabBuilder
         }
         if (typeof(Component).IsAssignableFrom(ft) && builtCards.TryGetValue(ft, out GameObject cardPrefab))
         {
-            // Template ẩn ngay dưới component (Instantiate(template, ListContent) ở runtime) — không trỏ asset để SetActive an toàn.
-            GameObject go = (GameObject)PrefabUtility.InstantiatePrefab(cardPrefab, c.transform);
-            PrefabUtility.UnpackPrefabInstance(go, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
-            go.name = ft.Name + "Template";
-            go.SetActive(false);
-            fi.SetValue(c, go.GetComponent(ft));
+            // Trỏ thẳng prefab thẻ ở Prefabs/UINew/Clan (sửa 1 thẻ là mọi nơi dùng đổi theo).
+            fi.SetValue(c, cardPrefab.GetComponent(ft));
             return true;
         }
         log.Add("  ! " + prefabName + "." + fi.Name + ": tham chiếu ngoài chưa map (" + ft.Name + ")");

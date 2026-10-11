@@ -29,7 +29,6 @@ public class UIClanContributionLeaderboardPopup : BaseUI
         base.Awake();
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
         if (DelayInfoText != null) DelayInfoText.text = "Updates every minute.";
-        if (CardPrefab != null) CardPrefab.gameObject.SetActive(false);
         if (ModeSelector != null)
         {
             ModeSelector.Setup(new[] { "Daily", "Weekly" });

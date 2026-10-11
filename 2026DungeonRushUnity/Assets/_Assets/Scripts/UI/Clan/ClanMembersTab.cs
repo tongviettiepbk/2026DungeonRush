@@ -47,7 +47,6 @@ public class ClanMembersTab : MonoBehaviour
         if (SettingsButton != null) SettingsButton.onClick.AddListener(OnSettingsClicked);
         if (RequestsButton != null) RequestsButton.onClick.AddListener(OnRequestsClicked);
         if (EditAnnouncementButton != null) EditAnnouncementButton.onClick.AddListener(OnAnnouncementClicked);
-        if (CardPrefab != null) CardPrefab.gameObject.SetActive(false);
         Transform dot = RequestsButton != null ? RequestsButton.transform.Find("Content/NotificationUI") : null;
         requestsDot = dot != null ? dot.gameObject : null;
         // Khối Join/Request trong header chỉ dùng khi xem clan khác — tab của mình thì ẩn.

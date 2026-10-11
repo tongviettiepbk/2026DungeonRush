@@ -51,3 +51,4 @@
 - [Clan + Clan War](dungonrush-clan-clanwar.md) — dựng + commit 2026-10-10; GD ở server/CLAN_DESIGN.md (đọc trước khi code tiếp); CHƯA test Play
 - [Store / Shop](dungonrush-shop-system.md) — dựng 2026-10-10 theo gốc: rương+pity, Daily Deals, boost exp, gói gem; PurchaseController BASE chưa có SDK; còn OfferPopup/RewardedChest
 - [Khuôn viết GD](gd-doc-layout.md) — GD phải theo khuôn BOSS_RUSH_DESIGN.md: mỗi luật 1 gạch + 1 nhãn cuối dòng, bảng mỗi ô 1 số
+- [Thư mục prefab UINew](dungonrush-uinew-prefab-folder.md) — Prefabs/UINew/<TínhNăng>/ = prefab dùng tham chiếu trực tiếp (không Resources); Prefabs/UI = nguồn rip cho builder

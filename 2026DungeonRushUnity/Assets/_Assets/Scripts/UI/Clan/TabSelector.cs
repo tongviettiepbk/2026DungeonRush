@@ -21,7 +21,6 @@ public class TabSelector : MonoBehaviour
     public void Setup(string[] labels, int selected = 0)
     {
         Clear();
-        if (_itemPrefab != null) _itemPrefab.gameObject.SetActive(false);
         for (int i = 0; i < labels.Length; i++)
         {
             TabSelectorItem item = Instantiate(_itemPrefab, _itemContainer);

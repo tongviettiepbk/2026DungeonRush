@@ -25,7 +25,6 @@ public class UIClanRequestsPopup : BaseUI
         ClanUIUtil.SetText(TitleText, "Requests");
         ClanUIUtil.SetText(EmptyStateText, "No pending requests");
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
-        if (CardPrefab != null) CardPrefab.gameObject.SetActive(false);
     }
 
     // fvw + eip gốc.

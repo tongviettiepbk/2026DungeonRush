@@ -43,7 +43,6 @@ public class UIClanBannerEditorPopup : BaseUI
         ClanUIUtil.SetText(ApplyButtonText, "Apply");
         if (ApplyButton != null) ApplyButton.onClick.AddListener(OnApplyClicked);
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
-        if (OptionPrefab != null) OptionPrefab.gameObject.SetActive(false);
     }
 
     // fsj gốc.
