@@ -53,3 +53,4 @@
 - [Khuôn viết GD](gd-doc-layout.md) — GD phải theo khuôn BOSS_RUSH_DESIGN.md: mỗi luật 1 gạch + 1 nhãn cuối dòng, bảng mỗi ô 1 số
 - [Quy tắc ảnh trùng _ResourceGame](dungonrush-resource-dedupe-rule.md) — giữ tên gốc game, bỏ bản tên data (*Icons); viền khác thì giữ bản có viền; dò trùng trước khi sinh icon mới
 - [Thư mục prefab UINew](dungonrush-uinew-prefab-folder.md) — Prefabs/UINew/<TínhNăng>/ = prefab dùng tham chiếu trực tiếp (không Resources); Prefabs/UI = nguồn rip cho builder
+- [Data test online + bộ test](dungonrush-online-test-data.md) — emulator: `npm run seed` (1000 người + 10 clan + war), `npm run test:seed` 45 ca; giả đồng hồ bằng handler.run + mock.timers để test logic theo ngày
