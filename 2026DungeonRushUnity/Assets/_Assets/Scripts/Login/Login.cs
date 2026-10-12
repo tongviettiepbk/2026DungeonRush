@@ -6,7 +6,7 @@ using UnityEngine.UI;
 // Màn loading: nạp save người chơi (static data đã nạp ở Root) rồi hiện nút "Tap To Play"
 // để vào MainGame.
 //
-// Bản rút gọn so với StickIdle: bỏ Firebase / RemoteConfig / server time / UIManager.
+// Bản rút gọn so với StickIdle: bỏ RemoteConfig / server time / UIManager.
 // Khi có phần UI/GameConfig sẽ thay text/version bằng UIManager + GameConfig.Instance.
 public class Login : MonoBehaviour
 {
@@ -55,6 +55,9 @@ public class Login : MonoBehaviour
         // Static data đã nạp ở Root; ở đây chỉ nạp save người chơi.
         GameData.userData.Load();
         yield return null; // nhường 1 frame để UI kịp vẽ trạng thái loading
+
+        // Đăng nhập (lần đầu: tự tạo tài khoản khách) + tài khoản email thì đối chiếu save cloud.
+        yield return AccountController.Instance.BootRoutine();
 
         OnLoadDone();
     }

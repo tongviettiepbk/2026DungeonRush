@@ -34,6 +34,11 @@ public class BaseUserData
         }
     }
 
+    public void DeleteSave()
+    {
+        PlayerPrefs.DeleteKey(GetDataKey());
+    }
+
     // Gọi 1 lần khi user mới (chưa có save) để set dữ liệu khởi đầu
     public virtual void InitData() { }
 

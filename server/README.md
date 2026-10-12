@@ -119,3 +119,14 @@ clan thật thì test dừng ngay vì phần giả lập tuần sau sẽ chốt 
 
 Lưu ý: `scripts/pvpEmulatorTest.mjs` gọi `removeallpvpplayers` → chạy nó trên emulator đang mở sẽ xoá sạch người chơi PvP
 (cả data seed lẫn tài khoản thật); chạy xong thì `npm run seed` lại.
+
+## Tài khoản + cloud save (`functions/src/account.ts`)
+
+Mô hình gốc: `DecodedData/ACCOUNT_MODEL.md`. Mở game là có tài khoản khách (Auth ẩn danh); Sign Up gắn email + mật khẩu vào chính
+tài khoản đó, Sign In / Forgot Password đi qua Firebase Auth (client gọi thẳng Auth REST, không qua Functions).
+Endpoint: `saveuserdoc` (chỉ tài khoản đã gắn email; từ chối `VERSION_NOT_ADVANCING` khi SaveVersion không lớn hơn bản đang giữ,
+`RATE_LIMITED` khi lưu cách nhau dưới 5 giây), `loaduserdoc`, `deleteuserdoc` (dọn save + hồ sơ PvP của tài khoản khách bị bỏ lại).
+Dữ liệu: `userDocs/{uid}` = `{ UserJson, SaveVersion, LastSyncUtcMs, SchemaVersion, LastWriterDeviceId }`.
+
+Test: `npm run test:emulator:account` (emulator đã chạy sẵn thì `node functions/scripts/accountEmulatorTest.mjs`).
+Lên Firebase thật: bật thêm **Authentication → Email/Password**; thư đặt lại mật khẩu dùng mẫu thư mặc định của Firebase.

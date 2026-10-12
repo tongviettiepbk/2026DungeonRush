@@ -36,12 +36,12 @@
 - [Hệ Mastery (G1)](dungonrush-mastery-feature.md) — 10 nhánh buff tiêu Gem; data+service+save+UI mở khoá+popup nâng cấp XONG (unlock=Lvl1, phí=levels[lv-1]); mở TUẦN TỰ theo MasteryConfig.Upgrades (phí 0,0,30..240 tăng dần); iuf dead code
 - [Companion save/upgrade/summon-level + UI](dungonrush-companion-save-upgrade.md) — whn/whm ĐÃ trích; nâng cấp THỦ CÔNG; CompanionService + CompanionUI + UIPetInfo xong; màu rarity popup còn thiếu
 - [Own Effect pet = buff hero khi SỞ HỮU](dungonrush-companion-own-effect.md) — lu.gov cộng OwnAttack/OwnHealth của MỌI pet owned (không cần equip) vào hero; ĐÃ áp ở HeroUnit
-- [Test logic bằng UnityMCP edit mode](dungonrush-unity-mcp-editmode-test.md) — staticData chưa load phải gọi Load(); codedom C#6; backup/restore userData, không Save
+- [Test logic bằng UnityMCP edit mode](dungonrush-unity-mcp-editmode-test.md) — staticData chưa load phải gọi Load(); codedom C#6; backup/restore userData, không Save; cách nối lại cầu MCP khi rớt + compile-check trên Mac
 - [Companion TODO còn thiếu](dungonrush-companion-todo.md) — 6 việc chưa làm của summon pet (Ads free vô hạn, tab Pet chưa khoá lv5, multiplier Bone, IsNew, màu rarity, event)
 - [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
 - [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; cả 3 dungeon có trận (Dragon/Zombie/CultistDungeonMode)
 - [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé reset 0h UTC (PvP 5+4 ads, BossRush), mở lv15, icon IsTicket/IsBossTicket; cả 2 mode đã có
-- [Boss Rush online](dungonrush-boss-rush-model.md) — ĐÃ code theo GDD/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); popup hồ sơ người chơi + avatar (22 hình thứ tự gốc) + xem chi tiết đồ/pet XONG (user tự chỉnh layout UIPlayerPopup — đừng chạy lại builder); ĐỦ 10 prefab boss + animation đánh theo Animator gốc (2026-10-12); còn ProfilePopup của mình, deploy
+- [Boss Rush online](dungonrush-boss-rush-model.md) — ĐÃ code theo GDD/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); popup hồ sơ người chơi + avatar (22 hình thứ tự gốc) + xem chi tiết đồ/pet XONG (user tự chỉnh layout UIPlayerPopup — đừng chạy lại builder); ĐỦ 10 prefab boss + animation đánh theo Animator gốc (2026-10-12); còn deploy
 - [Hệ Enchantment (Relic)](dungonrush-enchantment-system.md) — tier 1..11 ×(1+tier²/100) main stat slot; summon Vial 50 lv; merge 3→1; code+UI+scene đã dựng, CHƯA test Unity
 - [Power người chơi](dungonrush-power-model.md) — rm.iqm/iqr reverse + PlayerPower.cs; HeroUnit đã sửa: đồ thay nền PlayerBase slot + có Wing/Cape
 - [Wing/Cape trạng thái](dungonrush-wing-cape-todo.md) — Wing + Cape đã có UI/logic theo native (chưa test Unity); quặng/Cloak chưa có nguồn thật (cheat O/K)
@@ -54,3 +54,6 @@
 - [Quy tắc ảnh trùng _ResourceGame](dungonrush-resource-dedupe-rule.md) — giữ tên gốc game, bỏ bản tên data (*Icons); viền khác thì giữ bản có viền; dò trùng trước khi sinh icon mới
 - [Thư mục prefab UINew](dungonrush-uinew-prefab-folder.md) — Prefabs/UINew/<TínhNăng>/ = prefab dùng tham chiếu trực tiếp (không Resources); Prefabs/UI = nguồn rip cho builder
 - [Data test online + bộ test](dungonrush-online-test-data.md) — emulator: `npm run seed` (1000 người + 10 clan + war), `npm run test:seed` 45 ca; giả đồng hồ bằng handler.run + mock.timers để test logic theo ngày
+- [Profile popup (hồ sơ + Settings)](dungonrush-profile-popup.md) — UIProfilePopup mở từ ô avatar lobby, dựng 2026-10-12; slider âm lượng/rung/User ID/đổi tên/Account chạy, 5 nút còn "coming soon" (redeem, ngôn ngữ...)
+- [Thưởng offline (Combat Summary)](dungonrush-offline-earning.md) — dựng 2026-10-13 theo gốc: trần 4h × Mastery, exp/phút = exp 1 màn, 1 rương/phút, X = nhận ×1, ads ×2; nút lobby + QuickEarnings chưa làm
+- [Tài khoản + cloud save](dungonrush-account-system.md) — khách mặc định, Sign Up gắn email, Sign In/Forgot/Sign Out, Choose Save; dựng + test Play 2026-10-13, chưa commit; cách test không làm mất save Editor

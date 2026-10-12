@@ -20,7 +20,7 @@ public class UIMainLobby : BaseUI
     [Header(" Top")]
     public TMP_Text txtNamePlayer;
     public Image imgAvatar;
-    public Button btProfile;   // ô avatar góc trên (ProfileButton gốc) — tạm mở thẳng popup chọn avatar
+    public Button btProfile;   // ô avatar góc trên (ProfileButton gốc) → popup hồ sơ của mình
     public TMP_Text txtPower;
     public TMP_Text txtLevelMap;
     public TMP_Text txtGem;
@@ -76,6 +76,10 @@ public class UIMainLobby : BaseUI
     private string petAuto = "Auto On";
     private string petOff = "Auto Off";
 
+    // Thưởng offline: popup đang chờ nhận thì ngừng đẩy mốc thời gian (GameplayUI gốc).
+    private bool isOfflineEarningPending;
+    private float offlineHeartbeatTimer;
+
 #if UNITY_EDITOR
     [Space(20)]
     [Header("DEBUG - chỉ dùng test")]
@@ -112,7 +116,7 @@ public class UIMainLobby : BaseUI
         EventDispatcher.Instance.RegisterListener(EventID.CapeChanged, OnCapeChanged);
         EventDispatcher.Instance.RegisterListener(EventID.AvatarChanged, OnAvatarChanged);
         if (btProfile != null)
-            btProfile.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.AvatarSelectPopup));
+            btProfile.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.ProfilePopup));
         LoadPowerTxt();
         LoadAvatar();
 
@@ -124,7 +128,48 @@ public class UIMainLobby : BaseUI
 
         // Gốc GameplayUI → BossRushController.ekp lúc vào game: gửi lại snapshot đồ Boss Rush (1 lần/ngày UTC).
         BossRushController.Instance.OnGameStarted();
+
+        // Gốc GameplayUI.kjb lúc vào game: vắng đủ lâu thì bật popup thưởng offline.
+        if (OfflineEarningService.ShouldShowOnStart())
+            ShowOfflineEarning();
     }
+
+    #region Offline earning
+
+    private void ShowOfflineEarning()
+    {
+        // Không cho Back: đóng popup = nhận thưởng (nút X).
+        UIOfflineEarningPopup ui = UIManager.Instance.LoadUI(UIKey.OfflineEarningPopup, isBackable: false) as UIOfflineEarningPopup;
+        if (ui == null)
+            return;
+
+        isOfflineEarningPending = true;
+        ui.Show(OnOfflineEarningCollected);
+    }
+
+    private void OnOfflineEarningCollected()
+    {
+        isOfflineEarningPending = false;
+        offlineHeartbeatTimer = 0f;
+        Refresh();
+        UpdateLootTicketText();
+    }
+
+    // GameplayUI.Update gốc: đang chơi thì mỗi 10s đẩy mốc tính thưởng offline về "bây giờ".
+    private void UpdateOfflineHeartbeat()
+    {
+        if (isOfflineEarningPending)
+            return;
+
+        offlineHeartbeatTimer += Time.unscaledDeltaTime;
+        if (offlineHeartbeatTimer < OfflineEarningService.HEARTBEAT_INTERVAL)
+            return;
+
+        offlineHeartbeatTimer = 0f;
+        OfflineEarningService.Heartbeat();
+    }
+
+    #endregion
 
     #region Tab menu
 
@@ -233,6 +278,7 @@ public class UIMainLobby : BaseUI
     private void Update()
     {
         UpdatePetCooldowns();
+        UpdateOfflineHeartbeat();
 
 #if UNITY_EDITOR
         // add more loot ticket for test
@@ -262,6 +308,13 @@ public class UIMainLobby : BaseUI
         {
             GameData.userData.items.Receive(ItemType.CLOAK, 1000);
             this.PostEvent(EventID.CapeChanged);
+        }
+
+        // test: giả vắng 2 giờ rồi bật popup thưởng offline
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            GameData.userData.offlineEarning.collectTime = ShopService.Now() - 7200;
+            ShowOfflineEarning();
         }
 
         // test: mở tất cả pet (sở hữu đủ 16 con, level 1)

@@ -2019,6 +2019,7 @@ public class BaseUnit : MonoBehaviour
         // TODO(follow-stick): bỏ check UIGamePlay/UIManager (chưa port).
 
         audioSource.loop = isLoop;
+        audioSource.volume = AudioManager.Instance.SfxVolume;
 
         if (isLoop)
         {

@@ -29,6 +29,7 @@ public class UserData
     public const string DATA_KEY_PVP = "key_user_pvp";
     public const string DATA_KEY_CLAN = "key_user_clan";
     public const string DATA_KEY_SHOP = "key_user_shop";
+    public const string DATA_KEY_OFFLINE_EARNING = "key_user_offline_earning";
 
     public UserProfileData profile { get; set; } = new UserProfileData();
     public UserPlayerData player { get; set; } = new UserPlayerData();
@@ -47,6 +48,7 @@ public class UserData
     public UserPvPData pvp { get; set; } = new UserPvPData();
     public UserClanData clan { get; set; } = new UserClanData();
     public UserShopData shop { get; set; } = new UserShopData();
+    public UserOfflineEarningData offlineEarning { get; set; } = new UserOfflineEarningData();
 
     private List<BaseUserData> listData;
     private float lastTimeSaveData;
@@ -89,6 +91,7 @@ public class UserData
         pvp = LoadModule<UserPvPData>(DATA_KEY_PVP, out _);
         clan = LoadModule<UserClanData>(DATA_KEY_CLAN, out _);
         shop = LoadModule<UserShopData>(DATA_KEY_SHOP, out _);
+        offlineEarning = LoadModule<UserOfflineEarningData>(DATA_KEY_OFFLINE_EARNING, out _);
 
         LoadDone();
     }
@@ -160,6 +163,7 @@ public class UserData
             listData.Add(pvp);
             listData.Add(clan);
             listData.Add(shop);
+            listData.Add(offlineEarning);
         }
 
         for (int i = 0; i < listData.Count; i++)
@@ -201,8 +205,42 @@ public class UserData
             if (savePrefs)
             {
                 PlayerPrefs.Save();
+                CloudSaveController.MarkDirty();
             }
         }
+    }
+    #endregion
+
+    #region Cloud save
+    public string ToJson()
+    {
+        return JsonConvert.SerializeObject(this);
+    }
+
+    // Đọc bản save cloud để xem trước (tên, level...) — KHÔNG đụng save đang chơi. Json hỏng thì ném lỗi.
+    public static UserData ParseJson(string json)
+    {
+        return JsonConvert.DeserializeObject<UserData>(json);
+    }
+
+    // Lấy bản save cloud làm save hiện hành, ghi đè toàn bộ module trên máy (UserController.dti gốc).
+    public static void ApplyJson(string json)
+    {
+        UserData data = ParseJson(json);
+        GameData.userData = data;
+        data.LoadDone();
+        data.Save(true);
+    }
+
+    // Xoá save trên máy, bắt đầu lại như người chơi mới (UserController.dtj gốc, lúc đăng xuất).
+    public void ResetLocal()
+    {
+        ValidateData();
+        for (int i = 0; i < listData.Count; i++)
+        {
+            listData[i].DeleteSave();
+        }
+        Load();
     }
     #endregion
 

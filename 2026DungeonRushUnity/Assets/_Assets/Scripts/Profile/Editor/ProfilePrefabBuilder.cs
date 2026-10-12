@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Dựng prefab UI nhóm Profile (Resources/Prefabs/UI/UIPlayerPopup, UIAvatarSelectPopup) từ prefab rip layout-only ở
+// Dựng prefab UI nhóm Profile (Resources/Prefabs/UI/UIProfilePopup, UIPlayerPopup, UIAvatarSelectPopup + 5 popup tài khoản) từ prefab rip layout-only ở
 // Prefabs/UI/Profile/: bọc Canvas/CanvasScaler 1080×2160 + nền mờ ContentAll (như UIPvP*), gắn script, nối field.
 // Mỗi popup 1 menu riêng (Tools/DungeonRush/Build Profile UI/...) vì chạy lại là GHI ĐÈ prefab — popup nào đã
 // chỉnh bố cục bằng tay thì đừng dựng lại.
@@ -16,6 +16,8 @@ public static class ProfilePrefabBuilder
     // Prefab dùng bằng tham chiếu trực tiếp (ô avatar).
     private const string BUILT = "Assets/_Assets/Prefabs/UINew/Profile";
     private const string CUR = "Assets/_Assets/_ResourceGame/Currency/";
+    private const string TAB_ITEM = "Assets/_Assets/Prefabs/UINew/Clan/TabSelectorItemUI.prefab";
+    private const string SETTINGS = "Content/SettingsPage/VerticalLayout/";
     private const string LAYOUT = "Content/Loaded/VerticalLayout/";
     private const float COMPANION_SIZE = 90f;   // bằng ô lưới Items của bản rip
     private const int COMPANION_SLOTS = 3;      // UserCompanionData.MAX_EQUIPPED
@@ -32,6 +34,194 @@ public static class ProfilePrefabBuilder
         new KeyValuePair<string, GearSlotType>("Ring", GearSlotType.RING),
         new KeyValuePair<string, GearSlotType>("Cape", GearSlotType.CAPE),
     };
+
+    // ===== Hồ sơ của mình (Profile + Settings) =====
+
+    [MenuItem("Tools/DungeonRush/Build Profile UI/Profile Popup")]
+    public static string BuildProfilePopup()
+    {
+        GameObject root = NewRoot("UIProfilePopup", out Transform popup, RIP + "ProfilePopup.prefab");
+        UIProfilePopup ui = root.AddComponent<UIProfilePopup>();
+        ui.isPopup = true;
+        ui.btClose = Btn(popup, "Content/CloseButton");
+        ui.objProfilePage = Find(popup, "Content/ProfilePage").gameObject;
+        ui.objSettingsPage = Find(popup, "Content/SettingsPage").gameObject;
+
+        // Thanh tab: TabSelector sinh nút lúc chạy từ prefab TabSelectorItemUI (dùng chung với Clan).
+        Transform tabs = Find(popup, "Content/TabSelectorUI");
+        ui.tabSelector = tabs.gameObject.AddComponent<TabSelector>();
+        SerializedObject tabSelector = new SerializedObject(ui.tabSelector);
+        tabSelector.FindProperty("_selectorTransform").objectReferenceValue = Find(tabs, "Selector");
+        tabSelector.FindProperty("_itemContainer").objectReferenceValue = Find(tabs, "ItemContainer");
+        tabSelector.FindProperty("_itemPrefab").objectReferenceValue = AssetDatabase.LoadAssetAtPath<TabSelectorItem>(TAB_ITEM);
+        tabSelector.ApplyModifiedPropertiesWithoutUndo();
+
+        Transform profile = ui.objProfilePage.transform;
+        ui.txtName = Text(profile, "NicknameParent/NicknameText");
+        ui.txtPower = Text(profile, "PowerButton/Content/PowerText");
+        SetSprite(ui.txtPower, "IsPower");
+        ui.imgAvatar = Find(profile, "AvatarParent/AvatarImage - Button").GetComponent<Image>();
+        ui.btAvatar = Btn(profile, "AvatarParent/AvatarImage - Button");
+        ui.btEditAvatar = Btn(profile, "AvatarEditButton");
+        ui.btEditName = Btn(profile, "NicknameParent/EditNicknaemButton");
+
+        ui.sliderSound = Find(popup, SETTINGS + "SoundFX/SoundFXSlider").GetComponent<Slider>();
+        ui.imgSoundHandle = Find(ui.sliderSound.transform, "AudioHandle").GetComponent<Image>();
+        ui.txtSoundStatus = Text(ui.sliderSound.transform, "AudioHandle/OnOffText");
+        ui.sliderMusic = Find(popup, SETTINGS + "Music/MusicSlider").GetComponent<Slider>();
+        ui.imgMusicHandle = Find(ui.sliderMusic.transform, "MusicHandle").GetComponent<Image>();
+        ui.txtMusicStatus = Text(ui.sliderMusic.transform, "MusicHandle/OnOffText_1");
+
+        Transform vibrate = Find(popup, SETTINGS + "Vibration/VibrationToggle");
+        ui.toggleVibrate = vibrate.gameObject.AddComponent<ToggleButton>();
+        ui.toggleVibrate.Button = vibrate.GetComponent<Button>();
+        ui.toggleVibrate.ParentRectTransform = (RectTransform)vibrate;
+        ui.toggleVibrate.ChildRectTransform = (RectTransform)Find(vibrate, "Button");
+        ui.toggleVibrate.ChildButtonImage = Find(vibrate, "Button").GetComponent<Image>();
+        ui.toggleVibrate.StatusText = Find(vibrate, "Text (TMP)").GetComponent<TextMeshProUGUI>();
+        ui.toggleVibrate.Padding = 40f;   // ToggleButton.Padding gốc
+
+        ui.txtUserId = Text(popup, SETTINGS + "UserID_Info/UserIdText");
+        ui.btCopyUserId = Btn(popup, SETTINGS + "UserID_Info/CopyButton");
+        ui.txtVersion = Text(popup, SETTINGS + "Version_Info/VersionText");
+        WireAccountSection(ui, popup);
+
+        // Tính năng project chưa có: giữ nguyên bố cục gốc, bấm báo "coming soon".
+        ui.listButtonComingSoon = new List<Button>
+        {
+            Btn(profile, "RedeemCodeButton"),
+            Btn(popup, SETTINGS + "Discord/DiscordButton"),
+            Btn(popup, SETTINGS + "Country/CountryButton"),
+            Btn(popup, SETTINGS + "Language/LanguageButton"),
+            Btn(popup, SETTINGS + "ReportBug/ReportButton"),
+        };
+        // Chữ mẫu của bản rip: cờ ngôn ngữ (gốc chỉ bật khi có hình); "Redeem Code" bị ngắt 2 dòng với font project.
+        Text(popup, SETTINGS + "Language/LanguageButton/Content/LanguageName").text = "English";
+        Find(popup, SETTINGS + "Language/LanguageButton/Content/FlagImage").GetComponent<Image>().enabled = false;
+        Text(profile, "RedeemCodeButton/Content/RedeemCodeText").textWrappingMode = TextWrappingModes.NoWrap;
+        return Finish(Save(root, "UIProfilePopup"));
+    }
+
+    // Mục Account ở trang Settings: nút "Sign In / Up" ↔ "Sign Out", dòng "email · Last sync", nút Sync Now + vòng xoay.
+    private static void WireAccountSection(UIProfilePopup ui, Transform popup)
+    {
+        Transform account = Find(popup, SETTINGS + "AccountSection");
+        ui.btAccount = Btn(account, "AccountButton");
+        ui.txtAccountButton = Text(account, "AccountButton/Content/OnOffText_1");
+        ui.txtAccountInfo = Text(account, "AccountInfoLabel");
+        ui.btSyncNow = Btn(account, "SyncButton");
+        ui.imgSyncLoading = Find(account, "LoadingImage").GetComponent<Image>();
+        Text(account, "SyncButton/Content/OnOffText_1").text = "Sync Now";
+    }
+
+    // UIProfilePopup dựng TRƯỚC khi có hệ tài khoản: nối thêm mục Account + nút đổi tên vào prefab đang có, không dựng lại
+    // (giữ nguyên mọi chỉnh sửa bố cục bằng tay).
+    [MenuItem("Tools/DungeonRush/Build Profile UI/Profile Popup - Wire Account Only")]
+    public static string WireProfileAccount()
+    {
+        string path = OUT + "UIProfilePopup.prefab";
+        GameObject root = PrefabUtility.LoadPrefabContents(path);
+        UIProfilePopup ui = root.GetComponent<UIProfilePopup>();
+        Transform popup = Find(root.transform, "ContentAll/ProfilePopup");
+        ui.btEditName = Btn(popup, "Content/ProfilePage/NicknameParent/EditNicknaemButton");
+        WireAccountSection(ui, popup);
+        ui.listButtonComingSoon.Remove(ui.btEditName);
+        ui.listButtonComingSoon.Remove(ui.btAccount);
+        ui.listButtonComingSoon.Remove(ui.btSyncNow);
+        PrefabUtility.SaveAsPrefabAsset(root, path, out bool ok);
+        PrefabUtility.UnloadPrefabContents(root);
+        return Finish("UIProfilePopup account " + (ok ? "wired" : "FAILED"));
+    }
+
+    // ===== Tài khoản: Sign In / Sign Up / chọn save / Cloud Backup / đặt tên =====
+
+    [MenuItem("Tools/DungeonRush/Build Profile UI/Account Popups")]
+    public static string BuildAccountPopups()
+    {
+        return BuildSignInPopup() + ", " + BuildSignUpPopup() + ", " + BuildAccountSelectPopup() + ", "
+            + BuildCloudSavePopup() + ", " + BuildNicknamePopup();
+    }
+
+    private static string BuildSignInPopup()
+    {
+        GameObject root = NewRoot("UISignInPopup", out Transform popup, RIP + "SignInPopup.prefab");
+        UISignInPopup ui = root.AddComponent<UISignInPopup>();
+        ui.isPopup = true;
+        ui.inputEmail = Input(popup, "EmailField", "Enter Email");
+        ui.inputPassword = Input(popup, "PasswordField", "Enter Password");
+        ui.btSignIn = Btn(popup, "Content/SignUpButton");
+        ui.btForgotPassword = Btn(popup, "Content/ForgotPasswordButton");
+        ui.btSwitchToSignUp = Btn(popup, "Content/SignUpTextButton");
+        ui.btClose = Btn(popup, "Content/CloseButton");
+        ui.imgLoading = Find(popup, "Content/LoadingImage").GetComponent<Image>();
+        // Chữ theo bảng ngôn ngữ gốc (Popup.SignIn.*) — bản rip còn chữ mẫu của Sign Up.
+        Text(popup, "Content/TitleText").text = "Sign In";
+        Text(popup, "Content/SignUpButton/Content/Text").text = "Sign In";
+        Text(popup, "Content/ForgotPasswordButton").text = "Forgot password?";
+        return Finish(Save(root, "UISignInPopup"));
+    }
+
+    private static string BuildSignUpPopup()
+    {
+        GameObject root = NewRoot("UISignUpPopup", out Transform popup, RIP + "SignUpPopup.prefab");
+        UISignUpPopup ui = root.AddComponent<UISignUpPopup>();
+        ui.isPopup = true;
+        ui.inputEmail = Input(popup, "EmailField", "Enter Email");
+        ui.inputPassword = Input(popup, "PasswordField", "Enter Password");
+        ui.btSignUp = Btn(popup, "Content/SignUpButton");
+        ui.btSwitchToSignIn = Btn(popup, "Content/SignInTextButton");
+        ui.btClose = Btn(popup, "Content/CloseButton");
+        ui.imgLoading = Find(popup, "Content/LoadingImage").GetComponent<Image>();
+        Text(popup, "Content/SignUpButton/Content/Text").text = "Sign Up";
+        return Finish(Save(root, "UISignUpPopup"));
+    }
+
+    private static string BuildAccountSelectPopup()
+    {
+        GameObject root = NewRoot("UIAccountSelectPopup", out Transform popup, RIP + "AccountSelectPopup.prefab");
+        UIAccountSelectPopup ui = root.AddComponent<UIAccountSelectPopup>();
+        ui.isPopup = true;
+        ui.txtLocalName = Text(popup, "Content/Local/NicknameText");
+        ui.txtLocalProgress = Text(popup, "Content/Local/ProgressText");
+        ui.btKeepLocal = Btn(popup, "Content/Local/LocalButton");
+        ui.txtCloudName = Text(popup, "Content/Cloud/NicknameText");
+        ui.txtCloudProgress = Text(popup, "Content/Cloud/ProgressText");
+        ui.btUseCloud = Btn(popup, "Content/Cloud/CloudButton");
+        Text(popup, "Content/TitleText").text = "Choose Save";
+        // Bắt buộc chọn 1 trong 2 → bỏ nút đóng.
+        Find(popup, "Content/CloseButton").gameObject.SetActive(false);
+        return Finish(Save(root, "UIAccountSelectPopup"));
+    }
+
+    private static string BuildCloudSavePopup()
+    {
+        GameObject root = NewRoot("UICloudSavePopup", out Transform popup, RIP + "CloudSavePopup.prefab");
+        UICloudSavePopup ui = root.AddComponent<UICloudSavePopup>();
+        ui.isPopup = true;
+        ui.btSave = Btn(popup, "ContentTransform/SaveButton");
+        ui.btClose = Btn(popup, "ContentTransform/CloseButton");
+        ui.imgLoading = Find(popup, "ContentTransform/LoadingImage").GetComponent<Image>();
+        return Finish(Save(root, "UICloudSavePopup"));
+    }
+
+    private static string BuildNicknamePopup()
+    {
+        GameObject root = NewRoot("UINicknamePopup", out Transform popup, RIP + "NicknamePopup.prefab");
+        UINicknamePopup ui = root.AddComponent<UINicknamePopup>();
+        ui.isPopup = true;
+        ui.inputName = Input(popup, "ContentTransform/NicknameInputField", "Enter Nickname...");
+        ui.inputName.characterLimit = 15;
+        ui.btEnter = Btn(popup, "ContentTransform/NicknamePopupEnterButton");
+        ui.btClose = Btn(popup, "ContentTransform/NicknamePopupCloseButton");
+        return Finish(Save(root, "UINicknamePopup"));
+    }
+
+    private static TMP_InputField Input(Transform root, string path, string placeholder)
+    {
+        TMP_InputField input = Find(root, path).GetComponent<TMP_InputField>();
+        ((TMP_Text)input.placeholder).text = placeholder;
+        return input;
+    }
 
     // ===== Chọn avatar =====
 

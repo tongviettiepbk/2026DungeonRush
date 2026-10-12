@@ -23,3 +23,4 @@ export {
   claimclanwarpersonalbundle, claimclanwarclanreward, getclanwarcontributionleaderboard, getclanwarclanleaderboard,
   getclanwarleadershipranking, matchclanwarsweekly, matchclanwarsnow, seedclanwarpoints,
 } from "./clanWar";
+export { saveuserdoc, loaduserdoc, deleteuserdoc } from "./account";

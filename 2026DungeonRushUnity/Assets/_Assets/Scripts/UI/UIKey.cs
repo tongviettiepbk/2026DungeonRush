@@ -15,6 +15,13 @@ public class UIKey
     public const string BossRushClaimPopup = "UIBossRushClaimPopup";
     public const string PlayerPopup = "UIPlayerPopup";
     public const string AvatarSelectPopup = "UIAvatarSelectPopup";
+    public const string ProfilePopup = "UIProfilePopup";
+    public const string OfflineEarningPopup = "UIOfflineEarningPopup";
+    public const string SignInPopup = "UISignInPopup";
+    public const string SignUpPopup = "UISignUpPopup";
+    public const string AccountSelectPopup = "UIAccountSelectPopup";
+    public const string CloudSavePopup = "UICloudSavePopup";
+    public const string NicknamePopup = "UINicknamePopup";
     public const string PvPPopup = "UIPvPPopup";
     public const string PvPFindOpponentPopup = "UIPvPFindOpponentPopup";
     public const string PvPEndPopup = "UIPvPEndPopup";

@@ -4,7 +4,9 @@ using UnityEngine;
 // TODO(follow-stick): thay bằng hệ audio đầy đủ (nhạc nền, mixer, settings) khi port.
 public class AudioManager : Singleton<AudioManager>
 {
-    public bool isMuteSfx;
+    // Âm lượng SFX lấy thẳng từ save (slider Sound FX ở UIProfilePopup).
+    public float SfxVolume => GameData.userData.settings.soundVolume;
+    public bool isMuteSfx => SfxVolume <= 0f;
 
     [SerializeField] private AudioSource sfxSource;
 
@@ -20,6 +22,6 @@ public class AudioManager : Singleton<AudioManager>
             return;
         }
 
-        sfxSource.PlayOneShot(clip);
+        sfxSource.PlayOneShot(clip, SfxVolume);
     }
 }

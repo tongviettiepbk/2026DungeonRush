@@ -24,13 +24,20 @@ public static class ShopUIUtil
         return "<color=#" + ColorUtility.ToHtmlStringRGB(color) + ">" + text + "</color>";
     }
 
-    // ev.ehx gốc: 1200 → "20m", 323 → "5m 23s".
+    // ev.ehx gốc: lấy tối đa 2 đơn vị khác 0 theo thứ tự d/h/m/s. 1200 → "20m", 323 → "5m 23s", 9480 → "2h 38m".
     public static string FormatDuration(long seconds)
     {
-        long minutes = seconds / 60;
-        long rest = seconds % 60;
-        if (minutes <= 0) return rest + "s";
-        return rest > 0 ? minutes + "m " + rest + "s" : minutes + "m";
+        long[] values = { seconds / 86400, seconds % 86400 / 3600, seconds % 3600 / 60, seconds % 60 };
+        string[] units = { "d", "h", "m", "s" };
+        string text = string.Empty;
+        int count = 0;
+        for (int i = 0; i < values.Length && count < 2; i++)
+        {
+            if (values[i] <= 0) continue;
+            text += (count > 0 ? " " : string.Empty) + values[i] + units[i];
+            count++;
+        }
+        return count > 0 ? text : "0s";
     }
 
     public static void SetText(TMPro.TMP_Text text, string value)

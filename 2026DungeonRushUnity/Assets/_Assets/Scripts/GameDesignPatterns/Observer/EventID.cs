@@ -33,5 +33,10 @@ public enum EventID
     // Avatar: người chơi chọn avatar mới (UserController.AvatarChanged gốc) → lobby đổi hình.
     AvatarChanged,
 
+    // Tài khoản: vừa gắn email / đăng nhập / đăng xuất / sync xong (AccountController.OnAccountChanged gốc) → vẽ lại mục Account.
+    AccountChanged,
+    // Người chơi vừa đặt / đổi tên.
+    NicknameChanged,
+
     // TODO(follow-stick): thêm dần event khi port các hệ thống khác từ StickIdle.
 }

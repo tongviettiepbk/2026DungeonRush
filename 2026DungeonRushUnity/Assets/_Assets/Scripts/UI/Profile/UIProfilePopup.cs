@@ -1,0 +1,273 @@
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+// Popup hồ sơ CỦA MÌNH (ProfilePopup gốc), mở từ ô avatar ở lobby. 2 trang đổi bằng TabSelector:
+//  - Profile: avatar (bấm hình / nút bút → popup chọn avatar), Power, tên (nút bút → popup đổi tên).
+//  - Settings: âm lượng Sound FX / Music (slider, tay nắm ghi On/Off), rung, tài khoản (Sign In / Up ↔ Sign Out, Sync Now),
+//    User ID (nút chép), phiên bản.
+// Nút của tính năng project chưa có (redeem code, Discord, quốc gia, ngôn ngữ, báo lỗi)
+// nằm trong listButtonComingSoon — bấm chỉ báo "coming soon".
+public class UIProfilePopup : BaseUI
+{
+    public const int TAB_PROFILE = 0;
+    public const int TAB_SETTINGS = 1;
+
+    public Button btClose;
+    public TabSelector tabSelector;
+    public GameObject objProfilePage;
+    public GameObject objSettingsPage;
+
+    [Header("Profile")]
+    public TMP_Text txtName;
+    public TMP_Text txtPower;
+    public Image imgAvatar;
+    public Button btAvatar;
+    public Button btEditAvatar;
+    public Button btEditName;
+
+    [Header("Settings")]
+    public Slider sliderSound;
+    public TMP_Text txtSoundStatus;
+    public Image imgSoundHandle;
+    public Slider sliderMusic;
+    public TMP_Text txtMusicStatus;
+    public Image imgMusicHandle;
+    public ToggleButton toggleVibrate;
+    public TMP_Text txtUserId;
+    public Button btCopyUserId;
+    public TMP_Text txtVersion;
+
+    [Header("Account")]
+    public Button btAccount;
+    public TMP_Text txtAccountButton;
+    public TMP_Text txtAccountInfo;
+    public Button btSyncNow;
+    public Image imgSyncLoading;
+
+    public List<Button> listButtonComingSoon;
+
+    private bool isSyncing;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        btClose.onClick.AddListener(Close);
+        btAvatar.onClick.AddListener(OnClickAvatar);
+        btEditAvatar.onClick.AddListener(OnClickAvatar);
+        btEditName.onClick.AddListener(OnClickEditName);
+        btAccount.onClick.AddListener(OnClickAccount);
+        btSyncNow.onClick.AddListener(OnClickSyncNow);
+        btCopyUserId.onClick.AddListener(OnClickCopyUserId);
+        sliderSound.onValueChanged.AddListener(OnSoundChanged);
+        sliderMusic.onValueChanged.AddListener(OnMusicChanged);
+        toggleVibrate.onChanged = OnVibrateChanged;
+        for (int i = 0; i < listButtonComingSoon.Count; i++)
+        {
+            listButtonComingSoon[i].onClick.AddListener(OnClickComingSoon);
+        }
+
+        tabSelector.Setup(new[] { "Profile", "Settings" });
+        tabSelector.OnTabSelected += ShowPage;
+        EventDispatcher.Instance.RegisterListener(EventID.AvatarChanged, OnAvatarChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.NicknameChanged, OnNicknameChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.AccountChanged, OnAccountChanged);
+    }
+
+    private void OnDestroy()
+    {
+        if (EventDispatcher.IsNull == false)
+        {
+            EventDispatcher.Instance.RemoveListener(EventID.AvatarChanged, OnAvatarChanged);
+            EventDispatcher.Instance.RemoveListener(EventID.NicknameChanged, OnNicknameChanged);
+            EventDispatcher.Instance.RemoveListener(EventID.AccountChanged, OnAccountChanged);
+        }
+    }
+
+    // eip gốc: mỗi lần mở về trang Profile và vẽ lại toàn bộ.
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        ShowTab(TAB_PROFILE);
+        DrawProfile();
+        DrawSettings();
+        DrawAccount();
+    }
+
+    // kqj gốc: mở thẳng một trang (Cloud Backup mở Settings).
+    public void ShowTab(int tab)
+    {
+        tabSelector.Select(tab, false);
+        ShowPage(tab);
+    }
+
+    // Đóng popup mới ghi save (kéo slider đổi giá trị liên tục).
+    private void OnDisable()
+    {
+        GameData.Save();
+    }
+
+    // kqm gốc.
+    private void ShowPage(int tab)
+    {
+        objProfilePage.SetActive(tab == TAB_PROFILE);
+        objSettingsPage.SetActive(tab == TAB_SETTINGS);
+    }
+
+    // ===== Profile =====
+
+    private void DrawProfile()
+    {
+        txtName.text = GameData.userData.profile.userName;
+        txtPower.text = "<sprite=0>" + PlayerPower.ToLong(PlayerPower.GetCurrent()).ToLetter();
+        imgAvatar.sprite = AvatarConfig.Get(GameData.userData.profile.avatarId);
+    }
+
+    private void OnClickAvatar()
+    {
+        UIManager.Instance.LoadUI(UIKey.AvatarSelectPopup);
+    }
+
+    private void OnAvatarChanged(object param)
+    {
+        imgAvatar.sprite = AvatarConfig.Get(GameData.userData.profile.avatarId);
+    }
+
+    // OnEditNicknameClicked gốc.
+    private void OnClickEditName()
+    {
+        UIManager.Instance.LoadUI(UIKey.NicknamePopup);
+    }
+
+    private void OnNicknameChanged(object param)
+    {
+        txtName.text = GameData.userData.profile.userName;
+    }
+
+    // ===== Settings =====
+
+    private void DrawSettings()
+    {
+        UserSettingData settings = GameData.userData.settings;
+        sliderSound.SetValueWithoutNotify(settings.soundVolume);
+        sliderMusic.SetValueWithoutNotify(settings.musicVolume);
+        DrawVolumeStatus(txtSoundStatus, imgSoundHandle, settings.soundVolume);
+        DrawVolumeStatus(txtMusicStatus, imgMusicHandle, settings.musicVolume);
+        toggleVibrate.Set(settings.isHapticOn);
+
+        txtVersion.text = "Version " + Application.version;
+    }
+
+    // kqr gốc.
+    private void OnSoundChanged(float value)
+    {
+        UserSettingData settings = GameData.userData.settings;
+        settings.soundVolume = value;
+        settings.isDataChanged = true;
+        DrawVolumeStatus(txtSoundStatus, imgSoundHandle, value);
+    }
+
+    // kqq gốc. Project chưa có nhạc nền — mới lưu giá trị.
+    private void OnMusicChanged(float value)
+    {
+        UserSettingData settings = GameData.userData.settings;
+        settings.musicVolume = value;
+        settings.isDataChanged = true;
+        DrawVolumeStatus(txtMusicStatus, imgMusicHandle, value);
+    }
+
+    // kqs gốc: tay nắm ghi On/Off, tắt hẳn (0) thì ngả xám.
+    private void DrawVolumeStatus(TMP_Text text, Image handle, float value)
+    {
+        bool isOn = value > 0f;
+        text.text = isOn ? "ON" : "OFF";
+        handle.color = isOn ? UITabWing.DEFAULT_BUTTON_COLOR : UITabWing.DISABLED_BUTTON_COLOR;
+    }
+
+    // Project chưa có chỗ nào rung — mới lưu lựa chọn.
+    private void OnVibrateChanged(bool isOn)
+    {
+        UserSettingData settings = GameData.userData.settings;
+        settings.isHapticOn = isOn;
+        settings.isDataChanged = true;
+    }
+
+    // ===== Account =====
+
+    // krb gốc: khách → nút "Sign In / Up"; đã gắn email → nút "Sign Out", dòng "email · Last sync", nút Sync Now.
+    private void DrawAccount()
+    {
+        AccountController account = AccountController.Instance;
+        bool isLinked = account.IsLinked;
+        txtAccountButton.text = isLinked ? "Sign Out" : "Sign In / Up";
+        txtAccountInfo.gameObject.SetActive(isLinked);
+        if (isLinked)
+        {
+            txtAccountInfo.text = string.Format("{0} · Last sync: {1}", account.Email, account.GetLastSyncText());
+        }
+        btSyncNow.gameObject.SetActive(isLinked && isSyncing == false);
+        UISpinner.Set(imgSyncLoading, isLinked && isSyncing);
+        txtUserId.text = "User ID: " + FirebaseManager.Instance.Uid;
+    }
+
+    // krc gốc.
+    private void OnAccountChanged(object param)
+    {
+        if (gameObject.activeInHierarchy)
+        {
+            DrawAccount();
+        }
+    }
+
+    // krd gốc.
+    private void OnClickAccount()
+    {
+        if (AccountController.Instance.IsLinked == false)
+        {
+            UISignUpPopup.Open();
+            return;
+        }
+
+        AccountController.Instance.SignOut((ok, error) =>
+        {
+            UIManager.Instance.ShowToastMessage(ok ? "Signed out" : "Sign-out failed", isLocalize: false);
+        });
+    }
+
+    // kre / krf gốc.
+    private void OnClickSyncNow()
+    {
+        if (isSyncing || AccountController.Instance.IsLinked == false)
+        {
+            return;
+        }
+
+        isSyncing = true;
+        DrawAccount();
+        AccountController.Instance.SyncNow((ok, error) =>
+        {
+            isSyncing = false;
+            DrawAccount();
+            string message = "Synced to cloud";
+            if (ok == false)
+            {
+                bool isRateLimited = string.IsNullOrEmpty(error) == false && error.Contains(CloudSaveController.ERROR_RATE_LIMITED);
+                message = isRateLimited ? "Synced recently, try again later" : "Sync failed, try again later";
+            }
+            UIManager.Instance.ShowToastMessage(message, isLocalize: false);
+        });
+    }
+
+    // kqk gốc.
+    private void OnClickCopyUserId()
+    {
+        GUIUtility.systemCopyBuffer = FirebaseManager.Instance.Uid;
+        UIManager.Instance.ShowToastMessage("User ID copied", isLocalize: false);
+    }
+
+    private void OnClickComingSoon()
+    {
+        UIManager.Instance.ShowToastMessage("Coming soon", isLocalize: false);
+    }
+}
