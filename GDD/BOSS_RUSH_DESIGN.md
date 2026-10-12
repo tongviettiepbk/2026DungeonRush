@@ -113,7 +113,7 @@ từ đầu mùa. **[ĐỀ XUẤT]**
 - Mỗi league có 20 boss nối tiếp; giết boss này thì boss kế xuất hiện ngay. **[GỐC]**
 - 10 mẫu boss lặp vòng: Dark Lich, Black Dragon, … **[GỐC]**
 - Máu boss #1 theo league: 500M, 1B, 2B, 3B, 5B, 10B, 20B, 30B, 50B, 100B. Boss sau trâu hơn boss trước khoảng
-  1.5 lần. Bảng đầy đủ: `functions/src/config.ts`. **[GỐC]**
+  1.5 lần. Bảng đầy đủ: `server/functions/src/config.ts`. **[GỐC]**
 - Sát thương mỗi đòn của boss theo league: 300, 600, 900, 3000, 6000, 9000, 12000, 15000, 18000, 21000. **[GỐC]**
 - Tham chiếu tốc độ: một sảnh Iron thật (khoảng 100 người) mới giết 1 boss sau khoảng 4 ngày. **[GỐC]**
 
@@ -301,17 +301,17 @@ Chỉ tải dữ liệu khi người chơi bấm vào. Áp dụng cho cả ngư�
 
 | Hạng mục | Ở đâu |
 |---|---|
-| Sảnh 100 người, bot bù cho đủ 60, người thật vào chỗ trống | `functions/src/season.ts` (`createPool`), `bossRush.ts` (Join) |
-| Bot tính từ seed, không chạy nền; điểm, máu boss, power | `functions/src/bots.ts`, `bossRushPool.ts` |
+| Sảnh 100 người, bot bù cho đủ 60, người thật vào chỗ trống | `server/functions/src/season.ts` (`createPool`), `bossRush.ts` (Join) |
+| Bot tính từ seed, không chạy nền; điểm, máu boss, power | `server/functions/src/bots.ts`, `bossRushPool.ts` |
 | Chốt mùa cũ + dựng sảnh mùa mới, giữ chỗ người còn hoạt động | `season.ts` (`prepareSeason`), tác vụ Thứ Hai + dự phòng lúc Join |
-| Bảng thưởng Iron thật, hệ số league, điều kiện ≥ 1 trận | `functions/src/rewardConfig.ts` |
+| Bảng thưởng Iron thật, hệ số league, điều kiện ≥ 1 trận | `server/functions/src/rewardConfig.ts` |
 | Lên/xuống league | `rewardConfig.ts` (`computeNewTier`) |
 | 7 người hỗ trợ do server chọn, kèm bộ đồ | `startbossrushfight` trả `allies` |
 | Hồ sơ người chơi (phía server) | `getbossrushprofile` |
 | Bảng xếp hạng gọn (không kèm bộ đồ), không lộ cờ bot | `BossRushPlayerRow` |
 | Client: nhận `allies`, bỏ cờ bot, báo "đang chuẩn bị" | `Scripts/BossRush/` |
 | Cộng thưởng Cloak, Lootbox, 3 loại key ở client | `BossRushController.GrantRewards` |
-| Ngân hàng bộ đồ cho bot: 580 nhân vật mô phỏng (level 15–100) × 7 mốc | Công cụ Unity `Assets/Editor/BossRushBotBankGenerator.cs` (menu DungeonRush → Boss Rush → Generate Bot Bank) xuất `functions/data/botBank.json` |
+| Ngân hàng bộ đồ cho bot: 580 nhân vật mô phỏng (level 15–100) × 7 mốc | Công cụ Unity `Assets/Editor/BossRushBotBankGenerator.cs` (menu DungeonRush → Boss Rush → Generate Bot Bank) xuất `server/functions/data/botBank.json` |
 
 Ngân hàng bộ đồ phải **sinh lại** mỗi khi đổi cân bằng đồ hoặc công thức Power, rồi deploy lại server. Mỗi sảnh chọn
 cho bot các chuỗi có power gần người thật trong sảnh nhất, không trùng nhau.

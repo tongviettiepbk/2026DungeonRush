@@ -8,7 +8,7 @@ import { PlayerDoc, PoolDoc, PoolEntry, PoolResult } from "./models";
 import { BossRushRemoteConfig, computeNewTier, loadRemoteConfig } from "./rewardConfig";
 import { getEventKey } from "./schedule";
 
-// VÒNG ĐỜI MÙA (server/BOSS_RUSH_DESIGN.md mục 4.2): chốt các sảnh đã hết mùa (hạng cuối + league mới), rồi dựng
+// VÒNG ĐỜI MÙA (GDD/BOSS_RUSH_DESIGN.md mục 4.2): chốt các sảnh đã hết mùa (hạng cuối + league mới), rồi dựng
 // sảnh mùa mới — giữ chỗ cho người còn hoạt động, thiếu 60 người thì bù bot. Chạy bằng tác vụ hẹn giờ Thứ Hai;
 // dự phòng: lượt Join đầu tiên của mùa (có khoá ở document bossRushSeasons/{eventKey}).
 

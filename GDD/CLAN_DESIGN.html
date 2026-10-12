@@ -1,0 +1,354 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Clan + Clan War — Bản thiết kế (GD)</title><style>
+:root{--bg:#fff;--fg:#1c1c1e;--mut:#666;--line:#ddd;--th:#f3f3f5;--code:#f0f0f2}
+@media(prefers-color-scheme:dark){:root{--bg:#1e1e20;--fg:#e8e8ea;--mut:#a0a0a6;--line:#3a3a3e;--th:#2a2a2e;--code:#2e2e33}}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,"Segoe UI",sans-serif;max-width:860px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px}h2{font-size:21px;margin-top:40px;border-bottom:1px solid var(--line);padding-bottom:6px}
+h3{font-size:17px;margin-top:32px}h4{font-size:16px;margin:28px 0 4px}
+table{border-collapse:collapse;margin:12px 0;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:6px 12px;text-align:left;vertical-align:middle}th{background:var(--th)}
+td img{width:48px;display:block}p>img{width:88px}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:13px}hr{border:0;border-top:1px solid var(--line)}
+.tag{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;white-space:nowrap;color:#fff}
+.t0{background:#2e7d4f}.t1{background:#2f6fb5}.t2{background:#b9770e}.t3{background:#b03a3a}
+</style></head><body>
+<h1>Clan + Clan War — Bản thiết kế (GD)</h1>
+<p>Cập nhật: 2026-10-10. Server và client đã code theo bản này (mục 15 ghi phần còn lại). Các mục <span class="tag t2">ĐỀ XUẤT</span> đang chạy đúng như đề xuất và nằm trong config, đổi được khi bạn quyết khác. Số liệu reverse từ game gốc nằm ở <code>DecodedData/CLAN_MODEL.md</code>; file này là thiết kế của project mình.</p>
+<p>Ký hiệu độ chắc chắn của từng mục:</p>
+<table><thead><tr><th>Ký hiệu</th><th>Nghĩa</th></tr></thead><tbody>
+<tr><td><span class="tag t0">GỐC</span></td><td>Xác nhận từ game gốc (đọc từ APK)</td></tr>
+<tr><td><span class="tag t1">CHỐT</span></td><td>Đã thống nhất trong thảo luận</td></tr>
+<tr><td><span class="tag t2">ĐỀ XUẤT</span></td><td>Đề xuất, chờ duyệt (game gốc giữ phần này ở server, APK không có)</td></tr>
+<tr><td><span class="tag t3">CHỜ SỐ LIỆU</span></td><td>Cần ghi thêm từ game gốc mới quyết định được</td></tr>
+</tbody></table>
+<hr>
+<h2>1. Tổng quan</h2>
+<p>Clan là nhóm tối đa 50 người chơi. Mỗi tuần clan đấu <b>Clan War</b> với một clan khác: 5 ngày thi điểm đóng góp, 1 ngày PvP, 1 ngày nghỉ nhận thưởng. Cả clan nhận thưởng theo thắng/thua, mỗi người nhận thêm theo điểm cá nhân.</p>
+<ul>
+<li>Mở khoá ở PlayerLevel 15. <span class="tag t0">GỐC</span></li>
+<li>Vào từ tab Clan ở thanh dưới lobby.</li>
+<li>Chưa có clan → màn tìm clan. Có clan → 2 tab <b>Members</b> và <b>Battle</b> (Clan War). <span class="tag t0">GỐC</span></li>
+</ul>
+<h2>2. Tạo clan</h2>
+<ul>
+<li>Phí tạo: <b>100 gem</b>. <span class="tag t0">GỐC</span></li>
+<li>Tên: <b>3–15 ký tự</b>, chỉ chữ cái và số, không chứa từ bậy. <span class="tag t0">GỐC</span></li>
+<li>Tên không trùng clan khác, không phân biệt hoa/thường. <span class="tag t0">GỐC</span></li>
+<li>Tên không đổi được sau khi tạo. <span class="tag t0">GỐC</span></li>
+<li>Kiểu gia nhập: <b>Public</b> (vào ngay) hoặc <b>Approval Only</b> (chờ duyệt). Mặc định Public. <span class="tag t0">GỐC</span></li>
+<li>Người tạo là Leader. Clan mới ở Tier D.</li>
+<li>Mỗi người chỉ ở một clan. <span class="tag t0">GỐC</span></li>
+</ul>
+<h3>Banner</h3>
+<p>Chọn 4 thứ, đổi lại được trong cài đặt clan: <span class="tag t0">GỐC</span></p>
+<table><thead><tr><th>Thành phần</th><th>Số lựa chọn</th></tr></thead><tbody>
+<tr><td>Hình nền</td><td>8</td></tr>
+<tr><td>Màu nền</td><td>10</td></tr>
+<tr><td>Biểu tượng</td><td>20</td></tr>
+<tr><td>Màu biểu tượng</td><td>8</td></tr>
+</tbody></table>
+<h2>3. Vai trò và quyền</h2>
+<ul>
+<li>Ba vai trò: <b>Leader</b> (1 người), <b>Captain</b>, <b>Member</b>. <span class="tag t0">GỐC</span></li>
+<li>Tối đa <b>3 Captain</b> mỗi clan. <span class="tag t3">CHỜ SỐ LIỆU</span></li>
+</ul>
+<table><thead><tr><th>Việc</th><th>Member</th><th>Captain</th><th>Leader</th></tr></thead><tbody>
+<tr><td>Đóng góp Clan War, rời clan</td><td>✔</td><td>✔</td><td>✔</td></tr>
+<tr><td>Sửa announcement</td><td></td><td>✔</td><td>✔</td></tr>
+<tr><td>Duyệt / từ chối đơn xin vào</td><td></td><td>✔</td><td>✔</td></tr>
+<tr><td>Kick Member</td><td></td><td>✔</td><td>✔</td></tr>
+<tr><td>Kick Captain</td><td></td><td></td><td>✔</td></tr>
+<tr><td>Thăng Member ↔ giáng Captain</td><td></td><td></td><td>✔</td></tr>
+<tr><td>Sửa mô tả, kiểu gia nhập, banner</td><td></td><td></td><td>✔</td></tr>
+</tbody></table>
+<p>Bảng trên: <span class="tag t0">GỐC</span></p>
+<ul>
+<li>Announcement tối đa 300 ký tự. <span class="tag t0">GỐC</span></li>
+<li>Mô tả clan tối đa 200 ký tự. <span class="tag t0">GỐC</span></li>
+</ul>
+<h3>Khi Leader rời clan <span class="tag t2">ĐỀ XUẤT</span></h3>
+<ol>
+<li>Có Captain → Captain có Power cao nhất lên Leader.</li>
+<li>Không có Captain → Member có Power cao nhất lên Leader.</li>
+<li>Không còn ai → clan giải tán, tên clan được dùng lại.</li>
+</ol>
+<p>Game gốc không có nút chuyển Leader thủ công; bản này cũng chưa có.</p>
+<h2>4. Tìm và gia nhập clan</h2>
+<h3>4.1 Tìm clan</h3>
+<ul>
+<li>Danh sách tối đa <b>20 clan</b> cùng server. <span class="tag t3">CHỜ SỐ LIỆU</span></li>
+<li>Không gõ tên: xếp theo tổng Power giảm dần. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Gõ tên: tìm theo phần đầu tên. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Tìm nâng cao: số thành viên tối thiểu / tối đa (0–50), ẩn clan Approval Only. <span class="tag t0">GỐC</span></li>
+</ul>
+<h3>4.2 Gia nhập</h3>
+<ul>
+<li>Clan Public: bấm <b>Join</b> là vào ngay. <span class="tag t0">GỐC</span></li>
+<li>Clan Approval Only: bấm <b>Request</b>, chờ Captain hoặc Leader duyệt. <span class="tag t0">GỐC</span></li>
+<li>Số đơn xin vào mỗi ngày có giới hạn, tính lại lúc 0h UTC. <span class="tag t0">GỐC</span></li>
+<li>Giới hạn đang đặt là <b>5 đơn mỗi ngày</b>. <span class="tag t3">CHỜ SỐ LIỆU</span></li>
+<li>Được nhận vào một clan thì đơn đang chờ ở clan khác tự huỷ. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Clan đủ <b>50 người</b> thì không nhận thêm. <span class="tag t0">GỐC</span></li>
+</ul>
+<h3>4.3 Thời gian chờ</h3>
+<ul>
+<li>Rời clan xong phải <b>chờ 24 giờ</b> mới vào hoặc tạo clan khác. <span class="tag t0">GỐC</span></li>
+<li>Bị kick cũng phải chờ 24 giờ. <span class="tag t2">ĐỀ XUẤT</span></li>
+</ul>
+<h2>5. Tier của clan</h2>
+<ul>
+<li>5 tier: <b>D → C → B → A → S</b>. <span class="tag t0">GỐC</span></li>
+<li>Tier quyết định mức thưởng Clan War (mục 11.2). <span class="tag t0">GỐC</span></li>
+<li>Mỗi tuần clan được cộng <b>điểm tier = War Score</b> giành được tuần đó (tối đa 7). <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Thua vẫn được cộng phần War Score của mình. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Điểm tier chỉ tăng, không giảm. <span class="tag t2">ĐỀ XUẤT</span></li>
+</ul>
+<table><thead><tr><th>Tier</th><th>Điểm tier cần</th><th>Số tuần nhanh nhất</th></tr></thead><tbody>
+<tr><td>D</td><td>0</td><td>—</td></tr>
+<tr><td>C</td><td>7</td><td>1</td></tr>
+<tr><td>B</td><td>18</td><td>3</td></tr>
+<tr><td>A</td><td>35</td><td>5</td></tr>
+<tr><td>S</td><td>60</td><td>9</td></tr>
+</tbody></table>
+<p>Bảng trên: <span class="tag t2">ĐỀ XUẤT</span></p>
+<h2>6. Lịch tuần Clan War</h2>
+<ul>
+<li>Một tuần war bắt đầu <b>Thứ Ba 0h UTC</b>. <span class="tag t0">GỐC</span></li>
+<li>Mỗi ngày đổi lúc 0h UTC. <span class="tag t0">GỐC</span></li>
+</ul>
+<table><thead><tr><th>Ngày war</th><th>Thứ</th><th>Nội dung</th></tr></thead><tbody>
+<tr><td>Day 1</td><td>Thứ Ba</td><td>Thi điểm — nhóm A</td></tr>
+<tr><td>Day 2</td><td>Thứ Tư</td><td>Thi điểm — nhóm B</td></tr>
+<tr><td>Day 3</td><td>Thứ Năm</td><td>Thi điểm — nhóm A</td></tr>
+<tr><td>Day 4</td><td>Thứ Sáu</td><td>Thi điểm — nhóm B</td></tr>
+<tr><td>Day 5</td><td>Thứ Bảy</td><td>Thi điểm — nhóm A</td></tr>
+<tr><td>Day 6</td><td>Chủ Nhật</td><td>PvP với clan địch</td></tr>
+<tr><td>Day 7</td><td>Thứ Hai</td><td>Nghỉ, nhận thưởng</td></tr>
+</tbody></table>
+<p>Bảng trên: <span class="tag t0">GỐC</span></p>
+<ul>
+<li><b>Nhóm A</b>: nhặt đồ, triệu hồi pet, lên level. <span class="tag t0">GỐC</span></li>
+<li><b>Nhóm B</b>: đào mỏ, dùng key dungeon, triệu hồi áo choàng. <span class="tag t0">GỐC</span></li>
+</ul>
+<h2>7. Ghép cặp <span class="tag t2">ĐỀ XUẤT</span></h2>
+<p>Chạy tự động Thứ Ba 00:05 UTC.</p>
+<ol>
+<li>Chốt war tuần trước: cộng điểm tier, ghi clan Champion nếu có trận Championship.</li>
+<li>Ghép trận Championship nếu đủ điều kiện (mục 12).</li>
+<li>Xếp các clan còn lại theo điểm tier giảm dần; cùng điểm thì theo tổng Power.</li>
+<li>Ghép lần lượt từng đôi: hạng 1 gặp hạng 2, hạng 3 gặp hạng 4…</li>
+<li>Clan lẻ cuối cùng gặp một clan bot (mục 13).</li>
+</ol>
+<ul>
+<li>Clan có ít nhất 1 thành viên là được ghép.</li>
+<li>Clan tạo sau giờ ghép phải chờ tuần sau; tab Battle hiện "Waiting For War" và đếm ngược. <span class="tag t0">GỐC</span></li>
+</ul>
+<h2>8. Điểm đóng góp (Day 1–5)</h2>
+<ul>
+<li>Làm đúng hoạt động của ngày thì được điểm đóng góp. <span class="tag t0">GỐC</span></li>
+<li>Hoạt động không thuộc ngày hôm đó thì không có điểm. <span class="tag t0">GỐC</span></li>
+<li>Điểm tính cho cá nhân, đồng thời cộng vào tổng điểm ngày của clan. <span class="tag t0">GỐC</span></li>
+</ul>
+<h3>8.1 Điểm theo độ hiếm <span class="tag t2">ĐỀ XUẤT</span></h3>
+<table><thead><tr><th>Độ hiếm</th><th>Nhặt 1 món đồ</th><th>Triệu hồi 1 pet</th><th>Triệu hồi 1 áo choàng</th></tr></thead><tbody>
+<tr><td>Common</td><td>1</td><td>10</td><td>10</td></tr>
+<tr><td>Uncommon</td><td>2</td><td>20</td><td>20</td></tr>
+<tr><td>Rare</td><td>5</td><td>50</td><td>50</td></tr>
+<tr><td>Epic</td><td>10</td><td>100</td><td>100</td></tr>
+<tr><td>Legendary</td><td>25</td><td>250</td><td>250</td></tr>
+<tr><td>Mythic</td><td>50</td><td>500</td><td>500</td></tr>
+<tr><td>Artifact</td><td>100</td><td>—</td><td>—</td></tr>
+<tr><td>Ancient</td><td>200</td><td>—</td><td>—</td></tr>
+<tr><td>Immortal</td><td>400</td><td>—</td><td>—</td></tr>
+<tr><td>Divine</td><td>800</td><td>—</td><td>—</td></tr>
+</tbody></table>
+<h3>8.2 Điểm hoạt động khác</h3>
+<table><thead><tr><th>Hoạt động</th><th>Điểm</th><th>Độ chắc</th></tr></thead><tbody>
+<tr><td>Lên level</td><td>level mới × 100</td><td><span class="tag t0">GỐC</span></td></tr>
+<tr><td>Dùng 1 key dungeon</td><td>500</td><td><span class="tag t0">GỐC</span></td></tr>
+</tbody></table>
+<h3>8.3 Điểm đào mỏ <span class="tag t2">ĐỀ XUẤT</span></h3>
+<table><thead><tr><th>Quặng</th><th>Điểm</th></tr></thead><tbody>
+<tr><td>Stone</td><td>1</td></tr>
+<tr><td>Coal</td><td>2</td></tr>
+<tr><td>Iron</td><td>4</td></tr>
+<tr><td>Ruby</td><td>8</td></tr>
+<tr><td>Emerald</td><td>15</td></tr>
+<tr><td>Gold</td><td>30</td></tr>
+<tr><td>Diamond</td><td>60</td></tr>
+</tbody></table>
+<p>Project chưa có tính năng đào mỏ, nên Day 2 và Day 4 hiện chỉ kiếm điểm được bằng key dungeon và áo choàng.</p>
+<h3>8.4 Quy tắc ghi điểm</h3>
+<ul>
+<li>Client gom hoạt động rồi gửi lên server sau 8 giây; mất mạng thì giữ lại gửi sau. <span class="tag t0">GỐC</span></li>
+<li>Server chỉ nhận hoạt động diễn ra trong ngày hiện tại, bỏ hoạt động trùng. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Vào clan giữa tuần thì được đóng góp ngay cho war của clan mới. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Rời clan thì điểm đã góp vẫn ở lại trong tổng của clan cũ. <span class="tag t2">ĐỀ XUẤT</span></li>
+</ul>
+<h2>9. Thắng ngày và thắng tuần</h2>
+<ul>
+<li>Hết ngày, clan có tổng điểm ngày cao hơn <b>thắng ngày</b> và nhận War Score của ngày đó. <span class="tag t0">GỐC</span></li>
+<li>Hoà thì không clan nào nhận. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li><b>MVP ngày</b> của mỗi clan là người đóng góp nhiều điểm nhất ngày đó. <span class="tag t0">GỐC</span></li>
+<li>Hết Day 6, clan có tổng War Score cao hơn <b>thắng tuần</b>. <span class="tag t0">GỐC</span></li>
+<li>War Score bằng nhau thì clan có tổng điểm đóng góp cả tuần cao hơn thắng. <span class="tag t2">ĐỀ XUẤT</span></li>
+</ul>
+<table><thead><tr><th>Ngày</th><th>War Score</th></tr></thead><tbody>
+<tr><td>Day 1–5</td><td>1 mỗi ngày</td></tr>
+<tr><td>Day 6</td><td>2</td></tr>
+<tr><td>Cả tuần</td><td>7</td></tr>
+</tbody></table>
+<p>Bảng trên: <span class="tag t2">ĐỀ XUẤT</span></p>
+<h2>10. Day 6 — PvP</h2>
+<h3>10.1 Trận đánh</h3>
+<ul>
+<li>Đánh với thành viên clan địch do máy điều khiển, mặc bộ đồ và mang pet đã lưu của người thật. <span class="tag t0">GỐC</span></li>
+<li>Trận 30 giây, luật giống PvP Arena. <span class="tag t0">GỐC</span></li>
+<li>Bộ đồ đối thủ lấy từ lần gần nhất họ mở PvP Arena.</li>
+<li>Người chưa từng mở PvP Arena ra trận <b>không có đồ</b>, chỉ có tên và Power (xem mục 14).</li>
+</ul>
+<h3>10.2 Vé và điểm</h3>
+<ul>
+<li>Mỗi người có <b>5 vé</b>. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Bắt đầu trận là mất 1 vé, thắng hay thua cũng vậy. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Thắng được <b>1.000 điểm đóng góp</b>. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Mỗi đối thủ chỉ tính điểm một lần cho cả clan; người đã bị đồng đội hạ thì không đánh lại được. <span class="tag t0">GỐC</span></li>
+</ul>
+<h3>10.3 Reset vòng</h3>
+<ul>
+<li>Clan hạ hết toàn bộ đối thủ thì danh sách mở lại và mọi người được hồi vé. <span class="tag t0">GỐC</span></li>
+<li>Chỉ reset khi <b>cả hai clan có từ 30 thành viên</b> lúc bắt đầu war. <span class="tag t0">GỐC</span></li>
+<li>Tối đa <b>2 lần reset</b> mỗi war. <span class="tag t2">ĐỀ XUẤT</span></li>
+</ul>
+<h2>11. Thưởng</h2>
+<h3>11.1 Mốc cá nhân — theo điểm đóng góp cả tuần <span class="tag t2">ĐỀ XUẤT</span></h3>
+<table><thead><tr><th>Mốc điểm</th><th>Lootbox</th><th>Bone</th><th>Exp</th><th>Cloak</th></tr></thead><tbody>
+<tr><td>1.000</td><td>20</td><td>20</td><td>50</td><td>—</td></tr>
+<tr><td>3.000</td><td>40</td><td>40</td><td>100</td><td>5</td></tr>
+<tr><td>6.000</td><td>60</td><td>60</td><td>200</td><td>10</td></tr>
+<tr><td>10.000</td><td>80</td><td>80</td><td>300</td><td>15</td></tr>
+<tr><td>15.000</td><td>100</td><td>100</td><td>500</td><td>20</td></tr>
+<tr><td>25.000</td><td>150</td><td>150</td><td>800</td><td>30</td></tr>
+<tr><td>40.000</td><td>200</td><td>200</td><td>1.200</td><td>40</td></tr>
+<tr><td>60.000</td><td>300</td><td>300</td><td>2.000</td><td>60</td></tr>
+</tbody></table>
+<ul>
+<li>Đạt mốc là bấm nhận được ngay. <span class="tag t0">GỐC</span></li>
+<li>Sang Day 7 có nút gộp nhận hết các mốc còn lại. <span class="tag t0">GỐC</span></li>
+</ul>
+<h3>11.2 Thưởng clan — theo tier và thắng/thua <span class="tag t2">ĐỀ XUẤT</span></h3>
+<table><thead><tr><th>Tier</th><th>Kết quả</th><th>Lootbox</th><th>Bone</th><th>Cloak</th><th>Vial</th></tr></thead><tbody>
+<tr><td>S</td><td>Thắng</td><td>600</td><td>600</td><td>150</td><td>150</td></tr>
+<tr><td>S</td><td>Thua</td><td>300</td><td>300</td><td>75</td><td>75</td></tr>
+<tr><td>A</td><td>Thắng</td><td>450</td><td>450</td><td>110</td><td>110</td></tr>
+<tr><td>A</td><td>Thua</td><td>225</td><td>225</td><td>55</td><td>55</td></tr>
+<tr><td>B</td><td>Thắng</td><td>320</td><td>320</td><td>80</td><td>80</td></tr>
+<tr><td>B</td><td>Thua</td><td>160</td><td>160</td><td>40</td><td>40</td></tr>
+<tr><td>C</td><td>Thắng</td><td>220</td><td>220</td><td>55</td><td>55</td></tr>
+<tr><td>C</td><td>Thua</td><td>110</td><td>110</td><td>25</td><td>25</td></tr>
+<tr><td>D</td><td>Thắng</td><td>150</td><td>150</td><td>35</td><td>35</td></tr>
+<tr><td>D</td><td>Thua</td><td>75</td><td>75</td><td>15</td><td>15</td></tr>
+</tbody></table>
+<ul>
+<li>Nhận trong Day 7. <span class="tag t0">GỐC</span></li>
+<li>Tính theo tier của clan <b>lúc war bắt đầu</b>.</li>
+</ul>
+<h3>11.3 Điều kiện nhận</h3>
+<ul>
+<li>Thưởng clan chỉ dành cho người đã đóng góp ít nhất 1 điểm trong tuần. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Thưởng chưa nhận mất khi tuần mới bắt đầu (Thứ Ba 0h UTC). <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Bot không nhận thưởng.</li>
+</ul>
+<h3>11.4 Loại thưởng trong game</h3>
+<table><thead><tr><th>Loại</th><th>Vật phẩm trong project</th></tr></thead><tbody>
+<tr><td>Lootbox</td><td><code>ItemType.LOOT_TICKET</code></td></tr>
+<tr><td>Bone</td><td><code>ItemType.BONE</code></td></tr>
+<tr><td>Exp</td><td>Exp người chơi</td></tr>
+<tr><td>Cloak</td><td><code>ItemType.CLOAK</code></td></tr>
+<tr><td>Vial</td><td><code>ItemType.VIAL</code></td></tr>
+<tr><td>Pickaxe, Golden Pickaxe, Drill</td><td>Chưa có (chờ tính năng đào mỏ), các bảng trên để 0</td></tr>
+</tbody></table>
+<h2>12. Bảng xếp hạng và Championship</h2>
+<h3>12.1 Bảng xếp hạng</h3>
+<table><thead><tr><th>Bảng</th><th>Nội dung</th><th>Mở từ</th></tr></thead><tbody>
+<tr><td>Bảng đóng góp</td><td>Điểm từng thành viên của một clan, theo ngày hoặc cả tuần</td><td>Bấm banner clan ở tab Battle</td></tr>
+<tr><td>Clan Leaderboard</td><td>Các clan đứng đầu theo điểm tier, kèm dòng clan Champion</td><td>Nút Leaderboard</td></tr>
+<tr><td>Championship Ranking</td><td>Các clan theo tổng điểm đóng góp trong tuần</td><td>Từ Clan Leaderboard</td></tr>
+</tbody></table>
+<p>Ba bảng trên: <span class="tag t0">GỐC</span></p>
+<h3>12.2 Trận Championship</h3>
+<ul>
+<li>Clan đứng đầu Championship Ranking tuần trước được thách đấu clan Champion. <span class="tag t0">GỐC</span></li>
+<li>Chưa có Champion thì hai clan đứng đầu gặp nhau. <span class="tag t0">GỐC</span></li>
+<li>Clan thắng trận này là Champion mới, có vương miện trên banner. <span class="tag t0">GỐC</span></li>
+</ul>
+<h2>13. Clan bot <span class="tag t2">ĐỀ XUẤT</span></h2>
+<p>Mục tiêu: clan lẻ khi ghép cặp vẫn có war để chơi.</p>
+<h3>13.1 Danh tính</h3>
+<ul>
+<li>Tên lấy từ danh sách có sẵn kèm số, ví dụ "Ironclad42".</li>
+<li>Banner ngẫu nhiên.</li>
+<li>Cùng tier với clan thật.</li>
+</ul>
+<h3>13.2 Thành viên</h3>
+<ul>
+<li>Số bot bằng số thành viên clan thật, tối thiểu 5, tối đa 30.</li>
+<li>Mỗi bot sao chép bộ đồ của một thành viên clan thật.</li>
+<li>Power từ 80% đến 110% của người đó.</li>
+</ul>
+<h3>13.3 Điểm của bot</h3>
+<ul>
+<li>Điểm ngày = điểm clan thật × hệ số từ <b>0,55 đến 1,25</b>.</li>
+<li>Hệ số cố định cho từng ngày của từng war: có ngày bot thắng, có ngày bot thua.</li>
+<li>Trong ngày, điểm bot tăng dần theo giờ.</li>
+<li>Clan thật không đóng góp gì trong ngày thì bot vẫn có khoảng 2.100–3.500 điểm và thắng ngày đó.</li>
+<li>Bot không được cộng điểm tier, không lên bảng xếp hạng.</li>
+</ul>
+<h2>14. Chưa chốt</h2>
+<h3>Chờ bạn quyết định</h3>
+<ol>
+<li>Toàn bộ số điểm và thưởng ở mục 8, 9, 10, 11: đều là số tự đặt, chưa cân bằng với kinh tế game.</li>
+<li>Chống gian lận điểm: server đang tin số hoạt động client gửi lên, chưa có trần điểm mỗi ngày.</li>
+<li>Phí tạo clan do client tự trừ gem, server không kiểm tra.</li>
+<li>Người bị kick có phải chờ 24 giờ không (mục 4.3).</li>
+<li>Điểm của người rời clan giữa tuần: giữ cho clan cũ hay trừ đi (mục 8.4).</li>
+<li>Tier chỉ tăng, hay có tụt khi thua nhiều (mục 5).</li>
+<li>Đối thủ PvP không có đồ khi chưa từng mở PvP Arena (mục 10.1). Đề xuất: gửi bộ đồ lên server ngay khi vào clan.</li>
+<li>Thưởng chưa nhận có giữ sang tuần sau không (mục 11.3).</li>
+<li>Có cần nút chuyển Leader thủ công không (mục 3).</li>
+<li>Day 2 và Day 4 khi chưa có đào mỏ: giữ nguyên hay tạm đổi nhóm hoạt động (mục 8.3).</li>
+</ol>
+<h3>Chờ số liệu từ game gốc</h3>
+<ol>
+<li>Ảnh bảng "Day N Actions" ở một ngày lẻ và một ngày chẵn → điểm thật của từng hoạt động.</li>
+<li>Ảnh popup "War Rewards" → các mốc cá nhân và thưởng Win/Lose theo tier.</li>
+<li>Ảnh popup "War Results" sau một tuần → War Score từng ngày.</li>
+<li>Ảnh tab Battle vào Chủ Nhật → số vé PvP, điểm mỗi trận thắng, ngưỡng reset vòng.</li>
+<li>Tier của một clan qua vài tuần liên tiếp → luật lên/xuống tier.</li>
+<li>Ba con số 3 Captain, 20 clan mỗi lần tìm, 5 đơn mỗi ngày: có trong bảng hằng số của game gốc nhưng chưa xác nhận được đúng ý nghĩa → thử trong game gốc để kiểm.</li>
+</ol>
+<h2>15. Tình trạng code</h2>
+<h3>Đã làm (2026-10-10)</h3>
+<table><thead><tr><th>Phần</th><th>Nội dung</th><th>Vị trí</th></tr></thead><tbody>
+<tr><td>Server Clan</td><td>13 hàm theo tên gốc</td><td><code>server/functions/src/clan.ts</code></td></tr>
+<tr><td>Server Clan War</td><td>10 hàm + tác vụ ghép cặp hàng tuần + 2 hàm admin để thử</td><td><code>server/functions/src/clanWar.ts</code></td></tr>
+<tr><td>Config</td><td>Mọi con số <span class="tag t2">ĐỀ XUẤT</span>; ghi đè bằng Firestore <code>config/clanWar</code></td><td><code>server/functions/src/clanWarConfig.ts</code></td></tr>
+<tr><td>Test server</td><td>Đạt trên emulator</td><td><code>server/functions/scripts/clanEmulatorTest.mjs</code></td></tr>
+<tr><td>Client</td><td>Tab Clan, 13 popup, tự ghi điểm đóng góp</td><td><code>Scripts/Clan/</code>, <code>Scripts/UI/Clan/</code>, <code>Scripts/UI/ClanWar/</code></td></tr>
+<tr><td>Giao diện</td><td>Dựng từ prefab game gốc</td><td>Menu <code>Tools/DungeonRush/Build Clan UI Prefabs</code></td></tr>
+</tbody></table>
+<ul>
+<li>Test server đã phủ: tạo, tìm, vào, xin vào, duyệt, thăng chức, kick, rời, giải tán clan; ghép war, gửi điểm, bảng xếp hạng, nhận mốc cá nhân.</li>
+<li>Điểm đóng góp tự ghi khi: nhặt đồ, triệu hồi pet, triệu hồi áo choàng, dùng key dungeon, lên level.</li>
+<li>Trận PvP Day 6 dùng lại màn PvP Arena.</li>
+</ul>
+<h3>Chưa làm</h3>
+<ul>
+<li>Chạy thử trong Unity (Play mode): tab Clan, các popup, tab Battle.</li>
+<li>Test nhánh Day 6 PvP và nhận thưởng Day 7 (phụ thuộc ngày thật trong tuần).</li>
+<li>Soát bố cục và hình ảnh từng màn so với game gốc.</li>
+<li>Ảnh đại diện người chơi.</li>
+<li>Điểm đào mỏ (chờ tính năng đào mỏ).</li>
+<li>Chat clan (game gốc có).</li>
+<li>Triển khai lên project Firebase thật.</li>
+</ul>
+</body></html>

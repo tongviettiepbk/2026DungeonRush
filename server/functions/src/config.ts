@@ -1,7 +1,7 @@
 // Hằng số Boss Rush — REVERSE từ game gốc v41 (BossRushConfig.asset + BossRushConfig.cctor trong libil2cpp).
 // Chi tiết: DecodedData/BOSS_RUSH_MODEL.md. Client (StaticBossRushData.cs) giữ bản sao y hệt.
 
-// Sảnh (server/BOSS_RUSH_DESIGN.md mục 4): tối đa 100 người; thiếu người thật thì bot bù cho đủ 60;
+// Sảnh (GDD/BOSS_RUSH_DESIGN.md mục 4): tối đa 100 người; thiếu người thật thì bot bù cho đủ 60;
 // đầu mùa giữ chỗ tối đa 80 người cũ mỗi sảnh. "Fight with an 8-player team" = mình + 7 người hỗ trợ trong TRẬN.
 export const POOL_CAPACITY = 100;
 export const POOL_VISIBLE_TARGET = 60;

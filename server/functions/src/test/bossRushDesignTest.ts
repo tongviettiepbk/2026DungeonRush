@@ -5,7 +5,7 @@ import { PlayerDoc, RewardEntry } from "../models";
 import { DEFAULT_CONFIG, computeNewTier, computeRewards, getRewardTable } from "../rewardConfig";
 import { createPool } from "../season";
 
-// Kiểm các phép tính thuần của server/BOSS_RUSH_DESIGN.md: thưởng, lên/xuống league, chia sảnh, máu boss, bot.
+// Kiểm các phép tính thuần của GDD/BOSS_RUSH_DESIGN.md: thưởng, lên/xuống league, chia sảnh, máu boss, bot.
 
 const HOUR = 60 * 60 * 1000;
 const amount = (list: RewardEntry[], type: number) => list.find((r) => r.Type === type)?.Amount ?? 0;

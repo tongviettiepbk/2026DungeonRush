@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { BossRushCompanionModel, BossRushItemModel, BotSeed } from "./models";
 
-// BOT Boss Rush (server/BOSS_RUSH_DESIGN.md mục 11). Bot KHÔNG "chạy": không tiến trình, không tác vụ định kỳ,
+// BOT Boss Rush (GDD/BOSS_RUSH_DESIGN.md mục 11). Bot KHÔNG "chạy": không tiến trình, không tác vụ định kỳ,
 // không ghi database sau khi tạo. Mỗi bot chỉ là một hạt giống (BotSeed); điểm, damage lên boss, sức mạnh tại một
 // thời điểm đều là HÀM THUẦN của (seed, mốc của sảnh, giờ hiện tại) → ai đọc lúc nào cũng ra cùng một số, điểm chỉ
 // tăng không giảm. Đổi công thức thì tăng BOT_ALGO_VERSION và giữ nguyên nhánh cũ tới hết mùa.

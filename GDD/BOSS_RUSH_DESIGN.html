@@ -1,0 +1,278 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Boss Rush — Bản thiết kế (GD)</title><style>
+:root{--bg:#fff;--fg:#1c1c1e;--mut:#666;--line:#ddd;--th:#f3f3f5;--code:#f0f0f2}
+@media(prefers-color-scheme:dark){:root{--bg:#1e1e20;--fg:#e8e8ea;--mut:#a0a0a6;--line:#3a3a3e;--th:#2a2a2e;--code:#2e2e33}}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,"Segoe UI",sans-serif;max-width:860px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px}h2{font-size:21px;margin-top:40px;border-bottom:1px solid var(--line);padding-bottom:6px}
+h3{font-size:17px;margin-top:32px}h4{font-size:16px;margin:28px 0 4px}
+table{border-collapse:collapse;margin:12px 0;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:6px 12px;text-align:left;vertical-align:middle}th{background:var(--th)}
+td img{width:48px;display:block}p>img{width:88px}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:13px}hr{border:0;border-top:1px solid var(--line)}
+.tag{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;white-space:nowrap;color:#fff}
+.t0{background:#2e7d4f}.t1{background:#2f6fb5}.t2{background:#b9770e}.t3{background:#b03a3a}
+</style></head><body>
+<h1>Boss Rush — Bản thiết kế (GD)</h1>
+<p>Cập nhật: 2026-10-10. Server đã code theo bản này (mục 14 ghi phần còn lại). Các mục <span class="tag t2">ĐỀ XUẤT</span> đang chạy đúng như đề xuất và nằm trong config, đổi được khi bạn quyết khác. Số liệu reverse từ game gốc nằm ở <code>DecodedData/BOSS_RUSH_MODEL.md</code>; file này là thiết kế của project mình.</p>
+<p>Ký hiệu độ chắc chắn của từng mục:</p>
+<table><thead><tr><th>Ký hiệu</th><th>Nghĩa</th></tr></thead><tbody>
+<tr><td><span class="tag t0">GỐC</span></td><td>Xác nhận từ game gốc (đọc từ APK hoặc ảnh chụp khi chơi thật)</td></tr>
+<tr><td><span class="tag t1">CHỐT</span></td><td>Đã thống nhất trong thảo luận</td></tr>
+<tr><td><span class="tag t2">ĐỀ XUẤT</span></td><td>Đề xuất, chờ duyệt</td></tr>
+<tr><td><span class="tag t3">CHỜ SỐ LIỆU</span></td><td>Cần ghi thêm từ game gốc mới quyết định được</td></tr>
+</tbody></table>
+<hr>
+<h2>1. Tổng quan</h2>
+<p>Boss Rush là sự kiện theo tuần. Người chơi được xếp vào một <b>sảnh</b> tối đa 100 người cùng league. Cả sảnh cùng đánh một con boss có <b>máu chung</b>. Mỗi lượt đánh, người chơi vào trận cùng 7 người hỗ trợ lấy từ sảnh, đánh boss trong 30 giây. Cuối mùa, mỗi người nhận thưởng theo số boss cả sảnh đã giết và theo hạng của mình trong sảnh, rồi lên hoặc xuống league.</p>
+<ul>
+<li>Mở khoá ở PlayerLevel 15. <span class="tag t0">GỐC</span></li>
+<li>Vào từ tab Events → Join.</li>
+</ul>
+<h2>2. Mùa</h2>
+<ul>
+<li>Một mùa = một tuần: mở <b>Thứ Ba 00:00 → Chủ nhật 23:59:59 (UTC)</b>. <span class="tag t0">GỐC</span></li>
+<li><b>Thứ Hai nghỉ</b>: chốt mùa cũ, trả thưởng, dựng sảnh mùa mới. <span class="tag t0">GỐC</span> (phần dựng sảnh là <span class="tag t2">ĐỀ XUẤT</span>)</li>
+<li>Mã mùa = ngày Thứ Ba bắt đầu, dạng <code>yyyy-MM-dd</code>. <span class="tag t0">GỐC</span></li>
+<li>Sảnh giữ nguyên thành viên từ lúc tạo tới khi hết mùa và trả thưởng xong. <span class="tag t1">CHỐT</span></li>
+</ul>
+<h2>3. League</h2>
+<ul>
+<li>Có <b>10 league</b>: Iron, Bronze, Silver, Gold, Platinum, Emerald, Diamond, Master, Grandmaster, Legend. <span class="tag t0">GỐC</span></li>
+<li>Người mới bắt đầu ở Iron (league 1). <span class="tag t0">GỐC</span></li>
+<li>League Boss Rush là giá trị riêng, không liên quan cúp PvP. <span class="tag t0">GỐC</span></li>
+<li>League không xếp theo sức mạnh: trong một sảnh Iron thật có người 40M lẫn 629M power. <span class="tag t0">GỐC</span></li>
+<li>League càng cao boss càng trâu và đánh càng đau (mục 7).</li>
+<li>Luật lên/xuống league: mục 10.</li>
+</ul>
+<h2>4. Sảnh</h2>
+<h3>4.1 Quy tắc chung</h3>
+<ul>
+<li>Sảnh tối đa <b>100 người</b>, cùng league, cùng mùa. <span class="tag t0">GỐC</span> (ảnh sảnh thật có hạng tới 100)</li>
+<li>Sảnh cần trông có khoảng <b>60 người</b>. Thiếu người thật thì bot bù cho đủ; đủ người thật thì không có bot. <span class="tag t1">CHỐT</span></li>
+<li>Chỗ trống còn lại (tới 100) dành cho người thật vào bất cứ lúc nào trong mùa. <span class="tag t1">CHỐT</span></li>
+<li>Người thật <b>không thay chỗ bot</b>; bot đã vào sảnh thì ở tới hết mùa. <span class="tag t1">CHỐT</span></li>
+<li>Sảnh đầy 100 thì tạo sảnh mới theo cùng quy tắc. <span class="tag t1">CHỐT</span></li>
+</ul>
+<h3>4.2 Dựng sảnh đầu mùa</h3>
+<p>Chạy vào Thứ Hai bằng tác vụ hẹn giờ. Dự phòng: nếu tác vụ chưa chạy thì lượt Join đầu tiên của mùa sẽ kích hoạt (có khoá để hai người vào cùng lúc không dựng trùng). <span class="tag t2">ĐỀ XUẤT</span></p>
+<ol>
+<li><b>Chốt từng sảnh mùa cũ</b>: tính hạng cuối (người thật + bot), ghi thưởng chờ nhận và league mới cho người thật.</li>
+<li><b>Gom người còn hoạt động</b> của mùa cũ theo league mới của họ.</li>
+<li><b>Trộn ngẫu nhiên</b> trong từng league rồi <b>chia đều</b> vào các sảnh, mỗi sảnh giữ chỗ tối đa 80 người. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Sảnh nào dưới 60 người thật thì <b>thêm bot cho đủ 60</b>. Sảnh từ 60 người thật trở lên không có bot.</li>
+<li>Sảnh sẵn sàng, chỗ còn lại tới 100 để trống.</li>
+</ol>
+<p>"Còn hoạt động" = mùa trước đã đánh ít nhất 1 trận Boss Rush. <span class="tag t2">ĐỀ XUẤT</span></p>
+<p>Ví dụ (giữ chỗ tối đa 80 người mỗi sảnh):</p>
+<table><thead><tr><th>Người còn hoạt động trong một league</th><th>Kết quả đầu mùa</th></tr></thead><tbody>
+<tr><td>0</td><td>Chưa có sảnh. Người đầu tiên Join → sảnh mới: 1 người + 59 bot</td></tr>
+<tr><td>25</td><td>1 sảnh: 25 người + 35 bot, còn 40 chỗ</td></tr>
+<tr><td>70</td><td>1 sảnh: 70 người, không bot, còn 30 chỗ</td></tr>
+<tr><td>150</td><td>2 sảnh × 75 người, không bot, mỗi sảnh còn 25 chỗ</td></tr>
+<tr><td>200</td><td>3 sảnh × 66–67 người, không bot</td></tr>
+</tbody></table>
+<p>Không chia sảnh theo power: sảnh toàn người yếu sẽ dễ lấy thưởng top hơn hẳn. <span class="tag t2">ĐỀ XUẤT</span></p>
+<h3>4.3 Khi người chơi bấm Join</h3>
+<ol>
+<li>Đã được giữ chỗ từ đầu mùa → vào thẳng sảnh đó.</li>
+<li>Chưa có chỗ (người mới, người mùa trước không chơi):<ul><li>Có sảnh cùng league còn chỗ → vào sảnh đang có <b>nhiều người thật nhất</b>.</li><li>Không còn sảnh nào → tạo sảnh mới: 1 người + 59 bot.</li></ul></li>
+<li>Hiện sảnh: bảng xếp hạng, boss hiện tại, thời gian còn lại của mùa, số vé.</li>
+</ol>
+<p>Sảnh tạo giữa mùa: bot đã có sẵn điểm ứng với số ngày đã qua và boss đã mất máu tương ứng, trông như sảnh chạy từ đầu mùa. <span class="tag t2">ĐỀ XUẤT</span></p>
+<h2>5. Trận đánh</h2>
+<ul>
+<li>Bấm Fight là vào trận ngay, không chờ ai. <span class="tag t0">GỐC</span></li>
+<li>Đội gồm người chơi + <b>7 người hỗ trợ</b> lấy ngẫu nhiên từ sảnh (người thật hoặc bot), mặc đúng bộ đồ của họ. <span class="tag t0">GỐC</span></li>
+<li>Không có pet ra trận, kể cả của người hỗ trợ. Chỉ số cộng thêm từ pet đang sở hữu vẫn tính. <span class="tag t0">GỐC</span></li>
+<li>Trận dài <b>30 giây</b>, sân 12×12. Chỉ hết giờ mới kết thúc; hero chết vẫn chờ hết giờ. <span class="tag t0">GỐC</span></li>
+<li>Hết giờ → gửi kết quả lên server → popup "Fight Complete!" (Team Damage, Damage Dealt). <span class="tag t0">GỐC</span></li>
+<li><b>Thoát giữa trận: không tính gì cả</b> (không trừ máu boss, không cộng điểm). <span class="tag t0">GỐC</span> Vé đã bị trừ lúc bắt đầu trận (theo cách server hiện tại làm).</li>
+</ul>
+<h2>6. Điểm và xếp hạng</h2>
+<ul>
+<li><b>Máu boss</b> bị trừ theo tổng damage của <b>cả 8 người</b> trong trận. <span class="tag t1">CHỐT</span></li>
+<li><b>Bảng xếp hạng</b> chỉ cộng damage của <b>chính người vào đánh</b>. 7 người hỗ trợ không được cộng gì. <span class="tag t1">CHỐT</span></li>
+<li>Hạng trong sảnh = thứ tự điểm giảm dần; bằng điểm thì ai vào sảnh trước đứng trên.</li>
+<li>Hạng trong sảnh chính là "Placement" dùng để trả thưởng và xét lên/xuống league. <span class="tag t0">GỐC</span></li>
+<li>Điểm phụ thuộc chủ yếu vào số trận đã đánh, không đi theo power (ảnh sảnh thật: 629M power ≈ 3.82K điểm, 41M power ≈ 3.30K điểm). <span class="tag t0">GỐC</span></li>
+<li>Cách quy đổi damage → điểm: chưa rõ. Điểm thật tính bằng K trong khi máu boss tính bằng M. Config gốc có <code>DamageDivisor = 100</code> mà client không dùng, có thể server chia 100. <span class="tag t3">CHỜ SỐ LIỆU</span></li>
+</ul>
+<h2>7. Boss</h2>
+<ul>
+<li>Mỗi league có 20 boss nối tiếp; giết boss này thì boss kế xuất hiện ngay. <span class="tag t0">GỐC</span></li>
+<li>10 mẫu boss lặp vòng: Dark Lich, Black Dragon, … <span class="tag t0">GỐC</span></li>
+<li>Máu boss #1 theo league: 500M, 1B, 2B, 3B, 5B, 10B, 20B, 30B, 50B, 100B. Boss sau trâu hơn boss trước khoảng 1.5 lần. Bảng đầy đủ: <code>server/functions/src/config.ts</code>. <span class="tag t0">GỐC</span></li>
+<li>Sát thương mỗi đòn của boss theo league: 300, 600, 900, 3000, 6000, 9000, 12000, 15000, 18000, 21000. <span class="tag t0">GỐC</span></li>
+<li>Tham chiếu tốc độ: một sảnh Iron thật (khoảng 100 người) mới giết 1 boss sau khoảng 4 ngày. <span class="tag t0">GỐC</span></li>
+</ul>
+<h2>8. Vé</h2>
+<ul>
+<li>Vé reset mỗi ngày lúc 0h UTC. <span class="tag t0">GỐC</span></li>
+<li>Config trong APK ghi 3 vé thường + 3 vé xem quảng cáo, nhưng save gốc và thẻ ở tab Events lại hiện 5. Số thật do server gốc trả về. <span class="tag t3">CHỜ SỐ LIỆU</span> (server mình đang dùng 3 + 3)</li>
+</ul>
+<h2>9. Thưởng</h2>
+<p>Chỉ trả <b>một lần khi hết mùa</b>, không có thưởng theo trận hay theo ngày. <span class="tag t0">GỐC</span> Thưởng = phần Guaranteed + phần Placement.</p>
+<h3>9.1 Guaranteed — theo số boss cả sảnh đã giết</h3>
+<p>Cả sảnh nhận như nhau. Tỉ lệ Cloak : Lootbox : Bone luôn là 1 : 3 : 3, kèm key dungeon. <span class="tag t0">GỐC</span></p>
+<table><thead><tr><th>Thời điểm (Iron)</th><th>Cloak</th><th>Lootbox</th><th>Bone</th><th>Key Dragon</th><th>Key Zombie</th></tr></thead><tbody>
+<tr><td>Sảnh đang ở Boss #2 (đã giết 1 boss)</td><td>140</td><td>420</td><td>420</td><td>2</td><td>2</td></tr>
+<tr><td>Chốt mùa (mùa khác)</td><td>180</td><td>540</td><td>540</td><td>2</td><td>2</td></tr>
+</tbody></table>
+<p>Bước tăng theo từng boss: chưa đủ số liệu. Server đang dùng tạm <b>Cloak = 120 + 20 × số boss đã giết</b> (Lootbox và Bone gấp 3), khớp cả hai mốc trên nếu mùa đó sảnh giết 3 boss. <span class="tag t3">CHỜ SỐ LIỆU</span></p>
+<h3>9.2 Placement — theo hạng trong sảnh (Iron)</h3>
+<table><thead><tr><th>Hạng</th><th>Cloak</th><th>Gem</th></tr></thead><tbody>
+<tr><td>1</td><td>100</td><td>100</td></tr>
+<tr><td>2</td><td>80</td><td>80</td></tr>
+<tr><td>3</td><td>50</td><td>50</td></tr>
+<tr><td>4–10</td><td>30</td><td>30</td></tr>
+<tr><td>11–30</td><td>20</td><td>20</td></tr>
+<tr><td>31–50</td><td>10</td><td>10</td></tr>
+<tr><td>51–100</td><td>5</td><td>5</td></tr>
+</tbody></table>
+<p><span class="tag t0">GỐC</span> — đã đối chiếu khớp với một lần nhận thưởng thật: hạng 71 nhận 185 Cloak (180 + 5), 540 Lootbox, 540 Bone, 2 + 2 key, 5 Gem.</p>
+<h3>9.3 Thưởng theo league</h3>
+<p>Bảng trên là của Iron. League cao hơn nhân với hệ số (key dungeon không nhân, vì mỗi ngày chỉ có 2 key): <span class="tag t2">ĐỀ XUẤT</span></p>
+<table><thead><tr><th>League</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr></thead><tbody>
+<tr><td>Hệ số</td><td>1</td><td>1.2</td><td>1.4</td><td>1.6</td><td>1.8</td><td>2</td><td>2.3</td><td>2.6</td><td>3</td><td>3.5</td></tr>
+</tbody></table>
+<h3>9.4 Điều kiện nhận</h3>
+<ul>
+<li>Chỉ người đã đánh ít nhất 1 trận trong mùa mới được thưởng (người được giữ chỗ mà không quay lại thì không). <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Bot không nhận thưởng.</li>
+</ul>
+<h3>9.5 Loại thưởng trong game</h3>
+<table><thead><tr><th>Loại</th><th>Vật phẩm trong project</th></tr></thead><tbody>
+<tr><td>Cloak</td><td><code>ItemType.CLOAK</code> (summon áo choàng)</td></tr>
+<tr><td>Lootbox</td><td><code>ItemType.LOOT_TICKET</code></td></tr>
+<tr><td>Bone</td><td><code>ItemType.BONE</code></td></tr>
+<tr><td>Gem</td><td><code>ItemType.GEM</code></td></tr>
+<tr><td>Key Dragon / Zombie / Cultist</td><td>Key của dungeon tương ứng</td></tr>
+</tbody></table>
+<h2>10. Lên / xuống league <span class="tag t2">ĐỀ XUẤT</span></h2>
+<p>Xét theo hạng hiển thị trong sảnh lúc chốt mùa (tính cả bot).</p>
+<table><thead><tr><th>League</th><th>Lên nếu</th><th>Xuống nếu</th></tr></thead><tbody>
+<tr><td>Iron</td><td>Hạng 1–15</td><td>Không xuống</td></tr>
+<tr><td>Bronze, Silver</td><td>Hạng 1–15</td><td>Không đánh trận nào trong mùa</td></tr>
+<tr><td>Gold, Platinum, Emerald</td><td>Hạng 1–10</td><td>Trong 15% cuối sảnh, hoặc không đánh trận nào</td></tr>
+<tr><td>Diamond, Master, Grandmaster</td><td>Hạng 1–5</td><td>Trong 25% cuối sảnh, hoặc không đánh trận nào</td></tr>
+<tr><td>Legend</td><td>Không lên nữa</td><td>Trong 30% cuối sảnh, hoặc không đánh trận nào</td></tr>
+</tbody></table>
+<ul>
+<li>Mỗi mùa chỉ lên hoặc xuống một league.</li>
+<li>Phải có điểm mới được lên.</li>
+<li>"X% cuối sảnh" tính theo số người thực có trong sảnh, không tính theo 100.</li>
+<li>Bot chiếm hạng nhưng không lên hay xuống.</li>
+<li>Người không Join mùa nào thì giữ nguyên league.</li>
+</ul>
+<p>Các con số nằm trong config trên Firestore, chỉnh được mà không cần deploy lại.</p>
+<h2>11. Bot</h2>
+<p>Mục tiêu: sảnh không trống khi game ít người, và người chơi khó nhận ra bot. Khi đủ người thật thì bot tự hết.</p>
+<h3>11.1 Vòng đời</h3>
+<ul>
+<li>Bot chỉ được tạo lúc tạo sảnh, số lượng = 60 − số người thật của sảnh lúc đó (tối thiểu 0). <span class="tag t1">CHỐT</span></li>
+<li>Bot ở trong sảnh tới hết mùa. Mùa mới tạo bot mới hoàn toàn, không giữ danh tính. <span class="tag t1">CHỐT</span></li>
+<li>Bot không nhận thưởng, không lên/xuống league.</li>
+</ul>
+<h3>11.2 Danh tính <span class="tag t2">ĐỀ XUẤT</span></h3>
+<ul>
+<li>Id giống uid thật, không có tiền tố riêng. Cờ bot chỉ lưu ở server, <b>không gửi về client</b>.</li>
+<li>Tên: khoảng 20–30% bot dùng đúng dạng tên mặc định của game ("Player" + 6 số); còn lại lấy từ kho vài nghìn tên nhiều kiểu. Không trùng trong sảnh, không trùng tên người thật cùng sảnh.</li>
+<li>Avatar ngẫu nhiên, đa số là avatar mặc định.</li>
+</ul>
+<h3>11.3 Bộ đồ và sức mạnh <span class="tag t2">ĐỀ XUẤT</span></h3>
+<p>Bot có thể được chọn làm người hỗ trợ và người chơi xem được hồ sơ của bot (mục 12), nên bộ đồ phải khớp đúng với power hiển thị.</p>
+<ul>
+<li>Dùng một công cụ trong Unity Editor <b>mô phỏng nhân vật chơi 7 ngày</b> bằng đúng công thức của game (tỉ lệ ra đồ, level đồ, nâng cánh, relic, công thức Power), chụp lại bộ đồ mỗi ngày → một <b>chuỗi 7 bộ đồ</b> kèm power.</li>
+<li>Sinh vài trăm đến vài nghìn chuỗi thành một "ngân hàng", <b>đóng gói kèm code server</b>.</li>
+<li>Mỗi bot gán một chuỗi. Mỗi ngày bot có một giờ "đăng nhập" riêng: tới giờ đó chuyển sang bộ đồ kế tiếp; ngày nào không đăng nhập thì giữ nguyên. Sức mạnh nhờ vậy tăng theo bước nhảy như người thật.</li>
+<li>Về sau bổ sung ngân hàng bằng lịch sử bộ đồ (ẩn danh) của người chơi thật.</li>
+</ul>
+<p>Mẫu người thật ở Iron để đối chiếu: đồ độ hiếm cao nhưng level 1–4, cánh level 25–43, áo choàng có hoặc không, relic +1 đến +3, 3 pet đang dùng.</p>
+<h3>11.4 Điểm của bot <span class="tag t2">ĐỀ XUẤT</span></h3>
+<p>Bot không "chạy". Mỗi bot có một lịch chơi cố định sinh từ seed lúc tạo sảnh; điểm tại một thời điểm được <b>tính ra</b> từ seed và giờ hiện tại mỗi khi có người mở sảnh.</p>
+<table><thead><tr><th>Nhóm</th><th>Tỉ lệ</th><th>Hành vi</th></tr></thead><tbody>
+<tr><td>Không chơi</td><td>~15%</td><td>Vào sảnh rồi để 0 điểm</td></tr>
+<tr><td>Thỉnh thoảng</td><td>~35%</td><td>1–2 trận/ngày, có ngày nghỉ</td></tr>
+<tr><td>Đều đặn</td><td>~35%</td><td>3–4 trận/ngày</td></tr>
+<tr><td>Cày</td><td>~15%</td><td>Hết vé + xem quảng cáo</td></tr>
+</tbody></table>
+<ul>
+<li>Mỗi bot có khung giờ chơi riêng nên điểm không tăng đồng loạt.</li>
+<li>Điểm mỗi trận dao động, số lẻ; điểm tổng không đi theo power.</li>
+<li>Tham số khoá cứng lúc tạo sảnh. Mỗi sảnh ghi phiên bản công thức; đổi công thức thì sảnh cũ vẫn dùng bản cũ tới hết mùa, để điểm không bao giờ giảm.</li>
+</ul>
+<h3>11.5 Bot và máu boss <span class="tag t2">ĐỀ XUẤT</span></h3>
+<p>Mỗi trận của bot cũng trừ máu boss chung (damage của bot + 7 người hỗ trợ ước lượng), tính theo cùng lịch chơi. Tốc độ này ảnh hưởng thẳng tới thưởng Guaranteed của người thật nên là một núm chỉnh kinh tế.</p>
+<h3>11.6 Chi phí vận hành</h3>
+<table><thead><tr><th>Việc</th><th>Chi phí</th></tr></thead><tbody>
+<tr><td>Tạo bot</td><td>Ghi một lần lúc tạo sảnh, khoảng 10KB cho 59 bot trong document sảnh</td></tr>
+<tr><td>Điểm bot, máu boss</td><td>Tính lúc đọc sảnh, không đọc/ghi thêm</td></tr>
+<tr><td>Bộ đồ bot</td><td>Lấy từ ngân hàng đóng gói trong code, không đọc database</td></tr>
+<tr><td>Hết mùa</td><td>Tính điểm bot tại thời điểm kết thúc mùa, không cần tác vụ riêng</td></tr>
+</tbody></table>
+<h2>12. Hồ sơ người chơi</h2>
+<p>Bấm avatar một người trong sảnh → popup thông tin: <span class="tag t0">GỐC</span></p>
+<ul>
+<li>Tên, avatar.</li>
+<li>Hình hero mặc đồ và 3 pet trên một ô lưới nhỏ.</li>
+<li>Power.</li>
+<li>8 ô đồ: độ hiếm, level, huy hiệu relic (+N).</li>
+<li>3 pet đang dùng.</li>
+<li>Danh sách tổng chỉ số phụ.</li>
+</ul>
+<p>Chỉ tải dữ liệu khi người chơi bấm vào. Áp dụng cho cả người thật lẫn bot.</p>
+<h2>13. Chưa chốt</h2>
+<h3>Chờ bạn quyết định</h3>
+<ol>
+<li>Giữ chỗ tối đa 80 hay 60 người cũ mỗi sảnh (mục 4.2).</li>
+<li>Định nghĩa "còn hoạt động" (mục 4.2) và điều kiện nhận thưởng (mục 9.4).</li>
+<li>Bot có được chiếm top 3 không. Đề xuất: giới hạn nhóm "cày" để người thật đánh hết vé + xem quảng cáo luôn có cửa vào top 3.</li>
+<li>Tốc độ bot giết boss: bám mốc gốc (1–2 boss/tuần ở Iron) hay rộng tay hơn.</li>
+<li>Luật lên/xuống league (mục 10) và hệ số thưởng theo league (mục 9.3).</li>
+<li>Có thưởng một lần khi lần đầu đạt league mới không.</li>
+</ol>
+<h3>Chờ số liệu từ game gốc</h3>
+<ol>
+<li>Điểm trước và sau một trận + "Damage Dealt" / "Team Damage" của trận đó → cách quy đổi điểm.</li>
+<li>Bảng Rewards chụp kèm "Boss #N" ở vài thời điểm → bước tăng Guaranteed theo boss.</li>
+<li>Số vé thường và vé quảng cáo mỗi ngày.</li>
+<li>Tổng số người trong một sảnh (kéo xuống cuối danh sách).</li>
+<li>Hạng của người được lên league lúc chốt mùa, nếu thấy.</li>
+<li>Bảng Rewards của league khác Iron.</li>
+</ol>
+<h2>14. Tình trạng code</h2>
+<h3>Đã làm (2026-10-10)</h3>
+<table><thead><tr><th>Hạng mục</th><th>Ở đâu</th></tr></thead><tbody>
+<tr><td>Sảnh 100 người, bot bù cho đủ 60, người thật vào chỗ trống</td><td><code>server/functions/src/season.ts</code> (<code>createPool</code>), <code>bossRush.ts</code> (Join)</td></tr>
+<tr><td>Bot tính từ seed, không chạy nền; điểm, máu boss, power</td><td><code>server/functions/src/bots.ts</code>, <code>bossRushPool.ts</code></td></tr>
+<tr><td>Chốt mùa cũ + dựng sảnh mùa mới, giữ chỗ người còn hoạt động</td><td><code>season.ts</code> (<code>prepareSeason</code>), tác vụ Thứ Hai + dự phòng lúc Join</td></tr>
+<tr><td>Bảng thưởng Iron thật, hệ số league, điều kiện ≥ 1 trận</td><td><code>server/functions/src/rewardConfig.ts</code></td></tr>
+<tr><td>Lên/xuống league</td><td><code>rewardConfig.ts</code> (<code>computeNewTier</code>)</td></tr>
+<tr><td>7 người hỗ trợ do server chọn, kèm bộ đồ</td><td><code>startbossrushfight</code> trả <code>allies</code></td></tr>
+<tr><td>Hồ sơ người chơi (phía server)</td><td><code>getbossrushprofile</code></td></tr>
+<tr><td>Bảng xếp hạng gọn (không kèm bộ đồ), không lộ cờ bot</td><td><code>BossRushPlayerRow</code></td></tr>
+<tr><td>Client: nhận <code>allies</code>, bỏ cờ bot, báo "đang chuẩn bị"</td><td><code>Scripts/BossRush/</code></td></tr>
+<tr><td>Cộng thưởng Cloak, Lootbox, 3 loại key ở client</td><td><code>BossRushController.GrantRewards</code></td></tr>
+<tr><td>Ngân hàng bộ đồ cho bot: 580 nhân vật mô phỏng (level 15–100) × 7 mốc</td><td>Công cụ Unity <code>Assets/Editor/BossRushBotBankGenerator.cs</code> (menu DungeonRush → Boss Rush → Generate Bot Bank) xuất <code>server/functions/data/botBank.json</code></td></tr>
+</tbody></table>
+<p>Ngân hàng bộ đồ phải <b>sinh lại</b> mỗi khi đổi cân bằng đồ hoặc công thức Power, rồi deploy lại server. Mỗi sảnh chọn cho bot các chuỗi có power gần người thật trong sảnh nhất, không trùng nhau.</p>
+<p>Độ phủ sức mạnh của ngân hàng (đo bằng cách dựng thử một sảnh 59 bot quanh người chơi có power P):</p>
+<table><thead><tr><th>Power người chơi</th><th>Bot nằm trong khoảng 0.25×–8×</th><th>Bot mạnh hơn người chơi</th></tr></thead><tbody>
+<tr><td>5e5 (level 15, gần như chưa có đồ)</td><td>58 / 59</td><td>52 / 59</td></tr>
+<tr><td>1e6 → 4e13 (level 15 → level 100 bình thường)</td><td>55–59 / 59</td><td>khoảng một nửa</td></tr>
+<tr><td>1e14 (level 100, cày nặng)</td><td>37 / 59</td><td>17 / 59</td></tr>
+<tr><td>từ 3e14 trở lên</td><td>dưới 20 / 59</td><td>0</td></tr>
+</tbody></table>
+<p>Ngân hàng trải từ 3.5e5 đến 2e14. Trên 2e14 là mức mô phỏng không tạo ra được, nên người chơi mạnh cỡ đó sẽ thấy mọi bot yếu hơn mình. Muốn phủ thêm thì tăng mức cày của nhóm <code>HIGH_END_COUNT</code> trong công cụ.</p>
+<p>Test: <code>npm test</code> (thưởng, league, chia sảnh, máu boss, bot) và <code>npm run test:emulator</code> (cả luồng trên emulator).</p>
+<h3>Mốc của bot khi sảnh chưa có số liệu</h3>
+<p>Bot cần biết "một người chơi trung bình đánh được bao nhiêu damage mỗi trận" để điểm của nó hợp lý. Mốc này lấy theo thứ tự: damage trung bình của người thật trong sảnh lúc tạo → số liệu chung của league → <b>chưa có</b>. Trường hợp chưa có (những sảnh đầu tiên sau khi ra game), bot đứng yên ở 0 điểm cho tới trận thật đầu tiên của sảnh, lấy trận đó làm mốc và bắt đầu hoạt động từ lúc đó.</p>
+<h3>Chưa làm</h3>
+<table><thead><tr><th>Hạng mục</th><th>Ghi chú</th></tr></thead><tbody>
+<tr><td>Popup hồ sơ ở client (mục 12)</td><td>Server đã có <code>getbossrushprofile</code></td></tr>
+<tr><td>Avatar</td><td>Client chưa có hệ avatar; mọi người đang là avatar 0</td></tr>
+<tr><td>Quy đổi damage → điểm</td><td>Đang để điểm = damage</td></tr>
+<tr><td>Số vé</td><td>Đang 3 thường + 3 quảng cáo</td></tr>
+<tr><td>Chống gian lận</td><td>Server vẫn tin damage client gửi, chưa kiểm tra level 15</td></tr>
+<tr><td>Deploy thật</td><td>Cần deploy cả index Firestore mới (<code>firestore.indexes.json</code>)</td></tr>
+</tbody></table>
+</body></html>

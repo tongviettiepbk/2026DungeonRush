@@ -2,7 +2,7 @@ import { Firestore } from "firebase-admin/firestore";
 import { MAX_BOSS_COUNT, MAX_TIER, START_TIER } from "./config";
 import { RewardEntry, RewardTable } from "./models";
 
-// THƯỞNG + LÊN/XUỐNG LEAGUE (server/BOSS_RUSH_DESIGN.md mục 9, 10). Mặc định nằm trong file này; ghi đè được bằng
+// THƯỞNG + LÊN/XUỐNG LEAGUE (GDD/BOSS_RUSH_DESIGN.md mục 9, 10). Mặc định nằm trong file này; ghi đè được bằng
 // Firestore document `config/bossRush` để đổi số liệu KHÔNG cần deploy lại (cache 60 giây).
 //
 // Schema `config/bossRush` (mọi field tuỳ chọn):

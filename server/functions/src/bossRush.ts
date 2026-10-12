@@ -18,7 +18,7 @@ import {
 
 // Endpoint Boss Rush — tên hàm viết thường như URL server gốc (https://{fn}-umgnfrxyuq-uc.a.run.app/): joinbossrush,
 // getbossrushpool, startbossrushfight, reportbossrushdamage, claimbossrushrewards, updatebossrushplayer; thêm
-// getbossrushprofile (bấm avatar xem hồ sơ). Luật chơi: server/BOSS_RUSH_DESIGN.md. Lỗi nghiệp vụ trả
+// getbossrushprofile (bấm avatar xem hồ sơ). Luật chơi: GDD/BOSS_RUSH_DESIGN.md. Lỗi nghiệp vụ trả
 // {success:false, message} như DTO gốc; chỉ lỗi xác thực mới ném HttpsError.
 
 const AVG_WEIGHT = 0.3;

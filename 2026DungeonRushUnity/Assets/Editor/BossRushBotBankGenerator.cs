@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
-// Sinh "ngân hàng bộ đồ" cho bot Boss Rush (server/BOSS_RUSH_DESIGN.md mục 11.3) → server/functions/data/botBank.json.
+// Sinh "ngân hàng bộ đồ" cho bot Boss Rush (GDD/BOSS_RUSH_DESIGN.md mục 11.3) → server/functions/data/botBank.json.
 // Mỗi chuỗi = một nhân vật ảo "chơi" qua 7 mốc (đầu mùa + 6 ngày) bằng ĐÚNG cơ chế của game: tỉ lệ ra đồ theo level
 // (ForgeController.RollRarity), level món đồ (RollForgeLevel), substat (GearStatCalculator), chỉ mặc món làm Power
 // tăng, và Power tính bằng công thức thật (PlayerPower.Calculate). Nhờ vậy bộ đồ của bot luôn khớp power hiển thị,

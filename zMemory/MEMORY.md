@@ -41,16 +41,16 @@
 - [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
 - [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; cả 3 dungeon có trận (Dragon/Zombie/CultistDungeonMode)
 - [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé reset 0h UTC (PvP 5+4 ads, BossRush), mở lv15, icon IsTicket/IsBossTicket; cả 2 mode đã có
-- [Boss Rush online](dungonrush-boss-rush-model.md) — ĐÃ code theo server/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); popup hồ sơ người chơi + avatar (22 hình thứ tự gốc) + xem chi tiết đồ/pet XONG (user tự chỉnh layout UIPlayerPopup — đừng chạy lại builder); ĐỦ 10 prefab boss + animation đánh theo Animator gốc (2026-10-12); còn ProfilePopup của mình, deploy
+- [Boss Rush online](dungonrush-boss-rush-model.md) — ĐÃ code theo GDD/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); popup hồ sơ người chơi + avatar (22 hình thứ tự gốc) + xem chi tiết đồ/pet XONG (user tự chỉnh layout UIPlayerPopup — đừng chạy lại builder); ĐỦ 10 prefab boss + animation đánh theo Animator gốc (2026-10-12); còn ProfilePopup của mình, deploy
 - [Hệ Enchantment (Relic)](dungonrush-enchantment-system.md) — tier 1..11 ×(1+tier²/100) main stat slot; summon Vial 50 lv; merge 3→1; code+UI+scene đã dựng, CHƯA test Unity
 - [Power người chơi](dungonrush-power-model.md) — rm.iqm/iqr reverse + PlayerPower.cs; HeroUnit đã sửa: đồ thay nền PlayerBase slot + có Wing/Cape
 - [Wing/Cape trạng thái](dungonrush-wing-cape-todo.md) — Wing + Cape đã có UI/logic theo native (chưa test Unity); quặng/Cloak chưa có nguồn thật (cheat O/K)
 - [Substat trong combat](dungonrush-substat-combat.md) — 13 substat đối chiếu native; sửa CritDamage nền 1.05, thêm tick HealthRegen ×0.5, thêm đánh đôi DoubleChance
 - [VIỆC CÒN DỞ](dungonrush-pending-todo.md) — checklist sau đợt Enchantment/Power/Substat: test Unity, deploy server, hình ảnh, Wing/Cape, BattlePass/PvP; đọc khi user nói "làm tiếp"
 - [PvP Arena](dungonrush-pvp-mode.md) — ĐÃ dựng client+server theo gốc (Elo trophy, snapshot+pet đối thủ, 30s); thưởng win/lose chưa có số gốc
-- [Clan + Clan War](dungonrush-clan-clanwar.md) — dựng + commit 2026-10-10; GD ở server/CLAN_DESIGN.md (đọc trước khi code tiếp); CHƯA test Play
+- [Clan + Clan War](dungonrush-clan-clanwar.md) — dựng + commit 2026-10-10; GD ở GDD/CLAN_DESIGN.md (đọc trước khi code tiếp); CHƯA test Play
 - [Store / Shop](dungonrush-shop-system.md) — dựng 2026-10-10 theo gốc: rương+pity, Daily Deals, boost exp, gói gem; PurchaseController BASE chưa có SDK; còn OfferPopup/RewardedChest
-- [Khuôn viết GD](gd-doc-layout.md) — GD phải theo khuôn BOSS_RUSH_DESIGN.md: mỗi luật 1 gạch + 1 nhãn cuối dòng, bảng mỗi ô 1 số
+- [Khuôn viết GD](gd-doc-layout.md) — GD nằm ở GDD/ (gốc repo), theo khuôn GDD/BOSS_RUSH_DESIGN.md: mỗi luật 1 gạch + 1 nhãn cuối dòng, bảng mỗi ô 1 số; ảnh dùng cú pháp markdown
 - [Quy tắc ảnh trùng _ResourceGame](dungonrush-resource-dedupe-rule.md) — giữ tên gốc game, bỏ bản tên data (*Icons); viền khác thì giữ bản có viền; dò trùng trước khi sinh icon mới
 - [Thư mục prefab UINew](dungonrush-uinew-prefab-folder.md) — Prefabs/UINew/<TínhNăng>/ = prefab dùng tham chiếu trực tiếp (không Resources); Prefabs/UI = nguồn rip cho builder
 - [Data test online + bộ test](dungonrush-online-test-data.md) — emulator: `npm run seed` (1000 người + 10 clan + war), `npm run test:seed` 45 ca; giả đồng hồ bằng handler.run + mock.timers để test logic theo ngày

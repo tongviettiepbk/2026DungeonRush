@@ -3,7 +3,7 @@ import { DAILY_AD_TICKETS, DAILY_FREE_TICKETS, POOL_CAPACITY, getBossHp } from "
 import { BossRushPlayerRow, PoolDoc } from "./models";
 
 // Phép tính THUẦN trên một sảnh (không đụng Firestore): mốc thời gian mùa, bảng xếp hạng gộp người thật + bot,
-// máu boss. Xem server/BOSS_RUSH_DESIGN.md mục 4, 6, 7.
+// máu boss. Xem GDD/BOSS_RUSH_DESIGN.md mục 4, 6, 7.
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MAX_BOSS_LOOP = 1000;

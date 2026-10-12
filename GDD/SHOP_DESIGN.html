@@ -1,0 +1,249 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Store (Shop) — Bản thiết kế (GD)</title><style>
+:root{--bg:#fff;--fg:#1c1c1e;--mut:#666;--line:#ddd;--th:#f3f3f5;--code:#f0f0f2}
+@media(prefers-color-scheme:dark){:root{--bg:#1e1e20;--fg:#e8e8ea;--mut:#a0a0a6;--line:#3a3a3e;--th:#2a2a2e;--code:#2e2e33}}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,"Segoe UI",sans-serif;max-width:860px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:26px}h2{font-size:21px;margin-top:40px;border-bottom:1px solid var(--line);padding-bottom:6px}
+h3{font-size:17px;margin-top:32px}h4{font-size:16px;margin:28px 0 4px}
+table{border-collapse:collapse;margin:12px 0;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:6px 12px;text-align:left;vertical-align:middle}th{background:var(--th)}
+td img{width:48px;display:block}p>img{width:88px}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:13px}hr{border:0;border-top:1px solid var(--line)}
+.tag{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;white-space:nowrap;color:#fff}
+.t0{background:#2e7d4f}.t1{background:#2f6fb5}.t2{background:#b9770e}.t3{background:#b03a3a}
+</style></head><body>
+<h1>Store (Shop) — Bản thiết kế (GD)</h1>
+<p>Cập nhật: 2026-10-10. Client đã code theo bản này (mục 13 ghi phần còn lại). Các mục <span class="tag t2">ĐỀ XUẤT</span> đang chạy đúng như đề xuất, đổi được khi bạn quyết khác. Số liệu reverse từ game gốc nằm ở <code>DecodedData/SHOP_MODEL.md</code>; file này là thiết kế của project mình.</p>
+<p>Ký hiệu độ chắc chắn của từng mục:</p>
+<table><thead><tr><th>Ký hiệu</th><th>Nghĩa</th></tr></thead><tbody>
+<tr><td><span class="tag t0">GỐC</span></td><td>Xác nhận từ game gốc (đọc từ APK bản 41)</td></tr>
+<tr><td><span class="tag t2">ĐỀ XUẤT</span></td><td>Đề xuất, chờ duyệt</td></tr>
+<tr><td><span class="tag t3">CHỜ SỐ LIỆU</span></td><td>Cần ghi thêm từ game gốc mới quyết định được</td></tr>
+</tbody></table>
+<hr>
+<h2>1. Tổng quan</h2>
+<p>Store là tab đầu tiên ở thanh menu lobby. Nó làm ba việc:</p>
+<ul>
+<li><b>Bán gem bằng tiền thật</b> (6 gói gem, Daily Deals, Lifetime Boost, gói rương).</li>
+<li><b>Đổi gem lấy tiến trình</b>: rương pet/áo choàng, boost kinh nghiệm, dụng cụ đào mỏ.</li>
+<li><b>Cho người chơi lý do quay lại mỗi ngày</b>: 3 Daily Deal đổi theo ngày.</li>
+</ul>
+<p>Gem là tiền chính của Store. Ngoài Store, gem còn tiêu ở Mastery và phí tạo clan; nguồn gem miễn phí là thưởng lên level.</p>
+<h2>2. Lối vào và mở khoá</h2>
+<ul>
+<li>Tab Store mở được ngay từ đầu, không cần level. <span class="tag t2">ĐỀ XUẤT</span> (gốc có cờ <code>IsStoreTabUnlocked</code> gắn với hướng dẫn tân thủ; project chưa có hướng dẫn nên để mở sẵn)</li>
+<li>Riêng <b>mục rương</b> chỉ hiện khi người chơi đã mở tính năng Áo choàng: PlayerLevel ≥ 15, hoặc đã mua một gói rương (mục 6). <span class="tag t0">GỐC</span></li>
+</ul>
+<h2>3. Bố cục trang Store <span class="tag t0">GỐC</span></h2>
+<p>Một danh sách cuộn dọc, từ trên xuống:</p>
+<table><thead><tr><th>#</th><th>Mục</th><th>Trả bằng</th><th>Ghi chú</th></tr></thead><tbody>
+<tr><td>1</td><td>Lifetime Boost</td><td>Tiền thật</td><td>Biến mất sau khi mua</td></tr>
+<tr><td>2</td><td>Chests</td><td>Gem</td><td>Ẩn khi chưa mở Áo choàng</td></tr>
+<tr><td>3</td><td>Daily Deals (3 ô)</td><td>Tiền thật</td><td>Đổi mỗi ngày</td></tr>
+<tr><td>4</td><td>Boosters (2 ô)</td><td>Gem</td><td>Boost kinh nghiệm có thời hạn</td></tr>
+<tr><td>5</td><td>Resources (2 ô)</td><td>Gem</td><td>Dụng cụ đào mỏ</td></tr>
+<tr><td>6</td><td>Gems (6 gói)</td><td>Tiền thật</td><td></td></tr>
+</tbody></table>
+<p>Trong prefab gốc còn 5 mục <b>đang tắt</b> ở bản 41: No Ads, Starter Pack, Epic Pack, Dungeon Pack, Resource Pack. Thưởng của chúng vẫn có trong code (mục 10.2) nên bật lại được khi cần.</p>
+<h2>4. Lifetime Boost <span class="tag t0">GỐC</span></h2>
+<ul>
+<li>Mua một lần bằng tiền thật: <b>kinh nghiệm ×2 vĩnh viễn</b>.</li>
+<li>Mua xong thì ô này biến mất khỏi Store.</li>
+<li>Nhân dồn với các boost có thời hạn (mục 8).</li>
+</ul>
+<h2>5. Rương</h2>
+<p>Rương là nguồn <b>pet và áo choàng</b> thứ hai, bên cạnh summon bằng Bone (pet) và Cloak (áo choàng). Khác với summon, rương <b>ưu tiên ra mẫu chưa sở hữu</b>, nên đây là cách nhanh nhất để sưu tầm đủ bộ.</p>
+<h3>5.1 Bốn loại rương <span class="tag t0">GỐC</span></h3>
+<table><thead><tr><th>Rương</th><th>Giá</th><th>Số món / lần mở</th><th>Rarity cao nhất</th><th>Pity</th><th>Điều kiện bán</th></tr></thead><tbody>
+<tr><td>Standard Chest</td><td>40 gem</td><td>2</td><td>Rare</td><td>không</td><td>—</td></tr>
+<tr><td>Epic Chest</td><td>80 gem</td><td>6</td><td>Epic</td><td>20 lần</td><td>—</td></tr>
+<tr><td>Legendary Chest</td><td>120 gem</td><td>6</td><td>Legendary</td><td>20 lần</td><td>—</td></tr>
+<tr><td>Mythic Vault</td><td>200 gem</td><td>6</td><td>Mythic</td><td>20 lần</td><td>Đã sưu tầm đủ rarity Epic</td></tr>
+</tbody></table>
+<p>Tỉ lệ rarity của <b>mỗi món</b> (số hiển thị trong popup thông tin rương):</p>
+<table><thead><tr><th>Rương</th><th>Common</th><th>Uncommon</th><th>Rare</th><th>Epic</th><th>Legendary</th><th>Mythic</th></tr></thead><tbody>
+<tr><td>Standard</td><td>87%</td><td>9%</td><td>4%</td><td></td><td></td><td></td></tr>
+<tr><td>Epic</td><td>75%</td><td>20%</td><td>4%</td><td>1%</td><td></td><td></td></tr>
+<tr><td>Legendary</td><td>63.13%</td><td>30.3%</td><td>5.05%</td><td>1.01%</td><td>0.51%</td><td></td></tr>
+<tr><td>Mythic</td><td>45.92%</td><td>40%</td><td>10%</td><td>3%</td><td>0.75%</td><td>0.33%</td></tr>
+</tbody></table>
+<p>(Trọng số gốc của rương Legendary là 62.5 / 30 / 5 / 1 / 0.5, tổng 99, nên số hiển thị lệch nhẹ như trên.)</p>
+<h3>5.2 Một lần mở <span class="tag t0">GỐC</span></h3>
+<ol>
+<li>Roll rarity cho từng món theo bảng trên.</li>
+<li>Kiểm tra pity (mục 5.3).</li>
+<li>Với mỗi món, chọn một pet hoặc một mẫu áo choàng của rarity đó (mục 5.4).</li>
+<li>Hiện màn mở rương.</li>
+</ol>
+<h3>5.3 Pity <span class="tag t0">GỐC</span></h3>
+<ul>
+<li>Mỗi rương có pity đếm số lần mở <b>liên tiếp không ra món nào thuộc rarity cao nhất</b> của rương đó.</li>
+<li>Lần mở thứ 20 mà vẫn chưa ra: <b>món cuối cùng</b> của lần mở đó bị ép thành rarity cao nhất.</li>
+<li>Ra được món rarity cao nhất (tự nhiên hoặc do ép) thì bộ đếm về 0.</li>
+<li>Thẻ rương và popup thông tin luôn hiện "Get {rarity} in {n} opens", với n = số lần còn lại.</li>
+<li>Standard Chest không có pity.</li>
+</ul>
+<h3>5.4 Chọn pet hay áo choàng <span class="tag t0">GỐC</span></h3>
+<ul>
+<li>Mỗi rarity có 3 pet và 2 mẫu áo choàng, tổng 5 mẫu.</li>
+<li>Còn mẫu <b>chưa sở hữu</b> trong rarity đó: chọn ngẫu nhiên đều trong các mẫu chưa sở hữu (pet và áo choàng gộp chung).</li>
+<li>Đã sở hữu hết: chọn ngẫu nhiên đều trong cả 5 mẫu.</li>
+<li>Ra <b>pet đã có</b>: +1 thẻ của pet đó (dùng để nâng cấp pet).</li>
+<li>Ra <b>áo choàng</b>: luôn là một chiếc mới với chỉ số phụ roll riêng, kể cả khi đã có mẫu đó (áo trùng dùng làm nguyên liệu nâng cấp).</li>
+<li>Món là mẫu lần đầu sở hữu thì gắn nhãn <b>NEW</b>.</li>
+</ul>
+<h3>5.5 "Sưu tầm đủ rarity" <span class="tag t0">GỐC</span></h3>
+<p>Đủ một rarity = sở hữu cả 3 pet <b>và</b> có ít nhất một chiếc của cả 2 mẫu áo choàng thuộc rarity đó. Mythic Vault chỉ xuất hiện trong Store khi đã đủ rarity Epic.</p>
+<h3>5.6 Giá trị kỳ vọng</h3>
+<p>Tính từ tỉ lệ và pity ở trên (không phải số của game gốc):</p>
+<table><thead><tr><th>Rương</th><th>Gem / món</th><th>Xác suất một lần mở ra rarity cao nhất</th><th>Trung bình để ra một món rarity cao nhất</th><th>Tệ nhất</th></tr></thead><tbody>
+<tr><td>Standard</td><td>20</td><td>7.8%</td><td>~12.8 lần mở ≈ 510 gem</td><td>không giới hạn</td></tr>
+<tr><td>Epic</td><td>13.3</td><td>5.9%</td><td>~12 lần mở ≈ 960 gem</td><td>20 lần = 1600 gem</td></tr>
+<tr><td>Legendary</td><td>20</td><td>3.0%</td><td>~15.2 lần mở ≈ 1830 gem</td><td>20 lần = 2400 gem</td></tr>
+<tr><td>Mythic</td><td>33.3</td><td>2.0%</td><td>~16.7 lần mở ≈ 3330 gem</td><td>20 lần = 4000 gem</td></tr>
+</tbody></table>
+<p>Epic Chest rẻ nhất tính theo món. Từ Legendary trở lên, phần lớn món rarity cao nhất đến từ pity chứ không phải may mắn.</p>
+<h3>5.7 Giao diện <span class="tag t0">GỐC</span></h3>
+<ul>
+<li><b>Thẻ rương</b>: Standard và Epic là thẻ dọc xếp lưới 2 cột; Legendary và Mythic là thẻ ngang lớn nằm trên lưới, kèm ảnh 5 pet/áo tiêu biểu. Thứ tự hai thẻ ngang: rarity cao ở trên. <span class="tag t2">ĐỀ XUẤT</span></li>
+<li>Mỗi thẻ có: ảnh, tên, "Contains {các rarity}", dòng pity, nút mua ghi giá gem, nút <b>i</b>.</li>
+<li><b>Popup thông tin</b> (nút i): tên, ảnh, "Contains … cloak and companion", dòng pity, bảng tỉ lệ từng rarity.</li>
+<li><b>Màn mở rương</b>: chạm để mở → mỗi lần chạm hiện một món (ô lớn, có bộ đếm số món còn lại) → bảng tổng kết → đóng. Nút <b>Open all</b> nhảy thẳng tới bảng tổng kết.</li>
+<li>Thiếu gem: báo "Not enough gems!", không mở gì.</li>
+</ul>
+<h2>6. Gói rương (tiền thật)</h2>
+<table><thead><tr><th>Gói</th><th>Gem kèm theo</th><th>Rương mở sẵn</th><th>Khi nào chào bán</th></tr></thead><tbody>
+<tr><td>Legendary Chest Bundle</td><td>2500</td><td>20 Epic + 10 Legendary</td><td>Mặc định</td></tr>
+<tr><td>Mythic Chest Bundle</td><td>3000</td><td>20 Legendary + 10 Mythic</td><td>Khi đã sưu tầm đủ rarity Epic</td></tr>
+</tbody></table>
+<ul>
+<li>Mua xong: cộng gem, mở toàn bộ 30 rương (180 món) và hiện bảng kết quả dạng lưới cuộn. <span class="tag t0">GỐC</span></li>
+<li>Mỗi rương trong gói vẫn tính pity như mua lẻ, nên 20 rương Epic chắc chắn ra ít nhất một món Epic.</li>
+<li>Người chơi <b>chưa tới level 15</b> mua gói thì được mở sớm tính năng Áo choàng (popup ghi "Unlocks the Cloak feature!"). <span class="tag t0">GỐC</span></li>
+<li>Popup chào bán hiện: tên gói theo rarity, 5 ảnh tiêu biểu, các món trong gói (bấm vào rương để xem tỉ lệ), giá, nhãn -80%.</li>
+<li>Gốc mở popup này từ một nút ở lobby. Project <b>chưa có nút đó</b> (mục 13).</li>
+<li>Dữ liệu gốc còn 2 gói nhỏ (500 gem + 2 Legendary; 400 gem + 2 Mythic) không thấy chỗ bán ở bản 41.</li>
+</ul>
+<h2>7. Daily Deals</h2>
+<h3>7.1 Quy tắc <span class="tag t0">GỐC</span></h3>
+<ul>
+<li>Mỗi ngày (đổi lúc 00:00 UTC) có <b>3 deal</b>. Ba deal luôn <b>khác cỡ và khác loại</b> nhau.</li>
+<li>Có 4 cỡ (Tiny, Small, Medium, Large) × 5 loại (Dungeon, Gem, Cloak, Mining, Companion) = 20 deal có thể có.</li>
+<li>Bộ 3 deal sinh từ ngày hiện tại, nên mọi người chơi cùng ngày thấy cùng bộ deal.</li>
+<li>Deal đã mua biến mất. <b>Mua hết cả 3 thì ra ngay 3 deal mới</b>, không lặp lại deal đã mua trong ngày.</li>
+<li>Sang ngày mới thì danh sách "đã mua" xoá sạch.</li>
+<li>Thứ tự 3 ô: cỡ nhỏ ở trên. <span class="tag t2">ĐỀ XUẤT</span></li>
+</ul>
+<h3>7.2 Thưởng theo cỡ <span class="tag t0">GỐC</span></h3>
+<table><thead><tr><th>Loại deal</th><th>Thưởng chính</th><th>Tiny</th><th>Small</th><th>Medium</th><th>Large</th></tr></thead><tbody>
+<tr><td>Dungeon</td><td>Key Dragon Boss</td><td>1</td><td>2</td><td>3</td><td>5</td></tr>
+<tr><td></td><td>Key Zombie Horde</td><td>1</td><td>2</td><td>3</td><td>5</td></tr>
+<tr><td>Gem</td><td>Gem</td><td>200</td><td>500</td><td>2000</td><td>5000</td></tr>
+<tr><td>Cloak</td><td>Cloak (tiền summon áo choàng)</td><td>20</td><td>50</td><td>200</td><td>500</td></tr>
+<tr><td>Mining</td><td>Pickaxe</td><td>10</td><td>20</td><td>100</td><td>200</td></tr>
+<tr><td></td><td>Golden Pickaxe</td><td>1</td><td>2</td><td>10</td><td>20</td></tr>
+<tr><td></td><td>Drill</td><td>1</td><td>2</td><td>10</td><td>20</td></tr>
+<tr><td>Companion</td><td>Bone (tiền summon pet)</td><td>400</td><td>1000</td><td>4000</td><td>10000</td></tr>
+</tbody></table>
+<p>Mọi deal kèm thêm:</p>
+<table><thead><tr><th>Kèm thêm</th><th>Tiny</th><th>Small</th><th>Medium</th><th>Large</th><th>Áp dụng</th></tr></thead><tbody>
+<tr><td>Loot box</td><td>100</td><td>300</td><td>1500</td><td>3000</td><td>Mọi loại</td></tr>
+<tr><td>Gem</td><td>50</td><td>150</td><td>750</td><td>1500</td><td>Mọi loại trừ deal Gem</td></tr>
+</tbody></table>
+<p>Key mua từ deal là key cộng thêm, không mất khi sang ngày.</p>
+<h2>8. Boosters <span class="tag t0">GỐC</span></h2>
+<table><thead><tr><th>Boost</th><th>Giá</th><th>Hiệu lực</th><th>Thời lượng</th></tr></thead><tbody>
+<tr><td>x1.5 Exp Boost</td><td>45 gem</td><td>Kinh nghiệm ×1.5</td><td>20 phút</td></tr>
+<tr><td>x2 Exp Boost</td><td>75 gem</td><td>Kinh nghiệm ×2</td><td>5 phút</td></tr>
+</tbody></table>
+<ul>
+<li>Hai boost và Lifetime Boost <b>nhân dồn</b>: bật cả ba là ×6 (2 × 1.5 × 2).</li>
+<li>Đang chạy thì nút mua ẩn đi, thay bằng đồng hồ đếm ngược. Không mua chồng để cộng thêm giờ.</li>
+<li>Thời gian tính theo giờ thực, vẫn trôi khi thoát game.</li>
+<li>Boost áp vào <b>kinh nghiệm thắng màn campaign</b>. Kinh nghiệm từ thưởng Boss Rush chưa được nhân. <span class="tag t2">ĐỀ XUẤT</span></li>
+</ul>
+<h2>9. Resources <span class="tag t0">GỐC</span></h2>
+<table><thead><tr><th>Món</th><th>Giá</th><th>Nhận</th></tr></thead><tbody>
+<tr><td>Gold Pickaxe</td><td>45 gem</td><td>3 cái</td></tr>
+<tr><td>Drill</td><td>45 gem</td><td>3 cái</td></tr>
+</tbody></table>
+<p>Đây là dụng cụ của hệ Đào mỏ. Project chưa có hệ Đào mỏ nên hiện mua được, cộng vào kho, nhưng chưa có chỗ dùng.</p>
+<h2>10. Bán bằng tiền thật</h2>
+<h3>10.1 Gói gem</h3>
+<table><thead><tr><th>Gói</th><th>Gem <span class="tag t0">GỐC</span></th><th>Giá <span class="tag t2">ĐỀ XUẤT</span></th><th>Gem / 1$</th></tr></thead><tbody>
+<tr><td>Gem 1</td><td>100</td><td>$0.99</td><td>101</td></tr>
+<tr><td>Gem 2</td><td>255</td><td>$2.49</td><td>102</td></tr>
+<tr><td>Gem 3</td><td>520</td><td>$4.99</td><td>104</td></tr>
+<tr><td>Gem 4</td><td>1100</td><td>$9.99</td><td>110</td></tr>
+<tr><td>Gem 5</td><td>2700</td><td>$24.99</td><td>108</td></tr>
+<tr><td>Gem 6</td><td>5500</td><td>$49.99</td><td>110</td></tr>
+</tbody></table>
+<h3>10.2 Các món khác</h3>
+<table><thead><tr><th>Món</th><th>Thưởng <span class="tag t0">GỐC</span></th><th>Giá <span class="tag t2">ĐỀ XUẤT</span></th><th>Trạng thái</th></tr></thead><tbody>
+<tr><td>Lifetime Boost</td><td>Kinh nghiệm ×2 vĩnh viễn</td><td>$4.99</td><td>Đang bán</td></tr>
+<tr><td>Daily Deal Tiny / Small / Medium / Large</td><td>Mục 7.2</td><td>$0.99 / $2.49 / $9.99 / $24.99</td><td>Đang bán</td></tr>
+<tr><td>Legendary / Mythic Chest Bundle</td><td>Mục 6</td><td>$19.99 / $29.99</td><td>Có popup, chưa có nút mở</td></tr>
+<tr><td>No Ads</td><td>Tắt quảng cáo</td><td>$4.99</td><td>Tắt trong prefab gốc</td></tr>
+<tr><td>Starter Pack</td><td>500 gem + 300 loot box</td><td>$1.99</td><td>Tắt trong prefab gốc</td></tr>
+<tr><td>Epic Pack</td><td>2400 gem + 1500 loot box + 750 bone</td><td>$9.99</td><td>Tắt trong prefab gốc</td></tr>
+<tr><td>Dungeon Pack</td><td>4 key Dragon + 4 key Zombie</td><td>$1.99</td><td>Tắt trong prefab gốc</td></tr>
+<tr><td>Resource Pack</td><td>1200 loot box + 750 bone + 400 gem</td><td>$4.99</td><td>Tắt trong prefab gốc</td></tr>
+</tbody></table>
+<p>Giá tiền thật do cửa hàng ứng dụng trả về lúc chạy nên <b>không nằm trong APK</b>. Toàn bộ cột giá là đề xuất, suy từ lượng gem (gói gem giữ khoảng 100–110 gem cho 1$; Daily Deal loại Gem cho gấp đôi mức đó).</p>
+<h3>10.3 Thanh toán</h3>
+<ul>
+<li>Chưa gắn SDK thanh toán. Trong Unity Editor, bấm mua là thành công ngay để test. Trên máy thật, bấm mua sẽ báo "Store is not available" và không cộng gì.</li>
+<li>Khi gắn SDK: thưởng chỉ phát sau khi cửa hàng xác nhận thanh toán.</li>
+<li>Daily Deal ghi lại deal đang chờ thanh toán trước khi gọi cửa hàng, để nếu game tắt giữa chừng vẫn phát đúng thưởng. <span class="tag t0">GỐC</span></li>
+</ul>
+<h2>11. Dữ liệu lưu</h2>
+<p>Lưu ở máy, khoá <code>key_user_shop</code>:</p>
+<ul>
+<li>Bộ đếm pity của từng rarity.</li>
+<li>Daily Deals: ngày hiện tại, 3 deal đang bán, các deal đã mua trong ngày, deal đang chờ thanh toán.</li>
+<li>Thời điểm hết hạn của hai boost.</li>
+<li>Các cờ mua một lần: Lifetime Boost, No Ads, đã mở sớm Áo choàng.</li>
+</ul>
+<h2>12. Chưa chốt</h2>
+<h3>Chờ bạn quyết định</h3>
+<table><thead><tr><th>Việc</th><th>Hiện đang</th></tr></thead><tbody>
+<tr><td>Bảng giá tiền thật (mục 10)</td><td>Theo đề xuất</td></tr>
+<tr><td>Có bật lại 5 pack đang tắt không</td><td>Tắt như gốc</td></tr>
+<tr><td>Nút chào gói rương ở lobby đặt ở đâu</td><td>Chưa có nút</td></tr>
+<tr><td>Boost có nhân kinh nghiệm từ Boss Rush không</td><td>Không</td></tr>
+<tr><td>Giờ dùng cho boost và Daily Deals</td><td>Giờ của máy. Người chơi chỉnh đồng hồ có thể kéo dài boost hoặc đổi bộ deal; muốn chặn cần giờ server</td></tr>
+<tr><td>Tab Store có khoá theo level không</td><td>Mở sẵn</td></tr>
+</tbody></table>
+<h3>Chờ số liệu từ game gốc</h3>
+<table><thead><tr><th>Việc</th><th>Ghi chú</th></tr></thead><tbody>
+<tr><td>Giá thật của từng sản phẩm</td><td>Xem trong game gốc trên máy thật</td></tr>
+<tr><td>Thứ tự 3 Daily Deal và 2 thẻ rương ngang</td><td>Gốc có sắp xếp nhưng chưa đọc được quy tắc</td></tr>
+<tr><td>Rương quảng cáo ở lobby (Loot Box Offer / Gem Offer)</td><td>Có prefab popup, chưa đọc số thưởng và giới hạn mỗi ngày</td></tr>
+<tr><td>Weapon Offer</td><td>Có prefab popup, chưa đọc cách chọn vũ khí và thời hạn</td></tr>
+</tbody></table>
+<h2>13. Tình trạng code</h2>
+<h3>Đã làm (2026-10-10)</h3>
+<table><thead><tr><th>Hạng mục</th><th>Ở đâu</th></tr></thead><tbody>
+<tr><td>Dữ liệu rương, gói rương</td><td><code>Resources/Scriptable Objects/Shop/</code> (4 rương, 4 gói, <code>ChestConfig</code>)</td></tr>
+<tr><td>Mở rương, pity, chọn pet/áo, điều kiện Mythic</td><td><code>Scripts/Shop/ShopService.cs</code></td></tr>
+<tr><td>Boost kinh nghiệm, mua Drill / Gold Pickaxe</td><td><code>ShopService.cs</code>; nhân exp ở <code>CampaignMode</code></td></tr>
+<tr><td>Daily Deals: sinh theo ngày, mua, đổi bộ mới</td><td><code>Scripts/Shop/DailyDealService.cs</code></td></tr>
+<tr><td>Bảng thưởng gói tiền thật, giá đề xuất</td><td><code>Scripts/Shop/StaticShopData.cs</code></td></tr>
+<tr><td>Lớp thanh toán nền (chưa có SDK)</td><td><code>Scripts/Shop/PurchaseController.cs</code></td></tr>
+<tr><td>Save</td><td><code>Scripts/Shop/UserShopData.cs</code></td></tr>
+<tr><td>Trang Store, thẻ rương, ô Daily Deal</td><td><code>Scripts/UI/Shop/</code>, prefab <code>Resources/Prefabs/UI/StoreTabPage</code></td></tr>
+<tr><td>Popup thông tin rương, màn mở rương, bảng kết quả gói, popup chào gói</td><td><code>UIChestInfoPopup</code>, <code>UIChestRevealPopup</code>, <code>UIChestBundleRevealPopup</code>, <code>UIChestBundleOfferPopup</code></td></tr>
+</tbody></table>
+<p>Đổi số liệu rương hoặc dựng lại prefab: menu Unity <b>Tools → DungeonRush → Build Shop UI Prefabs</b>.</p>
+<p>Đã chạy thử trong Unity: mở 400 rương Epic ra tỉ lệ 76 / 18.5 / 4.1 / 1.4% và không lần nào trượt Epic quá 19 lượt; Daily Deal đổi bộ mới sau khi mua hết; ba boost nhân dồn; mua gói rương ra 180 món.</p>
+<h3>Chưa làm</h3>
+<table><thead><tr><th>Hạng mục</th><th>Ghi chú</th></tr></thead><tbody>
+<tr><td>SDK thanh toán</td><td>Viết lớp kế thừa <code>PurchaseController</code>, giống cách làm quảng cáo</td></tr>
+<tr><td>Nút chào gói rương ở lobby</td><td>Popup đã có, gọi <code>UIChestBundleOfferPopup.Show(ShopService.GetFeaturedBundle())</code></td></tr>
+<tr><td>Rương quảng cáo ở lobby</td><td>Prefab <code>RewardedChestPopup</code> có sẵn, chưa dựng</td></tr>
+<tr><td>Weapon Offer</td><td>Prefab <code>OfferPopup</code> có sẵn, chưa dựng</td></tr>
+<tr><td>Hệ Đào mỏ</td><td>Drill / Pickaxe chưa có chỗ dùng</td></tr>
+<tr><td>Battle Pass, Mining Offer, boost quảng cáo</td><td>Thuộc tính năng khác</td></tr>
+<tr><td>Hiệu ứng hạt trên thẻ rương và popup gói</td><td>Gốc dùng plugin UIParticle, project không có nên đang tắt</td></tr>
+<tr><td>Hiệu ứng mở rương</td><td>Món chưa bay từ rương ra ô như gốc</td></tr>
+</tbody></table>
+</body></html>

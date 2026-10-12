@@ -360,10 +360,10 @@ Mục tiêu: clan lẻ khi ghép cặp vẫn có war để chơi.
 
 | Phần | Nội dung | Vị trí |
 |---|---|---|
-| Server Clan | 13 hàm theo tên gốc | `functions/src/clan.ts` |
-| Server Clan War | 10 hàm + tác vụ ghép cặp hàng tuần + 2 hàm admin để thử | `functions/src/clanWar.ts` |
-| Config | Mọi con số **[ĐỀ XUẤT]**; ghi đè bằng Firestore `config/clanWar` | `functions/src/clanWarConfig.ts` |
-| Test server | Đạt trên emulator | `functions/scripts/clanEmulatorTest.mjs` |
+| Server Clan | 13 hàm theo tên gốc | `server/functions/src/clan.ts` |
+| Server Clan War | 10 hàm + tác vụ ghép cặp hàng tuần + 2 hàm admin để thử | `server/functions/src/clanWar.ts` |
+| Config | Mọi con số **[ĐỀ XUẤT]**; ghi đè bằng Firestore `config/clanWar` | `server/functions/src/clanWarConfig.ts` |
+| Test server | Đạt trên emulator | `server/functions/scripts/clanEmulatorTest.mjs` |
 | Client | Tab Clan, 13 popup, tự ghi điểm đóng góp | `Scripts/Clan/`, `Scripts/UI/Clan/`, `Scripts/UI/ClanWar/` |
 | Giao diện | Dựng từ prefab game gốc | Menu `Tools/DungeonRush/Build Clan UI Prefabs` |
 
