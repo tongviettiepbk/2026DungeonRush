@@ -33,6 +33,22 @@ public class UIBossRushJoinPopup : BaseUI
         SetLoading(false);
         if (txtTitle != null) txtTitle.text = "Boss Rush";
         Refresh();
+        CheckUnclaimed();
+    }
+
+    // Thứ Hai (ngày chốt): máy chưa biết sảnh mùa trước còn thưởng hay không nếu lần hỏi server gần nhất là trước
+    // lúc hết mùa → hỏi lại, có thưởng thì nút đổi thành "Join" để mở popup nhận thưởng.
+    private void CheckUnclaimed()
+    {
+        if (BossRushSchedule.IsActive(BossRushSchedule.UtcNow) || HasUnclaimed) return;
+
+        SetLoading(true);
+        BossRushController.Instance.RefreshPool((ok, res) =>
+        {
+            if (this == null || !gameObject.activeInHierarchy) return;
+            SetLoading(false);
+            Refresh();
+        });
     }
 
     private void Update()

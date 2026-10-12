@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,9 +12,9 @@ public class UIBossRushClaimPopup : BaseUI
     public TMP_Text txtRank;
     public TMP_Text txtCurrentTier;
     public TMP_Text txtNextTier;
-    public TMP_Text txtRankName;
     public Transform rewardsContent;
     public TMP_Text rewardTextPrefab;
+    public RewardIconSet rewardIcons;
     public Button btClaim;
     public Button btClose;
     public Button btRetry;
@@ -22,7 +23,11 @@ public class UIBossRushClaimPopup : BaseUI
     public GameObject objLoading;
 
     private string poolId;
-    private readonly List<TMP_Text> spawned = new List<TMP_Text>();
+    private readonly List<GameObject> spawned = new List<GameObject>();
+    private float currentTierY;
+    private float nextTierY;
+    private Transform gemRow;
+    private int gemAmount;
 
     public static void Open(string poolId)
     {
@@ -33,14 +38,17 @@ public class UIBossRushClaimPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        btClaim.onClick.AddListener(Close);
-        if (btClose != null) btClose.onClick.AddListener(Close);
+        currentTierY = txtCurrentTier.rectTransform.anchoredPosition.y;
+        nextTierY = txtNextTier.rectTransform.anchoredPosition.y;
+        btClaim.onClick.AddListener(OnClickClose);
+        if (btClose != null) btClose.onClick.AddListener(OnClickClose);
         if (btRetry != null) btRetry.onClick.AddListener(() => Claim(poolId));
     }
 
     public void Claim(string id)
     {
         poolId = id;
+        gemAmount = 0;
         if (txtTitle != null) txtTitle.text = "Boss Rush Results";
         SetState(loading: true, error: false);
 
@@ -57,30 +65,41 @@ public class UIBossRushClaimPopup : BaseUI
             SetState(loading: false, error: false);
             StaticBossRushData data = GameData.staticData.bossRush;
             if (txtRank != null) txtRank.text = "Placement: " + res.rank;
-            if (txtCurrentTier != null) txtCurrentTier.text = data.GetTierName(res.tier);
-            if (txtNextTier != null) txtNextTier.text = data.GetTierName(res.newTier);
-            if (txtRankName != null) txtRankName.text = res.promoted ? "Promoted!" : res.demoted ? "Demoted" : data.GetTierName(res.newTier);
-            ShowRewards(res.rewards);
-            GameController.Instance.uiLobby.Refresh();
+            ShowTier(data.GetTierName(res.tier), data.GetTierName(res.newTier), res.newTier != res.tier);
+            UIPvPRewardsPopup.FillRewards(res.rewards, rewardsContent, rewardTextPrefab, rewardIcons, spawned);
+            for (int i = 0; i < spawned.Count; i++)
+            {
+                if (res.rewards[i].Type != RewardType.Gem) continue;
+                gemRow = spawned[i].transform;
+                gemAmount = res.rewards[i].Amount;
+            }
         });
     }
 
-    private void ShowRewards(List<RewardEntry> rewards)
+    // Đóng popup mới cập nhật số trên lobby; có gem thì cho gem bay từ dòng thưởng vào ô gem.
+    private void OnClickClose()
     {
-        for (int i = 0; i < spawned.Count; i++)
-        {
-            if (spawned[i] != null) Destroy(spawned[i].gameObject);
-        }
-        spawned.Clear();
-        if (rewards == null || rewardsContent == null || rewardTextPrefab == null) return;
+        ShopUIUtil.RefreshLobby();
+        if (gemAmount > 0) GameController.Instance.uiLobby.PlayGemFly(gemRow, gemAmount);
+        gemAmount = 0;
+        Close();
+    }
 
-        for (int i = 0; i < rewards.Count; i++)
-        {
-            TMP_Text line = Instantiate(rewardTextPrefab, rewardsContent);
-            line.gameObject.SetActive(true);
-            line.text = rewards[i].Type + " x" + rewards[i].Amount;
-            spawned.Add(line);
-        }
+    // Giữ league: chỉ hiện tên league. Đổi league: tên cũ trượt xuống khỏi khung, tên mới trượt từ trên vào.
+    private void ShowTier(string current, string next, bool changed)
+    {
+        float step = nextTierY - currentTierY;
+        txtCurrentTier.text = current;
+        txtNextTier.text = next;
+        Slide(txtCurrentTier.rectTransform, currentTierY, changed ? currentTierY - step : currentTierY);
+        Slide(txtNextTier.rectTransform, nextTierY, changed ? currentTierY : nextTierY);
+    }
+
+    private void Slide(RectTransform rect, float fromY, float toY)
+    {
+        rect.DOKill();
+        rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, fromY);
+        if (fromY != toY) rect.DOAnchorPosY(toY, 0.4f).SetDelay(0.6f).SetUpdate(true);
     }
 
     private void SetState(bool loading, bool error)

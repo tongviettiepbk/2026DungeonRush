@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using TMPro;
@@ -600,6 +601,71 @@ public class UIMainLobby : BaseUI
         // số lượng gem hiện có (ItemType.GEM trong UserItemData). Gọi khi vào scene hoặc khi có thay đổi.
         if (txtGem != null)
             txtGem.text = GameData.userData.items.GetQuantityHave(ItemType.GEM).ToString("0");
+    }
+
+    private static Vector3 ScreenPosition(Transform ui, Vector3 worldPosition)
+    {
+        Canvas canvas = ui.GetComponentInParent<Canvas>();
+        Camera cam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.rootCanvas.worldCamera : null;
+        return RectTransformUtility.WorldToScreenPoint(cam, worldPosition);
+    }
+
+    // Hiệu ứng nhận gem: sinh vài hình gem tại vị trí UI nguồn (from), toả ra rồi lần lượt bay vào icon gem trên
+    // lobby; số gem đếm tăng dần theo từng viên tới nơi. Gọi SAU khi đã cộng gem vào data.
+    public void PlayGemFly(Transform from, double amount, int count = 6)
+    {
+        Image icon = txtGem != null ? txtGem.GetComponentInChildren<Image>() : null;
+        if (icon == null || amount <= 0 || count <= 0)
+        {
+            LoadResourceTxt();
+            return;
+        }
+
+        double start = GameData.userData.items.GetQuantityHave(ItemType.GEM) - amount;
+        txtGem.text = start.ToString("0");
+
+        // Canvas Overlay riêng nằm trên mọi popup: transform.position = pixel màn hình, nên vị trí nguồn/đích (có
+        // thể thuộc canvas theo camera) đều quy về toạ độ màn hình.
+        GameObject layer = new GameObject("GemFly", typeof(Canvas));
+        Canvas canvas = layer.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 1000;
+
+        Vector3 fromPosition = ScreenPosition(from, from.position);
+        Vector3 toPosition = ScreenPosition(icon.transform, icon.transform.position);
+        Vector3[] corners = new Vector3[4];
+        icon.rectTransform.GetWorldCorners(corners);
+        float size = ScreenPosition(icon.transform, corners[2]).x - ScreenPosition(icon.transform, corners[1]).x;
+        for (int i = 0; i < count; i++)
+        {
+            int index = i;
+            Image gem = new GameObject("Gem", typeof(Image)).GetComponent<Image>();
+            gem.transform.SetParent(layer.transform, false);
+            gem.sprite = icon.sprite;
+            gem.raycastTarget = false;
+            gem.rectTransform.sizeDelta = Vector2.one * size;
+            gem.transform.position = fromPosition;
+            gem.transform.localScale = Vector3.zero;
+
+            Vector3 spread = fromPosition + (Vector3)(Random.insideUnitCircle * size * 2f);
+            Sequence sequence = DOTween.Sequence().SetUpdate(true);
+            sequence.Append(gem.transform.DOMove(spread, 0.25f).SetEase(Ease.OutQuad));
+            sequence.Join(gem.transform.DOScale(1f, 0.25f));
+            sequence.AppendInterval(0.15f + index * 0.08f);
+            sequence.Append(gem.transform.DOMove(toPosition, 0.45f).SetEase(Ease.InQuad));
+            sequence.OnComplete(() =>
+            {
+                bool isLast = index == count - 1;
+                if (isLast) Destroy(layer);
+                else Destroy(gem.gameObject);
+                if (txtGem == null) return;
+
+                if (isLast) LoadResourceTxt();
+                else txtGem.text = (start + amount * (index + 1) / count).ToString("0");
+                icon.transform.DOKill(true);
+                icon.transform.DOPunchScale(Vector3.one * 0.3f, 0.15f).SetUpdate(true);
+            });
+        }
     }
 
     // Power người chơi (rm.iqm gốc, xem PlayerPower). Cập nhật khi đổi đồ / pet sở hữu / relic.
