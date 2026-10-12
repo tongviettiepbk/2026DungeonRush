@@ -156,6 +156,8 @@ public class UIClanWarRewardsPopup : BaseUI
         ClanUIUtil.SetActive(CollectPersonalCardRoot, cooldown);
         if (!cooldown) return;
         ClanWarClaimsDTO claims = war.claims ?? new ClanWarClaimsDTO();
+        // Không đóng góp điểm nào trong tuần → không có thưởng clan: ẩn thẻ (lý do ghi ở thẻ Clan Rewards của tab Battle).
+        ClanUIUtil.SetActive(CollectClanCardRoot, claims.clanRewardEligible || claims.clanRewardClaimed);
         ClanWarRewardsDTO clan = claims.clanReward ?? ClanWarController.ClanReward(config, war.myClan?.rewardTier, claims.outcome);
         if (CollectClanRewardsView != null) CollectClanRewardsView.SetRewards(clan);
         ClanUIUtil.SetActive(CollectClanButton, !claims.clanRewardClaimed);

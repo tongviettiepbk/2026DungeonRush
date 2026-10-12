@@ -32,6 +32,8 @@ public class ClanWarRewardClaimCards : MonoBehaviour
     public TMP_Text ClanClaimButtonText;
     public TMP_Text ClanClaimedStateText;
 
+    private const string NO_CONTRIBUTION_TEXT = "No reward: you did not contribute to this war";
+
     private bool isBusy;
 
     private void Awake()
@@ -63,10 +65,12 @@ public class ClanWarRewardClaimCards : MonoBehaviour
         ClanWarRewardsDTO clan = claims?.clanReward ?? ClanWarController.ClanReward(config, war.myClan?.rewardTier, claims?.outcome);
         bool clanClaimed = claims != null && claims.clanRewardClaimed;
         bool eligible = claims != null && claims.clanRewardEligible;
-        if (ClanRewardsView != null) ClanRewardsView.SetRewards(clan);
-        ClanUIUtil.SetActive(ClanClaimButton, !clanClaimed && clan != null && !clan.IsEmpty);
-        if (ClanClaimButton != null) ClanClaimButton.interactable = eligible;
-        ClanUIUtil.SetActive(ClanClaimedRoot, clanClaimed);
+        // Không đóng góp điểm nào trong tuần → không có thưởng clan: không hiện thưởng + nút Claim, ghi rõ lý do ở chỗ chữ "Claimed".
+        bool noReward = !clanClaimed && !eligible;
+        if (ClanRewardsView != null) ClanRewardsView.SetRewards(noReward ? null : clan);
+        ClanUIUtil.SetActive(ClanClaimButton, !clanClaimed && eligible && clan != null && !clan.IsEmpty);
+        ClanUIUtil.SetText(ClanClaimedStateText, noReward ? NO_CONTRIBUTION_TEXT : "Claimed");
+        ClanUIUtil.SetActive(ClanClaimedRoot, clanClaimed || noReward);
     }
 
     // gdm gốc.
