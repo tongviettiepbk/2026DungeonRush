@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Trang Enchantment (EnchantmentTabPage gốc) — page trong UiMainGame, mở từ nút enchantment ở ô trang bị lobby.
+// Trang Enchantment (EnchantmentTabPage gốc) — page trong UIMainGame2 (SafeArea/Pages), mở từ nút enchantment ở ô trang bị lobby.
 // 8 slot đeo relic + kho relic + Summon (Vial) + Quick Equip / Merge All. Logic ở EnchantmentService;
 // số liệu reverse xem DecodedData/ENCHANTMENT_MODEL.md.
 // Luồng đeo (gốc): bấm relic trong kho → popup Info → Equip → các slot sáng "đeo vào đây", kho chỉ còn

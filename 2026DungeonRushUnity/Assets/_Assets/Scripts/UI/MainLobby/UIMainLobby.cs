@@ -32,7 +32,7 @@ public class UIMainLobby : BaseUI
     public List<ElementPetUILobby> listElementPet;
 
     public TMP_Text txtLevelPlayer;
-    public Image imgProcessPlayer;
+    public Slider sliderProcessPlayer;
     public TMP_Text txtProcess;
 
     [Space(20)]
@@ -826,8 +826,8 @@ public class UIMainLobby : BaseUI
 
         if (player.playerLevel >= exp.MaxLevel)
         {
-            if (imgProcessPlayer != null)
-                imgProcessPlayer.fillAmount = 1f;
+            if (sliderProcessPlayer != null)
+                sliderProcessPlayer.value = 1f;
             if (txtProcess != null)
                 txtProcess.text = "MAX";
             return;
@@ -836,8 +836,8 @@ public class UIMainLobby : BaseUI
         int need = exp.GetXpRequired(player.playerLevel);
         int cur = player.playerExperience;
 
-        if (imgProcessPlayer != null)
-            imgProcessPlayer.fillAmount = need > 0 ? Mathf.Clamp01((float)cur / need) : 0f;
+        if (sliderProcessPlayer != null)
+            sliderProcessPlayer.value = need > 0 ? Mathf.Clamp01((float)cur / need) : 0f;
         if (txtProcess != null)
             txtProcess.text = cur + "/" + need;
     }

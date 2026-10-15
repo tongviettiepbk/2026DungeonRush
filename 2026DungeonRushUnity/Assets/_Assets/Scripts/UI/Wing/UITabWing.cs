@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Trang Wing (WingCraftTabPage gốc) — page trong UiMainGame, mở từ ô Wing ở lobby.
+// Trang Wing (WingCraftTabPage gốc) — page trong UIMainGame2 (SafeArea/Pages), mở từ ô Wing ở lobby.
 // Carousel 10 wing (mỗi rarity 1 mẫu, kéo/nút trái phải) + bảng info wing đang chọn + nút:
 //   Craft (chưa có) / Reroll (đã có) → UIWingCraftPopup / UIWingRerollPopup; Upgrade (tốn quặng); Equip/Unequip.
 // Chế tạo xong hiện ClaimPage "New Wing Obtained!". Logic ở WingService (reverse il2cpp v41).

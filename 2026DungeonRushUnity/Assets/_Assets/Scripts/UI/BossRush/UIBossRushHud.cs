@@ -9,8 +9,8 @@ public class UIBossRushHud : MonoBehaviour
 {
     public TMP_Text txtBossName;
     public TMP_Text txtBossHp;
-    public Image imgHpFill;          // FillRed (Image Filled) — máu hiện tại
-    public Image imgWhiteFill;       // FillWhite — chạy trễ phía sau
+    public Slider sliderHp;          // HPSlider gốc — máu hiện tại
+    public Slider sliderWhite;       // WhiteSlider gốc — vệt trắng chạy trễ phía sau
     public TMP_Text txtRemainingTime;
 
     [Header("Anim (giá trị mặc định như BossRushUI)")]
@@ -29,18 +29,24 @@ public class UIBossRushHud : MonoBehaviour
         if (txtBossName != null) txtBossName.text = "Boss #" + number + ": " + bossName;
         if (txtBossHp != null) txtBossHp.text = System.Math.Max(0d, hp).ToLetter() + " / " + maxHp.ToLetter();
 
-        if (imgHpFill != null)
+        if (sliderHp != null)
         {
-            imgHpFill.DOKill();
-            if (isNewBoss) imgHpFill.fillAmount = percent;
-            else imgHpFill.DOFillAmount(percent, hpAnimationDuration);
+            sliderHp.DOKill();
+            if (isNewBoss) sliderHp.value = percent;
+            else TweenValue(sliderHp, percent, hpAnimationDuration);
         }
-        if (imgWhiteFill != null)
+        if (sliderWhite != null)
         {
-            imgWhiteFill.DOKill();
-            if (isNewBoss) imgWhiteFill.fillAmount = percent;
-            else imgWhiteFill.DOFillAmount(percent, whiteAnimationDuration).SetDelay(whiteSliderDelay);
+            sliderWhite.DOKill();
+            if (isNewBoss) sliderWhite.value = percent;
+            else TweenValue(sliderWhite, percent, whiteAnimationDuration).SetDelay(whiteSliderDelay);
         }
+    }
+
+    // Tween slider.value, target = slider để DOKill() hủy được.
+    private static Tween TweenValue(Slider slider, float to, float duration)
+    {
+        return DOTween.To(() => slider.value, v => slider.value = v, to, duration).SetTarget(slider);
     }
 
     public void SetRemainingTime(float seconds)
