@@ -57,3 +57,4 @@
 - [Profile popup (hồ sơ + Settings)](dungonrush-profile-popup.md) — UIProfilePopup mở từ ô avatar lobby, dựng 2026-10-12; slider âm lượng/rung/User ID/đổi tên/Account chạy, 5 nút còn "coming soon" (redeem, ngôn ngữ...)
 - [Thưởng offline (Combat Summary)](dungonrush-offline-earning.md) — dựng 2026-10-13 theo gốc: trần 4h × Mastery, exp/phút = exp 1 màn, 1 rương/phút, X = nhận ×1, ads ×2; nút lobby + QuickEarnings chưa làm
 - [Tài khoản + cloud save](dungonrush-account-system.md) — khách mặc định, Sign Up gắn email, Sign In/Forgot/Sign Out, Choose Save; dựng + test Play 2026-10-13, chưa commit; cách test không làm mất save Editor
+- [Reskin đồ hero (art)](dungonrush-hero-equipment-reskin.md) — ảnh gốc 8 slot gom về _ResourceGame/HeroEquipment/; brief art GDD/ART_HERO_EQUIPMENT.md; mapping Gloves→áo, Wing→kính, Cape→tẩu

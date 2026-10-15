@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Tra ẢNH GẮN LÊN NGƯỜI cho 1 món đang mặc. Mỗi slot dùng config store khác nhau
-// (Weapon/Gears/Wing) nên gom việc dispatch về đây cho HeroEquipmentVisual gọi gọn.
+// (Weapon/Gears/Wing/Cape) nên gom việc dispatch về đây cho HeroEquipmentVisual gọi gọn.
 //
 // Bước 1: art body thật (bodySprite) đa số CHƯA gán → fallback về icon inventory để thấy
 // hình ngay khi test. Khi gán bodySprite dần thì tự dùng art đúng, không phải sửa code.
@@ -43,21 +43,18 @@ public static class EquipVisualResolver
                 return null;
             }
 
-            // Cape KHÔNG dùng sprite — là Spine skin, xem GetCapeData / HeroVisual.WearCape.
+            case GearSlotType.CAPE:
+            {
+                if (GameData.staticData.capes != null && int.TryParse(id, out int capeId))
+                {
+                    CapeData cape = GameData.staticData.capes.GetData(capeId);
+                    return cape != null ? (cape.bodySprite != null ? cape.bodySprite : cape.icon) : null;
+                }
+                return null;
+            }
+
             default:
                 return null;
         }
-    }
-
-    // Cape mặc lên người bằng Spine (skeletonData + skin), không phải sprite. Trả CapeData
-    // để HeroVisual gán trực tiếp. id = capeId dạng string.
-    public static CapeData GetCapeData(string id)
-    {
-        if (string.IsNullOrEmpty(id) || GameData.staticData == null || GameData.staticData.capes == null)
-        {
-            return null;
-        }
-
-        return int.TryParse(id, out int capeId) ? GameData.staticData.capes.GetData(capeId) : null;
     }
 }

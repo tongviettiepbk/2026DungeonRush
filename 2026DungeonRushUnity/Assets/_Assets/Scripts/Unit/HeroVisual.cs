@@ -1,45 +1,47 @@
-using Spine.Unity;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 // Hình ảnh trang bị của Hero. Ref các node trên rig được gán sẵn trong prefab (đơn giản hơn
-// resolve theo tên). Sprite/Spine lấy TRỰC TIẾP từ data gear qua EquipVisualResolver.
-//   - 5 slot sprite: Weapon/Helmet/Gloves/Backpack/Wing → set SpriteRenderer.
-//   - Cape: Spine — gán skeletonData + đổi skin lấy từ CapeData.
+// resolve theo tên). Sprite lấy TRỰC TIẾP từ data gear qua EquipVisualResolver.
+//   - 6 slot sprite: Weapon/Helmet/Gloves/Backpack/Wing/Cape → set SpriteRenderer.
 //
 // Quy tắc hiển thị: CHỈ bật (SetActive) object của slot khi MẶC THÀNH CÔNG (có hình). Riêng
-// bàn tay (handLeft/handRight) LUÔN bật vì có sprite mặc định — mặc găng thì đè sprite lên,
+// bàn tay (hand) LUÔN bật vì có sprite mặc định — mặc găng thì đè sprite lên,
 // cởi găng thì trả lại sprite mặc định (đã cache lúc đầu).
 public class HeroVisual : MonoBehaviour
 {
     public HeroUnit heroController;
 
     [Space(20)]
-    public SpriteRenderer handLeft;
-    public SpriteRenderer handRight;
+    [FormerlySerializedAs("handLeft")]
+    public SpriteRenderer hand;
     public SpriteRenderer weapon;
     public SpriteRenderer helmet;
     public SpriteRenderer backPack;
-    public SpriteRenderer wing1;
-    public SpriteRenderer wing2;
-    public SkeletonAnimation cape;
+    [FormerlySerializedAs("wing1")]
+    public SpriteRenderer wing;
+    public SpriteRenderer cape;
 
     [Header("Test")]
     [Tooltip("Sprite thay thế khi data gear CHƯA gán art — để test được logic bật object.")]
     public Sprite debugSprite;
+    [Tooltip("TẠM: bật = KHÔNG mặc đồ lên hình, hero giữ nguyên như prefab.")]
+    public bool skipLoadVisual = true;
 
     // Sprite mặc định của bàn tay (bare hand) để cởi găng thì trả lại.
-    private Sprite defaultHandLeft;
-    private Sprite defaultHandRight;
+    private Sprite defaultHand;
     private bool defaultsCached;
 
+    // TẠM TẮT: đổi đồ (loot...) KHÔNG đổi ảnh hero ngay — chỉ số vẫn tính lại ở HeroUnit.
+    // Hình chỉ dựng từ save lúc Hero sinh ra (RefreshAll). Bật lại 2 dòng dưới khi cần.
     private void OnEnable()
     {
-        EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnEquipmentChanged);
+        // EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnEquipmentChanged);
     }
 
     private void OnDisable()
     {
-        EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnEquipmentChanged);
+        // EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnEquipmentChanged);
     }
 
     // Người chơi đổi đồ (VD vừa loot ra) → mặc lại đúng slot đó từ save. param = GearSlotType.
@@ -75,6 +77,11 @@ public class HeroVisual : MonoBehaviour
 
     public void RefreshAll()
     {
+        if (skipLoadVisual)
+        {
+            return;
+        }
+
         CacheHandDefaults();
 
         UserEquipmentData data = overrideData ?? (GameData.userData != null ? GameData.userData.equipment : null);
@@ -119,8 +126,7 @@ public class HeroVisual : MonoBehaviour
                 ApplySlot(backPack, sprite);
                 break;
             case GearSlotType.WING:
-                ApplySlot(wing1, sprite);
-                ApplySlot(wing2, sprite);
+                ApplySlot(wing, sprite);
                 break;
             case GearSlotType.RING:
             case GearSlotType.NECKLACE:
@@ -156,19 +162,13 @@ public class HeroVisual : MonoBehaviour
     private void ApplyGloves(Sprite sprite)
     {
         CacheHandDefaults();
-        SetHand(handLeft, sprite != null ? sprite : defaultHandLeft);
-        SetHand(handRight, sprite != null ? sprite : defaultHandRight);
-    }
-
-    private static void SetHand(SpriteRenderer sr, Sprite sprite)
-    {
-        if (sr == null)
+        if (hand == null)
         {
             return;
         }
 
-        sr.gameObject.SetActive(true);
-        sr.sprite = sprite;
+        hand.gameObject.SetActive(true);
+        hand.sprite = sprite != null ? sprite : defaultHand;
     }
 
     // Cache sprite tay mặc định 1 lần, TRƯỚC khi có thao tác đè găng đầu tiên.
@@ -179,14 +179,11 @@ public class HeroVisual : MonoBehaviour
             return;
         }
 
-        if (handLeft != null) defaultHandLeft = handLeft.sprite;
-        if (handRight != null) defaultHandRight = handRight.sprite;
+        if (hand != null) defaultHand = hand.sprite;
         defaultsCached = true;
     }
 
-    // Cape = Spine skin. Cape gốc chia 3 skeleton (short/mid/long) nên đổi cape có thể phải
-    // đổi cả skeletonData rồi re-init; đổi trong cùng skeleton thì chỉ SetSkin. Chỉ bật object
-    // khi mặc thành công.
+    // Cape = sprite như slot thường, thêm điều kiện ẩn theo nút "Show Cloak".
     private void WearCape(string id)
     {
         if (cape == null)
@@ -194,30 +191,11 @@ public class HeroVisual : MonoBehaviour
             return;
         }
 
-        CapeData data = EquipVisualResolver.GetCapeData(id);
         // Nút "Show Cloak" (User.ShowCloak gốc) tắt thì vẫn mặc (vẫn có chỉ số) nhưng ẩn hình.
         // Ghost Boss Rush theo cờ ShowCloak trong snapshot của người chơi đó.
         bool isHidden = overrideData != null ? overrideShowCloak == false
             : GameData.userData != null && GameData.userData.capes.showCloak == false;
-        if (isHidden || data == null || data.skeletonData == null || string.IsNullOrEmpty(data.skinName))
-        {
-            cape.gameObject.SetActive(false);
-            return;
-        }
-
-        cape.gameObject.SetActive(true);
-
-        if (cape.Skeleton == null || cape.skeletonDataAsset != data.skeletonData)
-        {
-            cape.skeletonDataAsset = data.skeletonData;
-            cape.initialSkinName = data.skinName;
-            cape.Initialize(true);
-        }
-        else
-        {
-            cape.Skeleton.SetSkin(data.skinName);
-            cape.Skeleton.SetSlotsToSetupPose();
-        }
+        ApplySlot(cape, isHidden ? null : EquipVisualResolver.GetBodySprite(GearSlotType.CAPE, id));
     }
 
     // ===== TEST (chạy ở Play mode: chuột phải component trong Inspector) =====
@@ -238,10 +216,7 @@ public class HeroVisual : MonoBehaviour
         TestApplySprite(GearSlotType.GLOVES, FirstGearId(GearSlotType.GLOVES));
         TestApplySprite(GearSlotType.BACKPACK, FirstGearId(GearSlotType.BACKPACK));
         TestApplySprite(GearSlotType.WING, FirstWingId());
-
-        string capeId = FirstCapeId();
-        WearEquipment(GearSlotType.CAPE, capeId);
-        Debug.Log($"[HeroVisual] TEST Cape: capeId='{capeId}' (spine).");
+        TestApplySprite(GearSlotType.CAPE, FirstCapeId());
     }
 
     // Áp hình test cho 1 slot sprite: ưu tiên art trong data, thiếu thì dùng debugSprite.
@@ -260,8 +235,11 @@ public class HeroVisual : MonoBehaviour
         }
         else if (slot == GearSlotType.WING)
         {
-            ApplySlot(wing1, s);
-            ApplySlot(wing2, s);
+            ApplySlot(wing, s);
+        }
+        else if (slot == GearSlotType.CAPE)
+        {
+            ApplySlot(cape, s);
         }
         else if (slot == GearSlotType.WEAPON)
         {
