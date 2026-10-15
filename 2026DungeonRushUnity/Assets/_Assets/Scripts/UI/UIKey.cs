@@ -2,8 +2,10 @@
 // theo feature (Gear/Relic/Hero/Shop/Event...). DungOnRush port dần — thêm key khi có màn tương ứng.
 public class UIKey
 {
-    public const string InfoGear = "UiInfoGer";
-    public const string LootGearInfo = "UiLootGearInfo";
+    public const string InfoGear = "UIItemInfoPopup";
+    public const string NewItemPopup = "UINewItemPopup";
+    public const string NewForgePopup = "UINewForgePopup";
+    public const string AutoForgePopup = "UIAutoForgePopup";
     public const string PetInfo = "UIPetInfo";
     public const string UpgradePet = "uiUpgradePet";
     public const string SummonPet = "UiSumonPet";

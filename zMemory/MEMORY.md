@@ -59,3 +59,4 @@
 - [Tài khoản + cloud save](dungonrush-account-system.md) — khách mặc định, Sign Up gắn email, Sign In/Forgot/Sign Out, Choose Save; dựng + test Play 2026-10-13, chưa commit; cách test không làm mất save Editor
 - [Reskin đồ hero (art)](dungonrush-hero-equipment-reskin.md) — ảnh gốc 8 slot gom về _ResourceGame/HeroEquipment/; brief art GDD/ART_HERO_EQUIPMENT.md; mapping Gloves→áo, Wing→kính, Cape→tẩu
 - [UI lobby = UIMainGame2](dungonrush-main-ui-uimaingame2.md) — 2026-10-15 đã xoá UiMainGame tự dựng; UIMainGame2 gốc gắn UIMainLobby + 7 page ở Pages; XP/máu boss dùng Slider
+- [Loot + Auto Loot theo gốc](dungonrush-forge-auto-loot.md) — 2026-10-15: ForgeUIController + popup gốc, bán đồ = EXP, UserForgeData; builder Tools/DungeonRush/Build Forge UI; chữ popup tiếng Anh (font thiếu dấu)

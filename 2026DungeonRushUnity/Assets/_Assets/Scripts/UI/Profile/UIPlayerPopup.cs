@@ -162,9 +162,9 @@ public class UIPlayerPopup : BaseUI
             WingData wing = int.TryParse(record.equipId, out int wingId) ? GameData.staticData.wings.GetData(wingId) : null;
             if (wing == null) return;
 
-            string mainStats = "Máu: " + (GearStatCalculator.GetWingHealth(wing, record.level) * multiplier).ToLetter(false)
-                + "\nSát thương: " + (GearStatCalculator.GetWingDamage(wing, record.level) * multiplier).ToLetter(false);
-            ShowItemInfo(wing.icon, wing.wingName, wing.rarity, slot, mainStats, record.subStats);
+            string mainStats = "Health " + (GearStatCalculator.GetWingHealth(wing, record.level) * multiplier).ToLetter(false)
+                + "\nDamage " + (GearStatCalculator.GetWingDamage(wing, record.level) * multiplier).ToLetter(false);
+            ShowItemInfo(wing.icon, wing.wingName, wing.rarity, record.level, mainStats, record.subStats);
             return;
         }
         if (slot == GearSlotType.CAPE)
@@ -172,9 +172,9 @@ public class UIPlayerPopup : BaseUI
             CapeData cape = int.TryParse(record.equipId, out int capeId) ? GameData.staticData.capes.GetData(capeId) : null;
             if (cape == null) return;
 
-            string mainStats = "Sát thương: +" + (GearStatCalculator.GetCapeDamagePercent(cape, record.level) * multiplier).ToString("F1") + "%"
-                + "\nMáu: +" + (GearStatCalculator.GetCapeHealthPercent(cape, record.level) * multiplier).ToString("F1") + "%";
-            ShowItemInfo(cape.icon, cape.capeName, cape.rarity, slot, mainStats, record.subStats);
+            string mainStats = "Damage +" + (GearStatCalculator.GetCapeDamagePercent(cape, record.level) * multiplier).ToString("F1") + "%"
+                + "\nHealth +" + (GearStatCalculator.GetCapeHealthPercent(cape, record.level) * multiplier).ToString("F1") + "%";
+            ShowItemInfo(cape.icon, cape.capeName, cape.rarity, record.level, mainStats, record.subStats);
             return;
         }
 
@@ -185,10 +185,10 @@ public class UIPlayerPopup : BaseUI
         if (ui != null) ui.Show(result, GetRelicTier(slot));
     }
 
-    private static void ShowItemInfo(Sprite icon, string itemName, Rarity rarity, GearSlotType slot, string mainStats, List<GearSubStat> subStats)
+    private static void ShowItemInfo(Sprite icon, string itemName, Rarity rarity, int level, string mainStats, List<GearSubStat> subStats)
     {
         UIGearInfo ui = UIManager.Instance.LoadUI(UIKey.InfoGear) as UIGearInfo;
-        if (ui != null) ui.Show(icon, itemName, rarity + " - " + UIMainLobby.SlotName(slot), mainStats, subStats);
+        if (ui != null) ui.Show(icon, rarity, level, itemName, mainStats, subStats);
     }
 
     private void OnClickCompanion(ElementPlayerItemUI element)

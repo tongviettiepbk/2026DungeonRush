@@ -38,8 +38,8 @@ public class UIMainLobby : BaseUI
     [Space(20)]
     [Header("Loop")]
     public List<ElementEquipmentUILobby> listElementEquipment;
-    public Button btAutoLoot;
-    public Button btLoot;
+    // Nút Loot / Auto Loot + bục món: ForgeUIController lo (ForgeUI gốc).
+    public ForgeUIController forgeUI;
     public Button btBoost;
     public TMP_Text txtLootTicket;
 
@@ -80,18 +80,8 @@ public class UIMainLobby : BaseUI
     private bool isOfflineEarningPending;
     private float offlineHeartbeatTimer;
 
-#if UNITY_EDITOR
-    [Space(20)]
-    [Header("DEBUG - chỉ dùng test")]
-    // Nhập level để test bảng rarity. -1 = dùng giá trị thật trong save (playerLevel).
-    [SerializeField] private int debugForgeLevel = -1;
-#endif
-
     private void Start()
     {
-        if (btLoot != null)
-            btLoot.onClick.AddListener(OnClickLoot);
-
         if (btExitDungeon != null)
             btExitDungeon.onClick.AddListener(OnClickExitDungeon);
 
@@ -321,12 +311,6 @@ public class UIMainLobby : BaseUI
         if (Input.GetKeyDown(KeyCode.P))
             CheatUnlockAllPets();
 
-        // chỉnh nhanh debugForgeLevel khi đang chơi: mũi tên lên/xuống
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-            DebugCustom.Log($"[Forge] debugForgeLevel = {++debugForgeLevel}");
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-            DebugCustom.Log($"[Forge] debugForgeLevel = {--debugForgeLevel}");
-
 #endif
 
     }
@@ -436,72 +420,6 @@ public class UIMainLobby : BaseUI
 
     #endregion
 
-    // ---- LOOT: bấm Btn_Loot -> tiêu 1 LOOT_TICKET -> LootService random 1 item theo forgeLevel
-    // (rarity roll từ ForgeData), UI chỉ format & hiển thị ----
-
-    private void OnClickLoot()
-    {
-        if (GameData.userData.items.IsEnough(ItemType.LOOT_TICKET, 1) == false)
-        {
-            UIManager.Instance.ShowNotice(
-                content: "Không đủ vé loot.",
-                isLocalizeContent: false,
-                popupType: PopupNoticeType.Yes,
-                title: "LOOT",
-                labelYes: "OK");
-            return;
-        }
-
-        // Bảng rarity bám playerLevel (hệ exp). Row 0-based = playerLevel - 1 (Level 1 -> dòng 0).
-        int forgeLevel = GameData.userData.player.playerLevel - 1;
-#if UNITY_EDITOR
-        // Test: nếu có nhập debugForgeLevel (>=0) thì override level dùng để roll rarity.
-        if (debugForgeLevel >= 0)
-            forgeLevel = debugForgeLevel;
-#endif
-
-        LootResult result = LootService.RollOne(forgeLevel);
-        if (result == null)
-            return; // LootService đã log lỗi cụ thể.
-
-
-        DebugCustom.ShowLog("subStats:", JsonConvert.SerializeObject(result.subStats));
-
-        GameData.userData.items.Consume(ItemType.LOOT_TICKET, 1);
-        // Clan War: điểm "Loot {rarity} Equipment" (ClanWarController.fzk gốc).
-        ClanWarController.Instance.RecordLoot(result.rarity);
-        UpdateLootTicketText();
-
-        ElementEquipmentUILobby targetElement = null;
-        for (int i = 0; i < listElementEquipment.Count; i++)
-        {
-            if (listElementEquipment[i].typeEquipment == result.EquipSlot)
-            {
-                targetElement = listElementEquipment[i];
-                break;
-            }
-        }
-
-        LootResult oldResult = targetElement != null ? targetElement.GetDataGear() : null;
-
-        UILootGearInfo uiLootGearInfo = UIManager.Instance.LoadUI(UIKey.LootGearInfo) as UILootGearInfo;
-        if (uiLootGearInfo != null)
-        {
-            uiLootGearInfo.Show(result, oldResult,
-                onEquip: () =>
-                {
-                    if (targetElement != null)
-                        targetElement.SetLayout(result);
-
-                    // Ghép loot -> mặc đồ: lưu món (kèm rarity/level/substat đã roll) vào save rồi báo
-                    // Hero mặc lại đúng slot (live nếu hero đang trong scene; nếu không, hero đọc save khi spawn).
-                    GameData.userData.equipment.Equip(result.EquipSlot, result.equipId, result.rarity, result.level, result.subStats);
-                    this.PostEvent(EventID.EquipmentChanged, result.EquipSlot);
-                },
-                onSell: null);
-        }
-    }
-
     #region Info gear
 
     public static string SlotName(GearSlotType slot)
@@ -540,30 +458,25 @@ public class UIMainLobby : BaseUI
         }
     }
 
-    // Đổ danh sách dòng substat vào các ô text: ô thứ i hiện "Tên: +giá trị%" nếu có, thừa thì ẩn.
-    // Dùng chung cho UIGearInfo/UILootGearInfo. Null-guard cả subStats lẫn danh sách text (prefab có
-    // thể chưa wire hết), gear rarity thấp có thể 0 dòng.
-    public static void FillSubStats(List<GearSubStat> subStats, List<TMP_Text> texts)
-    {
-        if (texts == null)
-            return;
-
-        int count = subStats != null ? subStats.Count : 0;
-        for (int i = 0; i < texts.Count; i++)
-        {
-            if (texts[i] == null)
-                continue;
-
-            bool hasSubStat = i < count;
-            texts[i].gameObject.SetActive(hasSubStat);
-            if (hasSubStat)
-                texts[i].text = SubStatName(subStats[i].type) + ": +" + subStats[i].value.ToString("0.##") + "%";
-        }
-    }
-
     #endregion
 
     #region Load all Info Gear current
+    // Ô trang bị lobby sau khi mặc đồ mới (ForgeUIController gọi).
+    public void RefreshEquipment()
+    {
+        ReloadInfoGear();
+    }
+
+    // Level/thanh exp/gem sau khi cộng EXP (bán đồ forge).
+    public void RefreshExp()
+    {
+        SetlevelPlayer();
+        UpdateProcessLevel();
+        LoadResourceTxt();
+        if (forgeUI != null)
+            forgeUI.RefreshAutoVisual();
+    }
+
     public void Refresh()
     {
         ReloadInfoGear();
@@ -810,7 +723,7 @@ public class UIMainLobby : BaseUI
             btExitEventBlocker.interactable = false;
     }
 
-    // Level người chơi (hệ exp) = INDEX bảng rarity loot. OnClickLoot roll rarity theo playerLevel - 1.
+    // Level người chơi (hệ exp) = INDEX bảng rarity loot. ForgeUIController roll rarity theo playerLevel - 1.
     private void SetlevelPlayer()
     {
         if (txtLevelPlayer != null)

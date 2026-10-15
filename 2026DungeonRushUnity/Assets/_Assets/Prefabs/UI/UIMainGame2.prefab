@@ -8706,8 +8706,7 @@ MonoBehaviour:
   - {fileID: 293449442872749641}
   - {fileID: 6311721487560199045}
   - {fileID: 1436268322579089276}
-  btAutoLoot: {fileID: 4682973771948551761}
-  btLoot: {fileID: 7741344360276839589}
+  forgeUI: {fileID: 2878319579337706483}
   btBoost: {fileID: 1456944606503456288}
   txtLootTicket: {fileID: 6501407340292006227}
   listElementMenu:
@@ -8735,7 +8734,6 @@ MonoBehaviour:
   imgProcessWhite: {fileID: 0}
   objPvpUI: {fileID: 1568178832934943965}
   txtTimePvp: {fileID: 4591672737509088785}
-  debugForgeLevel: -1
 --- !u!1 &872662318152138002
 GameObject:
   m_ObjectHideFlags: 0
@@ -9320,6 +9318,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5258666162387678585}
   - component: {fileID: 762960696988017392}
+  - component: {fileID: 2878319579337706483}
   m_Layer: 5
   m_Name: ForgeUI
   m_TagString: Untagged
@@ -9367,6 +9366,30 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &2878319579337706483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908588805812608008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddb37bde52e854246a8bd1d302bd0241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ForgeUIController
+  owner: {fileID: 2738907365505191828}
+  btLoot: {fileID: 7741344360276839589}
+  btAuto: {fileID: 4682973771948551761}
+  objAutoButton: {fileID: 5949646607935317448}
+  objAutoRunning: {fileID: 7976983073360132636}
+  objAutoIdle: {fileID: 1270950149770307289}
+  itemList: {fileID: 3786030657057495868}
+  itemPrefab: {fileID: 3485243399779085592, guid: e0200ab18a04d4e7f9f2fb4473ed56cb, type: 3}
+  autoRotateSpeed: 360
+  processDelay: 0.35
+  autoNextDelay: 0.5
+  debugForgeLevel: -1
 --- !u!1 &923751999189990527
 GameObject:
   m_ObjectHideFlags: 0
@@ -94145,7 +94168,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7976983073360132636}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 

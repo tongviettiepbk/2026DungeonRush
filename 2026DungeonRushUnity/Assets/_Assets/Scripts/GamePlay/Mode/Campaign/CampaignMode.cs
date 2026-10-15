@@ -61,24 +61,9 @@ public class CampaignMode : BaseMode
             // Exp thắng màn = round(49 + level) (clear sạch quái, xem DecodedData/EXP_MODEL.md).
             // Cộng vào playerExperience → có thể lên playerLevel (rarity table tự tốt lên).
             int level = GameData.staticData.campaign.GetLevel(stageId);
-            // Boost exp mua ở Store (lifetime ×2, 20 phút ×1.5, 5 phút ×2 — ExperienceController.hdq gốc).
-            int expReward = ShopService.ApplyExpBoost(GameData.staticData.experience.GetStageExp(level));
-            int oldPlayerLevel = GameData.userData.player.playerLevel;
-            int levelsGained = GameData.userData.player.AddExperience(expReward);
-
-            // Mỗi level vừa lên → thưởng gem theo bảng LevelPopup.ywc (level 1-16 = 5, sau tăng dần).
-            if (levelsGained > 0)
-            {
-                StaticExperienceData exp = GameData.staticData.experience;
-                int totalGem = 0;
-                for (int lv = oldPlayerLevel + 1; lv <= GameData.userData.player.playerLevel; lv++)
-                {
-                    totalGem += exp.GetLevelUpGemReward(lv);
-                }
-                GameData.userData.items.Receive(ItemType.GEM, totalGem);
-                DebugCustom.Log($"[Campaign] Lên {levelsGained} level -> playerLevel = {GameData.userData.player.playerLevel}, +{totalGem} gem");
-                // TODO(Phase 3): bật UILevelPopup (bảng rarity + số gem) trước khi reload.
-            }
+            // Boost exp mua ở Store (lifetime ×2, 20 phút ×1.5, 5 phút ×2) + thưởng gem mỗi level vừa lên.
+            // TODO(Phase 3): lên level thì bật UILevelPopup (bảng rarity + số gem) trước khi reload.
+            PlayerExpService.Grant(GameData.staticData.experience.GetStageExp(level));
 
             GameData.userData.campaign.PassStage(stageId);
             GameData.Save(true);
