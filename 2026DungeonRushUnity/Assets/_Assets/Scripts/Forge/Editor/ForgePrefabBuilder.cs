@@ -20,6 +20,8 @@ public static class ForgePrefabBuilder
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/";
     private const string ITEM_ELEMENT_OUT = "Assets/_Assets/Prefabs/UINew/Forge/ItemElementUI.prefab";
     private const string LOBBY = "Assets/_Assets/Prefabs/UI/UIMainGame2.prefab";
+    private const string STAT_ARROW_UP = "Assets/_Assets/_ResourceGame/UI/stat_arrow_up.png";
+    private const string STAT_ARROW_DOWN = "Assets/_Assets/_ResourceGame/UI/stat_arrow_down.png";
     private const string BOX_SPRITE_ASSET = "Assets/_Assets/_ResourceGame/MasteryIcons/IsBox.asset";
     // Chữ "Lv.N" trên ô item: bản rip mất viền của font gốc → viền đen để đọc được trên nền rarity sáng.
     private const string LEVEL_TEXT_MATERIAL = "Assets/_Assets/Fonts/NotoSans/NotoSans-SemiBold-Outline-Black.mat";
@@ -109,6 +111,9 @@ public static class ForgePrefabBuilder
         ui.txtNewBaseStat = Text(popup, NEW + "Stats/BaseStatText");
         ui.txtNewSubStats = Text(popup, NEW + "Stats/SubStatText");
         ui.objNewNew = Find(popup, NEW + "NewTextNewItem").gameObject;
+        ui.imgCompareArrow = AddCompareArrow(ui.txtNewBaseStat.transform);
+        ui.sprStatUp = AssetDatabase.LoadAssetAtPath<Sprite>(STAT_ARROW_UP);
+        ui.sprStatDown = AssetDatabase.LoadAssetAtPath<Sprite>(STAT_ARROW_DOWN);
 
         ui.btEquip = Find(popup, "ContentTransform/NewForgeEquipButton").GetComponent<Button>();
         ui.btSell = Find(popup, "ContentTransform/NewForgeSellButton").GetComponent<Button>();
@@ -121,6 +126,23 @@ public static class ForgePrefabBuilder
         HideAll(popup, "TutorialUI");
         HideAll(popup, "NotificationUI");
         return Save(root, OUT + "UINewForgePopup.prefab");
+    }
+
+    // Prefab gốc không có node so sánh → thêm Image con của BaseStatText, neo góc trên-trái (popup tự dời ra sau chữ).
+    private static Image AddCompareArrow(Transform baseStatText)
+    {
+        GameObject go = new GameObject("CompareArrow", typeof(RectTransform), typeof(Image));
+        go.layer = baseStatText.gameObject.layer;
+        RectTransform rt = (RectTransform)go.transform;
+        rt.SetParent(baseStatText, false);
+        rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+        rt.pivot = new Vector2(0f, 0.5f);
+        rt.sizeDelta = new Vector2(33f, 33f);
+        Image img = go.GetComponent<Image>();
+        img.raycastTarget = false;
+        img.preserveAspect = true;
+        go.SetActive(false);
+        return img;
     }
 
     [MenuItem("Tools/DungeonRush/Build Forge UI/Item Info Popup")]
@@ -264,9 +286,104 @@ public static class ForgePrefabBuilder
         view.objAncient = Find(t, "BackgroundImage/Mask/Ancient").gameObject;
         view.objImmortal = Find(t, "BackgroundImage/Mask/Immortal").gameObject;
         view.objDivine = Find(t, "BackgroundImage/Mask/Divine").gameObject;
+        AddRarityPatternFx(t);
         HideAll(t, "TutorialUI");
         HideAll(t, "NotificationUI");
         return view;
+    }
+
+    // Bản rip mất SoftMask ở node Mask + RarityPatternEffect ở 3 pattern → gắn lại (Mask thường thay SoftMask).
+    // Thông số lấy từ prefab gốc: Duration 5, Ease Linear; Ancient trượt xuống 128.5, Immortal xoay 360, Divine trượt chéo 128.
+    private static void AddRarityPatternFx(Transform t, string maskPath = "BackgroundImage/Mask")
+    {
+        GameObject maskGo = Find(t, maskPath).gameObject;
+        Mask mask = maskGo.GetComponent<Mask>();
+        if (mask == null)
+            mask = maskGo.AddComponent<Mask>();
+        mask.showMaskGraphic = false;
+
+        SetPatternFx(Find(maskGo.transform, "Ancient"), RarityPatternEffect.PatternAnimation.MoveDown, 128.5f, 0f);
+        SetPatternFx(Find(maskGo.transform, "Immortal"), RarityPatternEffect.PatternAnimation.Spiral, 0f, 360f);
+        SetPatternFx(Find(maskGo.transform, "Divine"), RarityPatternEffect.PatternAnimation.MoveDiagonalDown, 128f, 0f);
+    }
+
+    // 8 ô đồ đang mặc ở lobby (ElementEquipmentUILobby, node pattern tên PatternMask): wire nền + pattern + FX.
+    private static string PatchLobbyEquipmentSlots()
+    {
+        GameObject lobby = PrefabUtility.LoadPrefabContents(LOBBY);
+        try
+        {
+            int count = 0;
+            foreach (ElementEquipmentUILobby slot in lobby.GetComponentsInChildren<ElementEquipmentUILobby>(true))
+            {
+                Transform t = slot.transform;
+                slot.imgBackground = Find(t, "BackgroundImage").GetComponent<Image>();
+                slot.objAncient = Find(t, "BackgroundImage/PatternMask/Ancient").gameObject;
+                slot.objImmortal = Find(t, "BackgroundImage/PatternMask/Immortal").gameObject;
+                slot.objDivine = Find(t, "BackgroundImage/PatternMask/Divine").gameObject;
+                AddRarityPatternFx(t, "BackgroundImage/PatternMask");
+                count++;
+            }
+            PrefabUtility.SaveAsPrefabAsset(lobby, LOBBY, out bool ok);
+            return "UIMainGame2 equipment slots: " + count + (ok ? " ok" : " FAILED");
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(lobby);
+        }
+    }
+
+    private static void SetPatternFx(Transform t, RarityPatternEffect.PatternAnimation type, float moveDistance, float rotationDegrees)
+    {
+        RarityPatternEffect fx = t.GetComponent<RarityPatternEffect>();
+        if (fx == null)
+            fx = t.gameObject.AddComponent<RarityPatternEffect>();
+        fx.animationType = type;
+        fx.duration = 5f;
+        fx.moveDistance = moveDistance;
+        fx.rotationDegrees = rotationDegrees;
+        fx.ease = DG.Tweening.Ease.Linear;
+        // Pattern chỉ để nhìn, không chặn bấm vào ô.
+        Image image = t.GetComponent<Image>();
+        if (image != null)
+            image.raycastTarget = false;
+    }
+
+    // Vá FX vào các prefab ĐÃ dựng (không dựng lại → giữ bố cục đã chỉnh tay).
+    [MenuItem("Tools/DungeonRush/Build Forge UI/Patch Rarity FX")]
+    public static string PatchRarityFx()
+    {
+        string[] paths =
+        {
+            ITEM_ELEMENT_OUT,
+            OUT + "UINewItemPopup.prefab",
+            OUT + "UINewForgePopup.prefab",
+            OUT + "UIItemInfoPopup.prefab",
+        };
+        List<string> results = new List<string>();
+        foreach (string path in paths)
+        {
+            GameObject root = PrefabUtility.LoadPrefabContents(path);
+            try
+            {
+                int count = 0;
+                foreach (ItemElementView view in root.GetComponentsInChildren<ItemElementView>(true))
+                {
+                    AddRarityPatternFx(view.transform);
+                    count++;
+                }
+                PrefabUtility.SaveAsPrefabAsset(root, path, out bool ok);
+                results.Add(System.IO.Path.GetFileNameWithoutExtension(path) + ": " + count + (ok ? " ok" : " FAILED"));
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(root);
+            }
+        }
+        results.Add(PatchLobbyEquipmentSlots());
+        string result = string.Join("\n", results);
+        Debug.Log("[ForgePrefabBuilder] Patch Rarity FX\n" + result);
+        return result;
     }
 
     // Root Canvas (Overlay, 1080×2160) → ContentAll (nền mờ toàn màn, có Button để đóng) → bản rip đã unpack.

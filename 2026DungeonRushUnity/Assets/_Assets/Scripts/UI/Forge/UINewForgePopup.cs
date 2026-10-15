@@ -26,6 +26,9 @@ public class UINewForgePopup : BaseUI
     public TMP_Text txtNewBaseStat;
     public TMP_Text txtNewSubStats;
     public GameObject objNewNew;         // nhãn "NEW" trên thẻ phải: món vừa loot
+    public Image imgCompareArrow;        // cạnh chỉ số chính thẻ phải: xanh lên = mạnh hơn đồ đang mặc, đỏ xuống = yếu hơn
+    public Sprite sprStatUp;
+    public Sprite sprStatDown;
 
     [Header("Nút")]
     public Button btEquip;
@@ -71,6 +74,21 @@ public class UINewForgePopup : BaseUI
         Fill(other, newElement, txtNewName, txtNewRarity, txtNewBaseStat, txtNewSubStats);
         objEquippedNew.SetActive(equipped == looted);
         objNewNew.SetActive(other == looted);
+        RefreshCompareArrow();
+    }
+
+    // So chỉ số chính (cùng slot nên cùng loại Damage/Health); bằng nhau thì ẩn. Mũi tên đặt ngay sau chữ.
+    private void RefreshCompareArrow()
+    {
+        bool isEqual = other.mainStat == equipped.mainStat;
+        imgCompareArrow.gameObject.SetActive(isEqual == false);
+        if (isEqual)
+            return;
+
+        imgCompareArrow.sprite = other.mainStat > equipped.mainStat ? sprStatUp : sprStatDown;
+        txtNewBaseStat.ForceMeshUpdate(true);
+        Bounds bounds = txtNewBaseStat.textBounds;
+        imgCompareArrow.rectTransform.anchoredPosition = new Vector2(bounds.max.x + 10f, bounds.center.y);
     }
 
     private static void Fill(LootResult item, ItemElementView element, TMP_Text name, TMP_Text rarity, TMP_Text baseStat, TMP_Text subStats)

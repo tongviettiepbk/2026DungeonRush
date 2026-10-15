@@ -49,6 +49,13 @@ public class StaticShopData
     public const float X2_BOOST_MULTIPLIER = 1.5f;
     public const float X5_BOOST_MULTIPLIER = 2f;
 
+    // Nút Boost lobby (xem quảng cáo) — BoostButton + EconomyController gốc.
+    // Giá trị dùng khi Mastery tắt; Mastery bật thì lấy nhánh AdBoostWorth / AdBoostDuration.
+    public const float AD_BOOST_MULTIPLIER = 2f;      // jwh: fmov #2.0
+    public const int AD_BOOST_DURATION = 300;         // EconomyController.BoostDuration (giây / 1 lần xem)
+    public const int AD_BOOST_MAX_STACK = 12;         // ykv: cộng dồn tối đa 12 lần thời lượng
+    public const int AD_BOOST_VISIBLE_LEVEL = 3;      // BoostButton.VisibleAtPlayerLevel
+
     public ChestConfig chestConfig;
 
     public StaticShopData()

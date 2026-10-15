@@ -17,4 +17,11 @@ public class UnitAnimationEventRelay : MonoBehaviour
     {
         AttackAnimationCompleted?.Invoke();
     }
+
+    // Event của clip đánh unit_all (strike_atk/gun_atk...). Hiện sát thương vẫn ra ở cuối nhịp
+    // (BaseUnit.OnAttackEnd) → chỉ nhận để Unity không báo "AnimationEvent has no receiver".
+    public void AE_Attack() { }
+    public void AE_AttackStep() { }
+    public void AE_AttackWindowBegin() { }
+    public void AE_AttackWindowEnd() { }
 }

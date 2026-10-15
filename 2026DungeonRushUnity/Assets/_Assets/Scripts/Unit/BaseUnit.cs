@@ -856,6 +856,8 @@ public class BaseUnit : MonoBehaviour
             if (IsTargetAvailable())
             {
                 StopMove();
+                // Đầu mỗi nhịp đánh quay mặt về phía đối thủ (trái/phải).
+                SetFacingDirection(GetDirectionToTarget());
                 PlayAnimAttack();
                 isAttacking = true;
 
@@ -881,6 +883,8 @@ public class BaseUnit : MonoBehaviour
     protected virtual void PlayAnimAttack()
     {
         animationController.ResetAnimHit();
+        // Cùng điều kiện với ReleaseAttack: có đạn = đánh xa.
+        animationController.isRangedAttack = hasProjectile && bulletPrefab != null;
         animationController.PlayAnimAttack();
     }
 

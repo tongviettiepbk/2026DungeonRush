@@ -113,10 +113,50 @@ public static class ShopService
         return true;
     }
 
-    // Lifetime ×2, boost 20 phút ×1.5, boost 5 phút ×2 — nhân dồn.
+    // ----- Boost xem quảng cáo (nút Boost lobby, BoostButton gốc) -----
+
+    // jwh: Mastery bật → nhánh AdBoostWorth (mặc định x2, Lvl1 x2.1 ... x4), tắt → x2.
+    public static float GetAdBoostMultiplier()
+    {
+        return MasteryService.IsEnabled ? MasteryService.GetCurrentValue(MasteryUpgradeType.AdBoostWorth) : StaticShopData.AD_BOOST_MULTIPLIER;
+    }
+
+    // jwo: thời lượng cộng thêm mỗi lần xem (giây). Mastery bật → nhánh AdBoostDuration (mặc định 300).
+    public static int GetAdBoostDuration()
+    {
+        return MasteryService.IsEnabled ? Mathf.RoundToInt(MasteryService.GetCurrentValue(MasteryUpgradeType.AdBoostDuration)) : StaticShopData.AD_BOOST_DURATION;
+    }
+
+    public static int GetAdBoostMaxDuration()
+    {
+        return GetAdBoostDuration() * StaticShopData.AD_BOOST_MAX_STACK;
+    }
+
+    public static bool IsAdBoostActive()
+    {
+        return User.adBoostEndTime > Now();
+    }
+
+    // jwn: thời gian còn lại, kẹp trong trần 12 × thời lượng (trần có thể giảm khi Mastery đổi).
+    public static long GetAdBoostRemaining()
+    {
+        return Math.Min(Math.Max(0, User.adBoostEndTime - Now()), GetAdBoostMaxDuration());
+    }
+
+    // jvy: xem xong quảng cáo → chưa chạy thì bật 1 lượt; đang chạy thì cộng thêm 1 lượt, không vượt trần.
+    public static void AddAdBoost()
+    {
+        long remaining = IsAdBoostActive() ? GetAdBoostRemaining() + GetAdBoostDuration() : GetAdBoostDuration();
+        User.adBoostEndTime = Now() + Math.Min(remaining, GetAdBoostMaxDuration());
+        User.isDataChanged = true;
+        GameData.Save(true);
+    }
+
+    // Lifetime ×2, boost quảng cáo ×AdBoostWorth, boost 20 phút ×1.5, boost 5 phút ×2 — nhân dồn.
     public static float GetExpMultiplier()
     {
         float multiplier = User.isLifetimeBoostBought ? StaticShopData.LIFETIME_BOOST_MULTIPLIER : 1f;
+        if (IsAdBoostActive()) multiplier *= GetAdBoostMultiplier();
         if (IsX2BoostActive()) multiplier *= StaticShopData.X2_BOOST_MULTIPLIER;
         if (IsX5BoostActive()) multiplier *= StaticShopData.X5_BOOST_MULTIPLIER;
         return multiplier;

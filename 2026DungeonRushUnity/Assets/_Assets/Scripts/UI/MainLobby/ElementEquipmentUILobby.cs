@@ -11,6 +11,12 @@ public class ElementEquipmentUILobby : MonoBehaviour
     public TMP_Text txtLevelEnchantment;
     public Image imgEquipment;
 
+    // Nền ô theo rarity + pattern chạy 3 rarity cuối (BackgroundImage/PatternMask/...), như ItemElementView.
+    public Image imgBackground;
+    public GameObject objAncient;
+    public GameObject objImmortal;
+    public GameObject objDivine;
+
     public Button btEnchantmentInfo;
 
     // UIMainLobby gán: bấm nút enchantment → mở trang Enchantment.
@@ -56,7 +62,14 @@ public class ElementEquipmentUILobby : MonoBehaviour
         RefreshEnchantment();
 
         if (result == null)
+        {
+            // Wing/Cape tự set nền ở SetWing/SetCape — không đè về Common.
+            if (typeEquipment != GearSlotType.WING && typeEquipment != GearSlotType.CAPE)
+                SetRarity(null);
             return;
+        }
+
+        SetRarity(result.rarity);
 
         if (imgEquipment != null)
         {
@@ -104,12 +117,29 @@ public class ElementEquipmentUILobby : MonoBehaviour
     public void SetWing(WingData wing, int level)
     {
         SetIcon(wing != null ? wing.icon : null, level);
+        SetRarity(wing != null ? wing.rarity : (Rarity?)null);
     }
 
     // Ô Cape: icon + "Lv.N" cape đang mặc; null → hình mặc định.
     public void SetCape(CapeData cape, int level)
     {
         SetIcon(cape != null ? cape.icon : null, level);
+        SetRarity(cape != null ? cape.rarity : (Rarity?)null);
+    }
+
+    // null = ô trống: nền Common (tier_01 như prefab gốc), tắt hết pattern.
+    private void SetRarity(Rarity? rarity)
+    {
+        if (imgBackground != null)
+        {
+            Sprite bg = RarityBackgroundConfig.Get(rarity ?? Rarity.Common);
+            if (bg != null)
+                imgBackground.sprite = bg;
+        }
+
+        if (objAncient != null) objAncient.SetActive(rarity == Rarity.Ancient);
+        if (objImmortal != null) objImmortal.SetActive(rarity == Rarity.Immortal);
+        if (objDivine != null) objDivine.SetActive(rarity == Rarity.Divine);
     }
 
     private void SetIcon(Sprite icon, int level)

@@ -40,7 +40,7 @@ public class UIMainLobby : BaseUI
     public List<ElementEquipmentUILobby> listElementEquipment;
     // Nút Loot / Auto Loot + bục món: ForgeUIController lo (ForgeUI gốc).
     public ForgeUIController forgeUI;
-    public Button btBoost;
+    public BoostButtonView boostButton;   // nút Boost xem quảng cáo (BoostButton gốc)
     public TMP_Text txtLootTicket;
 
     [Space(20)]
@@ -475,6 +475,8 @@ public class UIMainLobby : BaseUI
         LoadResourceTxt();
         if (forgeUI != null)
             forgeUI.RefreshAutoVisual();
+        if (boostButton != null)
+            boostButton.Refresh();
     }
 
     public void Refresh()
@@ -486,6 +488,8 @@ public class UIMainLobby : BaseUI
         LoadResourceTxt();
         LoadPowerTxt();
         LoadInfoMap();
+        if (boostButton != null)
+            boostButton.Refresh();
     }
 
     private void ReloadInfoGear()

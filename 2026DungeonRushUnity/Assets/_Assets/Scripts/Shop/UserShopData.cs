@@ -18,6 +18,7 @@ public class UserShopData : BaseUserData
     public bool isCapeFeatureEarlyUnlocked { get; set; }    // mua gói rương khi chưa tới level mở Cape
     public long x2ExpBoostEndTime { get; set; }             // unix giây
     public long x5ExpBoostEndTime { get; set; }
+    public long adBoostEndTime { get; set; }                // nút Boost xem quảng cáo (BoostButtonEndUtc gốc)
 
     protected override string GetDataKey()
     {

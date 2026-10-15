@@ -11,7 +11,10 @@ public class AnimationController : MonoBehaviour
     public string animDie = "die";
     public string eventAttack = "event_attack";
 
-    public bool isFacingRight { get; set; } = true;
+    public virtual bool isFacingRight { get; set; } = true;
+
+    // Nhịp đánh sắp phát là đánh xa (vũ khí có đạn) hay đánh gần — BaseUnit gán trước PlayAnimAttack.
+    public bool isRangedAttack { get; set; }
 
     public virtual void Renew() { }
     public virtual void Reset() { }

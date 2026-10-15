@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8919320461210189421}
   - component: {fileID: 2275716784570635476}
   - component: {fileID: 8966036848658053108}
+  - component: {fileID: 6232206515759424506}
   m_Layer: 5
   m_Name: Mask
   m_TagString: Untagged
@@ -78,6 +79,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1.85
+--- !u!114 &6232206515759424506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170500248118273930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
+  m_ShowMaskGraphic: 0
 --- !u!1 &423993901001539851
 GameObject:
   m_ObjectHideFlags: 0
@@ -885,6 +899,7 @@ GameObject:
   - component: {fileID: 1106117588397621591}
   - component: {fileID: 8807111402738334796}
   - component: {fileID: 7158816179896145511}
+  - component: {fileID: 3804606739115980625}
   m_Layer: 5
   m_Name: Divine
   m_TagString: Untagged
@@ -933,7 +948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -949,6 +964,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 4
+--- !u!114 &3804606739115980625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2574129630798827077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62cccc4f5056245ac9a2cd9c5f638e46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RarityPatternEffect
+  animationType: 2
+  duration: 5
+  moveDistance: 128
+  rotationDegrees: 0
+  ease: 1
 --- !u!1 &2664104033721215499
 GameObject:
   m_ObjectHideFlags: 0
@@ -1859,6 +1891,7 @@ GameObject:
   - component: {fileID: 4372729132080374092}
   - component: {fileID: 8594629625233202607}
   - component: {fileID: 6347492765699027973}
+  - component: {fileID: 8599040472842305404}
   m_Layer: 5
   m_Name: Ancient
   m_TagString: Untagged
@@ -1907,7 +1940,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1923,6 +1956,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 2
+--- !u!114 &8599040472842305404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5133274978003234530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62cccc4f5056245ac9a2cd9c5f638e46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RarityPatternEffect
+  animationType: 0
+  duration: 5
+  moveDistance: 128.5
+  rotationDegrees: 0
+  ease: 1
 --- !u!1 &5724023671341649528
 GameObject:
   m_ObjectHideFlags: 0
@@ -2555,6 +2605,7 @@ GameObject:
   - component: {fileID: 1791492994190199904}
   - component: {fileID: 4848514025462914782}
   - component: {fileID: 3268903058581917188}
+  - component: {fileID: 2867730711671961107}
   m_Layer: 5
   m_Name: Immortal
   m_TagString: Untagged
@@ -2603,7 +2654,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2619,3 +2670,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2867730711671961107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8955970533946341948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62cccc4f5056245ac9a2cd9c5f638e46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RarityPatternEffect
+  animationType: 1
+  duration: 5
+  moveDistance: 0
+  rotationDegrees: 360
+  ease: 1

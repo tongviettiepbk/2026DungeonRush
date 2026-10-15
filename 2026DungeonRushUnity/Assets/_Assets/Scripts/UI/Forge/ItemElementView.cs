@@ -27,6 +27,8 @@ public class ItemElementView : MonoBehaviour
             Sprite bg = RarityBackgroundConfig.Get(rarity);
             if (bg != null)
                 imgBackground.sprite = bg;
+            // Bản rip NewForgePopup để nền tint đỏ (FD5E5E) → nền rarity bị ám đỏ; màu do sprite quyết định.
+            imgBackground.color = Color.white;
         }
 
         if (imgItem != null)
