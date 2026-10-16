@@ -8822,6 +8822,7 @@ MonoBehaviour:
   btChestBundleLegendary: {fileID: 7253954052143257765}
   btChestBundleMythic: {fileID: 9212606773022577870}
   btMiningOffer: {fileID: 7156557755405923079}
+  offerButton: {fileID: 2991519805911030125}
   btAutoPet: {fileID: 7629369254338011105}
   txtAutoPet: {fileID: 3561525125692426135}
   listElementPet:
@@ -26169,6 +26170,7 @@ GameObject:
   - component: {fileID: 960404160214285686}
   - component: {fileID: 5743976665061259915}
   - component: {fileID: 2463758085613159761}
+  - component: {fileID: 2991519805911030125}
   m_Layer: 5
   m_Name: OfferButton
   m_TagString: Untagged
@@ -26250,6 +26252,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2991519805911030125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2288745741620724255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a340e0f39b79f46e1bec8dc59f435e6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OfferButtonView
+  Button: {fileID: 2463758085613159761}
+  WeaponIconImage: {fileID: 1886012237982625664}
+  RarityParticles: {fileID: 2558113968906428341}
+  TimerText: {fileID: 8830219759760573582}
 --- !u!1 &2320226164409729039
 GameObject:
   m_ObjectHideFlags: 0

@@ -142,3 +142,35 @@ Dựng asset + prefab: menu **Tools/DungeonRush/Build Shop UI Prefabs** (`ShopPr
 
 **Chưa làm:** `OfferPopup` (Weapon Offer — cần `OfferController`), `RewardedChestPopup` (rương quảng cáo bay ở lobby — `RewardedChestUI`),
 nút chào gói rương ở lobby, Battle Pass, Mining Offer, boost quảng cáo, hiệu ứng UIParticle (plugin không có trong project).
+
+## Lobby offers (reverse 2026-10-17)
+
+### Nút chào hàng (GameplayUI.khz)
+- Gói rương Legendary (kiz): `ChestStoreEnabled` (gốc bật) && đã mở tab Companion (level 5).
+- Gói rương Mythic (kja): như trên && đã sở hữu đủ pet + cape rarity Epic (`UserController.eew(3)`).
+- Gói Mining (kiu): playerLevel ≥ WingUnlockPlayerLevel (6) && còn gói `MiningConfig.izo` chưa mua.
+- Nút Offline Earning lobby: GameplayUI.kim/kka luôn `SetActive(false)` → tính năng TẮT ở v41.
+
+### Rương quảng cáo (RewardedChestUI / RewardedChestPopup)
+- Lần đầu sau 100s; sau khi nhận / đóng / bay hết đường 60s; không ở campaign (Dungeon, Boss Rush…) thì thử lại 15s.
+- Trần 800 lượt/ngày (`RewardedChestDailyCount`, reset theo ngày UTC).
+- Loại: Gem nếu `Random.value < chance/100`, chance = Mastery GemOfferChance (Mastery bật) hoặc 10.
+- Thưởng: Gem 6; hộp loot 10 + 2 × playerLevel.
+- Đường bay: Start → biên phải 3s → biên trái 8s → biên phải 8s → End 3s (Linear). Cánh từ ∓10° vỗ tới ±20° trong 0.12s (Yoyo); nhún Y +30 trong 0.6s (Yoyo).
+- Popup: "Gem Offer" / "Loot Box Offer"; nút "<sprite=0>Claim" (No Ads: "Claim" nhận luôn), quảng cáo chưa sẵn "Loading...", hết lượt hiện thời gian tới 0h UTC.
+
+### Weapon Offer (OfferController / OfferButton / OfferPopup)
+- Mở level 3 (`OfferUnlockPlayerLevel`); bật lần đầu sau khi thắng 1 màn campaign ("main_combat"), cờ `IsOfferFirstShown`.
+- Cấu hình remote `weapon_offer_config` = "giá,itemId|…", live "2,1301|10,1333|20,1364|50,1430|100,1432".
+- Giá → sản phẩm: 1→offer_099, 2→199, 3→299, 5→499, 10→999, 15→1499, 20→1999, 30→2999, 50→4999, 100→9999 (`lootio.offer_XXX`).
+- Gói sống 72h (`OfferStartTime`); hết hạn thì sinh lại CÙNG gói; `OfferIndex` chỉ tăng khi mua; hết danh sách thì không còn gói.
+- Substat cố định: tier = clamp(rarity − 4, 0, 6) của OfferSubStatTiers, giá trị = SubStatConfigs.MaxValue × 0.75.
+
+| Tier | Substat |
+|---|---|
+| 0 | AttackSpeed |
+| 1–4 | DoubleHitChance, AttackSpeed |
+| 5–6 | DoubleHitChance, AttackSpeed, MeleeDamage |
+
+- Mua: `EquippedItemModel(itemId, Weapon, rarity, level 1, substats)` mặc thẳng slot vũ khí (thay vũ khí cũ) → gói kế.
+- Vào game có gói còn hạn → chào popup (OfferController.jiy, hàng đợi popup lúc khởi động).

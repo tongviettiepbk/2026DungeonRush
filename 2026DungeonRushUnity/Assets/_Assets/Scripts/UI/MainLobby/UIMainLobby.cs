@@ -33,6 +33,7 @@ public class UIMainLobby : BaseUI
     public Button btChestBundleLegendary;   // ChestBundleOfferButton gốc
     public Button btChestBundleMythic;      // MythicChestBundleOfferButton gốc
     public Button btMiningOffer;            // MiningOfferButton gốc
+    public OfferButtonView offerButton;     // OfferButton gốc (Weapon Offer)
 
     [Space(20)]
     [Header("MID")]
@@ -134,6 +135,13 @@ public class UIMainLobby : BaseUI
 
         // Gốc GameplayUI → BossRushController.ekp lúc vào game: gửi lại snapshot đồ Boss Rush (1 lần/ngày UTC).
         BossRushController.Instance.OnGameStarted();
+
+        // OfferController.jiy gốc: vào game mà gói Weapon Offer đã bật → làm mới gói, còn hạn thì chào luôn.
+        if (GameData.userData.shop.isOfferFirstShown)
+        {
+            WeaponOfferService.EnsureOffer();
+            UIOfferPopup.Show();
+        }
 
         // Gốc GameplayUI.kjb lúc vào game: vắng đủ lâu thì bật popup thưởng offline.
         if (OfflineEarningService.ShouldShowOnStart())
@@ -594,9 +602,10 @@ public class UIMainLobby : BaseUI
     }
 
     // khz gốc: gói rương Legendary (kiz) / Mythic (kja), gói Mining (kiu: đã mở Wing và còn gói chưa mua).
-    // Nút Weapon Offer (OfferButton) chưa dựng → để tắt.
     private void RefreshOfferButtons()
     {
+        if (offerButton != null)
+            offerButton.Refresh();
         if (objOffersLayout != null && objOffersLayout.activeSelf == false)
             objOffersLayout.SetActive(true);
         if (btChestBundleLegendary != null)

@@ -172,6 +172,19 @@ public static class LootService
     }
 
     // Nạp data tĩnh (gears + weapons pool) và config công thức. false nếu thiếu config.
+    // GameResources.SubStatConfigs[type].MaxValue gốc (0 nếu không có).
+    public static float GetSubStatMaxValue(SubStatType type)
+    {
+        if (EnsureStaticLoaded() == false)
+            return 0f;
+        foreach (SubStatPoolEntry entry in gearStatConfig.subStatPool)
+        {
+            if (entry.type == type)
+                return entry.maxValue;
+        }
+        return 0f;
+    }
+
     private static bool EnsureStaticLoaded()
     {
         if (GameData.staticData.gears == null || GameData.staticData.weapons == null)

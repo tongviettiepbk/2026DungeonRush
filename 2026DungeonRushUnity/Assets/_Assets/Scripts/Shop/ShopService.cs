@@ -471,6 +471,12 @@ public static class ShopService
             return null;
         }
 
+        if (WeaponOfferService.IsOfferProduct(productId))
+        {
+            WeaponOfferService.OnPurchased(productId);
+            return null;
+        }
+
         if (MiningService.IsOfferProduct(productId))
         {
             MiningService.GrantOffer(productId);

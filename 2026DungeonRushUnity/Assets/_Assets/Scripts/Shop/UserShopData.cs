@@ -22,6 +22,14 @@ public class UserShopData : BaseUserData
     public int rewardedChestDailyCount { get; set; }        // rương quảng cáo bay qua màn (RewardedChestDailyCount gốc)
     public long rewardedChestLastResetTime { get; set; } = -1;   // unix giây, -1 = chưa có
 
+    // Weapon Offer (User.Offer* gốc): vũ khí đang chào bán, hết hạn 72h kể từ offerStartTime; offerIndex = gói kế trong cấu hình.
+    public string offerWeaponId { get; set; } = string.Empty;   // assetName WeaponData (gốc lưu OfferItemId)
+    public string offerProductId { get; set; } = string.Empty;
+    public long offerStartTime { get; set; } = -1;
+    public int offerIndex { get; set; }
+    public List<GearSubStat> offerSubStats { get; set; } = new List<GearSubStat>();
+    public bool isOfferFirstShown { get; set; }
+
     protected override string GetDataKey()
     {
         return UserData.DATA_KEY_SHOP;
@@ -32,6 +40,8 @@ public class UserShopData : BaseUserData
         if (chestPityCounters == null) chestPityCounters = new Dictionary<string, int>();
         if (dailyDealCurrentCombos == null) dailyDealCurrentCombos = new List<int>();
         if (dailyDealPurchasedCombos == null) dailyDealPurchasedCombos = new List<int>();
+        if (offerSubStats == null) offerSubStats = new List<GearSubStat>();
+        if (offerWeaponId == null) offerWeaponId = string.Empty;
     }
 
     // eer gốc.

@@ -15,6 +15,8 @@ public class CampaignMode : BaseMode
     [Header("Mảnh exp rơi khi quái chết / bay về hero khi thắng (FX)")]
     public LootDropController lootDrop;
 
+    private bool isOfferJustUnlocked;   // yda gốc: vừa bật Weapon Offer lần đầu → chào khi màn kế bắt đầu (jix)
+
     public override void Init(GameController controller, ModeType typeModeInput = ModeType.DefaultLevel)
     {
         base.Init(controller, typeModeInput);
@@ -84,6 +86,8 @@ public class CampaignMode : BaseMode
             PlayerExpService.Grant(GameData.staticData.experience.GetStageExp(level), accumulateDisplay: true);
 
             GameData.userData.campaign.PassStage(stageId);
+            // OfferController.jiw gốc ("main_combat" thắng): đủ level 3 lần đầu → bật Weapon Offer, chào ở màn kế.
+            isOfferJustUnlocked = WeaponOfferService.OnCampaignWon();
             GameData.Save(true);
 
             // Mảnh exp trên map bay về hero (chỉ là hiệu ứng, exp đã cộng ở trên).
@@ -119,6 +123,12 @@ public class CampaignMode : BaseMode
         if (GameController.Instance.uiLobby != null)
         {
             GameController.Instance.uiLobby.Refresh();
+        }
+
+        if (isOfferJustUnlocked)
+        {
+            isOfferJustUnlocked = false;
+            UIOfferPopup.Show();
         }
     }
 
