@@ -65,3 +65,4 @@
 - [FX mảnh EXP campaign](dungonrush-exp-shard-drop.md) — quái chết rơi mảnh exp, thắng bay về hero (LootDropController gốc); dựng 2026-10-16
 - [Thanh exp + lên level](dungonrush-experience-ui-levelup.md) — ExperienceUI + UILevelPopup theo gốc: exp chặn ở mức đầy, bấm Complete mới lên level (+gem); dựng 2026-10-16
 - [Hệ Đào mỏ (Mining)](dungonrush-mining-system.md) — nguồn quặng Wing; dựng theo gốc 2026-10-16 (cuốc/khoan/cuốc vàng, A*, ads, offer); builder Tools/DungeonRush/Build Mining; tool/quặng ở UserItemData
+- [Tutorial FTUE gốc](dungonrush-ftue-tutorial.md) — tay chỉ mềm, 18 step int; core Scripts/Tutorial XONG 2026-10-16 (TutorialUI guid gốc); còn Phase 2 wiring từng màn
