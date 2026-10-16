@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 // Popup món loại MỚI — slot đó chưa mặc gì (NewItemPopup gốc, 1 thẻ). Nhiệm vụ duy nhất: bấm Equip
 // để mặc món vào hero. Slot đã có đồ thì dùng UINewForgePopup (so sánh, mặc hoặc bán).
+// Chạm nền tối (CloseOnClickDark gốc) = BỎ QUA: món quay lại bục, bấm món đó để mở lại.
 public class UINewItemPopup : BaseUI
 {
     public ItemElementView itemElement;
@@ -13,19 +14,24 @@ public class UINewItemPopup : BaseUI
     public TMP_Text txtBaseStat;
     public TMP_Text txtSubStats;
     public Button btEquip;
+    public Button btBackground;
 
     private Action onEquip;
+    private Action onDismiss;
     private bool isHandled;
 
     protected override void Awake()
     {
         base.Awake();
         btEquip.onClick.AddListener(Close);
+        if (btBackground != null)
+            btBackground.onClick.AddListener(OnClickBackground);
     }
 
-    public void Show(LootResult item, Action onEquip)
+    public void Show(LootResult item, Action onEquip, Action onDismiss = null)
     {
         this.onEquip = onEquip;
+        this.onDismiss = onDismiss;
         isHandled = false;
 
         itemElement.SetItem(item);
@@ -38,7 +44,17 @@ public class UINewItemPopup : BaseUI
         txtSubStats.text = subStats;
     }
 
-    // Không có lựa chọn bỏ: nút Back không đóng được.
+    private void OnClickBackground()
+    {
+        if (onDismiss == null || isHandled)
+            return;
+
+        isHandled = true;
+        base.Close();
+        onDismiss();
+    }
+
+    // Nút Back không đóng được (bỏ qua chỉ bằng chạm nền).
     public override bool IsBackable()
     {
         return false;

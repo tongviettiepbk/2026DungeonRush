@@ -32,3 +32,11 @@ Việc còn dở sau phiên 2026-10-09 (Enchantment + Power + chỉ số trận 
 **6. Git**: commit trên main nhưng CHƯA push (origin/main đang sau) — user tự push.
 
 Liên quan: [[dungonrush-enchantment-system]], [[dungonrush-power-model]], [[dungonrush-substat-combat]].
+
+**6. KẾ HOẠCH LÀM NỐT (rà gốc vs project 2026-10-17)** — thứ tự đề xuất:
+- P1 (2026-10-17, CHƯA test Play): ĐÃ LÀM ads summon popup 3 lượt/ngày · multiplier Bone · IsNew · bỏ qua item Forge + tutorial 21. CHƯA làm nút Offline Earning lobby + QuickEarnings vì gốc v41 TẮT 2 tính năng này — chờ user quyết.
+- P2 Shop còn thiếu: RewardedChest (rương quảng cáo lobby) · OfferPopup Weapon Offer (remote weapon_offer_config) · nút lobby mở ChestBundleOffer.
+- P3 tính năng gốc chưa có: Battle Pass (BattlePassPopup/Config, thưởng Vial) · Speed Boost (SpeedBoostController + GameSpeedPopup) · CharacterPopup · Profile: Language (đã có Localize 15 tiếng), Country, Redeem, Report bug, Discord · RateUs · NoConnection/ForceUpdate · Vibration · Notification local.
+- P4 cần server/quyết định: Chat World/Clan · số thưởng PvP thật (chờ ảnh) · PvPPlayerPopup · deploy Firebase (Boss Rush/PvP/Clan/Account).
+- P5 SDK: Ads (lớp con MediationAds), IAP (PurchaseController), define FIREBASE_SDK + google-services.
+- Bỏ qua: Boss Gate (live tắt), CreativeController/EndGamePopup (mode dev/survival), MasteryButton lobby.

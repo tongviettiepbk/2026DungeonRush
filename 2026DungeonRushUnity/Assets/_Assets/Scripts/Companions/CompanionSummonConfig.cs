@@ -24,11 +24,15 @@ public class CompanionSummonConfig
     // cost = multiplier * 200 ; base = multiplier * 35 ; multiplier x1 = mặc định.
     public const int BONE_BIG_COST_PER_MULTIPLIER = 200;
     public const int BONE_BIG_BASE_COUNT_PER_MULTIPLIER = 35;
+    // CompanionTabPage.wke gốc: các bậc hệ số, nút ChangeSummonBoneMultiplier xoay vòng (index không lưu save).
+    public static readonly int[] BONE_BIG_MULTIPLIERS = { 1, 2, 3, 5, 10, 20, 30 };
 
     // --- Summon bằng quảng cáo (CompanionAdSummonPopup, hàm gốc eby) ---
     //   count = min( round(cap) + adBonus + AD_BASE_BONUS , round(cap) + AD_CAP_OVER_CAPACITY )
     public const int AD_BASE_BONUS = 11;
     public const int AD_CAP_OVER_CAPACITY = 35;
+    // Số lượt xem ads mỗi ngày (CompanionAdSummonPopup.gqg gốc: dừng khi đã dùng > 2), reset 0h UTC.
+    public const int AD_DAILY_LIMIT = 3;
 
     // --- Mastery "Summon Capacity" (CompanionSummonCount): giá trị theo cấp đã nâng ---
     // index 0 = chưa mua (default). Value[level]. GemCost mở/nâng: 60/120/160/200/250.

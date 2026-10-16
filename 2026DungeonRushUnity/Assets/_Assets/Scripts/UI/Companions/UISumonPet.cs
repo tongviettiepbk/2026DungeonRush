@@ -20,7 +20,7 @@ public class UISumonPet : BaseUI
         objPrefabElementPet.SetActive(false);
     }
 
-    public void Show(List<CompanionData> results)
+    public void Show(List<CompanionSummonResult> results)
     {
         for (int i = 0; i < results.Count; i++)
         {

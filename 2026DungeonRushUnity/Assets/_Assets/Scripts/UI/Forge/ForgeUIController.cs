@@ -14,6 +14,8 @@ using UnityEngine.UI;
 //  - Anim/FX theo ForgeUI gốc (ForgeUI.idn/ied/iee/ids/idt/iei/iem): bấm Loot → hộp phồng (OutBack) → lắc
 //    (PunchRotation) → hộp vỡ + particle hộp → món nảy ra trên bục + glow màu rarity; bán món → particle exp;
 //    rảnh 3s thì vệt sáng chạy qua nút Loot. Nút giữ trạng thái lún suốt lượt loot / khi auto (ForgeUI.iep).
+//  - Chạm nền popup khi chưa chọn (CloseOnClickDark gốc) = bỏ qua: món quay lại đầu bục, dừng xử lý (cả auto)
+//    tới khi người chơi bấm món đó để mở lại popup (ForgeController.het / hen gốc).
 //  - Tay chỉ tutorial (FTUE): nút Loot tới khi loot lần đầu (step 1); nút Auto khi đã loot mà chưa Start auto
 //    (step 12) hoặc đã nâng Mastery mà chưa chọn số búa (step 20). Xem DecodedData/TUTORIAL_MODEL.md.
 public class ForgeUIController : MonoBehaviour
@@ -24,6 +26,7 @@ public class ForgeUIController : MonoBehaviour
     {
         public LootResult item;
         public ItemElementView view;
+        public bool isDismissed;
     }
 
     public UIMainLobby owner;
@@ -329,7 +332,12 @@ public class ForgeUIController : MonoBehaviour
     private void OnBoxOpened()
     {
         foreach (PendingItem pending in queue)
+        {
             pending.view = SpawnView(pending.item);
+            PendingItem item = pending;
+            if (pending.view != null && pending.view.button != null)
+                pending.view.button.onClick.AddListener(() => OnClickPodiumItem(item));
+        }
 
         ShowItemList();
         SetState(State.ShowingItems);
@@ -474,7 +482,7 @@ public class ForgeUIController : MonoBehaviour
                 OnItemEquipped(pending, item);
                 return;
             }
-            newItem.Show(item, () => OnItemEquipped(pending, item));
+            newItem.Show(item, () => OnItemEquipped(pending, item), () => OnItemDismissed(pending));
             return;
         }
 
@@ -485,7 +493,31 @@ public class ForgeUIController : MonoBehaviour
             OnItemSold(pending, item);
             return;
         }
-        forge.Show(equipped, item, Equip, sold => OnItemSold(pending, sold));
+        forge.Show(equipped, item, Equip, sold => OnItemSold(pending, sold), () => OnItemDismissed(pending));
+    }
+
+    // het gốc: món bị bỏ qua quay lại đầu bục và chờ; lần đầu thì chỉ tay vào nó (FTUE step 21).
+    private void OnItemDismissed(PendingItem pending)
+    {
+        pending.isDismissed = true;
+        queue.Insert(0, pending);
+        SetState(State.ShowingItems);
+        if (pending.view != null && pending.view.dismissedTutorial != null && TutorialService.IsCompleted(FtueStep.ReopenDismissedItem) == false)
+            pending.view.dismissedTutorial.Show();
+    }
+
+    // hen + ItemElementUI.ButtonClicked gốc: bấm món đang bị bỏ qua → mở lại popup của nó.
+    private void OnClickPodiumItem(PendingItem pending)
+    {
+        if (state != State.ShowingItems || pending.isDismissed == false)
+            return;
+
+        TutorialService.Complete(FtueStep.ReopenDismissedItem);
+        if (pending.view != null && pending.view.dismissedTutorial != null)
+            pending.view.dismissedTutorial.Hide();
+        pending.isDismissed = false;
+        queue.Remove(pending);
+        ShowPopup(pending);
     }
 
     private void OnItemEquipped(PendingItem pending, LootResult item)

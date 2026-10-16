@@ -59,9 +59,10 @@ public static class ForgePrefabBuilder
     {
         GameObject go = Instantiate(GEAR + "ItemElementUI.prefab", null);
         go.name = "ItemElementUI";
-        WireItemElement(go.transform);
-        // Món trên bục chỉ để nhìn, không bấm.
-        go.GetComponent<Button>().interactable = false;
+        ItemElementView view = WireItemElement(go.transform);
+        // Món trên bục chỉ bấm được khi đang bị bỏ qua (mở lại popup) — ForgeUIController lọc.
+        go.GetComponent<Button>().interactable = true;
+        view.dismissedTutorial = TutorialUIBuilderUtil.Setup(Find(go.transform, "BackgroundImage/TutorialUI"));
         return Save(go, ITEM_ELEMENT_OUT);
     }
 
@@ -80,8 +81,8 @@ public static class ForgePrefabBuilder
         ui.txtName.richText = true;
         ui.txtRarity.richText = true;
         ui.btEquip = Find(popup, "ContentTransform/EquipButton").GetComponent<Button>();
-        // Chỉ có nhiệm vụ mặc vào hero: chạm nền không đóng.
-        btBackground.enabled = false;
+        // Chạm nền = bỏ qua món (CloseOnClickDark gốc).
+        ui.btBackground = btBackground;
         HideAll(popup, "TutorialUI");
         HideAll(popup, "NotificationUI");
         return Save(root, OUT + "UINewItemPopup.prefab");
@@ -93,8 +94,8 @@ public static class ForgePrefabBuilder
         GameObject root = NewRoot("UINewForgePopup", FORGE + "NewForgePopup.prefab", out Transform popup, out Button btBackground);
         UINewForgePopup ui = root.AddComponent<UINewForgePopup>();
         ui.isPopup = true;
-        // Phải chọn Equip hoặc Sell: chạm nền không đóng.
-        btBackground.enabled = false;
+        // Chạm nền khi chưa chọn = bỏ qua món (CloseOnClickDark gốc).
+        ui.btBackground = btBackground;
 
         const string EQ = "ContentTransform/Equipped/";
         ui.equippedElement = WireItemElement(Find(popup, EQ + "EquippedElementUI"));

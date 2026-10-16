@@ -13,6 +13,12 @@ public class UserCompanionData : BaseUserData
     public int totalSummons { get; set; }        // TotalCompanionSummons gốc — quyết định Summon Level
     public bool isAutoActive { get; set; } = true; // pet tự ra đòn khi hồi xong; false = người chơi bấm ô pet ở lobby
 
+    // Summon bằng quảng cáo (User.CompanionAdSummon* gốc): số lượt đã dùng trong ngày (UTC "yyyy-MM-dd"),
+    // và bonus +1 mỗi lần xem → số con mỗi lượt ads tăng dần tới trần.
+    public int adSummonDailyCount { get; set; }
+    public string adSummonLastResetDate { get; set; } = string.Empty;
+    public int adSummonBonusCount { get; set; }
+
     protected override string GetDataKey()
     {
         return UserData.DATA_KEY_COMPANION;

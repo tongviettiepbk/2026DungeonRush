@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 // 1 ô item (ItemElementUI gốc): nền theo rarity + pattern Ancient/Immortal/Divine, icon, "Lv.N".
 // Dùng trong NewItemPopup / ItemInfoPopup và các món nằm trên bục forge.
+// dismissedTutorial: tay chỉ trên món bị bỏ qua ở bục (ItemElementUI.DismissedItemTutorialUI gốc, FTUE step 21).
 public class ItemElementView : MonoBehaviour
 {
     public Button button;
@@ -13,6 +14,7 @@ public class ItemElementView : MonoBehaviour
     public GameObject objAncient;
     public GameObject objImmortal;
     public GameObject objDivine;
+    public TutorialUI dismissedTutorial;
 
     public void SetItem(LootResult item)
     {

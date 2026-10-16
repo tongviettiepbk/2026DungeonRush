@@ -9,6 +9,7 @@ public class UIKey
     public const string PetInfo = "UIPetInfo";
     public const string UpgradePet = "uiUpgradePet";
     public const string SummonPet = "UiSumonPet";
+    public const string CompanionAdSummonPopup = "UICompanionAdSummonPopup";
     public const string DungeonPopup = "UIDungeonPopup";
     public const string DungeonEndPopup = "UIDungeonEndPopup";
     public const string BossRushJoinPopup = "UIBossRushJoinPopup";

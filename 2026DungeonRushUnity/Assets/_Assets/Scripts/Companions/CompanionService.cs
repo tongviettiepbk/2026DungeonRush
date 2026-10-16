@@ -10,10 +10,58 @@ public static class CompanionService
 
     // ----- Số lượt mỗi nút (đã cộng Summon Capacity từ Mastery) -----
 
+    // eby gốc.
     public static int GetAdSummonCount()
     {
-        // TODO: AdBonus (save CompanionAdSummonBonusCount gốc) chưa có → 0.
-        return SummonConfig.GetAdSummonCount(SummonConfig.GetCurrentSummonCapacity(), 0);
+        return SummonConfig.GetAdSummonCount(SummonConfig.GetCurrentSummonCapacity(), User.adSummonBonusCount);
+    }
+
+    // ebz gốc: trần số con mỗi lượt ads = round(cap) + 35.
+    public static int GetAdSummonMaxCount()
+    {
+        return SummonConfig.GetCurrentSummonCapacity() + CompanionSummonConfig.AD_CAP_OVER_CAPACITY;
+    }
+
+    // ebu gốc: số lượt ads đã dùng hôm nay (sang ngày mới UTC thì về 0).
+    public static int GetAdSummonUsedToday()
+    {
+        string today = GetUtcToday();
+        if (User.adSummonLastResetDate != today)
+        {
+            User.adSummonDailyCount = 0;
+            User.adSummonLastResetDate = today;
+            User.isDataChanged = true;
+            GameData.Save();
+        }
+        return User.adSummonDailyCount;
+    }
+
+    public static int GetAdSummonRemainingToday()
+    {
+        return CompanionSummonConfig.AD_DAILY_LIMIT - GetAdSummonUsedToday();
+    }
+
+    // gqe gốc: thời gian tới 0h UTC hôm sau.
+    public static System.TimeSpan GetTimeToAdSummonReset()
+    {
+        System.DateTime now = GameUtils.GetTimeNow().ToUniversalTime();
+        return now.Date.AddDays(1) - now;
+    }
+
+    // gqh gốc: số con theo bonus hiện tại → +1 lượt trong ngày (ebv) → +1 bonus (ebx) → summon.
+    public static List<CompanionSummonResult> SummonByAd()
+    {
+        int count = GetAdSummonCount();
+        GetAdSummonUsedToday();
+        User.adSummonDailyCount++;
+        User.adSummonBonusCount++;
+        User.isDataChanged = true;
+        return Summon(count);
+    }
+
+    private static string GetUtcToday()
+    {
+        return GameUtils.GetTimeNow().ToUniversalTime().ToString("yyyy-MM-dd");
     }
 
     public static int GetBoneSmallSummonCount()
@@ -21,14 +69,15 @@ public static class CompanionService
         return SummonConfig.GetBoneSmallSummonCount(SummonConfig.GetCurrentSummonCapacity());
     }
 
-    public static int GetBoneBigSummonCount()
+    // gsf / gse gốc: theo hệ số đang chọn ở nút đổi multiplier.
+    public static int GetBoneBigSummonCount(int multiplier)
     {
-        return SummonConfig.GetBoneBigSummonCount(SummonConfig.GetCurrentSummonCapacity(), 1);
+        return SummonConfig.GetBoneBigSummonCount(SummonConfig.GetCurrentSummonCapacity(), multiplier);
     }
 
-    public static int GetBoneBigCost()
+    public static int GetBoneBigCost(int multiplier)
     {
-        return SummonConfig.GetBoneBigCost(1);
+        return SummonConfig.GetBoneBigCost(multiplier);
     }
 
     // ----- Summon -----
@@ -36,10 +85,10 @@ public static class CompanionService
     // Executor summon (mirror UserController.edi): mỗi lượt roll rarity theo summon level HIỆN TẠI →
     // random 1 con trong rarity → chưa có thì sở hữu (0 thẻ, isNew), có rồi thì +1 thẻ → totalSummons++.
     // Riêng lượt thứ 53 (totalSummons == 52 trước khi roll) ép ra Uncommon — hằng số trong native edi.
-    // Trả về danh sách con ra được theo thứ tự.
-    public static List<CompanionData> Summon(int count)
+    // Trả về danh sách con ra được theo thứ tự, kèm cờ lần đầu sở hữu (con mới ra 2 lần trong 1 lượt thì chỉ lần đầu là mới).
+    public static List<CompanionSummonResult> Summon(int count)
     {
-        List<CompanionData> results = new List<CompanionData>();
+        List<CompanionSummonResult> results = new List<CompanionSummonResult>();
         for (int i = 0; i < count; i++)
         {
             Rarity rarity = User.totalSummons == CompanionSummonLevelConfig.GUARANTEED_UNCOMMON_AT
@@ -52,17 +101,18 @@ public static class CompanionService
                 continue;
             }
 
-            if (User.IsOwned(data.assetName))
-            {
-                User.AddCards(data.assetName, 1);
-            }
-            else
+            bool isNew = User.IsOwned(data.assetName) == false;
+            if (isNew)
             {
                 User.Own(data.assetName);
             }
+            else
+            {
+                User.AddCards(data.assetName, 1);
+            }
 
             User.totalSummons++;
-            results.Add(data);
+            results.Add(new CompanionSummonResult(data, isNew));
             // Clan War: điểm "Summon {rarity} Companion" (ClanWarController.fzl gốc).
             ClanWarController.Instance.RecordSummonCompanion(data.rarity);
         }
@@ -73,7 +123,7 @@ public static class CompanionService
     }
 
     // Summon bằng Bone: trừ cost rồi summon `count` lượt. null nếu không đủ Bone.
-    public static List<CompanionData> TrySummonByBone(int cost, int count)
+    public static List<CompanionSummonResult> TrySummonByBone(int cost, int count)
     {
         if (GameData.userData.items.Consume(ItemType.BONE, cost) == false)
         {

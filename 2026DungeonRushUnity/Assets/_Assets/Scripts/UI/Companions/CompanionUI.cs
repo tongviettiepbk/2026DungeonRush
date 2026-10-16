@@ -34,12 +34,15 @@ public class CompanionUI : MonoBehaviour
     public Button btSummonX200;
     public TMP_Text txtQuantityX200;
     public TMP_Text txtQuantitySumonByX200;
+    public Button btChangeMultiplier;      // ChangeSummonBoneMultiplierButton gốc: xoay hệ số nút Bone lớn
+    public TMP_Text txtMultiplier;
 
     [Space(5)]
     public TutorialUI summonBoneTutorial;   // SummonBoneTutorialUI gốc
     public TutorialUI quickEquipTutorial;   // QuickEquipTutorialUI gốc
 
     private List<ElementPetEquimentUI> listPetInventory;
+    private int multiplierIndex;           // wjp gốc — không lưu save, mở lại game về x1
 
     private void Awake()
     {
@@ -49,6 +52,8 @@ public class CompanionUI : MonoBehaviour
         btSummonX100.onClick.AddListener(OnClickSummonX100);
         btSummonX200.onClick.AddListener(OnClickSummonX200);
         btInfo.onClick.AddListener(OnClickSummonInfo);
+        if (btChangeMultiplier != null)
+            btChangeMultiplier.onClick.AddListener(OnClickChangeMultiplier);
 
         for (int i = 0; i < listPetEquip.Count; i++)
         {
@@ -162,28 +167,39 @@ public class CompanionUI : MonoBehaviour
         }
 
         // Nút summon: số lượt (đã cộng Summon Capacity mastery) + giá Bone.
-        txtQuantitySumonByAds.text = "x" + CompanionService.GetAdSummonCount();
+        txtQuantityAds.text = Mathf.Max(0, CompanionService.GetAdSummonRemainingToday()) + "/" + CompanionSummonConfig.AD_DAILY_LIMIT;
+        txtQuantitySumonByAds.text = "Summon x" + CompanionService.GetAdSummonCount();
 
         txtQuantityX100.text = CompanionSummonConfig.BONE_SMALL_COST.ToString();
         txtQuantitySumonByX100.text = "x" + CompanionService.GetBoneSmallSummonCount();
         btSummonX100.interactable = bone >= CompanionSummonConfig.BONE_SMALL_COST;
 
-        int bigCost = CompanionService.GetBoneBigCost();
+        int multiplier = CurrentMultiplier;
+        int bigCost = CompanionService.GetBoneBigCost(multiplier);
         txtQuantityX200.text = bigCost.ToString();
-        txtQuantitySumonByX200.text = "x" + CompanionService.GetBoneBigSummonCount();
+        txtQuantitySumonByX200.text = "x" + CompanionService.GetBoneBigSummonCount(multiplier);
         btSummonX200.interactable = bone >= bigCost;
+        if (txtMultiplier != null)
+            txtMultiplier.text = "x" + multiplier;   // gtm gốc
+    }
+
+    private int CurrentMultiplier => CompanionSummonConfig.BONE_BIG_MULTIPLIERS[multiplierIndex];
+
+    // gtl gốc: sang bậc kế, hết thì quay về x1.
+    private void OnClickChangeMultiplier()
+    {
+        multiplierIndex = (multiplierIndex + 1) % CompanionSummonConfig.BONE_BIG_MULTIPLIERS.Length;
+        RefreshSummon();
     }
 
     // ----- Summon -----
 
+    // Gốc: nút Ads mở CompanionAdSummonPopup (3 lượt/ngày, xem quảng cáo trong popup).
     private void OnClickSummonAds()
     {
-        // TODO: giới hạn/ngày (CompanionAdSummonDailyCount gốc) chưa có.
-        MediationAds.Instance.ShowRewardedVideoAd("summon_companion", (result) =>
-        {
-            if (result == ShowResultADS.Finished)
-                OnSummonDone(CompanionService.Summon(CompanionService.GetAdSummonCount()));
-        });
+        UICompanionAdSummonPopup popup = UIManager.Instance.LoadUI(UIKey.CompanionAdSummonPopup) as UICompanionAdSummonPopup;
+        if (popup != null)
+            popup.Show(OnSummonDone);
     }
 
     private void OnClickSummonX100()
@@ -194,8 +210,9 @@ public class CompanionUI : MonoBehaviour
 
     private void OnClickSummonX200()
     {
-        OnSummonDone(CompanionService.TrySummonByBone(CompanionService.GetBoneBigCost(),
-                                                      CompanionService.GetBoneBigSummonCount()));
+        int multiplier = CurrentMultiplier;
+        OnSummonDone(CompanionService.TrySummonByBone(CompanionService.GetBoneBigCost(multiplier),
+                                                      CompanionService.GetBoneBigSummonCount(multiplier)));
     }
 
     // Nút (i) cạnh Summon Level → popup bảng tỉ lệ rarity level hiện tại / level kế.
@@ -208,7 +225,7 @@ public class CompanionUI : MonoBehaviour
         }
     }
 
-    private void OnSummonDone(List<CompanionData> results)
+    private void OnSummonDone(List<CompanionSummonResult> results)
     {
         if (results == null)
         {
