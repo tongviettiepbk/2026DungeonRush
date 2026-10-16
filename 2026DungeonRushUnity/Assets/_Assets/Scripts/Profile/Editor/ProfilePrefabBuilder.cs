@@ -86,11 +86,12 @@ public static class ProfilePrefabBuilder
         ui.txtVersion = Text(popup, SETTINGS + "Version_Info/VersionText");
         WireAccountSection(ui, popup);
 
+        ui.btDiscord = Btn(popup, SETTINGS + "Discord/DiscordButton");
+
         // Tính năng project chưa có: giữ nguyên bố cục gốc, bấm báo "coming soon".
         ui.listButtonComingSoon = new List<Button>
         {
             Btn(profile, "RedeemCodeButton"),
-            Btn(popup, SETTINGS + "Discord/DiscordButton"),
             Btn(popup, SETTINGS + "Country/CountryButton"),
             Btn(popup, SETTINGS + "Language/LanguageButton"),
             Btn(popup, SETTINGS + "ReportBug/ReportButton"),

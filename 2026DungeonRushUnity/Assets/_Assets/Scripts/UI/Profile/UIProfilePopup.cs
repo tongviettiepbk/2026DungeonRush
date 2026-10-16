@@ -7,7 +7,8 @@ using UnityEngine.UI;
 //  - Profile: avatar (bấm hình / nút bút → popup chọn avatar), Power, tên (nút bút → popup đổi tên).
 //  - Settings: âm lượng Sound FX / Music (slider, tay nắm ghi On/Off), rung, tài khoản (Sign In / Up ↔ Sign Out, Sync Now),
 //    User ID (nút chép), phiên bản.
-// Nút của tính năng project chưa có (redeem code, Discord, quốc gia, ngôn ngữ, báo lỗi)
+// Discord (kqz gốc): mở app Discord, 0.15s sau mà game chưa xuống nền thì mở link web.
+// Nút của tính năng project chưa có (redeem code, quốc gia, ngôn ngữ, báo lỗi)
 // nằm trong listButtonComingSoon — bấm chỉ báo "coming soon".
 public class UIProfilePopup : BaseUI
 {
@@ -46,9 +47,17 @@ public class UIProfilePopup : BaseUI
     public Button btSyncNow;
     public Image imgSyncLoading;
 
+    public Button btDiscord;
     public List<Button> listButtonComingSoon;
 
+    // ProfilePopup .ctor gốc.
+    private const string DISCORD_APP_URL = "discord://discord.gg/ErRm7dkAs4";
+    private const string DISCORD_WEB_URL = "https://discord.gg/ErRm7dkAs4";
+    private const float DISCORD_FALLBACK_DELAY = 0.15f;
+
     private bool isSyncing;
+    private bool isWaitingDiscordApp;
+    private float discordOpenTime;
 
     protected override void Awake()
     {
@@ -60,6 +69,8 @@ public class UIProfilePopup : BaseUI
         btAccount.onClick.AddListener(OnClickAccount);
         btSyncNow.onClick.AddListener(OnClickSyncNow);
         btCopyUserId.onClick.AddListener(OnClickCopyUserId);
+        if (btDiscord != null)
+            btDiscord.onClick.AddListener(OnClickDiscord);
         sliderSound.onValueChanged.AddListener(OnSoundChanged);
         sliderMusic.onValueChanged.AddListener(OnMusicChanged);
         toggleVibrate.onChanged = OnVibrateChanged;
@@ -269,5 +280,28 @@ public class UIProfilePopup : BaseUI
     private void OnClickComingSoon()
     {
         UIManager.Instance.ShowToastMessage("Coming soon", isLocalize: false);
+    }
+
+    // kqz gốc.
+    private void OnClickDiscord()
+    {
+        discordOpenTime = Time.time;
+        isWaitingDiscordApp = true;
+        Application.OpenURL(DISCORD_APP_URL);
+    }
+
+    // Update gốc: app Discord không mở (game không xuống nền) → mở bản web.
+    private void Update()
+    {
+        if (isWaitingDiscordApp == false || Time.time - discordOpenTime < DISCORD_FALLBACK_DELAY)
+            return;
+        isWaitingDiscordApp = false;
+        Application.OpenURL(DISCORD_WEB_URL);
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause)
+            isWaitingDiscordApp = false;
     }
 }
