@@ -342,7 +342,7 @@ public class BossRushController : Singleton<BossRushController>
                 case RewardType.Bone: GameData.userData.items.Receive(ItemType.BONE, r.Amount); break;
                 case RewardType.Gem: GameData.userData.items.Receive(ItemType.GEM, r.Amount); break;
                 case RewardType.Vial: GameData.userData.items.Receive(ItemType.VIAL, r.Amount); break;
-                case RewardType.Exp: GameData.userData.player.AddExperience(r.Amount); break;
+                case RewardType.Exp: PlayerExpService.Grant(r.Amount, applyMultiplier: false, storeOverflow: true); break;
                 case RewardType.CloakCurrency: GameData.userData.items.Receive(ItemType.CLOAK, r.Amount); break;
                 case RewardType.Lootbox: GameData.userData.items.Receive(ItemType.LOOT_TICKET, r.Amount); break;
                 case RewardType.DragonBossDungeonKey: AddDungeonKeys(DungeonType.DragonBoss, r.Amount); break;

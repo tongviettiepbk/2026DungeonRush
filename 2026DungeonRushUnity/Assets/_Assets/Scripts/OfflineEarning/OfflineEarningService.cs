@@ -75,19 +75,9 @@ public static class OfflineEarningService
         long elapsed = now - User.collectTime;
         SetCollectTime(elapsed > 0 ? now - elapsed % 60 : now);
 
-        // Gốc cộng exp offline KHÔNG qua boost exp của Store (ExperienceController.hdq, cờ boost = false).
-        UserPlayerData player = GameData.userData.player;
-        int oldPlayerLevel = player.playerLevel;
-        if (player.AddExperience(result.exp * multiplier) > 0)
-        {
-            // Lên level → thưởng gem như khi thắng màn (CampaignMode.CalculateResult).
-            int totalGem = 0;
-            for (int lv = oldPlayerLevel + 1; lv <= player.playerLevel; lv++)
-            {
-                totalGem += GameData.staticData.experience.GetLevelUpGemReward(lv);
-            }
-            GameData.userData.items.Receive(ItemType.GEM, totalGem);
-        }
+        // Gốc cộng exp offline KHÔNG qua boost exp của Store, dư thì để dành sau khi lên level
+        // (ExperienceController.hdq(exp, false, false, true)).
+        PlayerExpService.Grant(result.exp * multiplier, applyMultiplier: false, storeOverflow: true);
 
         GameData.userData.items.Receive(ItemType.LOOT_TICKET, result.lootBox * multiplier);
         GameData.Save(true);

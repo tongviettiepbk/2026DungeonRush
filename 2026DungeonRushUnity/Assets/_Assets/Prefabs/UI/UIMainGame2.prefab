@@ -8744,9 +8744,7 @@ MonoBehaviour:
   - {fileID: 6616442077339609090}
   - {fileID: 7024702585450226112}
   - {fileID: 4252645822541432770}
-  txtLevelPlayer: {fileID: 8877657718742326556}
-  sliderProcessPlayer: {fileID: 2532090439239250745}
-  txtProcess: {fileID: 2624668933671810910}
+  experienceUI: {fileID: 695396906027475087}
   listElementEquipment:
   - {fileID: 2257560770736069828}
   - {fileID: 5656039961866394618}
@@ -86619,6 +86617,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8529326013663820887}
+  - component: {fileID: 695396906027475087}
   m_Layer: 5
   m_Name: ExperienceUI
   m_TagString: Untagged
@@ -86650,6 +86649,32 @@ RectTransform:
   m_AnchoredPosition: {x: 0.0007324219, y: -22.816345}
   m_SizeDelta: {x: -0.15997314, y: 29.868805}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &695396906027475087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6975918135542034656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1d09b6cd3a58423486dfea1de702f18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExperienceUI
+  Slider: {fileID: 2532090439239250745}
+  PercentageText: {fileID: 2624668933671810910}
+  LevelButton: {fileID: 3246820515729417113}
+  InvisibleButton: {fileID: 880480308352209531}
+  LevelTutorialUI: {fileID: 4765698141354217295}
+  LevelText: {fileID: 8877657718742326556}
+  NotificationUI: {fileID: 4895518891666537398}
+  BoostIndicatorText: {fileID: 8796841881948709359}
+  ButtonClickSound: {fileID: 8300000, guid: b10caee2b1a06fb4ba555f7514304611, type: 3}
+  ButtonCompletedColor: {r: 0.0784, g: 0.6235, b: 0.9922, a: 1}
+  ButtonActiveColor: {r: 0.298, g: 0.298, b: 0.298, a: 1}
+  SliderAnimationDuration: 0.2
+  SliderAnimationEase: 6
+  EarnedExpHideDelay: 3
 --- !u!1 &6980508192679502810
 GameObject:
   m_ObjectHideFlags: 0

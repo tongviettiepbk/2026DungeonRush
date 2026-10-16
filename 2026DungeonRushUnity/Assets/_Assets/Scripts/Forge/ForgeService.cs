@@ -85,10 +85,10 @@ public static class ForgeService
         return SELL_EXP_PER_RARITY[index];
     }
 
-    // hez gốc: bán món → cộng EXP (có boost). Trả về số level vừa lên.
-    public static int Sell(LootResult item)
+    // hez gốc: bán món → cộng EXP (có boost, đầy thanh thì phần dư bị bỏ).
+    public static void Sell(LootResult item)
     {
-        return PlayerExpService.Grant(GetSellExp(item.rarity));
+        PlayerExpService.Grant(GetSellExp(item.rarity), accumulateDisplay: true);
     }
 
     // Tỉ lệ (%) ra từng rarity ở level hiện tại (dòng bảng forge = playerLevel - 1, như LootService).

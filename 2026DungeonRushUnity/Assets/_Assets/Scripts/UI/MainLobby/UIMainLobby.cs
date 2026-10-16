@@ -33,9 +33,7 @@ public class UIMainLobby : BaseUI
     public TMP_Text txtAutoPet;
     public List<ElementPetUILobby> listElementPet;
 
-    public TMP_Text txtLevelPlayer;
-    public Slider sliderProcessPlayer;
-    public TMP_Text txtProcess;
+    public ExperienceUI experienceUI;     // thanh exp đáy (BottomUI/ExperienceUI)
 
     [Space(20)]
     [Header("Loop")]
@@ -197,6 +195,21 @@ public class UIMainLobby : BaseUI
     public void CloseAllTabs()
     {
         SetActiveTab(-1);
+        // ExperienceController.hdr gốc: về màn chính mà thanh exp đã đầy từ trước → tự bật LevelPopup.
+        PlayerExpService.OnReturnHomeScreen();
+    }
+
+    // TabBarUI.kvn gốc: không tab menu / trang Enchantment / Wing nào đang mở.
+    public bool IsHomeScreen()
+    {
+        for (int i = 0; i < listElementMenu.Count; i++)
+        {
+            if (listElementMenu[i] != null && listElementMenu[i].isOpen)
+                return false;
+        }
+        if (pageEnchantment != null && pageEnchantment.gameObject.activeInHierarchy)
+            return false;
+        return pageWing == null || !pageWing.gameObject.activeInHierarchy;
     }
 
     // index = -1 -> không tab nào mở.
@@ -227,7 +240,7 @@ public class UIMainLobby : BaseUI
         if (pageEnchantment == null)
             return;
 
-        CloseAllTabs();
+        SetActiveTab(-1);
         if (pageWing != null)
             pageWing.Close();
         pageEnchantment.Open();
@@ -245,7 +258,7 @@ public class UIMainLobby : BaseUI
             return;
         }
 
-        CloseAllTabs();
+        SetActiveTab(-1);
         if (pageEnchantment != null)
             pageEnchantment.Close();
         pageWing.Open();
@@ -469,11 +482,9 @@ public class UIMainLobby : BaseUI
         ReloadInfoGear();
     }
 
-    // Level/thanh exp/gem sau khi cộng EXP (bán đồ forge).
+    // Gem/forge/boost sau khi cộng EXP (bán đồ forge). Thanh exp tự vẽ qua sự kiện PlayerExpService (có tween).
     public void RefreshExp()
     {
-        SetlevelPlayer();
-        UpdateProcessLevel();
         LoadResourceTxt();
         if (forgeUI != null)
             forgeUI.RefreshAutoVisual();
@@ -485,8 +496,8 @@ public class UIMainLobby : BaseUI
     {
         ReloadInfoGear();
         RefreshPets();
-        SetlevelPlayer();
-        UpdateProcessLevel();
+        if (experienceUI != null)
+            experienceUI.Refresh();
         LoadResourceTxt();
         LoadPowerTxt();
         LoadInfoMap();
@@ -747,40 +758,6 @@ public class UIMainLobby : BaseUI
         if (btExitEventBlocker != null)
             btExitEventBlocker.interactable = false;
     }
-
-    // Level người chơi (hệ exp) = INDEX bảng rarity loot. ForgeUIController roll rarity theo playerLevel - 1.
-    private void SetlevelPlayer()
-    {
-        if (txtLevelPlayer != null)
-            txtLevelPlayer.text = GameData.userData.player.playerLevel.ToString();
-    }
-
-    // Thanh exp tiến tới level kế: fill = expHiệnTại / ngưỡngLênLevel, text = "cur/need".
-    // Đạt MaxLevel (hết bảng experience_required_per_level) thì thanh đầy, hiện "MAX".
-    private void UpdateProcessLevel()
-    {
-        UserPlayerData player = GameData.userData.player;
-        StaticExperienceData exp = GameData.staticData.experience;
-
-        if (player.playerLevel >= exp.MaxLevel)
-        {
-            if (sliderProcessPlayer != null)
-                sliderProcessPlayer.value = 1f;
-            if (txtProcess != null)
-                txtProcess.text = "MAX";
-            return;
-        }
-
-        int need = exp.GetXpRequired(player.playerLevel);
-        int cur = player.playerExperience;
-
-        if (sliderProcessPlayer != null)
-            sliderProcessPlayer.value = need > 0 ? Mathf.Clamp01((float)cur / need) : 0f;
-        if (txtProcess != null)
-            txtProcess.text = cur + "/" + need;
-    }
-
-
 
     #endregion
 }

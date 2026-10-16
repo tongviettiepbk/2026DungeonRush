@@ -78,11 +78,10 @@ public class CampaignMode : BaseMode
             int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.stageIdCurrent;
 
             // Exp thắng màn = round(49 + level) (clear sạch quái, xem DecodedData/EXP_MODEL.md).
-            // Cộng vào playerExperience → có thể lên playerLevel (rarity table tự tốt lên).
+            // Như mảnh exp gốc (LootDropController.ExperienceShardCollected → hdp): có boost exp, cộng dồn "(+N)",
+            // đầy thanh thì phần dư bị bỏ và LevelPopup tự bật (bấm Complete mới lên level).
             int level = GameData.staticData.campaign.GetLevel(stageId);
-            // Boost exp mua ở Store (lifetime ×2, 20 phút ×1.5, 5 phút ×2) + thưởng gem mỗi level vừa lên.
-            // TODO(Phase 3): lên level thì bật UILevelPopup (bảng rarity + số gem) trước khi reload.
-            PlayerExpService.Grant(GameData.staticData.experience.GetStageExp(level));
+            PlayerExpService.Grant(GameData.staticData.experience.GetStageExp(level), accumulateDisplay: true);
 
             GameData.userData.campaign.PassStage(stageId);
             GameData.Save(true);
