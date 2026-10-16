@@ -507,4 +507,62 @@ public static class ShopService
     }
 
     #endregion
+
+    #region Rương quảng cáo (RewardedChestUI / RewardedChestPopup gốc)
+
+    // Hằng số gốc (RewardedChestUI .ctor/.cctor, reverse il2cpp v41).
+    public const int REWARDED_CHEST_DAILY_LIMIT = 800;
+    public const float REWARDED_CHEST_GEM_CHANCE_DEFAULT = 10f;   // % ra Gem khi Mastery chưa bật
+    public const int REWARDED_CHEST_LOOTBOX_BASE = 10;            // hộp loot = 10 + 2 × playerLevel
+    public const int REWARDED_CHEST_LOOTBOX_PER_LEVEL = 2;
+    public const int REWARDED_CHEST_GEM_AMOUNT = 6;
+    public const int REWARDED_CHEST_FIRST_DELAY = 100;            // giây sau khi vào game
+    public const int REWARDED_CHEST_AFTER_DELAY = 60;             // sau khi nhận / đóng / bay hết đường
+    public const int REWARDED_CHEST_RETRY_DELAY = 15;             // đang không ở campaign → thử lại
+
+    // ksj gốc: sang ngày mới (UTC) thì về 0 lượt.
+    public static void CheckRewardedChestReset()
+    {
+        long now = Now();
+        if (User.rewardedChestLastResetTime < 0
+            || DateTimeOffset.FromUnixTimeSeconds(now).UtcDateTime.Date > DateTimeOffset.FromUnixTimeSeconds(User.rewardedChestLastResetTime).UtcDateTime.Date)
+        {
+            User.rewardedChestDailyCount = 0;
+            User.rewardedChestLastResetTime = now;
+            User.isDataChanged = true;
+        }
+    }
+
+    public static int GetRewardedChestRemaining()
+    {
+        CheckRewardedChestReset();
+        return REWARDED_CHEST_DAILY_LIMIT - User.rewardedChestDailyCount;
+    }
+
+    // ksm gốc: % ra Gem = Mastery GemOfferChance (khi hệ Mastery bật), không thì 10%.
+    public static RewardedChestType RollRewardedChestType()
+    {
+        float chance = MasteryService.IsEnabled ? MasteryService.GetCurrentValue(MasteryUpgradeType.GemOfferChance) : REWARDED_CHEST_GEM_CHANCE_DEFAULT;
+        return UnityEngine.Random.value < chance / 100f ? RewardedChestType.Gem : RewardedChestType.Lootbox;
+    }
+
+    // OnChestClicked / ksk gốc.
+    public static int GetRewardedChestAmount(RewardedChestType type)
+    {
+        return type == RewardedChestType.Gem
+            ? REWARDED_CHEST_GEM_AMOUNT
+            : REWARDED_CHEST_LOOTBOX_BASE + REWARDED_CHEST_LOOTBOX_PER_LEVEL * GameData.userData.player.playerLevel;
+    }
+
+    // ksh + OnRewardedButtonClicked gốc: cộng thưởng rồi +1 lượt trong ngày.
+    public static void ClaimRewardedChest(RewardedChestType type, int amount)
+    {
+        Items.Receive(type == RewardedChestType.Gem ? ItemType.GEM : ItemType.LOOT_TICKET, amount);
+        CheckRewardedChestReset();
+        User.rewardedChestDailyCount++;
+        User.isDataChanged = true;
+        GameData.Save();
+    }
+
+    #endregion
 }

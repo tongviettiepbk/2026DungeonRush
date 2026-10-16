@@ -19,6 +19,8 @@ public class UserShopData : BaseUserData
     public long x2ExpBoostEndTime { get; set; }             // unix giây
     public long x5ExpBoostEndTime { get; set; }
     public long adBoostEndTime { get; set; }                // nút Boost xem quảng cáo (BoostButtonEndUtc gốc)
+    public int rewardedChestDailyCount { get; set; }        // rương quảng cáo bay qua màn (RewardedChestDailyCount gốc)
+    public long rewardedChestLastResetTime { get; set; } = -1;   // unix giây, -1 = chưa có
 
     protected override string GetDataKey()
     {

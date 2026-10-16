@@ -96,3 +96,9 @@ public enum Rarity
 
 // GHI CHÚ: enum EquipSlot cũ đã GỘP vào GearSlotType (Scripts/Gears/GearEnums.cs) để chỉ
 // còn 1 kiểu enum slot cho dễ nhớ. Hệ mặc đồ nay dùng GearSlotType.WEAPON/HELMET/...
+// Loại rương quảng cáo bay qua màn (RewardedChestUI.RewardedChestType gốc).
+public enum RewardedChestType
+{
+    Lootbox = 0,
+    Gem = 1,
+}
