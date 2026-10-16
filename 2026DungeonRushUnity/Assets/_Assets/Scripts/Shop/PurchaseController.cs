@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class PurchaseController : Singleton<PurchaseController>
 {
     public const string STORE_ID_NO_ADS = "lootio.noads";
+    public const string STORE_ID_BATTLE_PASS = "lootio.battlepass";
     public const string STORE_ID_RESOURCE_PACK = "lootio.resourcepack";
     public const string STORE_ID_GEM1 = "lootio.gem1";
     public const string STORE_ID_GEM2 = "lootio.gem2";

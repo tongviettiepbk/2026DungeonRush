@@ -34,6 +34,7 @@ public class UIMainLobby : BaseUI
     public Button btChestBundleMythic;      // MythicChestBundleOfferButton gốc
     public Button btMiningOffer;            // MiningOfferButton gốc
     public OfferButtonView offerButton;     // OfferButton gốc (Weapon Offer)
+    public BattlePassButtonView battlePassButton;   // BattlePassButton gốc
 
     [Space(20)]
     [Header("MID")]
@@ -606,6 +607,8 @@ public class UIMainLobby : BaseUI
     {
         if (offerButton != null)
             offerButton.Refresh();
+        if (battlePassButton != null)
+            battlePassButton.Refresh();
         if (objOffersLayout != null && objOffersLayout.activeSelf == false)
             objOffersLayout.SetActive(true);
         if (btChestBundleLegendary != null)

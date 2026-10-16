@@ -8823,6 +8823,7 @@ MonoBehaviour:
   btChestBundleMythic: {fileID: 9212606773022577870}
   btMiningOffer: {fileID: 7156557755405923079}
   offerButton: {fileID: 2991519805911030125}
+  battlePassButton: {fileID: 5206592458395328532}
   btAutoPet: {fileID: 7629369254338011105}
   txtAutoPet: {fileID: 3561525125692426135}
   listElementPet:
@@ -32333,6 +32334,7 @@ GameObject:
   - component: {fileID: 2644877067960140275}
   - component: {fileID: 2731025626992382470}
   - component: {fileID: 1621529575198316404}
+  - component: {fileID: 5206592458395328532}
   m_Layer: 5
   m_Name: BattlepassButton
   m_TagString: Untagged
@@ -32412,6 +32414,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5206592458395328532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2531890686357393403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d200c0e1e4d54475ad6619a1ee3d136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattlePassButtonView
+  Root: {fileID: 2531890686357393403}
+  Button: {fileID: 1621529575198316404}
+  NotificationUI: {fileID: 5705798247082704377}
 --- !u!1 &2532385598481223235
 GameObject:
   m_ObjectHideFlags: 0

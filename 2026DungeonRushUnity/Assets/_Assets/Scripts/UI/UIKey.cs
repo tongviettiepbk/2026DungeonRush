@@ -64,6 +64,7 @@ public class UIKey
     public const string ChestBundleOfferPopup = "UIChestBundleOfferPopup";
     public const string RewardedChestPopup = "UIRewardedChestPopup";
     public const string OfferPopup = "UIOfferPopup";
+    public const string BattlePassPopup = "UIBattlePassPopup";
 
     // TODO(follow-stick): bổ sung key theo từng feature khi port UI màn hình.
 }

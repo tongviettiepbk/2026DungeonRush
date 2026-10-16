@@ -30,6 +30,11 @@ public class UserShopData : BaseUserData
     public List<GearSubStat> offerSubStats { get; set; } = new List<GearSubStat>();
     public bool isOfferFirstShown { get; set; }
 
+    // Battle Pass (User.*BattlePass* gốc): mốc level đã nhận ở 2 hàng Free / Premium.
+    public bool isPremiumBattlePassBought { get; set; }
+    public List<int> claimedFreeBattlePassRewards { get; set; } = new List<int>();
+    public List<int> claimedPremiumBattlePassRewards { get; set; } = new List<int>();
+
     protected override string GetDataKey()
     {
         return UserData.DATA_KEY_SHOP;
@@ -42,6 +47,8 @@ public class UserShopData : BaseUserData
         if (dailyDealPurchasedCombos == null) dailyDealPurchasedCombos = new List<int>();
         if (offerSubStats == null) offerSubStats = new List<GearSubStat>();
         if (offerWeaponId == null) offerWeaponId = string.Empty;
+        if (claimedFreeBattlePassRewards == null) claimedFreeBattlePassRewards = new List<int>();
+        if (claimedPremiumBattlePassRewards == null) claimedPremiumBattlePassRewards = new List<int>();
     }
 
     // eer gốc.

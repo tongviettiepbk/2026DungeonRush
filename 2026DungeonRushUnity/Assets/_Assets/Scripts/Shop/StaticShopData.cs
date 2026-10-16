@@ -113,6 +113,7 @@ public class StaticShopData
         { "lootio.offer_499", "$4.99" }, { "lootio.offer_999", "$9.99" }, { "lootio.offer_1499", "$14.99" },
         { "lootio.offer_1999", "$19.99" }, { "lootio.offer_2999", "$29.99" }, { "lootio.offer_4999", "$49.99" },
         { "lootio.offer_9999", "$99.99" },
+        { PurchaseController.STORE_ID_BATTLE_PASS, "$9.99" },   // [SUY] giá Premium Battle Pass
     };
 
     public static string GetDefaultPrice(string productId)

@@ -457,6 +457,12 @@ public static class ShopService
             User.isDataChanged = true;
             return null;
         }
+        if (productId == PurchaseController.STORE_ID_BATTLE_PASS)
+        {
+            User.isPremiumBattlePassBought = true;
+            User.isDataChanged = true;
+            return null;
+        }
         if (productId == PurchaseController.STORE_ID_LIFETIME_BOOST)
         {
             User.isLifetimeBoostBought = true;
