@@ -40,6 +40,9 @@ public class UIKey
     public const string CapeDetailPopup = "UICapeDetailPopup";
     public const string CapeSalvagePopup = "UICapeSalvagePopup";
     public const string CapeUpgradeInfoPopup = "UICapeUpgradeInfoPopup";
+    public const string MiningPopup = "UIMiningPopup";
+    public const string MiningRarityPopup = "UIMiningRarityPopup";
+    public const string MiningOfferPopup = "UIMiningOfferPopup";
 
     public const string CreateClanPopup = "UICreateClanPopup";
     public const string ClanSettingsPopup = "UIClanSettingsPopup";

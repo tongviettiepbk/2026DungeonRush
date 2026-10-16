@@ -30,6 +30,10 @@ public enum EventID
     // (Cape đang mặc đổi chỉ số / hình thì nơi gọi post thêm EquipmentChanged(CAPE).)
     CapeChanged,
 
+    // Mining: số quặng / cuốc / khoan / cuốc vàng đổi (MiningOreChanged + MiningPickaxeChanged gốc)
+    // → popup Mining, trang Wing (quặng craft/upgrade) cập nhật.
+    MiningChanged,
+
     // Avatar: người chơi chọn avatar mới (UserController.AvatarChanged gốc) → lobby đổi hình.
     AvatarChanged,
 

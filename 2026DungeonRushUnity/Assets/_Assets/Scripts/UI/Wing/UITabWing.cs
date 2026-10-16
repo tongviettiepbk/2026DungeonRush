@@ -101,16 +101,14 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         btClaim.onClick.AddListener(OnClickClaim);
         baseStatColor = txtInfoBaseStat.color;
 
-        if (objMiningNotification != null)
-        {
-            objMiningNotification.SetActive(false);
-        }
         objClaimPage.SetActive(false);
     }
 
     private void OnEnable()
     {
         EventDispatcher.Instance.RegisterListener(EventID.WingChanged, OnWingChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.MiningChanged, OnWingChanged);
+        RefreshMiningNotification();
         BuildElements();
         currentIndex = GetDefaultIndex();
         LayoutElements();
@@ -121,6 +119,7 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     private void OnDisable()
     {
         EventDispatcher.Instance.RemoveListener(EventID.WingChanged, OnWingChanged);
+        EventDispatcher.Instance.RemoveListener(EventID.MiningChanged, OnWingChanged);
         DOTween.Kill(this);
         isAnimating = false;
         isDragging = false;
@@ -144,6 +143,7 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     // kzb/kze gốc: dựng lại carousel (icon/trạng thái sở hữu) + info, giữ wing đang chọn.
     public void Refresh()
     {
+        RefreshMiningNotification();
         BuildElements();
         LayoutElements();
         HighlightElements(currentIndex);
@@ -516,10 +516,23 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         this.PostEvent(EventID.WingChanged);
     }
 
-    // Hệ Mining (nguồn quặng) chưa làm.
+    // kzj gốc: chấm đỏ khi chưa vào mỏ lần nào hoặc cuốc đã hồi đầy.
+    private void RefreshMiningNotification()
+    {
+        if (objMiningNotification != null)
+        {
+            objMiningNotification.SetActive(MiningService.IsNotify());
+        }
+    }
+
+    // MiningButton gốc: mở popup Đào mỏ (nguồn quặng craft/upgrade/reroll Wing).
     private void OnClickMining()
     {
-        UIManager.Instance.ShowToastMessage("Tính năng Đào mỏ chưa mở", isLocalize: false);
+        UIMiningPopup popup = UIManager.Instance.LoadUI(UIKey.MiningPopup) as UIMiningPopup;
+        if (popup != null)
+        {
+            popup.Open();
+        }
     }
 
     // ----- Claim (WingClaimPage gốc) -----

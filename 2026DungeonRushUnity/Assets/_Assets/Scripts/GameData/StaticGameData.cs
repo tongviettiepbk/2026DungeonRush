@@ -22,6 +22,7 @@ public class StaticGameData
     public StaticEnchantmentData enchantments;
     public StaticPvPData pvp;
     public StaticShopData shop;
+    public MiningConfig mining;
 
     public void Load()
     {
@@ -42,5 +43,6 @@ public class StaticGameData
         if (enchantments == null) enchantments = new StaticEnchantmentData();
         if (pvp == null) pvp = new StaticPvPData();
         if (shop == null) shop = new StaticShopData();
+        if (mining == null) mining = UnityEngine.Resources.Load<MiningConfig>("Scriptable Objects/Mining/MiningConfig");
     }
 }

@@ -31,6 +31,7 @@ public class UserData
     public const string DATA_KEY_SHOP = "key_user_shop";
     public const string DATA_KEY_OFFLINE_EARNING = "key_user_offline_earning";
     public const string DATA_KEY_FORGE = "key_user_forge";
+    public const string DATA_KEY_MINING = "key_user_mining";
 
     public UserProfileData profile { get; set; } = new UserProfileData();
     public UserPlayerData player { get; set; } = new UserPlayerData();
@@ -51,6 +52,7 @@ public class UserData
     public UserShopData shop { get; set; } = new UserShopData();
     public UserOfflineEarningData offlineEarning { get; set; } = new UserOfflineEarningData();
     public UserForgeData forge { get; set; } = new UserForgeData();
+    public UserMiningData mining { get; set; } = new UserMiningData();
 
     private List<BaseUserData> listData;
     private float lastTimeSaveData;
@@ -95,6 +97,7 @@ public class UserData
         shop = LoadModule<UserShopData>(DATA_KEY_SHOP, out _);
         offlineEarning = LoadModule<UserOfflineEarningData>(DATA_KEY_OFFLINE_EARNING, out _);
         forge = LoadModule<UserForgeData>(DATA_KEY_FORGE, out _);
+        mining = LoadModule<UserMiningData>(DATA_KEY_MINING, out _);
 
         LoadDone();
     }
@@ -168,6 +171,7 @@ public class UserData
             listData.Add(shop);
             listData.Add(offlineEarning);
             listData.Add(forge);
+            listData.Add(mining);
         }
 
         for (int i = 0; i < listData.Count; i++)

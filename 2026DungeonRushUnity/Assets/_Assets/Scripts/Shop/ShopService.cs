@@ -465,6 +465,12 @@ public static class ShopService
             return null;
         }
 
+        if (MiningService.IsOfferProduct(productId))
+        {
+            MiningService.GrantOffer(productId);
+            return null;
+        }
+
         if (PurchaseController.DealProductIds.Contains(productId))
         {
             DailyDealService.OnDealPurchased(productId);
