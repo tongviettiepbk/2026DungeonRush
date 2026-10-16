@@ -6,6 +6,7 @@ using UnityEngine.UI;
 // Trang Mastery: lưới toàn bộ nhánh mastery (sinh từ data) + nút mở khoá nhánh kế tiếp.
 // Game gốc mở TUẦN TỰ theo MasteryConfig.Upgrades, phí = unlockGemCost của nhánh kế (tăng dần).
 // Logic nằm ở MasteryService; class này chỉ gắn nút + hiển thị.
+// Tutorial (MasteryTabPage gốc): tay chỉ nút mở khoá tới khi mở nhánh AutoLootHammerCount (step 15, nhánh mở đầu tiên).
 public class MasteryUI : MonoBehaviour
 {
     public Button BtSummonMastery;
@@ -15,6 +16,7 @@ public class MasteryUI : MonoBehaviour
     public GameObject objPrefabElementMastery;
 
     public MasterUpgradeUI infoMasterUpgradeUI;
+    public TutorialUI unlockTutorial;   // UnlockTutorialUI gốc
 
     // TEST: true = mở khoá miễn phí (bỏ qua trừ Gem).
     public bool isTestFree = true;
@@ -31,7 +33,18 @@ public class MasteryUI : MonoBehaviour
 
     private void OnEnable()
     {
+        SyncTutorialSteps();
         Refresh();
+    }
+
+    // ivr gốc: save cũ đã mở / đã nâng nhánh AutoLootHammerCount thì coi như xong step 15 / 17.
+    private static void SyncTutorialSteps()
+    {
+        int level = GameData.userData.mastery.GetLevel(MasteryUpgradeType.AutoLootHammerCount);
+        if (level >= 1)
+            TutorialService.Complete(FtueStep.UnlockMastery);
+        if (level >= 2)
+            TutorialService.Complete(FtueStep.UpgradeMastery);
     }
 
     // Sinh 1 ô cho mỗi nhánh trong config (thứ tự gốc MasteryConfig.Upgrades).
@@ -61,6 +74,10 @@ public class MasteryUI : MonoBehaviour
         }
 
         RefreshSummon();
+
+        // ivs gốc.
+        if (unlockTutorial != null)
+            unlockTutorial.SetVisible(BtSummonMastery.gameObject.activeSelf && TutorialService.IsCompleted(FtueStep.UnlockMastery) == false);
     }
 
     // Nút mở khoá: hiện phí Gem của nhánh sẽ mở kế tiếp; hết nhánh khoá thì tắt nút.
@@ -126,6 +143,10 @@ public class MasteryUI : MonoBehaviour
             UIManager.Instance.ShowToastMessage("Không đủ Gem", isLocalize: false);
             return;
         }
+
+        // ivw gốc: mở nhánh AutoLootHammerCount = step 15.
+        if (next.upgradeType == MasteryUpgradeType.AutoLootHammerCount)
+            TutorialService.Complete(FtueStep.UnlockMastery);
 
         this.PostEvent(EventID.MasteryChanged);
         Refresh();

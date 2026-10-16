@@ -14,6 +14,8 @@ using UnityEngine.UI;
 //  - Anim/FX theo ForgeUI gốc (ForgeUI.idn/ied/iee/ids/idt/iei/iem): bấm Loot → hộp phồng (OutBack) → lắc
 //    (PunchRotation) → hộp vỡ + particle hộp → món nảy ra trên bục + glow màu rarity; bán món → particle exp;
 //    rảnh 3s thì vệt sáng chạy qua nút Loot. Nút giữ trạng thái lún suốt lượt loot / khi auto (ForgeUI.iep).
+//  - Tay chỉ tutorial (FTUE): nút Loot tới khi loot lần đầu (step 1); nút Auto khi đã loot mà chưa Start auto
+//    (step 12) hoặc đã nâng Mastery mà chưa chọn số búa (step 20). Xem DecodedData/TUTORIAL_MODEL.md.
 public class ForgeUIController : MonoBehaviour
 {
     private enum State { Idle, PlayingAnimation, ShowingItems, ShowingPopup }
@@ -35,6 +37,10 @@ public class ForgeUIController : MonoBehaviour
     public float autoRotateSpeed = 360f;
     public float processDelay = 0.35f;   // món hiện trên bục rồi mới xử lý
     public float autoNextDelay = 0.5f;   // nghỉ giữa 2 lượt auto
+
+    [Header("Tutorial")]
+    public TutorialUI lootTutorial;      // ForgeUI.LootTutorialUI gốc
+    public TutorialUI autoForgeTutorial; // AutoForgeButton.AutoForgeTutorialUI gốc
 
     [Header("Anim / FX (ForgeUI gốc)")]
     public ForgeButtonView forgeButton;
@@ -96,6 +102,7 @@ public class ForgeUIController : MonoBehaviour
         else
             btLoot.onClick.AddListener(OnClickLoot);
         btAuto.onClick.AddListener(OnClickAuto);
+        TutorialService.StepCompleted += OnTutorialStepCompleted;
         RefreshAutoVisual();
         RefreshButtonState();
     }
@@ -113,6 +120,7 @@ public class ForgeUIController : MonoBehaviour
 
     private void OnDestroy()
     {
+        TutorialService.StepCompleted -= OnTutorialStepCompleted;
         boxSequence?.Kill();
         shineSequence?.Kill();
         glowTween?.Kill();
@@ -139,6 +147,10 @@ public class ForgeUIController : MonoBehaviour
         if (state != State.Idle || isAuto)
             return;
 
+        // ForgeUI.idz gốc: bấm Loot lần đầu là xong step 1 (kể cả khi hết hộp).
+        if (TutorialService.Complete(FtueStep.Loot) && lootTutorial != null)
+            lootTutorial.Hide();
+
         if (ForgeService.HammerCount < 1)
         {
             ShowNotEnough();
@@ -164,6 +176,11 @@ public class ForgeUIController : MonoBehaviour
             UIManager.Instance.ShowToastMessage("Mở ở level " + ForgeService.AUTO_USABLE_LEVEL, isLocalize: false);
             return;
         }
+
+        // AutoForgeButton.OnPointerUp gốc: bấm Auto lần đầu (đã mở khoá) → step 3, cất tay chỉ.
+        TutorialService.Complete(FtueStep.AutoForgeClicked);
+        if (autoForgeTutorial != null)
+            autoForgeTutorial.Hide();
 
         if (isAuto)
         {
@@ -238,6 +255,27 @@ public class ForgeUIController : MonoBehaviour
             objAutoRunning.SetActive(isAuto);
         if (objAutoIdle != null)
             objAutoIdle.SetActive(isAuto == false);
+        RefreshTutorials();
+    }
+
+    private void OnTutorialStepCompleted(FtueStep step)
+    {
+        RefreshTutorials();
+    }
+
+    // ForgeUI.idl + AutoForgeButton.iay gốc.
+    private void RefreshTutorials()
+    {
+        if (lootTutorial != null)
+            lootTutorial.SetVisible(TutorialService.IsCompleted(FtueStep.Loot) == false);
+
+        if (autoForgeTutorial != null)
+        {
+            bool wantStart = TutorialService.IsCompleted(FtueStep.Loot) && TutorialService.IsCompleted(FtueStep.StartAutoForge) == false;
+            bool wantHammer = TutorialService.IsCompleted(FtueStep.UpgradeMastery) && TutorialService.IsCompleted(FtueStep.SelectHammerCount) == false;
+            bool usable = GameData.userData.player.playerLevel >= ForgeService.AUTO_USABLE_LEVEL;
+            autoForgeTutorial.SetVisible((wantStart || wantHammer) && usable && autoForgeTutorial.gameObject.activeInHierarchy);
+        }
     }
 
     private static void ShowNotEnough()

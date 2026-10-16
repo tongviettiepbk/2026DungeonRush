@@ -3611,13 +3611,32 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3833106588876604011}
+  - component: {fileID: 779651576308435590}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!114 &779651576308435590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3449373287462491893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 6842077920921296095}
+  _moveDistance: 30
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &3833106588876604011
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8458,6 +8477,7 @@ MonoBehaviour:
   DarkButton: {fileID: 9173223663210618973}
   GemCountText: {fileID: 5405165432931060181}
   LevelUpSound: {fileID: 8300000, guid: a27f633e3dfcb3745bcddba61b57234b, type: 3}
+  LevelUpTutorialUI: {fileID: 779651576308435590}
   DisabledButtonColor: {r: 0.6706, g: 0.6706, b: 0.6706, a: 1}
   DefaultButtonColor: {r: 0.2078, g: 0.6, b: 0.8667, a: 1}
   RowScaleDuration: 0.2

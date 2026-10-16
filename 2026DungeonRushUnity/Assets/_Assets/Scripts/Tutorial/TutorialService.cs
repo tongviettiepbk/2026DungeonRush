@@ -18,6 +18,14 @@ public static class TutorialService
         return Profile.IsTutorialCompleted((int)step);
     }
 
+    // MasteryController.iuj gốc: Mastery đã mở (bật + đủ level) mà chưa nâng nhánh AutoLootHammerCount lên level 2.
+    public static bool IsMasteryTutorialNeeded()
+    {
+        return MasteryService.IsEnabled
+            && GameData.userData.player.playerLevel >= ForgeService.MASTERY_UNLOCK_PLAYER_LEVEL
+            && IsCompleted(FtueStep.UpgradeMastery) == false;
+    }
+
     // efx gốc: chỉ ghi lần đầu, lưu ngay (Save(true)) rồi báo event. Trả true nếu step vừa được ghi.
     public static bool Complete(FtueStep step)
     {

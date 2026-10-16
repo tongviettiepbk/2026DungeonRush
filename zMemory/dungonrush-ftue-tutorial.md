@@ -1,16 +1,18 @@
 ---
 name: dungonrush-ftue-tutorial
-description: "Tutorial gốc = FTUE tay chỉ mềm (không chặn), 18 step int lưu User.CompletedFtueSteps; doc DecodedData/TUTORIAL_MODEL.md; Phase 0+1 core (Scripts/Tutorial) XONG 2026-10-16, Phase 2 wiring từng màn CHƯA"
+description: "Tutorial gốc = FTUE tay chỉ mềm (không chặn), 18 step int lưu User.CompletedFtueSteps; doc DecodedData/TUTORIAL_MODEL.md; 16/18 step đã gắn 2026-10-17 (USER CHƯA TEST); còn 21 + 22 chờ tính năng"
 metadata:
   node_type: memory
   type: project
   originSessionId: a7015a71-d3e9-49aa-b7f2-b6ec5e0b8749
-  modified: 2026-10-16T16:04:12.248Z
+  modified: 2026-10-16T16:46:51.126Z
 ---
 
 Reverse il2cpp 2026-10-16. User chốt: dựng THEO GỐC (tay chỉ mềm), data/service kiểu StickIdle.
 **Đã dựng (Phase 0+1, compile sạch, chưa test Unity):** `Scripts/Tutorial/` — `FtueStep` (enum = id gốc), `TutorialService` (static: IsEnabled, IsCompleted, Complete→profile.completedTutorials + Save(true) + event C# `StepCompleted`), `TutorialUI` (port kxh/kxi; meta dùng LẠI guid gốc `b523c7755b6eb4f9e804571436a7422a` → 6 node trong Prefabs/UI/Pet/CompanionTabPage.prefab tự nối). DOTween project không có SetLink → tự kill tween. Không migrate save cũ (tay chỉ mềm, bấm 1 lần là xong).
-**Còn (Phase 2):** gắn TutorialUI vào node TutorialUI của từng màn (UIMainGame2 đã mất component, phải add + set _child) và gọi Show/Hide/Complete theo bảng; bỏ HideAll TutorialUI trong ForgePrefabBuilder/LevelPopupPrefabBuilder + ExperienceUI. Gốc KHÔNG có overlay chặn kiểu StickIdle: mỗi UI có node `TutorialUI` (tay chỉ, DOTween nhún/scale; `kxh`=Show, `kxi`=Hide, `kxg`=bật toàn cục theo remote config `tutorials_enabled`/GameResources.IsTutorialEnabled). `TutorialController` gốc thân rỗng (dead).
+**Phase 2 nhóm Forge/Level XONG 2026-10-16 (Unity compile 0 lỗi, chưa Play):** step 1 ForgeUIController.lootTutorial, 3+12/20 autoForgeTutorial, 2 ExperienceUI.LevelTutorialUI + UILevelPopup.LevelUpTutorialUI, 4 BoostButtonView, 5+12 UIAutoForgePopup.startAutoForgeTutorial. Gắn component bằng vá YAML (script scratchpad add_tutorial_ui.py: thêm MonoBehaviour guid gốc, bật node, tay scale 0, gán field) + builder dùng `TutorialUIBuilderUtil.Setup(node)` (Scripts/Tutorial/Editor) để dựng lại không mất.
+**Phase 2 nhóm còn lại XONG 2026-10-17 (Unity compile 0 lỗi, kiểm 18 field tay chỉ OK, USER CHƯA TEST Play):** 9 MiningController.Init, 10 UIWingCraftPopup, 11 StoreTabPage (x2/x5), 6/7 UITabDungeon+ElementDungeonUI.tutorial+UIDungeonPopupStart.enterTutorial, tab bar ElementTabMenuUILobby.tutorial (UIMainLobby.RefreshTabTutorials: Dungeon / Pet), 8/13 CompanionUI (CompanionService.IsQuickEquipChanged), 15/17 MasteryUI.unlockTutorial + ElementMasteryUI.tutorial + MasterUpgradeUI.upgradeTutorial + UITabCompanion.masteryTabTutorial (2 node cuối bị mất trong UIMainGame2 → dựng lại bằng execute_code, copy node Unlock), 20 UIAutoForgePopup hammerCount/hammerOption.
+**Chưa làm (thiếu tính năng):** 22 nút Boss campaign (BossButtonUI gốc — node TopBarUI/BossButton tắt, chưa có code); 21 item bị bỏ qua chèn lại list Forge (ForgeController.het — project không có luồng dismiss). MasteryButton lobby tắt/không dùng. Gốc KHÔNG có overlay chặn kiểu StickIdle: mỗi UI có node `TutorialUI` (tay chỉ, DOTween nhún/scale; `kxh`=Show, `kxi`=Hide, `kxg`=bật toàn cục theo remote config `tutorials_enabled`/GameResources.IsTutorialEnabled). `TutorialController` gốc thân rỗng (dead).
 Lưu: `User.CompletedFtueSteps` (List<int>); `UserController.efw(id)`=đã xong, `efx(id)`=đánh dấu + event `FtueStepCompleted`.
 
 Step (id → nghĩa / nơi):

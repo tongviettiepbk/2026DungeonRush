@@ -353,6 +353,7 @@ MonoBehaviour:
   imgIcon: {fileID: 114120674753805982}
   txtLv: {fileID: 114838551484894773}
   objLock: {fileID: 1607732157405331}
+  tutorial: {fileID: 6541047767299307468}
 --- !u!1 &1556276449492015
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,13 +514,32 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224054867572112193}
+  - component: {fileID: 6541047767299307468}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!114 &6541047767299307468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693703181213750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 224049350175376158}
+  _moveDistance: 30
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &224054867572112193
 RectTransform:
   m_ObjectHideFlags: 0

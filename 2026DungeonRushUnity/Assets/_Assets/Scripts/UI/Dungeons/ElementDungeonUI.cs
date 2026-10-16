@@ -10,6 +10,7 @@ public class ElementDungeonUI : MonoBehaviour
     public GameObject objNotice;
     public TMP_Text txtQuantityProcess;
     public Button btRequestJoin;
+    public TutorialUI tutorial;   // DungeonTabPage.DragonBossTutorialUI / ZombieHordeTutorialUI gốc
 
     public DungeonType Type { get; private set; }
 

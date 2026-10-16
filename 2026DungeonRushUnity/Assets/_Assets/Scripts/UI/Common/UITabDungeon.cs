@@ -45,6 +45,18 @@ public class UITabDungeon : MonoBehaviour
         zombieOutBreak.Refresh();
         cultistDungeon.Refresh();
         UpdateTimeRemain();
+        RefreshTutorials();
+    }
+
+    // kdg gốc: chỉ tay Dragon tới khi vào Dragon lần đầu (6), rồi Zombie khi đã mở (7).
+    private void RefreshTutorials()
+    {
+        bool dragonDone = TutorialService.IsCompleted(FtueStep.EnterDragonDungeon);
+        if (dragonHoard.tutorial != null)
+            dragonHoard.tutorial.SetVisible(dragonDone == false);
+        if (zombieOutBreak.tutorial != null)
+            zombieOutBreak.tutorial.SetVisible(dragonDone && TutorialService.IsCompleted(FtueStep.EnterZombieDungeon) == false
+                && DungeonService.IsUnlocked(DungeonType.ZombieHorde));
     }
 
     // "Replenishing in: 5h 30m" / "30m 23s" (UI.Dungeon.ReplenishingIn gốc).

@@ -3442,6 +3442,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 03768b477506ce8954211d4a755cad24, type: 3}
   - {fileID: 21300000, guid: 90f52bad073fe18d4e7b93b6a9ed7d1e, type: 3}
   - {fileID: 21300000, guid: 4bbd3348ff41f9d267749c35f1332a4b, type: 3}
+  enterTutorial: {fileID: 3430635057489862574}
 --- !u!1 &2620793520220048148
 GameObject:
   m_ObjectHideFlags: 0
@@ -7065,6 +7066,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5873081224866534033}
+  - component: {fileID: 3430635057489862574}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
@@ -7072,6 +7074,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &3430635057489862574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6303050479536490181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 4563361363854030490}
+  _moveDistance: 30
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &5873081224866534033
 RectTransform:
   m_ObjectHideFlags: 0

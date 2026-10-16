@@ -198,17 +198,7 @@ public static class CompanionService
     // Trang bị nhanh 3 con tốt nhất: rarity giảm dần, cùng rarity thì level giảm dần (comparer gốc UserController.ep.dnc).
     public static void QuickEquip()
     {
-        List<CompanionModel> sorted = new List<CompanionModel>(User.owned);
-        sorted.Sort((a, b) =>
-        {
-            int ra = GetRarityValue(a.companionId);
-            int rb = GetRarityValue(b.companionId);
-            if (ra != rb)
-            {
-                return rb.CompareTo(ra);
-            }
-            return b.level.CompareTo(a.level);
-        });
+        List<CompanionModel> sorted = GetQuickEquipOrder();
 
         List<string> equipped = User.GetEquipped();
         for (int i = equipped.Count - 1; i >= 0; i--)
@@ -222,6 +212,34 @@ public static class CompanionService
         }
 
         GameData.Save();
+    }
+
+    // CompanionTabPage.gss gốc: bấm Quick Equip có đổi đội hình không (bộ 3 con tốt nhất ≠ bộ đang mặc).
+    public static bool IsQuickEquipChanged()
+    {
+        List<CompanionModel> sorted = GetQuickEquipOrder();
+        HashSet<string> best = new HashSet<string>();
+        for (int i = 0; i < sorted.Count && i < UserCompanionData.MAX_EQUIPPED; i++)
+        {
+            best.Add(sorted[i].companionId);
+        }
+        return best.SetEquals(User.GetEquipped()) == false;
+    }
+
+    private static List<CompanionModel> GetQuickEquipOrder()
+    {
+        List<CompanionModel> sorted = new List<CompanionModel>(User.owned);
+        sorted.Sort((a, b) =>
+        {
+            int ra = GetRarityValue(a.companionId);
+            int rb = GetRarityValue(b.companionId);
+            if (ra != rb)
+            {
+                return rb.CompareTo(ra);
+            }
+            return b.level.CompareTo(a.level);
+        });
+        return sorted;
     }
 
     private static int GetRarityValue(string id)

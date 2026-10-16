@@ -10,6 +10,8 @@ using UnityEngine.UI;
 //  - Số hộp mở mỗi lượt: 8 ô 1..8, ô vượt ForgeService.GetMaxHammerCount bị khoá.
 //  - Start: lọc bật mà chưa tick substat nào → tự tắt lọc; đóng popup rồi gọi onStart.
 // Ô "Auto sell lower level" của bản gốc là tính năng chết (node tắt sẵn) — không dùng.
+// Tutorial: tay chỉ nút Start tới khi Start auto lần đầu (step 12); bỏ tick Keep lần đầu = step 5;
+// sau khi nâng Mastery AutoLoot (17): tay chỉ nút số búa rồi ô 2 búa tới khi chọn ≥ 2 búa (step 20).
 public class UIAutoForgePopup : BaseUI
 {
     [Header("Rarity (index = Rarity)")]
@@ -46,7 +48,13 @@ public class UIAutoForgePopup : BaseUI
     public Button btClose;
     public Button btBackground;
 
+    [Header("Tutorial")]
+    public TutorialUI startAutoForgeTutorial;   // StartAutoForgeTutorialUI gốc
+    public TutorialUI hammerCountTutorial;      // HammerCountTutorialUI gốc
+    public TutorialUI hammerOptionTutorial;     // HammerOptionElementUI.Tutorial của ô 2 búa (chỉ ô này có trong gốc)
+
     private Action onStart;
+    private bool isHammerPanelOpen;
 
     private static UserForgeData User => GameData.userData.forge;
 
@@ -84,8 +92,29 @@ public class UIAutoForgePopup : BaseUI
     public void Show(Action onStart)
     {
         this.onStart = onStart;
+        // eip gốc: đã chọn sẵn ≥ 2 búa thì coi như xong step 20 (mastery_hammer_already_known).
+        if (IsHammerTutorial() && ForgeService.GetSelectedHammerCount() >= 2)
+            TutorialService.Complete(FtueStep.SelectHammerCount);
         SetHammerPanelVisible(false);
         Refresh();
+    }
+
+    // ifz gốc.
+    private static bool IsHammerTutorial()
+    {
+        return TutorialService.IsCompleted(FtueStep.UpgradeMastery) && TutorialService.IsCompleted(FtueStep.SelectHammerCount) == false;
+    }
+
+    // eip / iga / HammerOptionElementUI.icd gốc: đang dẫn chọn số búa thì không chỉ nút Start.
+    private void RefreshTutorial()
+    {
+        bool isHammerTutorial = IsHammerTutorial();
+        if (startAutoForgeTutorial != null)
+            startAutoForgeTutorial.SetVisible(isHammerTutorial == false && TutorialService.IsCompleted(FtueStep.StartAutoForge) == false);
+        if (hammerCountTutorial != null)
+            hammerCountTutorial.SetVisible(isHammerTutorial && isHammerPanelOpen == false);
+        if (hammerOptionTutorial != null)
+            hammerOptionTutorial.SetVisible(isHammerTutorial && isHammerPanelOpen && ForgeService.GetMaxHammerCount() >= 2);
     }
 
     // igb gốc.
@@ -129,7 +158,11 @@ public class UIAutoForgePopup : BaseUI
     private void OnClickKeep(int index)
     {
         Rarity rarity = (Rarity)index;
-        User.SetRarityKept(rarity, User.IsRarityKept(rarity) == false);
+        bool wasKept = User.IsRarityKept(rarity);
+        // OnKeepButtonClicked gốc: bỏ tick lần đầu = step 5 (chỉ đánh dấu).
+        if (wasKept)
+            TutorialService.Complete(FtueStep.AutoForgeKeepUnchecked);
+        User.SetRarityKept(rarity, wasKept == false);
         GameData.Save();
         Refresh();
     }
@@ -165,6 +198,10 @@ public class UIAutoForgePopup : BaseUI
             return;
         }
 
+        // ige gốc: chọn ≥ 2 búa lần đầu sau khi nâng Mastery = step 20.
+        if (count >= 2 && IsHammerTutorial())
+            TutorialService.Complete(FtueStep.SelectHammerCount);
+
         User.selectedAutoHammerCount = count;
         User.isDataChanged = true;
         GameData.Save();
@@ -178,6 +215,8 @@ public class UIAutoForgePopup : BaseUI
         hammerPanel.interactable = visible;
         hammerPanel.blocksRaycasts = visible;
         hammerPanel.gameObject.SetActive(visible);
+        isHammerPanelOpen = visible;
+        RefreshTutorial();
     }
 
     // OnStartAutoForgeButtonClicked gốc.
@@ -189,6 +228,10 @@ public class UIAutoForgePopup : BaseUI
             User.isDataChanged = true;
             GameData.Save();
         }
+
+        TutorialService.Complete(FtueStep.StartAutoForge);
+        if (startAutoForgeTutorial != null)
+            startAutoForgeTutorial.Hide();
 
         Action callback = onStart;
         Close();

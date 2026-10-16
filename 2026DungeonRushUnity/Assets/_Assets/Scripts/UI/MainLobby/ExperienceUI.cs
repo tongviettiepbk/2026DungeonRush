@@ -13,14 +13,14 @@ using UnityEngine.UI;
 //    bình thường màu ButtonActiveColor.
 //  - BoostIndicatorText "x2" khi đang có boost exp (lifetime/quảng cáo/X2/X5).
 //  - Bấm nút Level (cả ButtonInvisible phủ thanh) → âm click + mở LevelPopup.
-// Tutorial bấm nút level (LevelTutorialUI, FTUE step 2) chưa có hệ FTUE → luôn ẩn.
+//  - Tay chỉ LevelTutorialUI (kfl gốc): hiện khi thanh exp đầy mà chưa lên level lần nào (FTUE step 2).
 public class ExperienceUI : MonoBehaviour
 {
     public Slider Slider;
     public TextMeshProUGUI PercentageText;
     public Button LevelButton;
     public Button InvisibleButton;
-    public GameObject LevelTutorialUI;
+    public TutorialUI LevelTutorialUI;
     public TextMeshProUGUI LevelText;
     public GameObject NotificationUI;
     public TextMeshProUGUI BoostIndicatorText;
@@ -43,7 +43,6 @@ public class ExperienceUI : MonoBehaviour
     {
         if (LevelButton != null) LevelButton.onClick.AddListener(OnLevelButtonClicked);
         if (InvisibleButton != null) InvisibleButton.onClick.AddListener(OnLevelButtonClicked);
-        if (LevelTutorialUI != null) LevelTutorialUI.SetActive(false);
     }
 
     private void Start()
@@ -53,6 +52,7 @@ public class ExperienceUI : MonoBehaviour
         PlayerExpService.LevelUpReady += OnLevelUpReady;
         PlayerExpService.LevelUpCompleted += OnLevelUpCompleted;
         PlayerExpService.ExperienceEarned += OnExperienceEarned;
+        TutorialService.StepCompleted += OnTutorialStepCompleted;
         isInitialized = true;
         Refresh();
     }
@@ -64,6 +64,7 @@ public class ExperienceUI : MonoBehaviour
         PlayerExpService.LevelUpReady -= OnLevelUpReady;
         PlayerExpService.LevelUpCompleted -= OnLevelUpCompleted;
         PlayerExpService.ExperienceEarned -= OnExperienceEarned;
+        TutorialService.StepCompleted -= OnTutorialStepCompleted;
         sliderTween?.Kill();
     }
 
@@ -85,6 +86,18 @@ public class ExperienceUI : MonoBehaviour
         RefreshPercentageText();
         RefreshLevelButton();
         RefreshBoostIndicator();
+    }
+
+    private void OnTutorialStepCompleted(FtueStep step)
+    {
+        RefreshTutorial();
+    }
+
+    // kfl gốc.
+    private void RefreshTutorial()
+    {
+        if (LevelTutorialUI != null)
+            LevelTutorialUI.SetVisible(PlayerExpService.IsLevelUpReady && TutorialService.IsCompleted(FtueStep.LevelUp) == false);
     }
 
     // kfh gốc (PlayerExperienceChanged).
@@ -150,6 +163,7 @@ public class ExperienceUI : MonoBehaviour
     public void OnLevelButtonClicked()
     {
         AudioManager.Instance.PlaySfx(ButtonClickSound);
+        if (LevelTutorialUI != null) LevelTutorialUI.Hide();
         PlayerExpService.OpenLevelPopup();
     }
 
@@ -196,6 +210,7 @@ public class ExperienceUI : MonoBehaviour
             LevelButton.image.color = isLevelUpReady ? ButtonCompletedColor : ButtonActiveColor;
         // kfs gốc: NotificationUI bật/tắt chấm.
         if (NotificationUI != null) NotificationUI.SetActive(isLevelUpReady);
+        RefreshTutorial();
     }
 
     // kfy gốc: hiện "x{hệ số}" khi hệ số boost exp > 1.

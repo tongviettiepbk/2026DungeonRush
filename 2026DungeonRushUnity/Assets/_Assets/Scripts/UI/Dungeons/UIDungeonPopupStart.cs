@@ -27,6 +27,8 @@ public class UIDungeonPopupStart : BaseUI
     public Sprite[] rewardIcons;
     public Sprite[] keyIcons;
 
+    public TutorialUI enterTutorial;   // DungeonPopup.EnterTutorialUI gốc
+
     private DungeonType type;
     private Action onChanged;
 
@@ -69,6 +71,19 @@ public class UIDungeonPopupStart : BaseUI
         btEnter.interactable = hasKey;
         btEnterByAds.gameObject.SetActive(showAd);
         txtQuantityProcessAds.text = (StaticDungeonData.MAX_AD_PER_DAY - progress.adWatchCount) + "/" + StaticDungeonData.MAX_AD_PER_DAY;
+        if (enterTutorial != null)
+            enterTutorial.SetVisible(GetEnterTutorialStep() != null);
+    }
+
+    // kcg / kck gốc: Dragon chưa vào lần nào → step 6; Zombie khi đã xong 6 → step 7.
+    private FtueStep? GetEnterTutorialStep()
+    {
+        bool dragonDone = TutorialService.IsCompleted(FtueStep.EnterDragonDungeon);
+        if (type == DungeonType.DragonBoss && dragonDone == false)
+            return FtueStep.EnterDragonDungeon;
+        if (type == DungeonType.ZombieHorde && dragonDone && TutorialService.IsCompleted(FtueStep.EnterZombieDungeon) == false)
+            return FtueStep.EnterZombieDungeon;
+        return null;
     }
 
     private void SetIcon(Image image, Sprite[] icons)
@@ -102,6 +117,10 @@ public class UIDungeonPopupStart : BaseUI
             UIManager.Instance.ShowToastMessage("Hết key", isLocalize: false);
             return;
         }
+
+        FtueStep? step = GetEnterTutorialStep();
+        if (step != null)
+            TutorialService.Complete(step.Value);
 
         // Vào trận: DungeonMode lo phần thắng (CompleteDungeon tiêu key) / thua / thoát (không tiêu key).
         Close();

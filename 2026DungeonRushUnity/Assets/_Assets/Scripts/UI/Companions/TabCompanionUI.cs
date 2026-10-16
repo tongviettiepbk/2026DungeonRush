@@ -13,6 +13,7 @@ public class UITabCompanion : MonoBehaviour
 
     public Button btMasterySelect;
     public GameObject objSelectMastery;
+    public TutorialUI masteryTabTutorial;   // CompanionTabPage.MasteryTabTutorial gốc
 
     private void Awake()
     {
@@ -44,5 +45,9 @@ public class UITabCompanion : MonoBehaviour
 
         objMasteryContent.SetActive(!isCompanion);
         objSelectMastery.SetActive(!isCompanion);
+
+        // gsl gốc: đang ở phần Companion mà Mastery cần dẫn → chỉ tay nút Mastery.
+        if (masteryTabTutorial != null)
+            masteryTabTutorial.SetVisible(isCompanion && TutorialService.IsMasteryTutorialNeeded());
     }
 }

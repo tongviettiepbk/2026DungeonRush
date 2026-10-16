@@ -44,6 +44,7 @@ public class MiningController : MonoBehaviour
         config = cfg;
         data = GameData.userData.mining;
         MiningService.InitIfNeeded();
+        TutorialService.Complete(FtueStep.EnterMine);   // jbp gốc: vào mỏ lần đầu (chỉ đánh dấu)
         MiningService.RegenPickaxes();
         MiningService.CheckDailyAdReset();
         AlignBlockParent();

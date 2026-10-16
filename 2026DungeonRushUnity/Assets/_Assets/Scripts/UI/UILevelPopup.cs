@@ -11,6 +11,7 @@ using UnityEngine.UI;
 //  - Bấm Complete: âm levelup → +gem thưởng (bảng LevelPopup.ywc) → lên level (+exp dư để dành) → hàng rarity
 //    nảy lần lượt từ dưới lên, nháy nền và đổi số sang level mới → gem bay về lobby.
 //  - Max level: nút xám "MAXED" không bấm được, ẩn thanh exp.
+//  - Tay chỉ nút Complete (kmn gốc) khi chưa lên level lần nào (FTUE step 2); bấm Complete là xong step.
 // Prefab Resources/Prefabs/UI/UILevelPopup do LevelPopupPrefabBuilder dựng từ LevelPopup.prefab rip.
 public class UILevelPopup : BaseUI
 {
@@ -31,6 +32,7 @@ public class UILevelPopup : BaseUI
     public Button DarkButton;
     public TMP_Text GemCountText;
     public AudioClip LevelUpSound;
+    public TutorialUI LevelUpTutorialUI;
 
     // Giá trị serialized của prefab gốc / GameResources.
     public Color DisabledButtonColor = new Color(0.6706f, 0.6706f, 0.6706f, 1f);
@@ -112,6 +114,8 @@ public class UILevelPopup : BaseUI
         }
 
         bool isReady = PlayerExpService.IsLevelUpReady;
+        if (LevelUpTutorialUI != null)
+            LevelUpTutorialUI.SetVisible(isReady && TutorialService.IsCompleted(FtueStep.LevelUp) == false);
         SetRarityTexts(level, level + 1);
         CompleteButton.gameObject.SetActive(isReady);
         ExperienceSlider.gameObject.SetActive(!isReady);
@@ -168,6 +172,8 @@ public class UILevelPopup : BaseUI
     private void OnCompleteClicked()
     {
         if (PlayerExpService.IsMaxLevel || isAnimating || !PlayerExpService.IsLevelUpReady) return;
+        TutorialService.Complete(FtueStep.LevelUp);
+        if (LevelUpTutorialUI != null) LevelUpTutorialUI.Hide();
         PlayLevelUp();
     }
 

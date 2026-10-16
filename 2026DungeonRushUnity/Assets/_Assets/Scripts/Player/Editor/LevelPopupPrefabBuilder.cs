@@ -57,8 +57,8 @@ public static class LevelPopupPrefabBuilder
         SetPatternFx(Find(popup, TABLE + "Immortal/Image_1/Pattern"), RarityPatternEffect.PatternAnimation.Spiral, 0f, 360f);
         SetPatternFx(Find(popup, TABLE + "Divine/Image_1/Pattern"), RarityPatternEffect.PatternAnimation.MoveDiagonalDown, 128f, 0f);
 
-        // Tutorial bấm Complete (FTUE) chưa có hệ FTUE → tắt sẵn.
-        Find(popup, CONTENT + "CompleteButton/Content/TutorialUI").gameObject.SetActive(false);
+        // Tay chỉ bấm Complete (FTUE step 2).
+        ui.LevelUpTutorialUI = TutorialUIBuilderUtil.Setup(Find(popup, CONTENT + "CompleteButton/Content/TutorialUI"));
 
         PrefabUtility.SaveAsPrefabAsset(root, OUT, out bool ok);
         Object.DestroyImmediate(root);

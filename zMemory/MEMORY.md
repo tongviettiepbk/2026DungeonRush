@@ -36,7 +36,7 @@
 - [Hệ Mastery (G1)](dungonrush-mastery-feature.md) — 10 nhánh buff tiêu Gem; data+service+save+UI mở khoá+popup nâng cấp XONG (unlock=Lvl1, phí=levels[lv-1]); mở TUẦN TỰ theo MasteryConfig.Upgrades (phí 0,0,30..240 tăng dần); iuf dead code
 - [Companion save/upgrade/summon-level + UI](dungonrush-companion-save-upgrade.md) — whn/whm ĐÃ trích; nâng cấp THỦ CÔNG; CompanionService + CompanionUI + UIPetInfo xong; màu rarity popup còn thiếu
 - [Own Effect pet = buff hero khi SỞ HỮU](dungonrush-companion-own-effect.md) — lu.gov cộng OwnAttack/OwnHealth của MỌI pet owned (không cần equip) vào hero; ĐÃ áp ở HeroUnit
-- [Test logic bằng UnityMCP edit mode](dungonrush-unity-mcp-editmode-test.md) — staticData chưa load phải gọi Load(); codedom C#6; backup/restore userData, không Save; cách nối lại cầu MCP khi rớt + compile-check trên Mac
+- [Test logic bằng UnityMCP edit mode](dungonrush-unity-mcp-editmode-test.md) — staticData chưa load phải gọi Load(); codedom C#6; backup/restore userData, không Save; cách nối lại cầu MCP khi rớt + gọi MCP qua HTTP khi session thiếu tool + compile-check trên Mac
 - [Companion TODO còn thiếu](dungonrush-companion-todo.md) — 6 việc chưa làm của summon pet (Ads free vô hạn, tab Pet chưa khoá lv5, multiplier Bone, IsNew, màu rarity, event)
 - [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
 - [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; cả 3 dungeon có trận (Dragon/Zombie/CultistDungeonMode)
@@ -65,4 +65,4 @@
 - [FX mảnh EXP campaign](dungonrush-exp-shard-drop.md) — quái chết rơi mảnh exp, thắng bay về hero (LootDropController gốc); dựng 2026-10-16
 - [Thanh exp + lên level](dungonrush-experience-ui-levelup.md) — ExperienceUI + UILevelPopup theo gốc: exp chặn ở mức đầy, bấm Complete mới lên level (+gem); dựng 2026-10-16
 - [Hệ Đào mỏ (Mining)](dungonrush-mining-system.md) — nguồn quặng Wing; dựng theo gốc 2026-10-16 (cuốc/khoan/cuốc vàng, A*, ads, offer); builder Tools/DungeonRush/Build Mining; tool/quặng ở UserItemData
-- [Tutorial FTUE gốc](dungonrush-ftue-tutorial.md) — tay chỉ mềm, 18 step int; core Scripts/Tutorial XONG 2026-10-16 (TutorialUI guid gốc); còn Phase 2 wiring từng màn
+- [Tutorial FTUE gốc](dungonrush-ftue-tutorial.md) — tay chỉ mềm, 18 step int; 16/18 step đã gắn 2026-10-17, USER CHƯA TEST; 21/22 chờ tính năng

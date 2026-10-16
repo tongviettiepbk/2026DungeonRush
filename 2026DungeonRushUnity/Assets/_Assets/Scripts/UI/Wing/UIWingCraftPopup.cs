@@ -59,6 +59,7 @@ public class UIWingCraftPopup : BaseUI
             return;
         }
 
+        TutorialService.Complete(FtueStep.CraftWing);   // kye gốc: chế wing lần đầu (chỉ đánh dấu)
         Action callback = onCrafted;
         onCrafted = null;
         Close();

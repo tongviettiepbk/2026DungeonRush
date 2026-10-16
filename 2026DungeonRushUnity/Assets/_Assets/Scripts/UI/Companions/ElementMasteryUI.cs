@@ -14,6 +14,7 @@ public class ElementMasteryUI : MonoBehaviour
     public TMP_Text txtLv;
 
     public GameObject objLock;
+    public TutorialUI tutorial;   // MasteryUpgradeCard.Tutorial gốc
 
     private MasteryUpgradeData data;
     private Action<MasteryUpgradeData> onClickInfo;
@@ -55,5 +56,11 @@ public class ElementMasteryUI : MonoBehaviour
         {
             txtLv.text = "Lvl " + user.GetLevel(data.upgradeType);
         }
+
+        // iwe gốc: đã mở AutoLootHammerCount (15) mà chưa nâng (17) → chỉ tay vào ô này.
+        if (tutorial != null)
+            tutorial.SetVisible(data.upgradeType == MasteryUpgradeType.AutoLootHammerCount
+                && TutorialService.IsCompleted(FtueStep.UnlockMastery)
+                && TutorialService.IsCompleted(FtueStep.UpgradeMastery) == false);
     }
 }

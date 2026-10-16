@@ -19,6 +19,7 @@ public class MasterUpgradeUI : MonoBehaviour
 
     public Button btUpgrade;
     public TMP_Text txtQuantityRequest;
+    public TutorialUI upgradeTutorial;   // MasteryUpgradeDetailPanel.UpgradeButtonTutorialUI gốc
 
     private MasteryUpgradeData data;
     private bool isTestFree;
@@ -67,6 +68,7 @@ public class MasterUpgradeUI : MonoBehaviour
             txtQuantityRequest.text = "MAX";
             txtQuantityRequest.color = colorEnough;
             btUpgrade.interactable = false;
+            RefreshTutorial();
             return;
         }
 
@@ -77,6 +79,16 @@ public class MasterUpgradeUI : MonoBehaviour
         txtQuantityRequest.text = cost.ToString();
         txtQuantityRequest.color = isEnough ? colorEnough : Color.red;
         btUpgrade.interactable = true;
+        RefreshTutorial();
+    }
+
+    // iwp gốc: nhánh AutoLootHammerCount, nút nâng bấm được, đã xong 15 mà chưa xong 17.
+    private void RefreshTutorial()
+    {
+        if (upgradeTutorial != null)
+            upgradeTutorial.SetVisible(data.upgradeType == MasteryUpgradeType.AutoLootHammerCount && btUpgrade.interactable
+                && TutorialService.IsCompleted(FtueStep.UnlockMastery)
+                && TutorialService.IsCompleted(FtueStep.UpgradeMastery) == false);
     }
 
     // prefix + số + suffix theo data gốc. Số nguyên in không lẻ ("%13", "+1", "3"),
@@ -101,6 +113,10 @@ public class MasterUpgradeUI : MonoBehaviour
             UIManager.Instance.ShowToastMessage("Không đủ Gem", isLocalize: false);
             return;
         }
+
+        // iws gốc: nâng nhánh AutoLootHammerCount = step 17.
+        if (data.upgradeType == MasteryUpgradeType.AutoLootHammerCount)
+            TutorialService.Complete(FtueStep.UpgradeMastery);
 
         this.PostEvent(EventID.MasteryChanged);
         Refresh();

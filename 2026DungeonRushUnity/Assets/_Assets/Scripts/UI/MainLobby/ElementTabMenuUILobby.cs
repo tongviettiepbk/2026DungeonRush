@@ -7,6 +7,9 @@ public class ElementTabMenuUILobby : MonoBehaviour
     public Button btTab;
     public GameObject objNotice;
     public GameObject objSelect;
+    public TutorialUI tutorial;   // TabBarElementUI.TutorialUI gốc
+
+    private bool wantTutorial;
 
     public TypeMenuLobby typeMenu { get; private set; }
     public bool isOpen { get; private set; }
@@ -28,5 +31,19 @@ public class ElementTabMenuUILobby : MonoBehaviour
         isOpen = open;
         if (objSelect != null)
             objSelect.SetActive(open);
+        RefreshTutorial();
+    }
+
+    // TabBarElementUI.kup gốc: tab đang mở thì không chỉ tay.
+    public void SetTutorial(bool want)
+    {
+        wantTutorial = want;
+        RefreshTutorial();
+    }
+
+    private void RefreshTutorial()
+    {
+        if (tutorial != null)
+            tutorial.SetVisible(wantTutorial && isOpen == false);
     }
 }

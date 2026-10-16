@@ -58,6 +58,9 @@ public class BoostButtonView : MonoBehaviour
         if (isWaitingAd)
             return;
 
+        // BoostButton.OnPointerUp gốc: bấm lần đầu = step 4 (chỉ đánh dấu, không cần xem xong quảng cáo).
+        TutorialService.Complete(FtueStep.BoostClicked);
+
         isWaitingAd = true;
         MediationAds.Instance.ShowRewardedVideoAd("boost_button", result =>
         {

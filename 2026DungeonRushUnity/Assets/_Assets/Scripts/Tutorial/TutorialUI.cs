@@ -18,16 +18,24 @@ public class TutorialUI : MonoBehaviour
     private Tween scaleTween;   // phóng to khi Show / thu nhỏ khi Hide
     private Tween loopTween;    // nhún lên xuống
     private bool isShowing;
+    private bool isInitialized;
 
     public bool IsShowing => isShowing;
 
     private void Awake()
     {
-        if (_child == null)
+        Init();
+    }
+
+    // Nơi gọi có thể Show trước khi Awake của node này chạy (cha OnEnable trước con) → nhớ vị trí gốc 1 lần.
+    private void Init()
+    {
+        if (isInitialized || _child == null)
         {
             return;
         }
 
+        isInitialized = true;
         originalPosition = _child.localPosition;
         _child.localScale = Vector3.zero;
     }
@@ -39,6 +47,7 @@ public class TutorialUI : MonoBehaviour
             return;
         }
 
+        Init();
         isShowing = true;
         scaleTween?.Kill();
         loopTween?.Kill();

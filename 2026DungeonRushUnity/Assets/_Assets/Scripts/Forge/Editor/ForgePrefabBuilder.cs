@@ -230,6 +230,9 @@ public static class ForgePrefabBuilder
         ui.btClose = Find(popup, "ContentTransform/Bg/TopArea/AutoForgeCloseButton").GetComponent<Button>();
         ui.btBackground = btBackground;
         HideAll(popup, "TutorialUI");
+        ui.startAutoForgeTutorial = TutorialUIBuilderUtil.Setup(Find(popup, BOTTOM + "StartAutoForgeButton/Content/TutorialUI"));
+        ui.hammerCountTutorial = TutorialUIBuilderUtil.Setup(Find(popup, BOTTOM + "HammerCountButton/TutorialUI"));
+        ui.hammerOptionTutorial = TutorialUIBuilderUtil.Setup(Find(popup, BOTTOM + "HammerOptionPanel/TutorialUI"));
         return Save(root, OUT + "UIAutoForgePopup.prefab");
     }
 
@@ -258,6 +261,8 @@ public static class ForgePrefabBuilder
                 rotateButton.enabled = false;
             ctrl.itemList = Find(forge, "ItemList");
             ctrl.itemPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(ITEM_ELEMENT_OUT).GetComponent<ItemElementView>();
+            ctrl.lootTutorial = TutorialUIBuilderUtil.Setup(Find(forge, "LootButton/Top/TutorialUI"));
+            ctrl.autoForgeTutorial = TutorialUIBuilderUtil.Setup(Find(forge, "AutoForgeButton/ButtonParent/TutorialUI"));
             owner.forgeUI = ctrl;
 
             PrefabUtility.SaveAsPrefabAsset(lobby, LOBBY, out bool ok);

@@ -180,7 +180,7 @@ public class StoreTabPage : MonoBehaviour
     private void OnBuyX2BoostClicked()
     {
         if (ShopService.IsX2BoostActive()) return;
-        OnGemPurchase(ShopService.BuyX2Boost());
+        OnBoostPurchase(ShopService.BuyX2Boost());
         RefreshBoosters();
     }
 
@@ -188,8 +188,15 @@ public class StoreTabPage : MonoBehaviour
     private void OnBuyX5BoostClicked()
     {
         if (ShopService.IsX5BoostActive()) return;
-        OnGemPurchase(ShopService.BuyX5Boost());
+        OnBoostPurchase(ShopService.BuyX5Boost());
         RefreshBoosters();
+    }
+
+    // kua/kub gốc: mua boost exp bằng gem lần đầu = FTUE step 11 (chỉ đánh dấu).
+    private static void OnBoostPurchase(bool isSuccess)
+    {
+        if (isSuccess) TutorialService.Complete(FtueStep.BuyStoreBoost);
+        OnGemPurchase(isSuccess);
     }
 
     private static void OnGemPurchase(bool isSuccess)

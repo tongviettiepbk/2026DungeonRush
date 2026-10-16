@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 // Trang Companion: 3 slot equip + inventory toàn bộ pet + summon (Ads / Bone nhỏ / Bone lớn) + Summon Level.
 // Logic nằm ở CompanionService; class này chỉ gắn nút + hiển thị. Số liệu reverse xem DecodedData/COMPANION_MODEL.md.
+// Tutorial (CompanionTabPage.gsm gốc): tay chỉ nút Bone lớn khi đã vào Zombie mà chưa summon (step 8, Bone ≥ 100);
+// sau đó tay chỉ Quick Equip khi bấm sẽ đổi đội hình (step 13).
 public class CompanionUI : MonoBehaviour
 {
     public TMP_Text txtQuantityBone;
@@ -32,6 +34,10 @@ public class CompanionUI : MonoBehaviour
     public Button btSummonX200;
     public TMP_Text txtQuantityX200;
     public TMP_Text txtQuantitySumonByX200;
+
+    [Space(5)]
+    public TutorialUI summonBoneTutorial;   // SummonBoneTutorialUI gốc
+    public TutorialUI quickEquipTutorial;   // QuickEquipTutorialUI gốc
 
     private List<ElementPetEquimentUI> listPetInventory;
 
@@ -82,6 +88,20 @@ public class CompanionUI : MonoBehaviour
         RefreshInventory();
         RefreshSummon();
         btUpgradeAll.interactable = CompanionService.CanUpgradeAny();
+        RefreshTutorials();
+    }
+
+    private void RefreshTutorials()
+    {
+        bool summonDone = TutorialService.IsCompleted(FtueStep.SummonCompanion);
+        if (summonBoneTutorial != null)
+        {
+            bool hasBone = GameData.userData.items.GetQuantityHave(ItemType.BONE) >= CompanionSummonConfig.BONE_SMALL_COST;
+            summonBoneTutorial.SetVisible(TutorialService.IsCompleted(FtueStep.EnterZombieDungeon) && summonDone == false && hasBone);
+        }
+        if (quickEquipTutorial != null)
+            quickEquipTutorial.SetVisible(summonDone && TutorialService.IsCompleted(FtueStep.QuickEquipCompanion) == false
+                && CompanionService.IsQuickEquipChanged());
     }
 
     private void RefreshEquip()
@@ -196,6 +216,8 @@ public class CompanionUI : MonoBehaviour
             return;
         }
 
+        // gth / gtk / CompanionAdSummonPopup.gqg gốc: summon thành công lần đầu = step 8.
+        TutorialService.Complete(FtueStep.SummonCompanion);
         UISumonPet uiSumonPet = UIManager.Instance.LoadUI(UIKey.SummonPet) as UISumonPet;
         if (uiSumonPet != null)
         {
@@ -211,6 +233,7 @@ public class CompanionUI : MonoBehaviour
     private void OnClickQuickEquip()
     {
         CompanionService.QuickEquip();
+        TutorialService.Complete(FtueStep.QuickEquipCompanion);   // gte gốc
         Refresh();
         OnEquippedChanged();
     }

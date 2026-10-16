@@ -105,6 +105,7 @@ public class UIMainLobby : BaseUI
         EventDispatcher.Instance.RegisterListener(EventID.WingChanged, OnWingChanged);
         EventDispatcher.Instance.RegisterListener(EventID.CapeChanged, OnCapeChanged);
         EventDispatcher.Instance.RegisterListener(EventID.AvatarChanged, OnAvatarChanged);
+        TutorialService.StepCompleted += OnTutorialStepCompleted;
         if (btProfile != null)
             btProfile.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.ProfilePopup));
         LoadPowerTxt();
@@ -174,6 +175,33 @@ public class UIMainLobby : BaseUI
 
         // Mặc định vào lobby: đóng hết, không tab nào mở.
         CloseAllTabs();
+        RefreshTabTutorials();
+    }
+
+    private void OnTutorialStepCompleted(FtueStep step)
+    {
+        RefreshTabTutorials();
+    }
+
+    // TabBarUI.kvb gốc: tab Dungeon dẫn vào Dragon (6) rồi Zombie (7, từ level mở Zombie);
+    // tab Pet dẫn summon pet (8, sau khi vào Zombie lấy Bone) hoặc Mastery.
+    private void RefreshTabTutorials()
+    {
+        int level = GameData.userData.player.playerLevel;
+        bool dragonDone = TutorialService.IsCompleted(FtueStep.EnterDragonDungeon);
+        bool zombieDone = TutorialService.IsCompleted(FtueStep.EnterZombieDungeon);
+        bool zombieReady = level >= GameData.staticData.dungeons.GetData(DungeonType.ZombieHorde).unlockPlayerLevel;
+        SetTabTutorial(TypeMenuLobby.Dungeon, dragonDone == false || (zombieDone == false && zombieReady));
+
+        bool summonWanted = zombieDone && TutorialService.IsCompleted(FtueStep.SummonCompanion) == false;
+        SetTabTutorial(TypeMenuLobby.Pet, summonWanted || TutorialService.IsMasteryTutorialNeeded());
+    }
+
+    private void SetTabTutorial(TypeMenuLobby type, bool want)
+    {
+        int index = (int)type;
+        if (index < listElementMenu.Count && listElementMenu[index] != null)
+            listElementMenu[index].SetTutorial(want);
     }
 
     // Bấm tab đang đóng -> mở; bấm lại chính tab đang mở -> đóng.
@@ -503,6 +531,7 @@ public class UIMainLobby : BaseUI
         LoadInfoMap();
         if (boostButton != null)
             boostButton.Refresh();
+        RefreshTabTutorials();
     }
 
     private void ReloadInfoGear()
@@ -676,6 +705,7 @@ public class UIMainLobby : BaseUI
 
     private void OnDestroy()
     {
+        TutorialService.StepCompleted -= OnTutorialStepCompleted;
         if (EventDispatcher.IsNull == false)
         {
             EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnPowerSourceChanged);
