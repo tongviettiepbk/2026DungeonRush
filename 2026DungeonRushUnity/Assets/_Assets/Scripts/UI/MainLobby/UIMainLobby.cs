@@ -26,6 +26,7 @@ public class UIMainLobby : BaseUI
     // Icon thưởng "<sprite=0>" trước tên dungeon ở txtLevelMap, index = DungeonType (gốc: 0 IsBox, 1 IsBone, 2 IsVial).
     public TMP_SpriteAsset[] dungeonRewardSpriteAssets;
     public TMP_Text txtGem;
+    public BossButtonUI bossButton;   // TopBarUI/BossButton (GameplayUI.BossGateButtonUI gốc)
 
     [Space(20)]
     [Header("MID")]
@@ -532,6 +533,19 @@ public class UIMainLobby : BaseUI
         if (boostButton != null)
             boostButton.Refresh();
         RefreshTabTutorials();
+        RefreshBossButton();
+    }
+
+    // GameplayUI.kjm gốc (mỗi lần đổi GameState): fc.ejy → Show, ngược lại Hide.
+    private void RefreshBossButton()
+    {
+        if (bossButton == null)
+            return;
+
+        if (BossButtonUI.CanRetryBossGate())
+            bossButton.Show();
+        else
+            bossButton.Hide();
     }
 
     private void ReloadInfoGear()

@@ -2106,7 +2106,7 @@ MonoBehaviour:
   objIndicator: {fileID: 1816887757891781120}
   tmpLvIndicator: {fileID: 8683356712141155259}
   tmpLvIndicatorBot: {fileID: 4437241075978099025}
-  objTutEquipHere: {fileID: 2147776321560083129}
+  tutorialEquipHere: {fileID: 7228885499551375051}
 --- !u!1 &245797016624040960
 GameObject:
   m_ObjectHideFlags: 0
@@ -2863,6 +2863,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5615069244285321249}
+  - component: {fileID: 8275417798290453594}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
@@ -2870,6 +2871,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &8275417798290453594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378249275723086383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 7374142165872077785}
+  _moveDistance: 15
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &5615069244285321249
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6257,7 +6276,7 @@ RectTransform:
   m_GameObject: {fileID: 569567009951675030}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4696484404980828722}
@@ -8760,6 +8779,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d56f634fb4354fd99dfb1db5b2cb7f1b, type: 2}
   - {fileID: 11400000, guid: ece9a6afc5a64ecc822403847a418257, type: 2}
   txtGem: {fileID: 2840134392099019576}
+  bossButton: {fileID: 138083155327617910}
   btAutoPet: {fileID: 7629369254338011105}
   txtAutoPet: {fileID: 3561525125692426135}
   listElementPet:
@@ -16983,7 +17003,7 @@ MonoBehaviour:
   objIndicator: {fileID: 3277743146303221725}
   tmpLvIndicator: {fileID: 3388556917262003018}
   tmpLvIndicatorBot: {fileID: 8623772812346365090}
-  objTutEquipHere: {fileID: 378249275723086383}
+  tutorialEquipHere: {fileID: 8275417798290453594}
 --- !u!1 &1451516354462064033
 GameObject:
   m_ObjectHideFlags: 0
@@ -25039,6 +25059,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4892276657429854799}
+  - component: {fileID: 7228885499551375051}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
@@ -25046,6 +25067,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &7228885499551375051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2147776321560083129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 7654868928319162737}
+  _moveDistance: 15
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &4892276657429854799
 RectTransform:
   m_ObjectHideFlags: 0
@@ -32706,13 +32745,35 @@ GameObject:
   m_Component:
   - component: {fileID: 7625063697067192415}
   - component: {fileID: 2202798037853760897}
+  - component: {fileID: 138083155327617910}
   m_Layer: 5
   m_Name: BossButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!114 &138083155327617910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2587333484765730226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277ce148a451831871dae312ef16046b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossButtonUI
+  _canvasGroup: {fileID: 2202798037853760897}
+  _button: {fileID: 7435422667110995852}
+  _buttonRect: {fileID: 6157699143711553008}
+  _glowRect: {fileID: 2546684736037558984}
+  _tutorialUI: {fileID: 107560420804242013}
+  _buttonPulseScale: 1.1
+  _buttonPulseDuration: 0.5
+  _glowPulseScale: 2.1581
+  _glowPulseDuration: 1.5
 --- !u!224 &7625063697067192415
 RectTransform:
   m_ObjectHideFlags: 0
@@ -35496,6 +35557,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3458434271496236112}
+  - component: {fileID: 5302987976346053771}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
@@ -35503,6 +35565,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &5302987976346053771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3013024164159156014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 556263597722022144}
+  _moveDistance: 15
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &3458434271496236112
 RectTransform:
   m_ObjectHideFlags: 0
@@ -35732,7 +35812,7 @@ RectTransform:
   m_GameObject: {fileID: 3040215273541947321}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6753076744713517447}
@@ -39935,13 +40015,32 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7258846258529408146}
+  - component: {fileID: 107560420804242013}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!114 &107560420804242013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3476999380913022509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 8713677721455709491}
+  _moveDistance: 30
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &7258846258529408146
 RectTransform:
   m_ObjectHideFlags: 0
@@ -45417,6 +45516,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5257844531664521476}
+  - component: {fileID: 328571690223685964}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
@@ -45424,6 +45524,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &328571690223685964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3607014850861745012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 4506039001099191396}
+  _moveDistance: 15
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &5257844531664521476
 RectTransform:
   m_ObjectHideFlags: 0
@@ -49803,7 +49921,7 @@ RectTransform:
   m_GameObject: {fileID: 3882160273755169826}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5615069244285321249}
@@ -52445,6 +52563,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 932846061533229125}
+  - component: {fileID: 4014742129379906483}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
@@ -52452,6 +52571,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &4014742129379906483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3905823482154789671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 483274709059631618}
+  _moveDistance: 15
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &932846061533229125
 RectTransform:
   m_ObjectHideFlags: 0
@@ -57863,7 +58000,7 @@ MonoBehaviour:
   objIndicator: {fileID: 97094520408541480}
   tmpLvIndicator: {fileID: 1962555162238144599}
   tmpLvIndicatorBot: {fileID: 5264832052395119155}
-  objTutEquipHere: {fileID: 7066485144415202483}
+  tutorialEquipHere: {fileID: 7257521141134530864}
 --- !u!1 &4386376686222928092
 GameObject:
   m_ObjectHideFlags: 0
@@ -65596,7 +65733,7 @@ MonoBehaviour:
   objIndicator: {fileID: 66089321285758305}
   tmpLvIndicator: {fileID: 34425626846455137}
   tmpLvIndicatorBot: {fileID: 5894438842923015127}
-  objTutEquipHere: {fileID: 7037655882347708880}
+  tutorialEquipHere: {fileID: 7290779566071693446}
 --- !u!1 &5025002926088464859
 GameObject:
   m_ObjectHideFlags: 0
@@ -68724,6 +68861,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5937352155666622657}
+  - component: {fileID: 2300871299647194877}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
@@ -68731,6 +68869,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &2300871299647194877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5301429649643285128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 645943248453228169}
+  _moveDistance: 15
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &5937352155666622657
 RectTransform:
   m_ObjectHideFlags: 0
@@ -71265,7 +71421,7 @@ RectTransform:
   m_GameObject: {fileID: 5608680534053405719}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5257844531664521476}
@@ -72323,7 +72479,7 @@ MonoBehaviour:
   objIndicator: {fileID: 3483104227268134183}
   tmpLvIndicator: {fileID: 7003773725017021306}
   tmpLvIndicatorBot: {fileID: 3872191613109220615}
-  objTutEquipHere: {fileID: 3013024164159156014}
+  tutorialEquipHere: {fileID: 5302987976346053771}
 --- !u!1 &5784230392370576936
 GameObject:
   m_ObjectHideFlags: 0
@@ -83437,7 +83593,7 @@ RectTransform:
   m_GameObject: {fileID: 6490133395905840719}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5937352155666622657}
@@ -85299,7 +85455,7 @@ RectTransform:
   m_GameObject: {fileID: 6748379404487011669}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3458434271496236112}
@@ -86471,7 +86627,7 @@ MonoBehaviour:
   objIndicator: {fileID: 3940708950313923453}
   tmpLvIndicator: {fileID: 5334231993477448277}
   tmpLvIndicatorBot: {fileID: 3463217917225814914}
-  objTutEquipHere: {fileID: 5301429649643285128}
+  tutorialEquipHere: {fileID: 2300871299647194877}
 --- !u!1 &6885735726103054443
 GameObject:
   m_ObjectHideFlags: 0
@@ -87854,6 +88010,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6753076744713517447}
+  - component: {fileID: 7290779566071693446}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
@@ -87861,6 +88018,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &7290779566071693446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7037655882347708880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 2054921462606814136}
+  _moveDistance: 15
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &6753076744713517447
 RectTransform:
   m_ObjectHideFlags: 0
@@ -88027,6 +88202,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4696484404980828722}
+  - component: {fileID: 7257521141134530864}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
@@ -88034,6 +88210,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &7257521141134530864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7066485144415202483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 3235944037597115520}
+  _moveDistance: 15
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!224 &4696484404980828722
 RectTransform:
   m_ObjectHideFlags: 0
@@ -89793,7 +89987,7 @@ MonoBehaviour:
   objIndicator: {fileID: 6999564624302909747}
   tmpLvIndicator: {fileID: 3401336569188246580}
   tmpLvIndicatorBot: {fileID: 3067229295226716292}
-  objTutEquipHere: {fileID: 3607014850861745012}
+  tutorialEquipHere: {fileID: 328571690223685964}
 --- !u!1 &7298787803512154211
 GameObject:
   m_ObjectHideFlags: 0
@@ -92204,7 +92398,7 @@ MonoBehaviour:
   objIndicator: {fileID: 5138247288076793916}
   tmpLvIndicator: {fileID: 4080908715176225824}
   tmpLvIndicatorBot: {fileID: 8233963990602239306}
-  objTutEquipHere: {fileID: 3905823482154789671}
+  tutorialEquipHere: {fileID: 4014742129379906483}
 --- !u!1 &7723355825751939667
 GameObject:
   m_ObjectHideFlags: 0
@@ -103196,7 +103390,7 @@ RectTransform:
   m_GameObject: {fileID: 8917455063145728110}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 932846061533229125}
@@ -103271,7 +103465,7 @@ RectTransform:
   m_GameObject: {fileID: 8922502596559103399}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4892276657429854799}

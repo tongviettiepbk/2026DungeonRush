@@ -15,7 +15,7 @@ public class ElementEnchantmentEquipUI : MonoBehaviour
     public GameObject objIndicator;      // badge tier (Image nền theo tier)
     public TMP_Text tmpLvIndicator;      // "+tier" trên badge
     public TMP_Text tmpLvIndicatorBot;   // "Lvl tier" dưới ô
-    public GameObject objTutEquipHere;   // sáng lên khi đang chọn slot để đeo relic
+    public TutorialUI tutorialEquipHere;   // tay chỉ "đeo vào đây" khi đang chọn slot để đeo relic
 
     private Action<ElementEnchantmentEquipUI> onClick;
 
@@ -84,12 +84,22 @@ public class ElementEnchantmentEquipUI : MonoBehaviour
         }
     }
 
-    // EnchantmentSlotUI.hye gốc: bật chỉ dẫn "đeo vào đây" khi đang chọn slot.
+    // EnchantmentSlotUI.hye gốc: bật node tay chỉ rồi Show cỡ 0.5; tắt thì tắt node rồi Hide.
     public void SetSelectMode(bool isOn)
     {
-        if (objTutEquipHere != null)
+        if (tutorialEquipHere == null)
         {
-            objTutEquipHere.SetActive(isOn);
+            return;
+        }
+
+        tutorialEquipHere.gameObject.SetActive(isOn);
+        if (isOn)
+        {
+            tutorialEquipHere.Show(0.5f);
+        }
+        else
+        {
+            tutorialEquipHere.Hide();
         }
     }
 

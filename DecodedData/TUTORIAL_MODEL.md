@@ -58,4 +58,5 @@ Nguồn: `UserController.efw/efx`, `User.CompletedFtueSteps`, `TutorialUI` (kxf.
 - **DungeonPopup (kcg)**: tay Enter hiện khi `(type Dragon && !6)` hoặc `(type Zombie && 6 && !7)`.
 - **Mastery khi mở popup/tab (ivd/ivr)**: nhánh 8 level ≥ 1 thì hoàn thành 15; level ≥ 2 thì hoàn thành 17.
 - **Item bị bỏ qua (ForgeController.het)**: khi chèn lại item bị dismiss vào đầu list Forge, `!21` thì hiện tay trên ItemElementUI đó.
+- **Nút Boss (BossButtonUI.jwq/jwu)**: tay hiện khi nút Show và `!22`; bấm → 22. Nút thuộc Boss Gate, live `boss_gate_enabled = false` nên không bao giờ hiện — xem BOSS_BUTTON_MODEL.md.
 - **Enchantment**: `EnchantmentSlotUI.hye(true)` bật TutorialUI trên slot khi đang chọn slot gắn relic — không có step.

@@ -18,7 +18,7 @@ Việc còn dở sau phiên 2026-10-09 (Enchantment + Power + chỉ số trận 
 
 **3. Hình ảnh (user tự làm / làm sau)**
 - Hiệu ứng relic trên nhân vật (SoldierEnchantmentEffectController: material từ tier 6, particle sau từ 7, trước từ 8; asset rip EnchantmentGlow_Tier_7..11(+_Front), 24 material Enchantment_*, shader Enchant_SpineEnchant/OutlineFlash; cả PreviewCharacter).
-- Nút summon: icon Vial `<sprite=0>` + màu Default/Disabled khi thiếu Vial; slot RarityPatterns (Ancient/Immortal/Divine); popup xem trước khi bấm ô kết quả Merge (EnchantmentPreviewInfoPopup); nền tier sau "+tier" ở ô lobby; animation TutorialUI "equip here"; cuộn bảng kết quả summon.
+- Nút summon: icon Vial `<sprite=0>` + màu Default/Disabled khi thiếu Vial; slot RarityPatterns (Ancient/Immortal/Divine); popup xem trước khi bấm ô kết quả Merge (EnchantmentPreviewInfoPopup); nền tier sau "+tier" ở ô lobby; cuộn bảng kết quả summon.
 - Power: icon `<sprite=0>` (lobby + toast đang thay bằng chữ "Power"), toast kiểu WarningUI; định dạng số gốc rn.iqt (hậu tố K,M,B,T,q,Q,s,S,O,N,D,aa…; đang dùng ToLetter).
 - Đánh đôi: khi có Spine anim event thật thì đổi đòn 2 theo event (gốc anim x2), hiện đặt giữa nhịp.
 
