@@ -52,6 +52,11 @@ public static class LevelPopupPrefabBuilder
         ui.GemCountText.spriteAsset = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>(CUR + "IsGem.asset");
         ui.LevelUpSound = AssetDatabase.LoadAssetAtPath<AudioClip>(SOUND + "levelup.ogg");
 
+        // Bản rip mất RarityPatternEffect ở hoa văn 3 hàng cuối → gắn lại theo thông số gốc (5s, Linear).
+        SetPatternFx(Find(popup, TABLE + "Ancient/Image/Pattern"), RarityPatternEffect.PatternAnimation.MoveDown, 128.5f, 0f);
+        SetPatternFx(Find(popup, TABLE + "Immortal/Image_1/Pattern"), RarityPatternEffect.PatternAnimation.Spiral, 0f, 360f);
+        SetPatternFx(Find(popup, TABLE + "Divine/Image_1/Pattern"), RarityPatternEffect.PatternAnimation.MoveDiagonalDown, 128f, 0f);
+
         // Tutorial bấm Complete (FTUE) chưa có hệ FTUE → tắt sẵn.
         Find(popup, CONTENT + "CompleteButton/Content/TutorialUI").gameObject.SetActive(false);
 
@@ -103,4 +108,19 @@ public static class LevelPopupPrefabBuilder
     }
 
     private static TMP_Text Text(Transform root, string path) => Find(root, path).GetComponent<TMP_Text>();
+
+    private static void SetPatternFx(Transform t, RarityPatternEffect.PatternAnimation type, float moveDistance, float rotationDegrees)
+    {
+        RarityPatternEffect fx = t.GetComponent<RarityPatternEffect>();
+        if (fx == null)
+            fx = t.gameObject.AddComponent<RarityPatternEffect>();
+        fx.animationType = type;
+        fx.duration = 5f;
+        fx.moveDistance = moveDistance;
+        fx.rotationDegrees = rotationDegrees;
+        fx.ease = DG.Tweening.Ease.Linear;
+        Image image = t.GetComponent<Image>();
+        if (image != null)
+            image.raycastTarget = false;
+    }
 }
