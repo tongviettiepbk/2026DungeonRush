@@ -35,8 +35,9 @@ Liên quan: [[dungonrush-enchantment-system]], [[dungonrush-power-model]], [[dun
 
 **6. KẾ HOẠCH LÀM NỐT (rà gốc vs project 2026-10-17)** — thứ tự đề xuất:
 - P1 (2026-10-17, CHƯA test Play): ĐÃ LÀM ads summon popup 3 lượt/ngày · multiplier Bone · IsNew · bỏ qua item Forge + tutorial 21. CHƯA làm nút Offline Earning lobby + QuickEarnings vì gốc v41 TẮT 2 tính năng này — chờ user quyết.
-- P2 Shop còn thiếu: RewardedChest (rương quảng cáo lobby) · OfferPopup Weapon Offer (remote weapon_offer_config) · nút lobby mở ChestBundleOffer.
-- P3 tính năng gốc chưa có: Battle Pass (BattlePassPopup/Config, thưởng Vial) · Speed Boost (SpeedBoostController + GameSpeedPopup) · CharacterPopup · Profile: Language (đã có Localize 15 tiếng), Country, Redeem, Report bug, Discord · RateUs · NoConnection/ForceUpdate · Vibration · Notification local.
-- P4 cần server/quyết định: Chat World/Clan · số thưởng PvP thật (chờ ảnh) · PvPPlayerPopup · deploy Firebase (Boss Rush/PvP/Clan/Account).
-- P5 SDK: Ads (lớp con MediationAds), IAP (PurchaseController), define FIREBASE_SDK + google-services.
+- P2 Shop XONG 2026-10-17 (CHƯA test Play): khoá tab theo level + tắt Mastery miễn phí, nút chào gói rương/Mining, RewardedChest, Weapon Offer.
+- P3 (2026-10-17, CHƯA test Play): XONG Battle Pass, Discord. GỐC TẮT/CHẾT (không làm): Speed Boost (SpeedBoostController không ai bật, GameSpeedPopup không có đường mở), CharacterPopup (không có đường mở), nút Offline Earning lobby + QuickEarnings, Boss Gate.
+- P3b LOCALIZATION (đợt lớn, chưa làm): gốc 10 ngôn ngữ (en, tr, ar, fr, de, it, ja, ko, es, pt-BR — LanguageSelectPopup.Languages), chuỗi ở DecodedData/localization/strings_*.json; project đang dùng bộ 15 ngôn ngữ StickIdle + nhiều chữ UI hardcode tiếng Anh, font thiếu glyph → cần port chuỗi gốc + nối LocalizeText + LanguageSelectPopup (rip ở Prefabs/UI/Settings).
+- P4 cần server/quyết định: Chat World/Clan (GameResources.IsChatEnabled=1) · Quốc gia (CountrySelectPopup, cần nickname trước) · Redeem Code (RedeemCodePopup) · Report Bug (BugReportPopup) · số thưởng PvP thật (chờ ảnh) · PvPPlayerPopup · OfflineButton gốc (chỉ báo kết nối AccountController) · deploy Firebase (Boss Rush/PvP/Clan/Account).
+- P5 SDK: Ads (lớp con MediationAds), IAP (PurchaseController, Restore Purchase iOS), RateUs / ForceUpdate / NoConnection (PopupController), define FIREBASE_SDK + google-services.
 - Bỏ qua: Boss Gate (live tắt), CreativeController/EndGamePopup (mode dev/survival), MasteryButton lobby.

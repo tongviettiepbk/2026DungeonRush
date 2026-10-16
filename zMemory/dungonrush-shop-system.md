@@ -13,6 +13,6 @@ ShopService (mua gem, boost, mở rương, GrantProduct), DailyDealService, Purc
 **Nối sang hệ khác:** CapeService.IsUnlocked thêm `shop.isCapeFeatureEarlyUnlocked`; CampaignMode nhân exp qua `ShopService.ApplyExpBoost`;
 `DungeonService.AddBonusKeys`; ItemType thêm PICKAXE 16 / DRILL 17 / GOLDEN_PICKAXE 18 (Mining chưa có nơi tiêu).
 **[SUY]:** giá tiền thật (`StaticShopData.DEFAULT_PRICES`), thứ tự sort deal + thẻ rương featured.
-**CHƯA:** OfferPopup (Weapon Offer), RewardedChestPopup (rương quảng cáo ở lobby), nút lobby mở `UIChestBundleOfferPopup.Show(ShopService.GetFeaturedBundle())`,
-Battle Pass, boost quảng cáo, UIParticle (builder tắt mọi ParticleSystem trong prefab UI vì thiếu plugin).
+**ĐÃ LÀM 2026-10-17 (CHƯA test Play):** nút chào gói rương Legendary/Mythic + gói Mining ở OffersVerticalLayout (bỏ GetFeaturedBundle), rương quảng cáo bay (RewardedChestUI + UIRewardedChestPopup), Weapon Offer (WeaponOfferService + OfferButtonView + UIOfferPopup). Doc: SHOP_MODEL.md mục Lobby offers.
+**CHƯA:** Battle Pass, UIParticle (builder tắt mọi ParticleSystem trong prefab UI vì thiếu plugin).
 Liên quan: [[dungonrush-clan-clanwar]], [[dungonrush-wing-cape-todo]], [[dungonrush-mediation-ads]], [[dungonrush-ripped-prefab-rewire]].
