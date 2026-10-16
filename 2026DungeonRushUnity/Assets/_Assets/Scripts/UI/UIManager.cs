@@ -136,6 +136,18 @@ public class UIManager : Singleton<UIManager>
             {
                 DebugCustom.Log(string.Format("HideUI={0}, LastestUI={1}", uiObject.name, lastestPopup.name));
 
+                // Port fix StickIdle: đóng popup không nằm trên đỉnh (VD OfflineEarning bị LevelPopup tự bật đè lên)
+                // → dựng lại stack bỏ uiObject; không thì entry đã Destroy còn kẹt, GetActiveUI văng MissingReference.
+                if (activeUIs.Contains(uiObject))
+                {
+                    List<BaseUI> remaining = activeUIs.Where(x => x != uiObject).ToList();
+                    activeUIs.Clear();
+                    for (int i = remaining.Count - 1; i >= 0; i--)
+                    {
+                        activeUIs.Push(remaining[i]);
+                    }
+                }
+
                 if (cachedUIs.ContainsKey(uiObject.gameObject.name))
                 {
                     cachedUIs.Remove(uiObject.gameObject.name);

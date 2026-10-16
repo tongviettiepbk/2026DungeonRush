@@ -22,7 +22,7 @@ Việc còn dở sau phiên 2026-10-09 (Enchantment + Power + chỉ số trận 
 - Đánh đôi: khi có Spine anim event thật thì đổi đòn 2 theo event (gốc anim x2), hiện đặt giữa nhịp.
 
 **4. Tính năng gốc chưa có trong project (có dính relic/Vial)**
-- Wing + Cape đã có UI (chưa có nguồn quặng/Cloak) → xem [[dungonrush-wing-cape-todo]].
+- Wing + Cape đã có UI; quặng Wing có nguồn Mining (2026-10-16); Cloak chưa có nguồn → xem [[dungonrush-wing-cape-todo]].
 - BattlePass, ClanWar (thưởng Vial); Chat, Loadout upload (gửi enchantmentTiers). PvP ĐÃ dựng 2026-10-10 — còn số thưởng gốc, xem [[dungonrush-pvp-mode]].
 
 **5. Nghi vấn chưa chốt**

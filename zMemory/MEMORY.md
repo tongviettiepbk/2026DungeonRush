@@ -44,7 +44,7 @@
 - [Boss Rush online](dungonrush-boss-rush-model.md) — ĐÃ code theo GDD/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); popup hồ sơ người chơi + avatar (22 hình thứ tự gốc) + xem chi tiết đồ/pet XONG (user tự chỉnh layout UIPlayerPopup — đừng chạy lại builder); ĐỦ 10 prefab boss + animation đánh theo Animator gốc (2026-10-12); còn deploy
 - [Hệ Enchantment (Relic)](dungonrush-enchantment-system.md) — tier 1..11 ×(1+tier²/100) main stat slot; summon Vial 50 lv; merge 3→1; code+UI+scene đã dựng, CHƯA test Unity
 - [Power người chơi](dungonrush-power-model.md) — rm.iqm/iqr reverse + PlayerPower.cs; HeroUnit đã sửa: đồ thay nền PlayerBase slot + có Wing/Cape
-- [Wing/Cape trạng thái](dungonrush-wing-cape-todo.md) — Wing + Cape đã có UI/logic theo native (chưa test Unity); quặng/Cloak chưa có nguồn thật (cheat O/K)
+- [Wing/Cape trạng thái](dungonrush-wing-cape-todo.md) — Wing + Cape đã có UI/logic theo native (chưa test Unity); quặng có Mining, Cloak chưa có nguồn thật (cheat K)
 - [Substat trong combat](dungonrush-substat-combat.md) — 13 substat đối chiếu native; sửa CritDamage nền 1.05, thêm tick HealthRegen ×0.5, thêm đánh đôi DoubleChance
 - [VIỆC CÒN DỞ](dungonrush-pending-todo.md) — checklist sau đợt Enchantment/Power/Substat: test Unity, deploy server, hình ảnh, Wing/Cape, BattlePass/PvP; đọc khi user nói "làm tiếp"
 - [PvP Arena](dungonrush-pvp-mode.md) — ĐÃ dựng client+server theo gốc (Elo trophy, snapshot+pet đối thủ, 30s); thưởng win/lose chưa có số gốc
@@ -64,3 +64,4 @@
 - [Nút Boost xem quảng cáo](dungonrush-ad-boost-button.md) — Boost x2 +5m cạnh Loot = EXP ×AdBoostWorth/AdBoostDuration (Mastery), trần 12 lượt; icon = IsAd; dựng 2026-10-16
 - [FX mảnh EXP campaign](dungonrush-exp-shard-drop.md) — quái chết rơi mảnh exp, thắng bay về hero (LootDropController gốc); dựng 2026-10-16
 - [Thanh exp + lên level](dungonrush-experience-ui-levelup.md) — ExperienceUI + UILevelPopup theo gốc: exp chặn ở mức đầy, bấm Complete mới lên level (+gem); dựng 2026-10-16
+- [Hệ Đào mỏ (Mining)](dungonrush-mining-system.md) — nguồn quặng Wing; dựng theo gốc 2026-10-16 (cuốc/khoan/cuốc vàng, A*, ads, offer); builder Tools/DungeonRush/Build Mining; tool/quặng ở UserItemData
