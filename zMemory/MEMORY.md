@@ -62,3 +62,4 @@
 - [UI lobby = UIMainGame2](dungonrush-main-ui-uimaingame2.md) — 2026-10-15 đã xoá UiMainGame tự dựng; UIMainGame2 gốc gắn UIMainLobby + 7 page ở Pages; XP/máu boss dùng Slider
 - [Loot + Auto Loot theo gốc](dungonrush-forge-auto-loot.md) — 2026-10-15: ForgeUIController + popup gốc, bán đồ = EXP, UserForgeData; builder Tools/DungeonRush/Build Forge UI; chữ popup tiếng Anh (font thiếu dấu)
 - [Nút Boost xem quảng cáo](dungonrush-ad-boost-button.md) — Boost x2 +5m cạnh Loot = EXP ×AdBoostWorth/AdBoostDuration (Mastery), trần 12 lượt; icon = IsAd; dựng 2026-10-16
+- [FX mảnh EXP campaign](dungonrush-exp-shard-drop.md) — quái chết rơi mảnh exp, thắng bay về hero (LootDropController gốc); dựng 2026-10-16

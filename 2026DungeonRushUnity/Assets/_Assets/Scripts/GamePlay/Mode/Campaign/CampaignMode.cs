@@ -12,6 +12,9 @@ using UnityEngine;
 // AudioSource+AnimationController ở root) — PreviewCharacter là mẫu. YÊU CẦU TAG: "TeamA"/"TeamB".
 public class CampaignMode : BaseMode
 {
+    [Header("Mảnh exp rơi khi quái chết / bay về hero khi thắng (FX)")]
+    public LootDropController lootDrop;
+
     public override void Init(GameController controller, ModeType typeModeInput = ModeType.DefaultLevel)
     {
         base.Init(controller, typeModeInput);
@@ -43,13 +46,29 @@ public class CampaignMode : BaseMode
     public override void Reset()
     {
         base.Reset();
+        if (lootDrop != null)
+        {
+            lootDrop.Clear();
+        }
+    }
+
+    // Quái chết → rơi mảnh exp. Rơi TRƯỚC base (base xét thắng) để mảnh của con cuối cũng kịp được thu.
+    protected override void OnEnemyDie(int battleId)
+    {
+        BaseUnit unit = GameController.Instance.GetUnitByBattleId(battleId);
+        if (lootDrop != null && unit != null && teamB.Contains(unit))
+        {
+            lootDrop.DropExp(unit.transform.position);
+        }
+
+        base.OnEnemyDie(battleId);
     }
 
     // ===== KẾT QUẢ TRẬN (Phase 1: chỉ vòng lặp win/lose + reload) =====
     // BaseMode.EndGame gọi CalculateResult sau khi phát EventID.EndGame.
     //   Win  → đánh dấu qua màn (PassStage: cập nhật passedStageId + stageIdCurrent sang màn kế) rồi lưu.
     //   Lose → lùi stageIdCurrent 1 màn (StepBackStage), passedStageId giữ nguyên, rồi đánh lại màn dễ hơn.
-    // Dù thắng hay thua đều dựng lại màn sau delayEndGame giây. Reload trễ (coroutine) để KHÔNG
+    // Dù thắng hay thua đều dựng lại màn sau delayEndGame giây (thắng thì chờ thêm tới khi thu xong mảnh exp). Reload trễ (coroutine) để KHÔNG
     // hủy unit ngay giữa lúc BaseMode đang dispatch sự kiện UnitDie/EndGame.
     protected override void CalculateResult(bool isWin)
     {
@@ -67,6 +86,12 @@ public class CampaignMode : BaseMode
 
             GameData.userData.campaign.PassStage(stageId);
             GameData.Save(true);
+
+            // Mảnh exp trên map bay về hero (chỉ là hiệu ứng, exp đã cộng ở trên).
+            if (lootDrop != null && hero != null)
+            {
+                lootDrop.CollectAll(hero.transform);
+            }
         }
         else if (overrideStageId <= 0)
         {
@@ -82,6 +107,13 @@ public class CampaignMode : BaseMode
     private IEnumerator RoutineReloadAfterResult()
     {
         yield return new WaitForSeconds(delayEndGame);
+
+        // Chờ mảnh exp bay hết về hero rồi mới dựng màn mới.
+        while (lootDrop != null && lootDrop.IsCollecting)
+        {
+            yield return null;
+        }
+
         Build();
 
         // Cập nhật lại lobby (level, thanh exp, gem, tên màn) sau khi data đổi vì thắng/thua.
