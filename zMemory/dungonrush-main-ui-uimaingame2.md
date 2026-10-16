@@ -17,6 +17,7 @@ Từ 2026-10-15, UI lobby chính là `Prefabs/UI/UIMainGame2.prefab` (layout g�
 - Thanh XP + máu boss gốc là Slider → code đã đổi: `UIMainLobby.sliderProcessPlayer`, `UIBossRushHud.sliderHp/sliderWhite`.
 - Đã ẩn node chưa có logic: GameUI, Battlepass/Offline/Leaderboard, OffersVerticalLayout, BossButton, mọi TutorialUI*/NotificationUI*.
 - UiMainGame.prefab ĐÃ XOÁ (2026-10-15); Test.unity + _Recovery/0 (3).unity đã gỡ instance → GameController.uiLobby ở 2 scene đó = null.
+- TopBarUI/LevelText (txtLevelMap) theo gốc 2026-10-16: campaign = `StaticCampaignData.GetLevelText(level)` "<color>Tier</color> a-b" (8 Tier/100 level, GameplayUI.kii); dungeon = "<sprite=0><color=KeyColor>Tên</color>\nDifficulty a-b" (kig, icon IsBox/IsBone/IsVial ở `dungeonRewardSpriteAssets`). BossRush title/tên tab chưa làm.
 
 **Why:** user muốn dùng UI gốc thay bản tự dựng.
 **How to apply:** sửa UI lobby thì sửa UIMainGame2, đừng dựng lại Loot/Footer tự chế. Xem [[dungonrush-uinew-prefab-folder]].

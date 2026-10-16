@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 // 1 dungeon: tên, loại tài nguyên thưởng, mốc mở khoá, công thức thưởng.
 public class DungeonConfig
@@ -8,6 +9,7 @@ public class DungeonConfig
     public string displayName;
     public ItemType rewardType;
     public int unlockPlayerLevel;
+    public Color keyColor;              // DungeonData.KeyColor gốc — màu tên dungeon ở LevelText thanh trên
     // Thưởng khi thắng màn N = rewardBase + rewardScaler * (N - 1)  (EconomyController.hcu/hct/hcv gốc).
     public int rewardBase;
     public int rewardScaler;
@@ -34,11 +36,11 @@ public class StaticDungeonData
     public readonly List<DungeonConfig> dungeons = new List<DungeonConfig>
     {
         // Dragon's Hoard không khoá riêng (chỉ theo mốc mở tab Dungeon = PlayerLevel 4). Thưởng Hammer = LOOT_TICKET.
-        new DungeonConfig { type = DungeonType.DragonBoss, modeType = ModeType.DragonBossDungeon, displayName = "Dragon's Hoard", rewardType = ItemType.LOOT_TICKET, unlockPlayerLevel = 0, rewardBase = 50, rewardScaler = 1 },
+        new DungeonConfig { type = DungeonType.DragonBoss, modeType = ModeType.DragonBossDungeon, displayName = "Dragon's Hoard", rewardType = ItemType.LOOT_TICKET, unlockPlayerLevel = 0, keyColor = new Color(0.8039216f, 0.09803922f, 0.21176471f), rewardBase = 50, rewardScaler = 1 },
         // DungeonTabPage.ZombieHordeUnlockPlayerLevel = 5 (.cctor).
-        new DungeonConfig { type = DungeonType.ZombieHorde, modeType = ModeType.ZombieHordeDungeon, displayName = "Zombie Outbreak", rewardType = ItemType.BONE, unlockPlayerLevel = 5, rewardBase = 100, rewardScaler = 2 },
+        new DungeonConfig { type = DungeonType.ZombieHorde, modeType = ModeType.ZombieHordeDungeon, displayName = "Zombie Outbreak", rewardType = ItemType.BONE, unlockPlayerLevel = 5, keyColor = new Color(0.38431376f, 0.3803922f, 0.454902f), rewardBase = 100, rewardScaler = 2 },
         // GameResources.CultistDungeonUnlockPlayerLevel = 20.
-        new DungeonConfig { type = DungeonType.Cultist, modeType = ModeType.CultistDungeon, displayName = "Cultist Ritual", rewardType = ItemType.VIAL, unlockPlayerLevel = 20, rewardBase = 100, rewardScaler = 2 },
+        new DungeonConfig { type = DungeonType.Cultist, modeType = ModeType.CultistDungeon, displayName = "Cultist Ritual", rewardType = ItemType.VIAL, unlockPlayerLevel = 20, keyColor = new Color(0.90588236f, 0.8352941f, 0.7607843f), rewardBase = 100, rewardScaler = 2 },
     };
 
     public DungeonConfig GetData(DungeonType type)

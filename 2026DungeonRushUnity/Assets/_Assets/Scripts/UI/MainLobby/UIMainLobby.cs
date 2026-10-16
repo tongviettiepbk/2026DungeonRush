@@ -23,6 +23,8 @@ public class UIMainLobby : BaseUI
     public Button btProfile;   // ô avatar góc trên (ProfileButton gốc) → popup hồ sơ của mình
     public TMP_Text txtPower;
     public TMP_Text txtLevelMap;
+    // Icon thưởng "<sprite=0>" trước tên dungeon ở txtLevelMap, index = DungeonType (gốc: 0 IsBox, 1 IsBone, 2 IsVial).
+    public TMP_SpriteAsset[] dungeonRewardSpriteAssets;
     public TMP_Text txtGem;
 
     [Space(20)]
@@ -676,7 +678,7 @@ public class UIMainLobby : BaseUI
 
     private void LoadInfoMap()
     {
-        // Đang trong dungeon: bật objDungeonUI (có nút Exit), txtLevelMap = độ khó dungeon "1-1".
+        // Đang trong dungeon: bật objDungeonUI (có nút Exit).
         DungeonMode dungeon = GameController.Instance.mode as DungeonMode;
         SetActiveDungeonUI(dungeon != null);
         if (txtLevelMap == null)
@@ -684,14 +686,33 @@ public class UIMainLobby : BaseUI
 
         if (dungeon != null)
         {
-            txtLevelMap.text = StaticDungeonData.GetDifficultyText(dungeon.DungeonLevel);
+            txtLevelMap.text = GetDungeonLevelText(dungeon);
             return;
         }
 
-        // Màn campaign đang đánh: stageIdCurrent (101, 102...) hiển thị dạng "chương-màn" = "1-1".
+        // Campaign (GameplayUI.kii gốc): "<color>Tier</color> chương-màn", VD "Hard 6-5".
         int stageId = GameData.userData.campaign.stageIdCurrent;
-        StaticCampaignData campaign = GameData.staticData.campaign;
-        txtLevelMap.text = campaign.GetChapter(stageId) + "-" + campaign.GetStageIndex(stageId);
+        txtLevelMap.text = StaticCampaignData.GetLevelText(GameData.staticData.campaign.GetLevel(stageId));
+    }
+
+    // Dungeon (GameplayUI.kig gốc): "<sprite=0><color=#KeyColor>Tên dungeon</color>\nDifficulty a-b",
+    // sprite = icon thưởng của dungeon (gán spriteAsset cho text).
+    private string GetDungeonLevelText(DungeonMode dungeon)
+    {
+        DungeonType type = dungeon.dungeonType;
+        DungeonConfig config = GameData.staticData.dungeons.GetData(type);
+        string name = config != null ? config.displayName : type.ToString();
+        Color color = config != null ? config.keyColor : Color.white;
+
+        int index = (int)type;
+        TMP_SpriteAsset spriteAsset = dungeonRewardSpriteAssets != null && index < dungeonRewardSpriteAssets.Length
+            ? dungeonRewardSpriteAssets[index] : null;
+        if (spriteAsset != null)
+            txtLevelMap.spriteAsset = spriteAsset;
+
+        return (spriteAsset != null ? "<sprite=0>" : "")
+            + "<color=#" + ColorUtility.ToHtmlStringRGB(color) + ">" + name + "</color>\n"
+            + "Difficulty " + StaticDungeonData.GetDifficultyText(dungeon.DungeonLevel);
     }
 
     public void SetActiveDungeonUI(bool isOn)
