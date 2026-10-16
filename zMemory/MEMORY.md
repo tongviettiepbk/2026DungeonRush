@@ -5,6 +5,7 @@
 - [AssetRipper export không có .meta](assetripper-export-no-meta.md) — khôi phục guid bằng UnityPy từ xapk; đã copy texture+FX vào _Assets
 - [Kiến trúc 2026StickIdle](stickidle-architecture.md) — idle RPG base: GameData static/user split, feature-folder, Firebase, UI prefix conventions
 - [CHỈ THỊ: DungeonRush follow StickIdle](dungonrush-follow-stickidle.md) — quy tắc cố định: phát triển DungeonRush bám sát kiến trúc StickIdle, 6 phần, từng bước lấy core base
+- [CHỈ THỊ: làm ĐÚNG gốc](dungonrush-follow-original-strict.md) — lệch gốc thì sửa, gốc tắt thì không làm, tự chạy lần lượt kế hoạch (2026-10-17)
 - [Rebuild DungOnRush progress](dungonrush-rebuild-progress.md) — 6 phần theo StickIdle; Data ✅; project 2026DungeonRushUnity; compile-check bằng dotnet
 - [Map grid background](dungonrush-map-grid-background.md) — nền map = grid procedural (Custom/GridShader viết lại cho URP) + material Inner/Outer, không phải bitmap; shader gốc rip bị dummy
 - [Map & spawn procedural](dungonrush-map-spawn-procedural.md) — KHÔNG có data toạ độ box/enemy; map sinh procedural (LevelGenerator seed 31577), enemy scale theo Tier+progression; doc ở MAP_AND_SPAWN_MODEL.md

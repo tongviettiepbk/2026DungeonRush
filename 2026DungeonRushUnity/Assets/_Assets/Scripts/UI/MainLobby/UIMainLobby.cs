@@ -165,6 +165,9 @@ public class UIMainLobby : BaseUI
 
     #region Tab menu
 
+    // TabData.UnlockPlayerLevel gốc (GameplayScene), index = TypeMenuLobby: Shop, Pet, Dungeon, Event, Clan.
+    private static readonly int[] TAB_UNLOCK_LEVELS = { 3, 5, 4, 15, 20 };
+
     // listElementMenu[i] <-> listObjTab[i] <-> (TypeMenuLobby)i
     private void InitTabMenu()
     {
@@ -176,7 +179,31 @@ public class UIMainLobby : BaseUI
 
         // Mặc định vào lobby: đóng hết, không tab nào mở.
         CloseAllTabs();
+        RefreshTabLocks();
         RefreshTabTutorials();
+    }
+
+    private static int GetTabUnlockLevel(TypeMenuLobby type)
+    {
+        int index = (int)type;
+        return index < TAB_UNLOCK_LEVELS.Length ? TAB_UNLOCK_LEVELS[index] : 0;
+    }
+
+    // TabBarUI.kuy gốc: đổi level → khoá/mở từng tab; tab đang mở mà bị khoá thì đóng.
+    private void RefreshTabLocks()
+    {
+        int level = GameData.userData.player.playerLevel;
+        for (int i = 0; i < listElementMenu.Count; i++)
+        {
+            ElementTabMenuUILobby element = listElementMenu[i];
+            if (element == null)
+                continue;
+
+            bool locked = level < GetTabUnlockLevel((TypeMenuLobby)i);
+            element.SetLocked(locked);
+            if (locked && element.isOpen)
+                CloseAllTabs();
+        }
     }
 
     private void OnTutorialStepCompleted(FtueStep step)
@@ -209,6 +236,13 @@ public class UIMainLobby : BaseUI
     private void OnClickTab(TypeMenuLobby type)
     {
         int index = (int)type;
+        // TabBarUI.kvc gốc: tab khoá → báo "Unlock at Level N" (Errors.UnlockAtLevel).
+        if (index < listElementMenu.Count && listElementMenu[index] != null && listElementMenu[index].isLocked)
+        {
+            UIManager.Instance.ShowToastMessage("Unlock at Level " + GetTabUnlockLevel(type), isLocalize: false);
+            return;
+        }
+
         if (index < listElementMenu.Count && listElementMenu[index] != null && listElementMenu[index].isOpen)
             CloseAllTabs();
         else
@@ -532,6 +566,7 @@ public class UIMainLobby : BaseUI
         LoadInfoMap();
         if (boostButton != null)
             boostButton.Refresh();
+        RefreshTabLocks();
         RefreshTabTutorials();
         RefreshBossButton();
     }

@@ -19,7 +19,7 @@ public class MasteryUI : MonoBehaviour
     public TutorialUI unlockTutorial;   // UnlockTutorialUI gốc
 
     // TEST: true = mở khoá miễn phí (bỏ qua trừ Gem).
-    public bool isTestFree = true;
+    public bool isTestFree = false;
 
     private List<ElementMasteryUI> listElementMastery;
     private Color colorEnough;

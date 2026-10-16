@@ -2,14 +2,25 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 1 tab ở thanh tab đáy lobby (TabBarElementUI gốc). Chưa tới TabData.UnlockPlayerLevel thì khoá:
+// icon đổi sang hình khoá màu tối (kul gốc), không chỉ tay tutorial; bấm báo "Unlock at Level N" (TabBarUI.kvc).
 public class ElementTabMenuUILobby : MonoBehaviour
 {
+    private static readonly Color LOCKED_ICON_COLOR = new Color(0.1019608f, 0.1019608f, 0.1019608f, 1f);   // zcj gốc
+
     public Button btTab;
     public GameObject objNotice;
     public GameObject objSelect;
     public TutorialUI tutorial;   // TabBarElementUI.TutorialUI gốc
+    public Image imgIcon;
+    public Sprite sprLocked;      // TabData.LockedIconSprite gốc
 
     private bool wantTutorial;
+    private Sprite sprIcon;
+    private Color iconColor;
+    private bool isIconCached;
+
+    public bool isLocked { get; private set; }
 
     public TypeMenuLobby typeMenu { get; private set; }
     public bool isOpen { get; private set; }
@@ -44,6 +55,24 @@ public class ElementTabMenuUILobby : MonoBehaviour
     private void RefreshTutorial()
     {
         if (tutorial != null)
-            tutorial.SetVisible(wantTutorial && isOpen == false);
+            tutorial.SetVisible(wantTutorial && isOpen == false && isLocked == false);
+    }
+
+    // kuk + kul gốc.
+    public void SetLocked(bool locked)
+    {
+        isLocked = locked;
+        if (imgIcon != null)
+        {
+            if (isIconCached == false)
+            {
+                isIconCached = true;
+                sprIcon = imgIcon.sprite;
+                iconColor = imgIcon.color;
+            }
+            imgIcon.sprite = locked && sprLocked != null ? sprLocked : sprIcon;
+            imgIcon.color = locked ? LOCKED_ICON_COLOR : iconColor;
+        }
+        RefreshTutorial();
     }
 }
