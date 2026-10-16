@@ -410,16 +410,22 @@ public static class ShopService
         return false;
     }
 
-    // GameplayUI.kiz / kja gốc: gói rương đang chào ở lobby — Mythic khi đã sưu tầm đủ Epic, không thì Legendary.
-    public static ChestBundleData GetFeaturedBundle()
+    // GameplayUI.kiy gốc: nút chào gói rương ở lobby hiện khi ChestStoreEnabled (gốc bật) và đã mở tab Companion (level 5).
+    public static bool IsChestOfferUnlocked()
     {
-        if (ChestConfig == null)
-        {
-            return null;
-        }
-        return IsRarityComplete(Rarity.Epic) && ChestConfig.MythicFeaturedBundle != null
-            ? ChestConfig.MythicFeaturedBundle
-            : ChestConfig.LegendaryFeaturedBundle;
+        return ChestConfig != null && GameData.userData.player.playerLevel >= CompanionSummonConfig.COMPANION_UNLOCK_PLAYER_LEVEL;
+    }
+
+    // kiz gốc: gói Legendary luôn chào.
+    public static ChestBundleData GetLegendaryOfferBundle()
+    {
+        return IsChestOfferUnlocked() ? ChestConfig.LegendaryFeaturedBundle : null;
+    }
+
+    // kja gốc: gói Mythic chỉ chào khi đã sưu tầm đủ pet + cape rarity Epic (UserController.eew(3)).
+    public static ChestBundleData GetMythicOfferBundle()
+    {
+        return IsChestOfferUnlocked() && IsRarityComplete(Rarity.Epic) ? ChestConfig.MythicFeaturedBundle : null;
     }
 
     #endregion

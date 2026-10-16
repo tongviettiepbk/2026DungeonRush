@@ -1,0 +1,971 @@
+[
+ {
+  "m_GameObject": "ref(0,23)",
+  "m_Enabled": 1,
+  "m_Script": "ref(16777216,2231369728)",
+  "m_Name": "",
+  "ForgeDefaultLevelOffsets": [
+   {
+    "Offset": -2,
+    "Weight": 5
+   },
+   {
+    "Offset": -1,
+    "Weight": 10
+   },
+   {
+    "Offset": 0,
+    "Weight": 15
+   },
+   {
+    "Offset": 1,
+    "Weight": 20
+   },
+   {
+    "Offset": 2,
+    "Weight": 25
+   },
+   {
+    "Offset": 3,
+    "Weight": 15
+   },
+   {
+    "Offset": 4,
+    "Weight": 10
+   }
+  ],
+  "ForgeRarityLevelOffsets": [
+   {
+    "Rarity": 0,
+    "Offsets": [
+     {
+      "Offset": 3,
+      "Weight": 10
+     },
+     {
+      "Offset": 6,
+      "Weight": 30
+     },
+     {
+      "Offset": 9,
+      "Weight": 40
+     },
+     {
+      "Offset": 12,
+      "Weight": 15
+     },
+     {
+      "Offset": 15,
+      "Weight": 5
+     }
+    ]
+   },
+   {
+    "Rarity": 1,
+    "Offsets": [
+     {
+      "Offset": 2,
+      "Weight": 10
+     },
+     {
+      "Offset": 4,
+      "Weight": 30
+     },
+     {
+      "Offset": 6,
+      "Weight": 40
+     },
+     {
+      "Offset": 8,
+      "Weight": 15
+     },
+     {
+      "Offset": 10,
+      "Weight": 5
+     }
+    ]
+   },
+   {
+    "Rarity": 2,
+    "Offsets": [
+     {
+      "Offset": 1,
+      "Weight": 10
+     },
+     {
+      "Offset": 2,
+      "Weight": 30
+     },
+     {
+      "Offset": 3,
+      "Weight": 40
+     },
+     {
+      "Offset": 4,
+      "Weight": 15
+     },
+     {
+      "Offset": 5,
+      "Weight": 5
+     }
+    ]
+   }
+  ],
+  "ForgeMinLevel": 1,
+  "ForgeMaxLevel": 100,
+  "ForgeLowerRarityMinLevel": 90,
+  "ItemStatBaseMeleeWeapon": 9.0,
+  "ItemStatBaseRangedWeapon": 7.0,
+  "ItemStatBaseGlovesDamage": 6.0,
+  "ItemStatBaseHeadItem": 45.0,
+  "ItemStatBaseBackItem": 30.0,
+  "ItemStatBaseNecklaceHealth": 20.0,
+  "ItemStatBaseRingDamage": 6.0,
+  "ItemStatTierScaler": 3.1622776985168457,
+  "ItemStatLevelScaler": 0.014999999664723873,
+  "SubStatConfigs": [
+   {
+    "Type": 0,
+    "MaxValue": 40.0,
+    "Weight": 100
+   },
+   {
+    "Type": 1,
+    "MaxValue": 5.0,
+    "Weight": 100
+   },
+   {
+    "Type": 2,
+    "MaxValue": 12.0,
+    "Weight": 100
+   },
+   {
+    "Type": 3,
+    "MaxValue": 100.0,
+    "Weight": 100
+   },
+   {
+    "Type": 4,
+    "MaxValue": 15.0,
+    "Weight": 100
+   },
+   {
+    "Type": 5,
+    "MaxValue": 40.0,
+    "Weight": 100
+   },
+   {
+    "Type": 6,
+    "MaxValue": 15.0,
+    "Weight": 100
+   },
+   {
+    "Type": 7,
+    "MaxValue": 6.0,
+    "Weight": 100
+   },
+   {
+    "Type": 8,
+    "MaxValue": 20.0,
+    "Weight": 100
+   },
+   {
+    "Type": 9,
+    "MaxValue": 50.0,
+    "Weight": 100
+   },
+   {
+    "Type": 10,
+    "MaxValue": 15.0,
+    "Weight": 100
+   },
+   {
+    "Type": 11,
+    "MaxValue": 7.0,
+    "Weight": 100
+   },
+   {
+    "Type": 12,
+    "MaxValue": 30.0,
+    "Weight": 100
+   }
+  ],
+  "SubStatTierSlots": [
+   {
+    "MinTier": 2,
+    "SubStatCount": 1
+   },
+   {
+    "MinTier": 3,
+    "SubStatCount": 1
+   },
+   {
+    "MinTier": 4,
+    "SubStatCount": 2
+   },
+   {
+    "MinTier": 5,
+    "SubStatCount": 2
+   },
+   {
+    "MinTier": 6,
+    "SubStatCount": 2
+   },
+   {
+    "MinTier": 7,
+    "SubStatCount": 2
+   },
+   {
+    "MinTier": 8,
+    "SubStatCount": 3
+   },
+   {
+    "MinTier": 9,
+    "SubStatCount": 3
+   }
+  ],
+  "SubStatDistributionSpread": 0.25,
+  "HealthRegenMultiplier": 0.5,
+  "BaseGameSpeed": 1.0,
+  "SpeedBoostMultiplier": 2.0,
+  "SpeedBoostDuration": 300.0,
+  "IsChatEnabled": 1,
+  "IsRewardedChestEnabled": 1,
+  "IsTutorialEnabled": 1,
+  "MasteryUnlockPlayerLevel": 6,
+  "BattlePassUnlockPlayerLevel": 4,
+  "ChestStoreEnabled": 1,
+  "ChestConfig": "ref(2,12400)",
+  "CapeUnlockPlayerLevel": 15,
+  "WingUnlockPlayerLevel": 6,
+  "SubStatFilterUnlockForgeLevel": 7,
+  "BaseCriticalDamagePercent": 5.0,
+  "PlayerBaseWeaponDamage": 6.0,
+  "PlayerBaseGlovesDamage": 4.0,
+  "PlayerBaseHelmetHealth": 30.0,
+  "PlayerBaseBackpackHealth": 20.0,
+  "PlayerBaseNecklaceHealth": 0.0,
+  "PlayerBaseRingDamage": 0.0,
+  "PlayerBaseAttackSpeed": 1.0,
+  "PlayerBaseMoveSpeed": 2.0,
+  "PlayerBaseAttackDistance": 1.5,
+  "EnemyBaseMoveSpeed": 1.5,
+  "EnemyBaseMeleeAttackDistance": 1.5,
+  "EnemyBaseRangeAttackDistance": 3.0,
+  "EnemyDetectionRange": 4.0,
+  "EnemyGearSeed": 12345,
+  "EnemyGearMaxCombatLevel": 300,
+  "EnemyGearTierWeights": [
+   5,
+   15,
+   25,
+   25,
+   25,
+   25,
+   30,
+   30,
+   40,
+   40,
+   40
+  ],
+  "ArmyPowerBase": 500.0,
+  "ArmyPowerExponentialScaler": 3.1622776985168457,
+  "ArmyPowerSegments": [
+   {
+    "Threshold": 80,
+    "LevelScaler": 20.0
+   },
+   {
+    "Threshold": 200,
+    "LevelScaler": 30.0
+   },
+   {
+    "Threshold": 999999,
+    "LevelScaler": 40.0
+   }
+  ],
+  "MeleeHealthToDamageRatio": 3.0,
+  "RangedHealthToDamageRatio": 2.0,
+  "BossHealthToDamageRatio": 10.0,
+  "RangedUnitDamageMultiplier": 0.800000011920929,
+  "PresetSeed": 42,
+  "ArmyPresets": [
+   {
+    "Name": "1 Melee",
+    "MeleeCount": 1,
+    "RangedCount": 0,
+    "LancasterCoefficient": 1.0
+   },
+   {
+    "Name": "1 Range",
+    "MeleeCount": 0,
+    "RangedCount": 1,
+    "LancasterCoefficient": 1.2000000476837158
+   },
+   {
+    "Name": "1 Melee 1 Range",
+    "MeleeCount": 1,
+    "RangedCount": 1,
+    "LancasterCoefficient": 1.0
+   },
+   {
+    "Name": "3 Melee",
+    "MeleeCount": 3,
+    "RangedCount": 0,
+    "LancasterCoefficient": 1.2000000476837158
+   },
+   {
+    "Name": "3 Range",
+    "MeleeCount": 0,
+    "RangedCount": 3,
+    "LancasterCoefficient": 1.5
+   },
+   {
+    "Name": "6 Melee",
+    "MeleeCount": 6,
+    "RangedCount": 0,
+    "LancasterCoefficient": 1.2000000476837158
+   },
+   {
+    "Name": "6 Range",
+    "MeleeCount": 0,
+    "RangedCount": 6,
+    "LancasterCoefficient": 1.7999999523162842
+   },
+   {
+    "Name": "2 Melee 2 Range",
+    "MeleeCount": 2,
+    "RangedCount": 2,
+    "LancasterCoefficient": 1.5
+   },
+   {
+    "Name": "3 Melee 3 Range",
+    "MeleeCount": 3,
+    "RangedCount": 3,
+    "LancasterCoefficient": 1.5
+   }
+  ],
+  "ManualPresets": [
+   {
+    "Name": "Level 1",
+    "MeleeCount": 1,
+    "RangedCount": 0,
+    "LancasterCoefficient": 1.0
+   },
+   {
+    "Name": "Level 2",
+    "MeleeCount": 2,
+    "RangedCount": 0,
+    "LancasterCoefficient": 1.0
+   },
+   {
+    "Name": "Level 3",
+    "MeleeCount": 0,
+    "RangedCount": 1,
+    "LancasterCoefficient": 1.0
+   },
+   {
+    "Name": "Level 4",
+    "MeleeCount": 0,
+    "RangedCount": 2,
+    "LancasterCoefficient": 1.2999999523162842
+   },
+   {
+    "Name": "Level 5",
+    "MeleeCount": 1,
+    "RangedCount": 1,
+    "LancasterCoefficient": 1.0
+   },
+   {
+    "Name": "Level 6",
+    "MeleeCount": 1,
+    "RangedCount": 2,
+    "LancasterCoefficient": 1.5
+   },
+   {
+    "Name": "Level 7",
+    "MeleeCount": 2,
+    "RangedCount": 2,
+    "LancasterCoefficient": 1.5
+   },
+   {
+    "Name": "Level 8",
+    "MeleeCount": 3,
+    "RangedCount": 3,
+    "LancasterCoefficient": 1.5
+   },
+   {
+    "Name": "Level 9",
+    "MeleeCount": 0,
+    "RangedCount": 5,
+    "LancasterCoefficient": 2.0
+   },
+   {
+    "Name": "Level 10",
+    "MeleeCount": 5,
+    "RangedCount": 0,
+    "LancasterCoefficient": 1.0
+   }
+  ],
+  "MaxOfflineSeconds": 14400,
+  "BonePerMinute": 60,
+  "HammerPerMinute": 1,
+  "OfflineEarningExpPercent": 3,
+  "BoneDropChance": 0.25,
+  "BoneDropCountMin": 3,
+  "BoneDropCountMax": 6,
+  "BonePerDrop": 1,
+  "LootBoxDropChance": 0.10000000149011612,
+  "LootBoxPerDrop": 1,
+  "StartingLootBoxCount": 240,
+  "ItemSellExperiencePerRarity": [
+   1,
+   2,
+   4,
+   6,
+   8,
+   10,
+   12,
+   14
+  ],
+  "StartingGem": 0,
+  "DungeonBoneRewardBase": 100,
+  "DungeonBoneRewardScaler": 2,
+  "DungeonLootBoxRewardBase": 50,
+  "DungeonLootBoxRewardScaler": 1,
+  "DungeonVialRewardBase": 100,
+  "DungeonVialRewardScaler": 2,
+  "DragonLevelBase": 1,
+  "DragonLevelToCombatLevelMultiplier": 3,
+  "ZombieLevelBase": 5,
+  "ZombieLevelToCombatLevelMultiplier": 3,
+  "ZombiePresets": [
+   {
+    "Name": "6 Melee",
+    "MeleeCount": 6,
+    "RangedCount": 0,
+    "LancasterCoefficient": 1.0
+   },
+   {
+    "Name": "8 Melee",
+    "MeleeCount": 8,
+    "RangedCount": 0,
+    "LancasterCoefficient": 1.0
+   },
+   {
+    "Name": "10 Melee",
+    "MeleeCount": 10,
+    "RangedCount": 0,
+    "LancasterCoefficient": 1.0
+   },
+   {
+    "Name": "12 Melee",
+    "MeleeCount": 12,
+    "RangedCount": 0,
+    "LancasterCoefficient": 1.0
+   }
+  ],
+  "CultistLevelBase": 60,
+  "CultistLevelToCombatLevelMultiplier": 3,
+  "CultistPresets": [
+   {
+    "Name": "2 Melee 3 Ranged",
+    "MeleeCount": 2,
+    "RangedCount": 3,
+    "LancasterCoefficient": 1.5
+   },
+   {
+    "Name": "2 Melee 3 Ranged",
+    "MeleeCount": 3,
+    "RangedCount": 4,
+    "LancasterCoefficient": 1.5
+   },
+   {
+    "Name": "2 Melee 3 Ranged",
+    "MeleeCount": 3,
+    "RangedCount": 3,
+    "LancasterCoefficient": 1.5
+   },
+   {
+    "Name": "2 Melee 3 Ranged",
+    "MeleeCount": 3,
+    "RangedCount": 2,
+    "LancasterCoefficient": 1.5
+   },
+   {
+    "Name": "2 Melee 3 Ranged",
+    "MeleeCount": 4,
+    "RangedCount": 3,
+    "LancasterCoefficient": 1.5
+   }
+  ],
+  "CultistDungeonUnlockPlayerLevel": 20,
+  "DungeonThemes": [
+   "ref(2,12437)",
+   "ref(2,12438)",
+   "ref(2,12436)"
+  ],
+  "MapConfigs": [
+   "ref(2,12662)",
+   "ref(2,12663)",
+   "ref(2,12665)",
+   "ref(2,12664)",
+   "ref(2,12659)",
+   "ref(2,12660)",
+   "ref(2,12661)"
+  ],
+  "DragonBossCharacterId": 999999,
+  "SoldierPrefab": "ref(2,5197)",
+  "RarityColors": [
+   {
+    "r": 0.7921569347381592,
+    "g": 0.7921569347381592,
+    "b": 0.7921569347381592,
+    "a": 1.0
+   },
+   {
+    "r": 0.8784314393997192,
+    "g": 0.7764706611633301,
+    "b": 0.615686297416687,
+    "a": 1.0
+   },
+   {
+    "r": 0.7098039388656616,
+    "g": 0.8784314393997192,
+    "b": 0.3607843220233917,
+    "a": 1.0
+   },
+   {
+    "r": 0.2705882489681244,
+    "g": 0.7686275243759155,
+    "b": 1.0,
+    "a": 1.0
+   },
+   {
+    "r": 1.0,
+    "g": 0.8666667342185974,
+    "b": 0.3803921937942505,
+    "a": 1.0
+   },
+   {
+    "r": 0.6352941393852234,
+    "g": 0.5333333611488342,
+    "b": 0.9490196704864502,
+    "a": 1.0
+   },
+   {
+    "r": 0.2862745225429535,
+    "g": 0.658823549747467,
+    "b": 0.44705885648727417,
+    "a": 1.0
+   },
+   {
+    "r": 0.2352941334247589,
+    "g": 0.29019609093666077,
+    "b": 0.760784387588501,
+    "a": 1.0
+   },
+   {
+    "r": 0.9019608497619629,
+    "g": 0.3803921937942505,
+    "b": 0.3803921937942505,
+    "a": 1.0
+   },
+   {
+    "r": 1.0,
+    "g": 0.6980392336845398,
+    "b": 0.21176472306251526,
+    "a": 1.0
+   }
+  ],
+  "DungeonDatas": [
+   "ref(2,12424)",
+   "ref(2,12439)",
+   "ref(2,12423)"
+  ],
+  "WeaponDatas": [
+   "ref(2,12604)",
+   "ref(2,12603)",
+   "ref(2,12607)",
+   "ref(2,12606)",
+   "ref(2,12610)",
+   "ref(2,12633)",
+   "ref(2,12612)",
+   "ref(2,12613)",
+   "ref(2,12615)",
+   "ref(2,12616)",
+   "ref(2,12634)",
+   "ref(2,12636)",
+   "ref(2,12637)",
+   "ref(2,12639)",
+   "ref(2,12638)",
+   "ref(2,12641)",
+   "ref(2,12642)",
+   "ref(2,12645)",
+   "ref(2,12644)",
+   "ref(2,12605)",
+   "ref(2,12608)",
+   "ref(2,12611)",
+   "ref(2,12614)",
+   "ref(2,12617)",
+   "ref(2,12609)",
+   "ref(2,12646)",
+   "ref(2,12640)",
+   "ref(2,12635)",
+   "ref(2,12643)",
+   "ref(2,12618)",
+   "ref(2,12619)",
+   "ref(2,12620)",
+   "ref(2,12621)",
+   "ref(2,12622)",
+   "ref(2,12623)",
+   "ref(2,12647)",
+   "ref(2,12648)",
+   "ref(2,12649)",
+   "ref(2,12650)",
+   "ref(2,12651)",
+   "ref(2,12652)",
+   "ref(2,12624)",
+   "ref(2,12625)",
+   "ref(2,12626)",
+   "ref(2,12653)",
+   "ref(2,12654)",
+   "ref(2,12655)",
+   "ref(2,12656)",
+   "ref(2,12657)",
+   "ref(2,12658)",
+   "ref(2,12630)",
+   "ref(2,12631)",
+   "ref(2,12632)",
+   "ref(2,12627)",
+   "ref(2,12628)",
+   "ref(2,12629)",
+   "ref(2,12600)",
+   "ref(2,12601)",
+   "ref(2,12602)"
+  ],
+  "HelmetDatas": [
+   "ref(2,12505)",
+   "ref(2,12504)",
+   "ref(2,12508)",
+   "ref(2,12509)",
+   "ref(2,12513)",
+   "ref(2,12512)",
+   "ref(2,12521)",
+   "ref(2,12520)",
+   "ref(2,12517)",
+   "ref(2,12506)",
+   "ref(2,12507)",
+   "ref(2,12511)",
+   "ref(2,12514)",
+   "ref(2,12519)",
+   "ref(2,12518)",
+   "ref(2,12515)",
+   "ref(2,12522)",
+   "ref(2,12523)",
+   "ref(2,12510)",
+   "ref(2,12516)",
+   "ref(2,12524)",
+   "ref(2,12525)",
+   "ref(2,12526)",
+   "ref(2,12527)",
+   "ref(2,12528)",
+   "ref(2,12529)",
+   "ref(2,12530)",
+   "ref(2,12531)",
+   "ref(2,12532)",
+   "ref(2,12533)",
+   "ref(2,12534)",
+   "ref(2,12535)",
+   "ref(2,12536)",
+   "ref(2,12537)",
+   "ref(2,12538)",
+   "ref(2,12539)",
+   "ref(2,12500)",
+   "ref(2,12501)",
+   "ref(2,12502)",
+   "ref(2,12503)"
+  ],
+  "BackpackDatas": [
+   "ref(2,12442)",
+   "ref(2,12443)",
+   "ref(2,12445)",
+   "ref(2,12444)",
+   "ref(2,12447)",
+   "ref(2,12446)",
+   "ref(2,12448)",
+   "ref(2,12450)",
+   "ref(2,12449)",
+   "ref(2,12451)",
+   "ref(2,12452)",
+   "ref(2,12453)",
+   "ref(2,12454)",
+   "ref(2,12455)",
+   "ref(2,12456)",
+   "ref(2,12457)",
+   "ref(2,12458)",
+   "ref(2,12459)",
+   "ref(2,12440)",
+   "ref(2,12441)"
+  ],
+  "GlovesDatas": [
+   "ref(2,12464)",
+   "ref(2,12465)",
+   "ref(2,12469)",
+   "ref(2,12468)",
+   "ref(2,12473)",
+   "ref(2,12472)",
+   "ref(2,12477)",
+   "ref(2,12476)",
+   "ref(2,12481)",
+   "ref(2,12480)",
+   "ref(2,12467)",
+   "ref(2,12471)",
+   "ref(2,12470)",
+   "ref(2,12475)",
+   "ref(2,12474)",
+   "ref(2,12478)",
+   "ref(2,12479)",
+   "ref(2,12483)",
+   "ref(2,12482)",
+   "ref(2,12466)",
+   "ref(2,12484)",
+   "ref(2,12485)",
+   "ref(2,12486)",
+   "ref(2,12487)",
+   "ref(2,12488)",
+   "ref(2,12489)",
+   "ref(2,12490)",
+   "ref(2,12491)",
+   "ref(2,12492)",
+   "ref(2,12493)",
+   "ref(2,12494)",
+   "ref(2,12495)",
+   "ref(2,12496)",
+   "ref(2,12497)",
+   "ref(2,12498)",
+   "ref(2,12499)",
+   "ref(2,12460)",
+   "ref(2,12461)",
+   "ref(2,12462)",
+   "ref(2,12463)"
+  ],
+  "NecklaceDatas": [
+   "ref(2,12544)",
+   "ref(2,12556)",
+   "ref(2,12555)",
+   "ref(2,12553)",
+   "ref(2,12552)",
+   "ref(2,12550)",
+   "ref(2,12549)",
+   "ref(2,12547)",
+   "ref(2,12546)",
+   "ref(2,12543)",
+   "ref(2,12545)",
+   "ref(2,12548)",
+   "ref(2,12554)",
+   "ref(2,12551)",
+   "ref(2,12557)",
+   "ref(2,12558)",
+   "ref(2,12559)",
+   "ref(2,12560)",
+   "ref(2,12561)",
+   "ref(2,12562)",
+   "ref(2,12563)",
+   "ref(2,12564)",
+   "ref(2,12565)",
+   "ref(2,12566)",
+   "ref(2,12567)",
+   "ref(2,12568)",
+   "ref(2,12569)",
+   "ref(2,12540)",
+   "ref(2,12541)",
+   "ref(2,12542)"
+  ],
+  "RingDatas": [
+   "ref(2,12586)",
+   "ref(2,12585)",
+   "ref(2,12583)",
+   "ref(2,12582)",
+   "ref(2,12580)",
+   "ref(2,12579)",
+   "ref(2,12577)",
+   "ref(2,12576)",
+   "ref(2,12574)",
+   "ref(2,12573)",
+   "ref(2,12575)",
+   "ref(2,12578)",
+   "ref(2,12581)",
+   "ref(2,12584)",
+   "ref(2,12587)",
+   "ref(2,12588)",
+   "ref(2,12589)",
+   "ref(2,12590)",
+   "ref(2,12591)",
+   "ref(2,12592)",
+   "ref(2,12593)",
+   "ref(2,12594)",
+   "ref(2,12595)",
+   "ref(2,12596)",
+   "ref(2,12597)",
+   "ref(2,12598)",
+   "ref(2,12599)",
+   "ref(2,12570)",
+   "ref(2,12571)",
+   "ref(2,12572)"
+  ],
+  "ItemRarityBackgroundSprites": [
+   "ref(2,1159)",
+   "ref(2,1483)",
+   "ref(2,1647)",
+   "ref(2,872)",
+   "ref(2,1763)",
+   "ref(2,991)",
+   "ref(2,1268)",
+   "ref(2,1302)",
+   "ref(2,959)",
+   "ref(2,1228)",
+   "ref(2,1749)"
+  ],
+  "DisabledButtonColor": {
+   "r": 0.6705882549285889,
+   "g": 0.6705882549285889,
+   "b": 0.6705882549285889,
+   "a": 1.0
+  },
+  "DefaultButtonColor": {
+   "r": 0.2078431397676468,
+   "g": 0.6000000238418579,
+   "b": 0.8666666746139526,
+   "a": 1.0
+  },
+  "PassiveButtonColor": {
+   "r": 0.16981130838394165,
+   "g": 0.16981130838394165,
+   "b": 0.16981130838394165,
+   "a": 1.0
+  },
+  "DangerButtonColor": {
+   "r": 1.0,
+   "g": 0.239215686917305,
+   "b": 0.2705882489681244,
+   "a": 1.0
+  },
+  "AdButtonColor": {
+   "r": 1.0,
+   "g": 0.4274509847164154,
+   "b": 0.14509804546833038,
+   "a": 1.0
+  },
+  "EnchantmentTierIcons": [
+   "ref(2,1737)",
+   "ref(2,938)",
+   "ref(2,1606)",
+   "ref(2,1667)",
+   "ref(2,969)",
+   "ref(2,1195)",
+   "ref(2,1315)",
+   "ref(2,900)",
+   "ref(2,1251)",
+   "ref(2,1561)",
+   "ref(2,1780)"
+  ],
+  "BoxSpriteAsset": "ref(2,12319)",
+  "BoneSpriteAsset": "ref(2,12317)",
+  "GemSpriteAsset": "ref(2,12324)",
+  "DragonBossKeySpriteAsset": "ref(2,12331)",
+  "HammerSpriteAsset": "ref(2,12327)",
+  "ZombieHordeKeySpriteAsset": "ref(2,12326)",
+  "CultistKeySpriteAsset": "ref(2,12316)",
+  "VialSpriteAsset": "ref(2,12336)",
+  "BattleSpriteAsset": "ref(2,12330)",
+  "TrophySpriteAsset": "ref(2,12335)",
+  "ExpSpriteAsset": "ref(2,12323)",
+  "MiningGoldenPickaxeSpriteAsset": "ref(2,12325)",
+  "MiningPickaxeSpriteAsset": "ref(2,12329)",
+  "MiningDrillSpriteAsset": "ref(2,12322)",
+  "EventTicketSpriteAsset": "ref(2,12334)",
+  "BossRushTicketSpriteAsset": "ref(2,12318)",
+  "CloakCurrencySpriteAsset": "ref(2,12321)",
+  "_experienceRequiredPerLevelString": "200,400,600,1000,1200,1400,1600,2000,3000,5000,7000,9000,12000,15000,18000,21000,25000,28000,32000,37000,41000,46000,52000,57000,64000,70000,77000,84000,92000,110000,120000,130000,140000,140000,150000,170000,180000,190000,200000,210000,230000,240000,250000,270000,280000,300000,310000,330000,350000,360000,380000,400000,420000,440000,460000,480000,500000,520000,540000,570000,590000,620000,640000,670000,690000,720000,740000,770000,800000,830000,860000,890000,920000,950000,980000,1020000,1050000,1080000,1120000,1150000,1190000,1230000,1270000,1300000,1340000,1380000,1420000,1460000,1500000,1550000,1590000,1630000,1680000,1720000,1770000,1820000,1860000,1910000,1960000,2000000",
+  "ExperienceLevelBase": 49.0,
+  "ExperienceLevelScaler": 1.0,
+  "ExperienceShardDropChance": 1.0,
+  "ExperienceShardDropCountMin": 1,
+  "ExperienceShardDropCountMax": 3,
+  "ExperienceShardDropPrefab": "ref(2,2538)",
+  "CompanionDatas": [
+   "ref(2,12408)",
+   "ref(2,12411)",
+   "ref(2,12405)",
+   "ref(2,12409)",
+   "ref(2,12406)",
+   "ref(2,12412)",
+   "ref(2,12407)",
+   "ref(2,12413)",
+   "ref(2,12410)",
+   "ref(2,12414)",
+   "ref(2,12415)",
+   "ref(2,12416)",
+   "ref(2,12417)",
+   "ref(2,12419)",
+   "ref(2,12418)",
+   "ref(2,12421)",
+   "ref(2,12420)",
+   "ref(2,12422)"
+  ],
+  "WingDatas": [
+   "ref(2,12687)",
+   "ref(2,12689)",
+   "ref(2,12690)",
+   "ref(2,12691)",
+   "ref(2,12692)",
+   "ref(2,12693)",
+   "ref(2,12694)",
+   "ref(2,12695)",
+   "ref(2,12696)",
+   "ref(2,12688)"
+  ],
+  "CapeDatas": [
+   "ref(2,12383)",
+   "ref(2,12387)",
+   "ref(2,12388)",
+   "ref(2,12389)",
+   "ref(2,12390)",
+   "ref(2,12391)",
+   "ref(2,12392)",
+   "ref(2,12393)",
+   "ref(2,12394)",
+   "ref(2,12384)",
+   "ref(2,12385)",
+   "ref(2,12386)"
+  ],
+  "CapeConfig": "ref(2,12395)",
+  "CapeCurrencyMappings": [],
+  "DamageParticlePrefab": "ref(2,5219)",
+  "PvPConfig": "ref(2,12678)",
+  "MiningConfig": "ref(2,12677)",
+  "FlashSpriteMaterial": "ref(2,60)",
+  "BoneDropPrefab": "ref(0,0)",
+  "LootBoxDropPrefab": "ref(2,2537)",
+  "TierDatas": [
+   "ref(2,12679)",
+   "ref(2,12680)",
+   "ref(2,12681)",
+   "ref(2,12682)",
+   "ref(2,12683)",
+   "ref(2,12684)",
+   "ref(2,12685)",
+   "ref(2,12686)"
+  ],
+  "BossGateCombatLevelOverrides": [
+   10,
+   20,
+   30
+  ],
+  "CharacterRowSpacing": 0.2199999988079071,
+  "CharacterColumnSpacing": 0.2199999988079071,
+  "SquadRowSpacing": 0.33000001311302185,
+  "SquadColumnSpacing": 0.2199999988079071
+ }
+]

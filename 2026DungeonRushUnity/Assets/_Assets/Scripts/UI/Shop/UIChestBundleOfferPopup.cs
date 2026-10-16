@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 // Popup chào bán gói rương bằng tiền thật (ChestBundleOfferPopup gốc, prefab Chest_Bundle_PopupOffer):
 // "{rarity} Chest Bundle", các món trong gói (gem + từng loại rương), ảnh pet/cape tiêu biểu lắc lư, nút mua.
-// Mở bằng UIChestBundleOfferPopup.Show(ShopService.GetFeaturedBundle()) — nút chào ở lobby (GameplayUI gốc) chưa có.
+// Mở từ 2 nút chào ở lobby (UIMainLobby.btChestBundleLegendary / btChestBundleMythic — GameplayUI.kiv/kiw gốc).
 public class UIChestBundleOfferPopup : BaseUI
 {
     public Image ChestIcon;

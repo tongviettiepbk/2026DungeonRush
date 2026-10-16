@@ -28,6 +28,12 @@ public class UIMainLobby : BaseUI
     public TMP_Text txtGem;
     public BossButtonUI bossButton;   // TopBarUI/BossButton (GameplayUI.BossGateButtonUI gốc)
 
+    [Header("Nút chào hàng (OffersVerticalLayout — GameplayUI.khz gốc)")]
+    public GameObject objOffersLayout;
+    public Button btChestBundleLegendary;   // ChestBundleOfferButton gốc
+    public Button btChestBundleMythic;      // MythicChestBundleOfferButton gốc
+    public Button btMiningOffer;            // MiningOfferButton gốc
+
     [Space(20)]
     [Header("MID")]
     public Button btAutoPet;
@@ -107,6 +113,13 @@ public class UIMainLobby : BaseUI
         EventDispatcher.Instance.RegisterListener(EventID.CapeChanged, OnCapeChanged);
         EventDispatcher.Instance.RegisterListener(EventID.AvatarChanged, OnAvatarChanged);
         TutorialService.StepCompleted += OnTutorialStepCompleted;
+        PurchaseController.PurchaseSuccessful += OnPurchaseSuccessful;
+        if (btChestBundleLegendary != null)
+            btChestBundleLegendary.onClick.AddListener(() => UIChestBundleOfferPopup.Show(ShopService.GetLegendaryOfferBundle()));
+        if (btChestBundleMythic != null)
+            btChestBundleMythic.onClick.AddListener(() => UIChestBundleOfferPopup.Show(ShopService.GetMythicOfferBundle()));
+        if (btMiningOffer != null)
+            btMiningOffer.onClick.AddListener(OnClickMiningOffer);
         if (btProfile != null)
             btProfile.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.ProfilePopup));
         LoadPowerTxt();
@@ -117,6 +130,7 @@ public class UIMainLobby : BaseUI
 
         UpdateLootTicketText();
         InitTabMenu();
+        RefreshOfferButtons();
 
         // Gốc GameplayUI → BossRushController.ekp lúc vào game: gửi lại snapshot đồ Boss Rush (1 lần/ngày UTC).
         BossRushController.Instance.OnGameStarted();
@@ -569,7 +583,47 @@ public class UIMainLobby : BaseUI
         RefreshTabLocks();
         RefreshTabTutorials();
         RefreshBossButton();
+        RefreshOfferButtons();
     }
+
+    #region Nút chào hàng
+
+    private void OnPurchaseSuccessful(string productId)
+    {
+        RefreshOfferButtons();
+    }
+
+    // khz gốc: gói rương Legendary (kiz) / Mythic (kja), gói Mining (kiu: đã mở Wing và còn gói chưa mua).
+    // Nút Weapon Offer (OfferButton) chưa dựng → để tắt.
+    private void RefreshOfferButtons()
+    {
+        if (objOffersLayout != null && objOffersLayout.activeSelf == false)
+            objOffersLayout.SetActive(true);
+        if (btChestBundleLegendary != null)
+            btChestBundleLegendary.gameObject.SetActive(ShopService.GetLegendaryOfferBundle() != null);
+        if (btChestBundleMythic != null)
+            btChestBundleMythic.gameObject.SetActive(ShopService.GetMythicOfferBundle() != null);
+        if (btMiningOffer != null)
+            btMiningOffer.gameObject.SetActive(IsMiningOfferAvailable());
+    }
+
+    private static bool IsMiningOfferAvailable()
+    {
+        return GameData.userData.player.playerLevel >= WingService.UNLOCK_PLAYER_LEVEL && MiningService.GetNextOffer() != null;
+    }
+
+    // kix gốc.
+    private void OnClickMiningOffer()
+    {
+        if (IsMiningOfferAvailable() == false)
+            return;
+
+        UIMiningOfferPopup popup = UIManager.Instance.LoadUI(UIKey.MiningOfferPopup) as UIMiningOfferPopup;
+        if (popup != null)
+            popup.Setup();
+    }
+
+    #endregion
 
     // GameplayUI.kjm gốc (mỗi lần đổi GameState): fc.ejy → Show, ngược lại Hide.
     private void RefreshBossButton()
@@ -755,6 +809,7 @@ public class UIMainLobby : BaseUI
     private void OnDestroy()
     {
         TutorialService.StepCompleted -= OnTutorialStepCompleted;
+        PurchaseController.PurchaseSuccessful -= OnPurchaseSuccessful;
         if (EventDispatcher.IsNull == false)
         {
             EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnPowerSourceChanged);
