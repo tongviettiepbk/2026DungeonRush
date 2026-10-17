@@ -120,7 +120,7 @@ public class UICapeSalvagePopup : BaseUI
 
         if (level >= CapeService.MaxLevel)
         {
-            txtXP.text = "MAX";
+            txtXP.text = Loc.L("Common.Level.Max");
             rectXPFill.localScale = Vector3.one;
         }
         else

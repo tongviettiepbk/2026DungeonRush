@@ -80,7 +80,7 @@ public class ElementEnchantmentEquipUI : MonoBehaviour
         if (tmpLvIndicatorBot != null)
         {
             tmpLvIndicatorBot.gameObject.SetActive(hasRelic);
-            tmpLvIndicatorBot.text = "Lvl " + Tier;
+            tmpLvIndicatorBot.text = Loc.L("Common.Level.Abbrev", Tier);
         }
     }
 

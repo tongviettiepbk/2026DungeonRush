@@ -25,8 +25,8 @@ public class ClanRequestCard : MonoBehaviour
         if (AcceptButton != null) AcceptButton.onClick.AddListener(() => onAccept?.Invoke(request));
         if (DenyButton != null) DenyButton.onClick.AddListener(() => onDeny?.Invoke(request));
         if (CardButton != null) CardButton.onClick.AddListener(() => onClick?.Invoke(request));
-        ClanUIUtil.SetText(AcceptButtonText, "Accept");
-        ClanUIUtil.SetText(DenyButtonText, "Deny");
+        ClanUIUtil.SetText(AcceptButtonText, Loc.L("Clan.Requests.Accept"));
+        ClanUIUtil.SetText(DenyButtonText, Loc.L("Clan.Requests.Deny"));
     }
 
     // fvr gốc.

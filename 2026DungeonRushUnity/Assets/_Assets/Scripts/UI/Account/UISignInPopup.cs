@@ -64,12 +64,12 @@ public class UISignInPopup : BaseUI
         string password = inputPassword.text;
         if (IsValidEmail(email) == false)
         {
-            UIManager.Instance.ShowToastMessage("Please enter a valid email", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.Auth.Error.InvalidEmail"), isLocalize: false);
             return;
         }
         if (string.IsNullOrEmpty(password))
         {
-            UIManager.Instance.ShowToastMessage("Please enter your password", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.SignIn.Error.PasswordRequired"), isLocalize: false);
             return;
         }
 
@@ -79,10 +79,10 @@ public class UISignInPopup : BaseUI
             SetBusy(false);
             if (ok == false)
             {
-                UIManager.Instance.ShowToastMessage(string.IsNullOrEmpty(error) ? "Sign in failed" : error, isLocalize: false);
+                UIManager.Instance.ShowToastMessage(string.IsNullOrEmpty(error) ? Loc.L("Popup.SignIn.Error.Failed") : error, isLocalize: false);
                 return;
             }
-            UIManager.Instance.ShowToastMessage("Signed in", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.SignIn.Success"), isLocalize: false);
             Close();
         });
     }
@@ -98,7 +98,7 @@ public class UISignInPopup : BaseUI
         string email = inputEmail.text.Trim();
         if (IsValidEmail(email) == false)
         {
-            UIManager.Instance.ShowToastMessage("Enter your email first", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.SignIn.Error.EmailFirst"), isLocalize: false);
             return;
         }
 
@@ -106,7 +106,7 @@ public class UISignInPopup : BaseUI
         AccountController.Instance.SendPasswordReset(email, (ok, error) =>
         {
             SetBusy(false);
-            string message = ok ? "Reset email sent" : (string.IsNullOrEmpty(error) ? "Failed to send reset email" : error);
+            string message = ok ? Loc.L("Popup.SignIn.ResetSent") : (string.IsNullOrEmpty(error) ? Loc.L("Popup.SignIn.Error.ResetFailed") : error);
             UIManager.Instance.ShowToastMessage(message, isLocalize: false);
         });
     }

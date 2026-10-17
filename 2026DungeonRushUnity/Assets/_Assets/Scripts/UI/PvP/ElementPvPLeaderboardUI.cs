@@ -16,8 +16,8 @@ public class ElementPvPLeaderboardUI : MonoBehaviour
     {
         // jpu gốc: "#{rank}", dòng của mình thêm " (You)" (Common.YouSuffix).
         if (txtRank != null) txtRank.text = "#" + entry.Rank;
-        string name = string.IsNullOrEmpty(entry.PlayerName) ? "Unknown" : entry.PlayerName;
-        if (txtName != null) txtName.text = entry.IsCurrentPlayer ? name + " (You)" : name;
+        string name = string.IsNullOrEmpty(entry.PlayerName) ? Loc.L("Common.Unknown") : entry.PlayerName;
+        if (txtName != null) txtName.text = entry.IsCurrentPlayer ? name + (" " + Loc.L("Common.YouSuffix")) : name;
         if (txtTrophy != null) txtTrophy.text = "<sprite=0>" + entry.Trophy;
         if (imgBackground != null) imgBackground.color = entry.IsCurrentPlayer ? highlightColor : defaultColor;
     }

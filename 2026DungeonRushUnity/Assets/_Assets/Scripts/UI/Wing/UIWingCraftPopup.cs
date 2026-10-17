@@ -46,7 +46,7 @@ public class UIWingCraftPopup : BaseUI
         bool isEnough = ore >= wing.craftOreCost;
         txtResource.text = UITabWing.GetOreText(wing.craftOreType, ore, wing.craftOreCost);
         txtResource.color = isEnough ? Color.white : Color.red;
-        txtCraft.text = WingService.GetOwned(wing) != null ? "Reroll" : "Craft";
+        txtCraft.text = WingService.GetOwned(wing) != null ? Loc.L("UI.Wings.Reroll") : Loc.L("UI.Wings.Craft");
         imgCraft.color = isEnough ? UITabWing.DEFAULT_BUTTON_COLOR : UITabWing.DISABLED_BUTTON_COLOR;
     }
 

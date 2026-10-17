@@ -31,8 +31,8 @@ public class UIMiningRarityPopup : BaseUI
         MiningConfig config = MiningService.Config;
         int level = GameData.userData.mining.mineLevel;
         int maxLevel = config.GetMaxMineLevel();
-        txtCurrentLevel.text = "Lvl " + level;
-        txtNextLevel.text = level < maxLevel ? "Lvl " + (level + 1) : "-";
+        txtCurrentLevel.text = Loc.L("Common.Level.Abbrev", level);
+        txtNextLevel.text = level < maxLevel ? Loc.L("Common.Level.Abbrev", level + 1) : "-";
 
         FillRates(listCurrentRate, config.GetRarityLevel(level));
         if (level < maxLevel)

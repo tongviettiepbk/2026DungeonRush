@@ -55,7 +55,7 @@ public class UIMiningOfferPopup : BaseUI
             return;
         }
 
-        txtTitle.text = tier.TitleKey == "UI.Mining.OfferTitleLarge" ? "Large Mining Offer" : "Mining Offer";
+        txtTitle.text = tier.TitleKey == "UI.Mining.OfferTitleLarge" ? Loc.L("UI.Mining.OfferTitleLarge") : Loc.L("UI.Mining.OfferTitle");
         txtDrill.text = "x" + tier.Drill;
         txtGoldenPickaxe.text = "x" + tier.GoldenPickaxe;
         txtPickaxe.text = "x" + tier.Pickaxe;

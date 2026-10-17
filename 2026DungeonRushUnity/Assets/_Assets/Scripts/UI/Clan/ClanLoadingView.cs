@@ -23,7 +23,7 @@ public class ClanLoadingView : MonoBehaviour
     private void Awake()
     {
         if (RetryButton != null) RetryButton.onClick.AddListener(OnRetryClicked);
-        if (RetryButtonText != null) RetryButtonText.text = "Retry";
+        if (RetryButtonText != null) RetryButtonText.text = Loc.L("Clan.Common.Retry");
     }
 
     private void OnDestroy()

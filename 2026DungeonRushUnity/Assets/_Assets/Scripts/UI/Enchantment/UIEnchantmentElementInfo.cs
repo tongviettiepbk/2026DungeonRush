@@ -74,7 +74,7 @@ public class UIEnchantmentElementInfo : BaseUI
 
         if (txtEquip != null)
         {
-            txtEquip.text = isEquipped ? "Unequip" : "Equip";
+            txtEquip.text = isEquipped ? Loc.L("Popup.Enchantment.Unequip") : Loc.L("Popup.Enchantment.Equip");
         }
         if (btMerge != null)
         {

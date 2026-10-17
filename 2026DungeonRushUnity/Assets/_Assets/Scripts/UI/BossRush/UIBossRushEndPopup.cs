@@ -29,9 +29,9 @@ public class UIBossRushEndPopup : BaseUI
     public void Show(long teamDamage, long ownDamage, bool reported, Action onClose)
     {
         this.onClose = onClose;
-        if (txtTitle != null) txtTitle.text = "Fight Complete!";
+        if (txtTitle != null) txtTitle.text = Loc.L("Popup.BossRushEnd.Title");
         txtInfo.text = "Team Damage: " + teamDamage.ToLetter() + "\nDamage Dealt: " + ownDamage.ToLetter();
-        if (txtContinue != null) txtContinue.text = "Continue";
+        if (txtContinue != null) txtContinue.text = Loc.L("Popup.BossRushEnd.Continue");
         SetError(!reported);
         if (objLoading != null) objLoading.SetActive(false);
     }
@@ -41,7 +41,7 @@ public class UIBossRushEndPopup : BaseUI
         if (txtError != null)
         {
             txtError.gameObject.SetActive(isOn);
-            txtError.text = "Failed to get battle results.";
+            txtError.text = Loc.L("Popup.BossRushEnd.ResultsFailed");
         }
         if (btRetry != null) btRetry.gameObject.SetActive(isOn && GameData.userData.bossRush.pendingReport != null);
     }

@@ -39,11 +39,11 @@ public class ClanMembersTab : MonoBehaviour
 
     private void Awake()
     {
-        ClanUIUtil.SetText(TypeLabel, "Type");
-        ClanUIUtil.SetText(MembersLabel, "Members");
-        ClanUIUtil.SetText(PowerLabel, "Power");
-        ClanUIUtil.SetText(TierLabel, "Tier");
-        ClanUIUtil.SetText(NoAnnouncementText, "No announcement yet");
+        ClanUIUtil.SetText(TypeLabel, Loc.L("Clan.Common.Type"));
+        ClanUIUtil.SetText(MembersLabel, Loc.L("Clan.Common.Members"));
+        ClanUIUtil.SetText(PowerLabel, Loc.L("Clan.Common.Power"));
+        ClanUIUtil.SetText(TierLabel, Loc.L("Clan.Common.Tier"));
+        ClanUIUtil.SetText(NoAnnouncementText, Loc.L("Clan.Members.NoAnnouncement"));
         if (SettingsButton != null) SettingsButton.onClick.AddListener(OnSettingsClicked);
         if (RequestsButton != null) RequestsButton.onClick.AddListener(OnRequestsClicked);
         if (EditAnnouncementButton != null) EditAnnouncementButton.onClick.AddListener(OnAnnouncementClicked);
@@ -76,7 +76,7 @@ public class ClanMembersTab : MonoBehaviour
             if (this == null) return;
             if (!ok)
             {
-                if (LoadingView != null) LoadingView.ShowError(error ?? "Failed to load clan data", Refresh);
+                if (LoadingView != null) LoadingView.ShowError(error ?? Loc.L("Errors.Clan.LoadFailed"), Refresh);
                 return;
             }
             if (LoadingView != null) LoadingView.Hide();

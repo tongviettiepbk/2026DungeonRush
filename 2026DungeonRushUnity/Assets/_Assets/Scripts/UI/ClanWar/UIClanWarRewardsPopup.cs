@@ -52,16 +52,16 @@ public class UIClanWarRewardsPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TitleText, "War Rewards");
-        ClanUIUtil.SetText(WinCardLabelText, "Win");
-        ClanUIUtil.SetText(LoseCardLabelText, "Lose");
-        ClanUIUtil.SetText(CollectClanTitleText, "Clan Rewards");
-        ClanUIUtil.SetText(CollectPersonalTitleText, "Personal Rewards");
-        ClanUIUtil.SetText(CollectClanCardText, "Collect Clan Reward");
-        ClanUIUtil.SetText(CollectPersonalCardText, "Collect Remaining Personal Rewards");
-        ClanUIUtil.SetText(CollectClanClaimedText, "Claimed");
-        ClanUIUtil.SetText(CollectPersonalClaimedText, "Claimed");
-        ClanUIUtil.SetText(DelayInfoText, "Updates every minute.");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.War.Rewards.Title"));
+        ClanUIUtil.SetText(WinCardLabelText, Loc.L("Clan.War.Rewards.WinCard"));
+        ClanUIUtil.SetText(LoseCardLabelText, Loc.L("Clan.War.Rewards.LoseCard"));
+        ClanUIUtil.SetText(CollectClanTitleText, Loc.L("Clan.War.RewardCard.ClanTitle"));
+        ClanUIUtil.SetText(CollectPersonalTitleText, Loc.L("Clan.War.RewardCard.PersonalTitle"));
+        ClanUIUtil.SetText(CollectClanCardText, Loc.L("Clan.War.Rewards.CollectClan"));
+        ClanUIUtil.SetText(CollectPersonalCardText, Loc.L("Clan.War.Rewards.CollectPersonal"));
+        ClanUIUtil.SetText(CollectClanClaimedText, Loc.L("Clan.War.RewardCard.Claimed"));
+        ClanUIUtil.SetText(CollectPersonalClaimedText, Loc.L("Clan.War.RewardCard.Claimed"));
+        ClanUIUtil.SetText(DelayInfoText, Loc.L("Clan.War.Leaderboard.DelayInfo"));
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
         if (CollectClanButton != null) CollectClanButton.onClick.AddListener(OnCollectClan);
         if (CollectPersonalButton != null) CollectPersonalButton.onClick.AddListener(OnCollectPersonal);
@@ -83,7 +83,7 @@ public class UIClanWarRewardsPopup : BaseUI
     private void Draw(ClanWarWireDTO war, ClanWarConfigDTO config)
     {
         string tier = war.myClan != null ? war.myClan.rewardTier : "D";
-        ClanUIUtil.SetText(TierHeaderText, "Tier " + ClanRoleExt.TierText(tier) + " Rewards");
+        ClanUIUtil.SetText(TierHeaderText, (Loc.L("Clan.Common.Tier") + " ") + ClanRoleExt.TierText(tier) + (" " + Loc.L("Clan.War.Button.Rewards")));
         if (WinRewardsView != null) WinRewardsView.SetRewards(ClanWarController.ClanReward(config, tier, "win"));
         if (LoseRewardsView != null) LoseRewardsView.SetRewards(ClanWarController.ClanReward(config, tier, "lose"));
         int score = war.milestone != null ? war.milestone.weeklyContribution : war.myWeeklyPoints;

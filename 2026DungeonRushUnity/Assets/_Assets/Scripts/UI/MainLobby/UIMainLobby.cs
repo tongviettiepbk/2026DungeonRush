@@ -82,8 +82,9 @@ public class UIMainLobby : BaseUI
     public GameObject objPvpUI;
     public TMP_Text txtTimePvp;
 
-    private string petAuto = "Auto On";
-    private string petOff = "Auto Off";
+    // CompanionTabPage gốc: UI.Companion.AutoOn / AutoOff.
+    private const string PET_AUTO_KEY = "UI.Companion.AutoOn";
+    private const string PET_OFF_KEY = "UI.Companion.AutoOff";
 
     // Thưởng offline: popup đang chờ nhận thì ngừng đẩy mốc thời gian (GameplayUI gốc).
     private bool isOfflineEarningPending;
@@ -262,7 +263,7 @@ public class UIMainLobby : BaseUI
         // TabBarUI.kvc gốc: tab khoá → báo "Unlock at Level N" (Errors.UnlockAtLevel).
         if (index < listElementMenu.Count && listElementMenu[index] != null && listElementMenu[index].isLocked)
         {
-            UIManager.Instance.ShowToastMessage("Unlock at Level " + GetTabUnlockLevel(type), isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.UnlockAtLevel", GetTabUnlockLevel(type)), isLocalize: false);
             return;
         }
 
@@ -340,7 +341,7 @@ public class UIMainLobby : BaseUI
 
         if (WingService.IsUnlocked() == false)
         {
-            UIManager.Instance.ShowToastMessage("Mở Wing ở level " + WingService.UNLOCK_PLAYER_LEVEL, isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.UnlockAtLevel", WingService.UNLOCK_PLAYER_LEVEL), isLocalize: false);
             return;
         }
 
@@ -355,7 +356,7 @@ public class UIMainLobby : BaseUI
     {
         if (CapeService.IsUnlocked() == false)
         {
-            UIManager.Instance.ShowToastMessage("Mở Cape ở level " + CapeService.UNLOCK_PLAYER_LEVEL, isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.UnlockAtLevel", CapeService.UNLOCK_PLAYER_LEVEL), isLocalize: false);
             return;
         }
 
@@ -487,7 +488,7 @@ public class UIMainLobby : BaseUI
         if (!element.IsUnlocked)
         {
             UIManager.Instance.ShowToastMessage(
-                "Mở pet ở level " + CompanionSummonConfig.COMPANION_UNLOCK_PLAYER_LEVEL, isLocalize: false);
+                Loc.L("Errors.UnlockAtLevel", CompanionSummonConfig.COMPANION_UNLOCK_PLAYER_LEVEL), isLocalize: false);
             return;
         }
 
@@ -512,11 +513,11 @@ public class UIMainLobby : BaseUI
         UpdateAutoPetVisual();
     }
 
-    // Chữ trên nút auto: petAuto khi pet tự kích hoạt, petOff khi người chơi bấm tay.
+    // Chữ trên nút auto: AUTO ON khi pet tự kích hoạt, AUTO OFF khi người chơi bấm tay.
     private void UpdateAutoPetVisual()
     {
         if (txtAutoPet != null)
-            txtAutoPet.text = GameData.userData.companions.isAutoActive ? petAuto : petOff;
+            txtAutoPet.text = GameData.userData.companions.isAutoActive ? Loc.L(PET_AUTO_KEY) : Loc.L(PET_OFF_KEY);
     }
 
     #endregion
@@ -540,23 +541,7 @@ public class UIMainLobby : BaseUI
 
     public static string SubStatName(SubStatType type)
     {
-        switch (type)
-        {
-            case SubStatType.AttackSpeed: return "Tốc đánh";
-            case SubStatType.BlockChance: return "Tỉ lệ đỡ";
-            case SubStatType.CriticalChance: return "Tỉ lệ chí mạng";
-            case SubStatType.CriticalDamage: return "Sát thương chí mạng";
-            case SubStatType.Damage: return "Sát thương";
-            case SubStatType.DoubleHitChance: return "Tỉ lệ đánh đôi";
-            case SubStatType.Health: return "Máu";
-            case SubStatType.HealthRegen: return "Hồi máu";
-            case SubStatType.Lifesteal: return "Hút máu";
-            case SubStatType.MeleeDamage: return "Sát thương cận chiến";
-            case SubStatType.RangedDamage: return "Sát thương bắn xa";
-            case SubStatType.CompanionCooldown: return "Hồi chiêu pet";
-            case SubStatType.CompanionDamage: return "Sát thương pet";
-            default: return type.ToString();
-        }
+        return ItemTextUtil.SubStatName(type);
     }
 
     #endregion
@@ -858,7 +843,7 @@ public class UIMainLobby : BaseUI
     {
         DungeonType type = dungeon.dungeonType;
         DungeonConfig config = GameData.staticData.dungeons.GetData(type);
-        string name = config != null ? config.displayName : type.ToString();
+        string name = config != null ? config.LocalizedName : type.ToString();
         Color color = config != null ? config.keyColor : Color.white;
 
         int index = (int)type;
@@ -869,7 +854,7 @@ public class UIMainLobby : BaseUI
 
         return (spriteAsset != null ? "<sprite=0>" : "")
             + "<color=#" + ColorUtility.ToHtmlStringRGB(color) + ">" + name + "</color>\n"
-            + "Difficulty " + StaticDungeonData.GetDifficultyText(dungeon.DungeonLevel);
+            + StaticDungeonData.GetDifficultyLabel(dungeon.DungeonLevel);
     }
 
     public void SetActiveDungeonUI(bool isOn)

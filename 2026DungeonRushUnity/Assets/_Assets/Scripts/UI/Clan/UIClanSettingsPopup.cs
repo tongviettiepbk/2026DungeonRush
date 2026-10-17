@@ -29,18 +29,18 @@ public class UIClanSettingsPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TitleText, "Clan Settings");
-        ClanUIUtil.SetText(NameLabel, "Clan Name");
-        ClanUIUtil.SetText(DescriptionLabel, "Description");
-        ClanUIUtil.SetText(BannerLabel, "Banner");
-        ClanUIUtil.SetText(BrowseButtonText, "Browse");
-        ClanUIUtil.SetText(PublicLabel, "Public");
-        ClanUIUtil.SetText(SaveButtonText, "Save");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.Settings.Title"));
+        ClanUIUtil.SetText(NameLabel, Loc.L("Clan.Common.ClanName"));
+        ClanUIUtil.SetText(DescriptionLabel, Loc.L("Clan.Settings.Description"));
+        ClanUIUtil.SetText(BannerLabel, Loc.L("Clan.Common.Banner"));
+        ClanUIUtil.SetText(BrowseButtonText, Loc.L("Clan.Common.Browse"));
+        ClanUIUtil.SetText(PublicLabel, Loc.L("Clan.Common.Public"));
+        ClanUIUtil.SetText(SaveButtonText, Loc.L("Clan.Common.Save"));
         if (DescriptionInput != null)
         {
             DescriptionInput.characterLimit = StaticClanData.DESCRIPTION_MAX;
             DescriptionInput.lineType = TMP_InputField.LineType.MultiLineNewline;
-            if (DescriptionInput.placeholder is TMP_Text ph) ph.text = "Description...";
+            if (DescriptionInput.placeholder is TMP_Text ph) ph.text = Loc.L("Clan.Description.Placeholder");
         }
         if (SaveButton != null) SaveButton.onClick.AddListener(OnSaveClicked);
         if (CloseButton != null) CloseButton.onClick.AddListener(OnCloseClicked);
@@ -100,7 +100,7 @@ public class UIClanSettingsPopup : BaseUI
             SetBusy(false);
             if (!ok)
             {
-                ClanUIUtil.Toast(error ?? "Failed to save changes");
+                ClanUIUtil.Toast(error ?? Loc.L("Errors.Clan.SaveFailed"));
                 return;
             }
             Close();

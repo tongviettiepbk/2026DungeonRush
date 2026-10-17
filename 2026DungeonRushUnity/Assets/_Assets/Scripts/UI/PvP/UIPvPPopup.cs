@@ -46,7 +46,7 @@ public class UIPvPPopup : BaseUI
     {
         base.OnEnable();
         PvPController.TicketsUpdated += OnTicketsUpdated;
-        if (txtTitle != null) txtTitle.text = "PvP Arena";
+        if (txtTitle != null) txtTitle.text = Loc.L("Popup.PvP.Title");
         isLoaded = false;
         SetLoading(true);
         Open();
@@ -80,7 +80,7 @@ public class UIPvPPopup : BaseUI
             if (this == null || !gameObject.activeInHierarchy) return;
             if (!ok)
             {
-                UIManager.Instance.ShowToastMessage(message ?? "Failed to load PvP.", isLocalize: false);
+                UIManager.Instance.ShowToastMessage(message ?? Loc.L("Errors.PvP.LoadFailed"), isLocalize: false);
                 Close();
                 return;
             }
@@ -152,7 +152,7 @@ public class UIPvPPopup : BaseUI
 
         btBattle.gameObject.SetActive(true);
         btBattle.interactable = total > 0;
-        if (txtBattle != null) txtBattle.text = "<sprite=0>" + total + "/" + daily + "\nBattle";
+        if (txtBattle != null) txtBattle.text = "<sprite=0>" + total + "/" + daily + ("\n" + Loc.L("Common.Battle"));
 
         if (btAdTicket != null)
         {
@@ -179,7 +179,7 @@ public class UIPvPPopup : BaseUI
     {
         if (GameData.userData.pvp.TotalTickets <= 0)
         {
-            UIManager.Instance.ShowToastMessage("No PvP tickets remaining.", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.PvP.NoTicketsRemaining"), isLocalize: false);
             return;
         }
         UIManager.Instance.LoadUI(UIKey.PvPFindOpponentPopup);
@@ -209,7 +209,7 @@ public class UIPvPPopup : BaseUI
 
             Controller.GrantAdTicket((ok, message) =>
             {
-                UIManager.Instance.ShowToastMessage(ok ? "PvP ticket added." : message, isLocalize: false);
+                UIManager.Instance.ShowToastMessage(ok ? Loc.L("Popup.PvP.TicketAdded") : message, isLocalize: false);
                 if (this != null && gameObject.activeInHierarchy) DrawButtons();
             });
         });

@@ -45,12 +45,12 @@ public class UINicknamePopup : BaseUI
         string name = inputName.text.Trim();
         if (name.Length < NAME_MIN || name.Length > NAME_MAX)
         {
-            UIManager.Instance.ShowToastMessage("Name must be 3-15 characters", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.Nickname.Error.Length"), isLocalize: false);
             return;
         }
         if (Regex.IsMatch(name, NAME_PATTERN) == false)
         {
-            UIManager.Instance.ShowToastMessage("Invalid Character!", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.Nickname.Error.InvalidChars"), isLocalize: false);
             return;
         }
 

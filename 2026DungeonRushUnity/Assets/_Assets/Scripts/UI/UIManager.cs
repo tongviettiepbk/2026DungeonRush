@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -251,17 +251,22 @@ public class UIManager : Singleton<UIManager>
 
     #region Message
     public void ShowNotice(string content, bool isLocalizeContent = true, PopupNoticeType popupType = PopupNoticeType.YesNo, bool isBackable = true,
-        TextAlignmentOptions textAnchor = TextAlignmentOptions.Center, string title = "Notice", string labelYes = "Confirm", string labelNo = "Cancel", bool titleToUpper = true,
+        TextAlignmentOptions textAnchor = TextAlignmentOptions.Center, string title = "Notice", string labelYes = "Common.Confirm", string labelNo = "Common.Cancel", bool titleToUpper = true,
         UnityAction yesCallback = null, UnityAction noCallback = null, UnityAction closeCallback = null)
     {
+        // Chuỗi là key bảng gốc thì dịch; chữ thường (đã dịch sẵn / tên riêng) giữ nguyên.
         if (isLocalizeContent)
         {
-            content = LocalizeManager.Instance.GetLocalizeText(content);
+            content = Translate(content);
         }
 
-        title = LocalizeManager.Instance.GetLocalizeText(title, isToUpper: titleToUpper);
-        labelYes = LocalizeManager.Instance.GetLocalizeText(labelYes);
-        labelNo = LocalizeManager.Instance.GetLocalizeText(labelNo);
+        title = Translate(title);
+        if (titleToUpper && title != null)
+        {
+            title = title.ToUpper();
+        }
+        labelYes = Translate(labelYes);
+        labelNo = Translate(labelNo);
 
         notice.Show(content, popupType, isBackable, textAnchor, title, labelYes, labelNo, yesCallback, noCallback, closeCallback);
     }
@@ -270,10 +275,15 @@ public class UIManager : Singleton<UIManager>
     {
         if (isLocalize)
         {
-            content = LocalizeManager.Instance.GetLocalizeText(content);
+            content = Translate(content);
         }
 
         toast.Show(content);
+    }
+
+    private static string Translate(string text)
+    {
+        return LocalizeManager.Instance.HasKey(text) ? LocalizeManager.Instance.GetLocalizeText(text) : text;
     }
 
     public void ShowToastMessageError(string content, bool isLocalize = true)

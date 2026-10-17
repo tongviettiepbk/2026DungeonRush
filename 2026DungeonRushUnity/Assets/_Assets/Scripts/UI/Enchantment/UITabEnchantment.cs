@@ -147,11 +147,11 @@ public class UITabEnchantment : MonoBehaviour
     private void RefreshSummon()
     {
         int total = GameData.userData.enchantments.totalSummons;
-        txtLvl.text = "Lvl " + EnchantmentConfig.GetLevel(total);
+        txtLvl.text = Loc.L("Common.Level.Abbrev", EnchantmentConfig.GetLevel(total));
         EnchantmentConfig.GetProgress(total, out int current, out int required, out bool isMax);
         if (isMax)
         {
-            txtFill.text = "MAX";
+            txtFill.text = Loc.L("Common.Level.Max");
             imgFill.fillAmount = 1f;
         }
         else

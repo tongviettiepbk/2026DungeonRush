@@ -55,11 +55,11 @@ public class UIChestBundleOfferPopup : BaseUI
         if (ChestIcon != null) ChestIcon.sprite = bundle.Icon;
         if (top != null)
         {
-            ShopUIUtil.SetText(TitleText, string.Format("{0} Chest Bundle", top.Rarity));
+            ShopUIUtil.SetText(TitleText, string.Format(Loc.L("UI.Chest.BundleOfferTitle"), top.Rarity));
             if (RibbonImage != null) RibbonImage.color = UITabWing.GetRarityColor(top.Rarity);
         }
         ShopUIUtil.SetActive(CloakUnlockText, !CapeService.IsUnlocked());
-        ShopUIUtil.SetText(CloakUnlockText, "Unlocks the Cloak feature!");
+        ShopUIUtil.SetText(CloakUnlockText, Loc.L("UI.Chest.UnlocksCloak"));
         ShopUIUtil.SetText(BuyButtonPriceText, PurchaseController.Instance.GetPriceText(bundle.StoreId) ?? "N/A");
         if (LoadingImage != null) LoadingImage.gameObject.SetActive(false);
 

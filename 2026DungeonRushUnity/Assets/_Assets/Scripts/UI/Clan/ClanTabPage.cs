@@ -30,7 +30,7 @@ public class ClanTabPage : MonoBehaviour
     {
         if (TabSelector != null)
         {
-            TabSelector.Setup(new[] { "Members", "Battle" });
+            TabSelector.Setup(new[] { Loc.L("Clan.Tab.Members"), Loc.L("Clan.Tab.Battle") });
             TabSelector.OnTabSelected += OnTabSelected;
         }
         if (CloseButton != null) CloseButton.onClick.AddListener(() => GameController.Instance.uiLobby.CloseAllTabs());
@@ -74,7 +74,7 @@ public class ClanTabPage : MonoBehaviour
             if (this == null) return;
             if (!ok)
             {
-                if (LoadingView != null) LoadingView.ShowError(error ?? "Failed to load clan data", Load);
+                if (LoadingView != null) LoadingView.ShowError(error ?? Loc.L("Errors.Clan.LoadFailed"), Load);
                 return;
             }
             isInitialized = true;

@@ -100,14 +100,14 @@ public class UILevelPopup : BaseUI
     private void Refresh()
     {
         int level = GameData.userData.player.playerLevel;
-        LevelText.text = "Level " + level;
+        LevelText.text = Loc.L("Popup.Level.LevelUp", level);
 
         if (PlayerExpService.IsMaxLevel)
         {
             SetRarityTexts(level, level);
             CompleteButton.gameObject.SetActive(true);
             CompleteButton.interactable = false;
-            CompleteButtonText.text = "MAXED";
+            CompleteButtonText.text = Loc.L("Popup.Level.Maxed");
             CompleteButtonImage.color = DisabledButtonColor;
             ExperienceSlider.gameObject.SetActive(false);
             return;
@@ -122,7 +122,7 @@ public class UILevelPopup : BaseUI
         isCloseOnClickDark = !isReady;
         if (isReady)
         {
-            CompleteButtonText.text = "Complete!";
+            CompleteButtonText.text = Loc.L("Popup.Level.Complete");
             CompleteButtonImage.color = DefaultButtonColor;
             CompleteButton.interactable = !isAnimating;
             return;
@@ -192,7 +192,7 @@ public class UILevelPopup : BaseUI
 
         int newLevel = GameData.userData.player.playerLevel;
         int nextLevel = newLevel + (PlayerExpService.IsMaxLevel ? 0 : 1);
-        LevelText.text = "Level " + newLevel;
+        LevelText.text = Loc.L("Popup.Level.LevelUp", newLevel);
         ExperienceSlider.value = 0f;
         List<float> currentRates = GetProbabilities(newLevel);
         List<float> nextRates = GetProbabilities(nextLevel);

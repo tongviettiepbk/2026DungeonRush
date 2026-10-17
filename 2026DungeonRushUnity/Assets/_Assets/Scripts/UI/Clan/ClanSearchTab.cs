@@ -29,15 +29,15 @@ public class ClanSearchTab : MonoBehaviour
 
     private void Awake()
     {
-        ClanUIUtil.SetText(TitleText, "Join a Clan");
-        ClanUIUtil.SetText(AdvancedSearchButtonText, "Advanced Search");
-        ClanUIUtil.SetText(CreateClanButtonText, "Create Clan");
-        ClanUIUtil.SetText(EmptyStateText, "No clans found");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.Search.Title"));
+        ClanUIUtil.SetText(AdvancedSearchButtonText, Loc.L("Clan.Search.Advanced"));
+        ClanUIUtil.SetText(CreateClanButtonText, Loc.L("Clan.Search.Create"));
+        ClanUIUtil.SetText(EmptyStateText, Loc.L("Clan.Search.Empty"));
         if (NameSearchInput != null)
         {
             NameSearchInput.characterLimit = StaticClanData.NAME_MAX;
             NameSearchInput.onSubmit.AddListener(OnNameSubmitted);
-            if (NameSearchInput.placeholder is TMP_Text ph) ph.text = "Search for a clan...";
+            if (NameSearchInput.placeholder is TMP_Text ph) ph.text = Loc.L("Clan.Search.Placeholder");
         }
         if (AdvancedSearchButton != null) AdvancedSearchButton.onClick.AddListener(OnAdvancedSearchClicked);
         if (CreateClanButton != null) CreateClanButton.onClick.AddListener(OnCreateClicked);
@@ -87,7 +87,7 @@ public class ClanSearchTab : MonoBehaviour
         if (this == null) return;
         if (!ok)
         {
-            if (LoadingView != null) LoadingView.ShowError(error ?? "Search failed", Refresh);
+            if (LoadingView != null) LoadingView.ShowError(error ?? Loc.L("Errors.Clan.SearchFailed"), Refresh);
             return;
         }
         if (LoadingView != null) LoadingView.Hide();

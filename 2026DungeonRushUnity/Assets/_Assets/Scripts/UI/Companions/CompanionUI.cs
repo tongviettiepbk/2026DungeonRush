@@ -157,7 +157,7 @@ public class CompanionUI : MonoBehaviour
         CompanionSummonLevelConfig.GetProgress(total, out int current, out int required, out bool isMax);
         if (isMax)
         {
-            txtProcess.text = "MAX";
+            txtProcess.text = Loc.L("Common.Max");
             imgProcess.fillAmount = 1f;
         }
         else

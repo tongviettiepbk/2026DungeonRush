@@ -22,8 +22,8 @@ public class UIClanRequestsPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TitleText, "Requests");
-        ClanUIUtil.SetText(EmptyStateText, "No pending requests");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.Requests.Title"));
+        ClanUIUtil.SetText(EmptyStateText, Loc.L("Clan.Requests.Empty"));
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
     }
 
@@ -44,7 +44,7 @@ public class UIClanRequestsPopup : BaseUI
             if (this == null) return;
             if (!ok)
             {
-                if (LoadingView != null) LoadingView.ShowError(error ?? "Failed to load clan data", Load);
+                if (LoadingView != null) LoadingView.ShowError(error ?? Loc.L("Errors.Clan.LoadFailed"), Load);
                 return;
             }
             if (LoadingView != null) LoadingView.Hide();

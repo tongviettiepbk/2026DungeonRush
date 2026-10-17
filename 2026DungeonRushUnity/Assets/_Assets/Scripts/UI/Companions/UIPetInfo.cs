@@ -73,12 +73,12 @@ public class UIPetInfo : BaseUI
         bool isEquipped = isViewOther == false && isOwned && user.IsEquipped(data.assetName);
         int level = isViewOther ? viewLevel : user.GetLevel(data.assetName); // chưa sở hữu → 1
 
-        txtName.text = data.companionName;
+        txtName.text = Loc.Or(data.localizationKey, data.companionName);
         // TODO: màu chữ theo rarity — chưa có bảng màu gốc, đang giữ màu mặc định của prefab.
-        txtRarity.text = data.rarity.ToString();
+        txtRarity.text = Loc.Rarity(data.rarity);
 
         txtDescription.text = BuildDescription(level);
-        txtOwnEffect.text = "Damage " + Highlight(FormatNumber(CompanionService.GetOwnAttack(data, level)))
+        txtOwnEffect.text = (Loc.L("Items.SubStat.Damage") + " ") + Highlight(FormatNumber(CompanionService.GetOwnAttack(data, level)))
                           + " Health " + Highlight(FormatNumber(CompanionService.GetOwnHealth(data, level)));
 
         imgIcon.sprite = data.icon;
@@ -91,7 +91,7 @@ public class UIPetInfo : BaseUI
         imgProcess.gameObject.SetActive(isMine);
         btEquip.gameObject.SetActive(isMine);
         btUpgrade.gameObject.SetActive(isMine);
-        textLv.text = "Lvl " + level;
+        textLv.text = Loc.L("Common.Level.Abbrev", level);
         if (isMine == false)
         {
             return;
@@ -99,7 +99,7 @@ public class UIPetInfo : BaseUI
 
         if (model.level >= CompanionUpgradeConfig.MAX_LEVEL)
         {
-            textProcess.text = "MAX";
+            textProcess.text = Loc.L("Common.Level.Max");
             imgProcess.fillAmount = 1f;
         }
         else
@@ -112,7 +112,7 @@ public class UIPetInfo : BaseUI
         TMP_Text txtEquip = btEquip.GetComponentInChildren<TMP_Text>(true);
         if (txtEquip != null)
         {
-            txtEquip.text = isEquipped ? "Remove" : "Equip";
+            txtEquip.text = isEquipped ? "Remove" : Loc.L("Common.Equip");
         }
         btUpgrade.interactable = user.CanUpgrade(data.assetName);
     }

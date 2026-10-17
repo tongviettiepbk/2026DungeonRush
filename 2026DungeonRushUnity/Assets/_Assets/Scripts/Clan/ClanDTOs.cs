@@ -367,9 +367,9 @@ public static class ClanRoleExt
     {
         switch (role)
         {
-            case ClanRole.Leader: return "Leader";
-            case ClanRole.Captain: return "Captain";
-            case ClanRole.Member: return "Member";
+            case ClanRole.Leader: return Loc.L("Clan.Role.Leader");
+            case ClanRole.Captain: return Loc.L("Clan.Role.Captain");
+            case ClanRole.Member: return Loc.L("Clan.Role.Member");
             default: return string.Empty;
         }
     }
@@ -397,7 +397,7 @@ public static class ClanRoleExt
     // frn / fro gốc.
     public static string JoinSettingText(ClanJoinSetting setting)
     {
-        return setting == ClanJoinSetting.ApprovalOnly ? "Approval Only" : "Open";
+        return setting == ClanJoinSetting.ApprovalOnly ? Loc.L("Clan.Join.ApprovalOnly") : Loc.L("Clan.Join.Open");
     }
 
     public static Color JoinSettingColor(ClanJoinSetting setting)

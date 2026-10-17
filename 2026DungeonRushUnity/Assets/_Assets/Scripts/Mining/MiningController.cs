@@ -145,7 +145,7 @@ public class MiningController : MonoBehaviour
         EnsureCharacterWalkable();
         if (cell.y >= data.currentDepth + config.VisibleRows - 1)
         {
-            UIManager.Instance.ShowToastMessage("Too deep! Mine upper blocks first.", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.Mining.TooDeep"), isLocalize: false);
             return;
         }
 
@@ -168,14 +168,14 @@ public class MiningController : MonoBehaviour
 
         if (MiningService.GetToolCount(MiningToolType.Pickaxe) <= 0)
         {
-            UIManager.Instance.ShowToastMessage("No pickaxes available!", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.Mining.NoPickaxes"), isLocalize: false);
             return;
         }
 
         List<Vector2Int> path = pathfinder.FindPathToNeighbor(character.GridPosition, cell, grid.IsWalkable);
         if (path == null)
         {
-            UIManager.Instance.ShowToastMessage("No path available!", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.Mining.NoPath"), isLocalize: false);
             return;
         }
 
@@ -236,14 +236,14 @@ public class MiningController : MonoBehaviour
 
         if (MiningService.GetToolCount(MiningToolType.Drill) <= 0)
         {
-            UIManager.Instance.ShowToastMessage("No drills available!", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.Mining.NoDrills"), isLocalize: false);
             return;
         }
 
         List<Vector2Int> path = pathfinder.FindPathToNeighbor(character.GridPosition, cell, grid.IsWalkable);
         if (path == null)
         {
-            UIManager.Instance.ShowToastMessage("No path available!", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.Mining.NoPath"), isLocalize: false);
             return;
         }
 
@@ -282,14 +282,14 @@ public class MiningController : MonoBehaviour
 
         if (MiningService.GetToolCount(MiningToolType.GoldenPickaxe) <= 0)
         {
-            UIManager.Instance.ShowToastMessage("No golden pickaxes available!", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.Mining.NoGoldenPickaxes"), isLocalize: false);
             return;
         }
 
         List<Vector2Int> path = pathfinder.FindPathToNeighbor(character.GridPosition, cell, grid.IsWalkable);
         if (path == null)
         {
-            UIManager.Instance.ShowToastMessage("No path available!", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Errors.Mining.NoPath"), isLocalize: false);
             return;
         }
 

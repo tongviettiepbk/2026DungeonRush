@@ -53,7 +53,7 @@ public class UIBossRushHud : MonoBehaviour
     {
         if (txtRemainingTime != null)
         {
-            txtRemainingTime.text = Mathf.CeilToInt(seconds) + "s";
+            txtRemainingTime.text = Mathf.CeilToInt(seconds) + Loc.L("Common.Time.Seconds");
         }
     }
 

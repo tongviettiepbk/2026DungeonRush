@@ -35,12 +35,12 @@ public class UIClanBannerEditorPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TitleText, "Clan Banner Editor");
-        ClanUIUtil.SetText(ShapeLabel, "Shape");
-        ClanUIUtil.SetText(BackgroundColorLabel, "Background Color");
-        ClanUIUtil.SetText(EmblemShapeLabel, "Emblem Shape");
-        ClanUIUtil.SetText(EmblemColorLabel, "Emblem Color");
-        ClanUIUtil.SetText(ApplyButtonText, "Apply");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.Banner.Title"));
+        ClanUIUtil.SetText(ShapeLabel, Loc.L("Clan.Banner.Shape"));
+        ClanUIUtil.SetText(BackgroundColorLabel, Loc.L("Clan.Banner.BackgroundColor"));
+        ClanUIUtil.SetText(EmblemShapeLabel, Loc.L("Clan.Banner.EmblemShape"));
+        ClanUIUtil.SetText(EmblemColorLabel, Loc.L("Clan.Banner.EmblemColor"));
+        ClanUIUtil.SetText(ApplyButtonText, Loc.L("Clan.Banner.Apply"));
         if (ApplyButton != null) ApplyButton.onClick.AddListener(OnApplyClicked);
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
     }

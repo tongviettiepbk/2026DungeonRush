@@ -153,7 +153,7 @@ public class UIBossRushPopup : BaseUI
 
         if (txtTimer != null)
         {
-            txtTimer.text = ended ? "Event Ended" : BossRushSchedule.FormatRemain(BossRushSchedule.GetEventEnd(now) - now);
+            txtTimer.text = ended ? Loc.L("Popup.BossRush.EventEnded") : BossRushSchedule.FormatRemain(BossRushSchedule.GetEventEnd(now) - now);
         }
 
         BossRushTicketsDTO tickets = GameData.userData.bossRush.tickets;
@@ -169,7 +169,7 @@ public class UIBossRushPopup : BaseUI
         {
             if (ended)
             {
-                txtStatus.text = "Results are being prepared";
+                txtStatus.text = Loc.L("Popup.BossRush.ResultsPreparing");
             }
             else if (remaining <= 0)
             {
@@ -204,7 +204,7 @@ public class UIBossRushPopup : BaseUI
             return;
         }
 
-        UIManager.Instance.ShowToastMessage("No fights remaining today!", isLocalize: false);
+        UIManager.Instance.ShowToastMessage(Loc.L("Popup.BossRush.NoFightsRemaining"), isLocalize: false);
     }
 
     private void StartFight()

@@ -33,7 +33,7 @@ public class UIPvPRewardsPopup : BaseUI
     protected override void OnEnable()
     {
         base.OnEnable();
-        if (txtTitle != null) txtTitle.text = "PvP Rewards";
+        if (txtTitle != null) txtTitle.text = Loc.L("Popup.PvP.Rewards.Title");
         leagueIndex = PvPController.Instance.LeagueIndex;
         Draw();
     }

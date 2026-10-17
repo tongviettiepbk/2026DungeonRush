@@ -21,10 +21,10 @@ public class UILeadershipRankPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TitleText, "Championship Ranking");
-        ClanUIUtil.SetText(DescriptionText, "Earn Contribution Points to reach the top! The highest-contributing clan earns the right to challenge the Champion Clan in next week's war. If there is no Champion Clan, the top two clans will fight each other.");
-        ClanUIUtil.SetText(UpdateInfoText, "Updates every 10 minutes");
-        ClanUIUtil.SetText(NoRankingsText, "Rankings will be displayed when war is active.");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.War.LeadershipRank.Title"));
+        ClanUIUtil.SetText(DescriptionText, Loc.L("Clan.War.LeadershipRank.Description"));
+        ClanUIUtil.SetText(UpdateInfoText, Loc.L("Clan.War.LeadershipRank.UpdateInfo"));
+        ClanUIUtil.SetText(NoRankingsText, Loc.L("Clan.War.LeadershipRank.NoRankings"));
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
     }
 
@@ -49,7 +49,7 @@ public class UILeadershipRankPopup : BaseUI
             if (this == null) return;
             if (res == null)
             {
-                if (LoadingView != null) LoadingView.ShowError("Failed to load clan war data.", Load);
+                if (LoadingView != null) LoadingView.ShowError(Loc.L("Errors.ClanWar.LoadFailed"), Load);
                 return;
             }
             if (LoadingView != null) LoadingView.Hide();

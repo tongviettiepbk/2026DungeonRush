@@ -32,16 +32,16 @@ public class UIAdvancedSearchPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TitleText, "Clan Search");
-        ClanUIUtil.SetText(NameLabel, "Clan Name");
-        ClanUIUtil.SetText(MinMemberLabel, "Min Member");
-        ClanUIUtil.SetText(MaxMemberLabel, "Max Member");
-        ClanUIUtil.SetText(HideApprovalLabel, "Hide Approval Only");
-        ClanUIUtil.SetText(SearchButtonText, "Search");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.AdvancedSearch.Title"));
+        ClanUIUtil.SetText(NameLabel, Loc.L("Clan.Common.ClanName"));
+        ClanUIUtil.SetText(MinMemberLabel, Loc.L("Clan.AdvancedSearch.MinMember"));
+        ClanUIUtil.SetText(MaxMemberLabel, Loc.L("Clan.AdvancedSearch.MaxMember"));
+        ClanUIUtil.SetText(HideApprovalLabel, Loc.L("Clan.AdvancedSearch.HideApprovalOnly"));
+        ClanUIUtil.SetText(SearchButtonText, Loc.L("Clan.AdvancedSearch.Search"));
         if (NameInput != null)
         {
             NameInput.characterLimit = StaticClanData.NAME_MAX;
-            if (NameInput.placeholder is TMP_Text ph) ph.text = "Clan Name...";
+            if (NameInput.placeholder is TMP_Text ph) ph.text = Loc.L("Clan.Common.NamePlaceholder");
         }
         if (MinDecrementButton != null) MinDecrementButton.onClick.AddListener(() => SetMin(min - 1));
         if (MinIncrementButton != null) MinIncrementButton.onClick.AddListener(() => SetMin(min + 1));

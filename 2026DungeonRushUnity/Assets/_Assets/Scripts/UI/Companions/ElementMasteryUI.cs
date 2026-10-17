@@ -54,7 +54,7 @@ public class ElementMasteryUI : MonoBehaviour
         txtLv.gameObject.SetActive(isUnlocked);
         if (isUnlocked)
         {
-            txtLv.text = "Lvl " + user.GetLevel(data.upgradeType);
+            txtLv.text = Loc.L("Common.Level.Abbrev", user.GetLevel(data.upgradeType));
         }
 
         // iwe gốc: đã mở AutoLootHammerCount (15) mà chưa nâng (17) → chỉ tay vào ô này.

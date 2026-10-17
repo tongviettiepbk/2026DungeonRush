@@ -339,8 +339,8 @@ public class UIMiningPopup : BaseUI, IPointerClickHandler, IPointerDownHandler, 
         SetText(txtIron, MiningService.GetOre(MineOreType.IronMine).ToString());
         SetText(txtRuby, MiningService.GetOre(MineOreType.RubyMine).ToString());
         SetText(txtStone, MiningService.GetOre(MineOreType.Stone).ToString());
-        SetText(txtDepth, string.Format("Depth: {0}", data.currentDepth));
-        SetText(txtMineLevel, "Lvl " + data.mineLevel);
+        SetText(txtDepth, string.Format(Loc.L("Popup.Mining.Depth"), data.currentDepth));
+        SetText(txtMineLevel, Loc.L("Common.Level.Abbrev", data.mineLevel));
         RefreshDepthSlider();
         RefreshTools();
     }

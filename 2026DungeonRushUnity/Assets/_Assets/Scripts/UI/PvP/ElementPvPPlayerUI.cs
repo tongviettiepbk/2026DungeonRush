@@ -27,7 +27,7 @@ public class ElementPvPPlayerUI : MonoBehaviour
     {
         this.model = model;
         this.onBattle = onBattle;
-        if (txtName != null) txtName.text = string.IsNullOrEmpty(model.PlayerName) ? "Unknown" : model.PlayerName;
+        if (txtName != null) txtName.text = string.IsNullOrEmpty(model.PlayerName) ? Loc.L("Common.Unknown") : model.PlayerName;
         if (txtPower != null) txtPower.text = model.Power > 0d ? "<sprite=0>" + model.Power.ToLetter() : "<sprite=0>0";
         if (imgBackground != null) imgBackground.color = isMe ? highlightedColor : defaultColor;
         if (btBattle != null)

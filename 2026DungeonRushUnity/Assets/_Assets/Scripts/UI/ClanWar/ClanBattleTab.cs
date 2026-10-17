@@ -35,11 +35,11 @@ public class ClanBattleTab : MonoBehaviour
 
     private void Awake()
     {
-        ClanUIUtil.SetText(WaitingTitleText, "Waiting For War");
-        ClanUIUtil.SetText(WaitingBodyText, "Your clan will be matched when the next war week begins.");
-        ClanUIUtil.SetText(RewardsButtonText, "Rewards");
-        ClanUIUtil.SetText(DaysResultsButtonText, "Days & Results");
-        ClanUIUtil.SetText(LeaderboardButtonText, "Leaderboard");
+        ClanUIUtil.SetText(WaitingTitleText, Loc.L("Clan.War.Waiting.Title"));
+        ClanUIUtil.SetText(WaitingBodyText, Loc.L("Clan.War.Waiting.Body"));
+        ClanUIUtil.SetText(RewardsButtonText, Loc.L("Clan.War.Button.Rewards"));
+        ClanUIUtil.SetText(DaysResultsButtonText, Loc.L("Clan.War.Button.DaysResults"));
+        ClanUIUtil.SetText(LeaderboardButtonText, Loc.L("Clan.War.Button.Leaderboard"));
         if (RewardsButton != null) RewardsButton.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.ClanWarRewardsPopup));
         if (DaysResultsButton != null) DaysResultsButton.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.ClanWarDaysAndResultsPopup));
         if (LeaderboardButton != null) LeaderboardButton.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.ClanWarLeaderboardPopup));
@@ -77,7 +77,7 @@ public class ClanBattleTab : MonoBehaviour
             if (this == null) return;
             if (s == null && !hasData && LoadingView != null)
             {
-                LoadingView.ShowError("Failed to load clan war data.", Load);
+                LoadingView.ShowError(Loc.L("Errors.ClanWar.LoadFailed"), Load);
             }
         });
     }
@@ -113,7 +113,7 @@ public class ClanBattleTab : MonoBehaviour
     {
         ClanWarWireDTO war = s.war;
         bool waiting = war == null || war.IsConcluded;
-        ClanUIUtil.SetText(TitleText, war != null && war.IsLeadership ? "Championship War" : "Clan War");
+        ClanUIUtil.SetText(TitleText, war != null && war.IsLeadership ? Loc.L("Clan.Battle.LeadershipTitle") : Loc.L("Clan.Battle.Title"));
         ClanUIUtil.SetActive(WaitingCardRoot, waiting);
         ClanUIUtil.SetActive(ProgressSection, !waiting && !war.IsCooldown);
         ClanUIUtil.SetActive(DayActionsSection, !waiting && war.IsDay);

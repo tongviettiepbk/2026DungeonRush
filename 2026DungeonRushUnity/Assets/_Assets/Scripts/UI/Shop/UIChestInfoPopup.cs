@@ -30,7 +30,7 @@ public class UIChestInfoPopup : BaseUI
     {
         ShopUIUtil.SetText(ChestNameText, StaticShopData.GetChestName(chest));
         if (ChestIcon != null) ChestIcon.sprite = chest.Icon;
-        ShopUIUtil.SetText(DescriptionText, string.Format("Contains {0} cloak and companion", ChestStoreCard.GetRarityList(chest)));
+        ShopUIUtil.SetText(DescriptionText, string.Format(Loc.L("UI.Chest.ContainsFull"), ChestStoreCard.GetRarityList(chest)));
 
         if (PityParent != null) PityParent.SetActive(chest.PityCount > 0);
         if (chest.PityCount > 0) ShopUIUtil.SetText(PityCountText, ChestStoreCard.GetPityText(chest, PityCountColor));

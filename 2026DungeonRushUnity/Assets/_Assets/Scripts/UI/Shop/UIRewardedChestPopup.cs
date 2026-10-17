@@ -62,7 +62,7 @@ public class UIRewardedChestPopup : BaseUI
         bool isGem = chestType == RewardedChestType.Gem;
         RewardImage.sprite = isGem ? GemRewardSprite : LootboxRewardSprite;
         RewardText.text = amount.ToString();
-        TitleText.text = isGem ? "Gem Offer" : "Loot Box Offer";
+        TitleText.text = isGem ? Loc.L("Popup.RewardedChest.GemTitle") : Loc.L("Popup.RewardedChest.LootboxTitle");
 
         if (ShopService.GetRewardedChestRemaining() <= 0)
         {
@@ -75,7 +75,7 @@ public class UIRewardedChestPopup : BaseUI
 
         AdButton.interactable = isWaitingAd == false;
         AdButtonImage.color = UITabWing.DEFAULT_BUTTON_COLOR;
-        AdButtonText.text = isWaitingAd ? "Loading..." : (GameData.userData.shop.isNoAdsBought ? "Claim" : "<sprite=0>Claim");
+        AdButtonText.text = isWaitingAd ? Loc.L("Common.Loading") : (GameData.userData.shop.isNoAdsBought ? Loc.L("Common.Claim") : "<sprite=0>Claim");
     }
 
     // OnRewardedButtonClicked gốc.

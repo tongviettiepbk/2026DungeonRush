@@ -48,12 +48,12 @@ public class ClanWarEnemyCard : MonoBehaviour
         if (BattleButtonText != null)
         {
             BattleButtonText.gameObject.SetActive(target.defeated || !hasTickets);
-            BattleButtonText.text = target.defeated ? "Defeated" : "No Tickets";
+            BattleButtonText.text = target.defeated ? Loc.L("Clan.War.Pvp.DefeatedButton") : Loc.L("Clan.War.Pvp.NoTicketsButton");
         }
         if (DefeatedText != null)
         {
             DefeatedText.gameObject.SetActive(target.defeated);
-            DefeatedText.text = "Defeated";
+            DefeatedText.text = Loc.L("Clan.War.Pvp.DefeatedButton");
         }
         SetBusy(false);
     }

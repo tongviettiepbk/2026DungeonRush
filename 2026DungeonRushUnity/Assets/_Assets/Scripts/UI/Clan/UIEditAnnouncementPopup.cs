@@ -18,14 +18,14 @@ public class UIEditAnnouncementPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TitleText, "Edit Announcement");
-        ClanUIUtil.SetText(SaveButtonText, "Save");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.Announcement.Title"));
+        ClanUIUtil.SetText(SaveButtonText, Loc.L("Clan.Common.Save"));
         if (AnnouncementInput != null)
         {
             AnnouncementInput.characterLimit = StaticClanData.ANNOUNCEMENT_MAX;
             AnnouncementInput.lineType = TMP_InputField.LineType.MultiLineNewline;
             AnnouncementInput.onValueChanged.AddListener(UpdateCounter);
-            if (AnnouncementInput.placeholder is TMP_Text ph) ph.text = "Announcement...";
+            if (AnnouncementInput.placeholder is TMP_Text ph) ph.text = Loc.L("Clan.Announcement.Placeholder");
         }
         if (SaveButton != null) SaveButton.onClick.AddListener(OnSaveClicked);
         if (CloseButton != null) CloseButton.onClick.AddListener(OnCloseClicked);
@@ -57,7 +57,7 @@ public class UIEditAnnouncementPopup : BaseUI
             SetBusy(false);
             if (!ok)
             {
-                ClanUIUtil.Toast(error ?? "Failed to save changes");
+                ClanUIUtil.Toast(error ?? Loc.L("Errors.Clan.SaveFailed"));
                 return;
             }
             Close();

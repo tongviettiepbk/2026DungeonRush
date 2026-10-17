@@ -53,7 +53,7 @@ public class UICapeUpgradeInfoPopup : BaseUI
     private void SetViewLevel(int level)
     {
         viewLevel = Mathf.Clamp(level, 1, CapeSummonConfig.MaxLevel);
-        txtLevel.text = "Level " + viewLevel;
+        txtLevel.text = Loc.L("Common.Level.Long", viewLevel);
         btLeft.gameObject.SetActive(viewLevel > 1);
         btRight.gameObject.SetActive(viewLevel < CapeSummonConfig.MaxLevel);
         objProgress.SetActive(viewLevel == currentLevel);

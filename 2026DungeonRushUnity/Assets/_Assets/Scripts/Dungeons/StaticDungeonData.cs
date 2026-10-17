@@ -7,6 +7,8 @@ public class DungeonConfig
     public DungeonType type;
     public ModeType modeType;           // mode chơi khi bấm Enter (MapConfig.EnvironmentType gốc)
     public string displayName;
+    // Tên theo ngôn ngữ đang dùng (bảng gốc Items.Dungeon.Name.<DungeonType>).
+    public string LocalizedName { get { return Loc.L("Items.Dungeon.Name." + type); } }
     public ItemType rewardType;
     public int unlockPlayerLevel;
     public Color keyColor;              // DungeonData.KeyColor gốc — màu tên dungeon ở LevelText thanh trên
@@ -59,6 +61,13 @@ public class StaticDungeonData
     {
         DungeonConfig data = GetData(type);
         return data != null ? data.rewardBase + data.rewardScaler * (level - 1) : 0;
+    }
+
+    // "Difficulty a-b" ở thanh trên khi đang đánh dungeon (GameplayUI.kig gốc: UI.Gameplay.DungeonDifficulty).
+    public static string GetDifficultyLabel(int level)
+    {
+        int index = level - 1;
+        return Loc.L("UI.Gameplay.DungeonDifficulty", index / LEVELS_PER_DIFFICULTY + 1, index % LEVELS_PER_DIFFICULTY + 1);
     }
 
     public static string GetDifficultyText(int level)

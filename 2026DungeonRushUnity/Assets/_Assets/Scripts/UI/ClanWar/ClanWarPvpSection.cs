@@ -23,8 +23,8 @@ public class ClanWarPvpSection : MonoBehaviour
 
     private void Awake()
     {
-        if (PvpTitleText != null) PvpTitleText.text = "Day 6 PvP";
-        if (NoEnemiesText != null) NoEnemiesText.text = "No Enemy Clan Members";
+        if (PvpTitleText != null) PvpTitleText.text = Loc.L("Clan.War.Pvp.Title");
+        if (NoEnemiesText != null) NoEnemiesText.text = Loc.L("Clan.War.Pvp.NoEnemies");
     }
 
     // gdd gốc.
@@ -44,7 +44,7 @@ public class ClanWarPvpSection : MonoBehaviour
         {
             int minMembers = config?.pvp != null ? config.pvp.minMembersForReset : 30;
             if (pvp.resetEnabled) PvpHelperText.text = "Tickets refresh when " + pvp.resetThreshold + " players are defeated";
-            else if (pvp.resetCount >= pvp.maxResets && pvp.maxResets > 0) PvpHelperText.text = "Maximum round resets reached for this war";
+            else if (pvp.resetCount >= pvp.maxResets && pvp.maxResets > 0) PvpHelperText.text = Loc.L("Clan.War.Pvp.MaxResets");
             else PvpHelperText.text = "Tickets and defeated status do not refresh for this round because one clan started the round below " + minMembers + " members";
         }
         if (!has) return;

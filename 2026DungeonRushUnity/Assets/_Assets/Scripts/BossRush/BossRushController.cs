@@ -183,7 +183,7 @@ public class BossRushController : Singleton<BossRushController>
             if (!ok || res == null || !res.success || string.IsNullOrEmpty(res.fightToken))
             {
                 DebugCustom.LogWarning("[BossRush] Failed to start Boss Rush fight | response=" + raw);
-                string message = res != null && res.message == "No fights remaining." ? "No fights remaining today!" : "Failed to start fight. Please try again.";
+                string message = res != null && res.message == "No fights remaining." ? Loc.L("Popup.BossRush.NoFightsRemaining") : "Failed to start fight. Please try again.";
                 callback?.Invoke(false, message);
                 return;
             }

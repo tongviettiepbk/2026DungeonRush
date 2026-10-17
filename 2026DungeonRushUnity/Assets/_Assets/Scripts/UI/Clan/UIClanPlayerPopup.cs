@@ -28,8 +28,8 @@ public class UIClanPlayerPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(KickButtonText, "Kick");
-        ClanUIUtil.SetText(LeaveButtonText, "Leave");
+        ClanUIUtil.SetText(KickButtonText, Loc.L("Clan.Player.Kick"));
+        ClanUIUtil.SetText(LeaveButtonText, Loc.L("Clan.Player.Leave"));
         if (CloseButton != null) CloseButton.onClick.AddListener(OnCloseClicked);
         if (HiddenPlayerButton != null) HiddenPlayerButton.onClick.AddListener(OnCloseClicked);
         if (PromoteDemoteButton != null) PromoteDemoteButton.onClick.AddListener(OnPromoteDemoteClicked);
@@ -72,7 +72,7 @@ public class UIClanPlayerPopup : BaseUI
         ClanUIUtil.SetActive(LeaveButton, false);
         bool canPromote = myRole == ClanRole.Leader && member.Role != ClanRole.Leader;
         ClanUIUtil.SetActive(PromoteDemoteButton, canPromote);
-        ClanUIUtil.SetText(PromoteDemoteLabel, member.Role == ClanRole.Member ? "Promote" : "Demote");
+        ClanUIUtil.SetText(PromoteDemoteLabel, member.Role == ClanRole.Member ? Loc.L("Clan.Promote") : Loc.L("Clan.Demote"));
         ClanUIUtil.SetActive(KickButton, ClanRoleExt.CanActOn(myRole, member.Role));
     }
 
@@ -86,7 +86,7 @@ public class UIClanPlayerPopup : BaseUI
             SetBusy(false);
             if (!ok)
             {
-                ClanUIUtil.Toast(error ?? "Failed to leave clan");
+                ClanUIUtil.Toast(error ?? Loc.L("Errors.Clan.LeaveFailed"));
                 return;
             }
             Close();
@@ -103,7 +103,7 @@ public class UIClanPlayerPopup : BaseUI
             SetBusy(false);
             if (!ok)
             {
-                ClanUIUtil.Toast(error ?? "Failed to change role");
+                ClanUIUtil.Toast(error ?? Loc.L("Errors.Clan.RoleChangeFailed"));
                 return;
             }
             member.Role = role;
@@ -121,7 +121,7 @@ public class UIClanPlayerPopup : BaseUI
             SetBusy(false);
             if (!ok)
             {
-                ClanUIUtil.Toast(error ?? "Failed to kick member");
+                ClanUIUtil.Toast(error ?? Loc.L("Errors.Clan.KickFailed"));
                 return;
             }
             Close();

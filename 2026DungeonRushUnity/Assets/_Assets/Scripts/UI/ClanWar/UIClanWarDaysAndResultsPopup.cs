@@ -29,9 +29,9 @@ public class UIClanWarDaysAndResultsPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TitleText, "War Results");
-        ClanUIUtil.SetText(SubtitleText, "War Scores earned this week");
-        ClanUIUtil.SetText(DailyScoresHeaderText, "Daily Scores");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.War.DaysResults.Title"));
+        ClanUIUtil.SetText(SubtitleText, Loc.L("Clan.War.DaysResults.Subtitle"));
+        ClanUIUtil.SetText(DailyScoresHeaderText, Loc.L("Clan.War.DaysResults.SectionTitle"));
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
     }
 
@@ -51,7 +51,7 @@ public class UIClanWarDaysAndResultsPopup : BaseUI
             if (this == null) return;
             if (s?.war == null)
             {
-                if (LoadingView != null) LoadingView.ShowError("Failed to load clan war data.", Load);
+                if (LoadingView != null) LoadingView.ShowError(Loc.L("Errors.ClanWar.LoadFailed"), Load);
                 return;
             }
             if (LoadingView != null) LoadingView.Hide();

@@ -27,7 +27,7 @@ public class UIUpgradePet : BaseUI
         int nextLevel = isMax ? level : level + 1;
 
         txtLevelCurrent.text = "Lv. " + level;
-        txtLevelNext.text = isMax ? "MAX" : "Lv. " + nextLevel;
+        txtLevelNext.text = isMax ? Loc.L("Common.Level.Max") : "Lv. " + nextLevel;
 
         for (int i = 0; i < listRarity.Count; i++)
         {

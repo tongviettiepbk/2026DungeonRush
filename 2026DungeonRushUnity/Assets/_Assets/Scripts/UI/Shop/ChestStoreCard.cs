@@ -38,7 +38,7 @@ public class ChestStoreCard : MonoBehaviour
             InfoButton.onClick.AddListener(OnInfoClicked);
         }
 
-        ShopUIUtil.SetText(ContainsText, string.Format("Contains {0}", GetRarityList(chest)));
+        ShopUIUtil.SetText(ContainsText, string.Format(Loc.L("UI.Chest.Contains"), GetRarityList(chest)));
         RefreshPity();
     }
 
@@ -70,7 +70,7 @@ public class ChestStoreCard : MonoBehaviour
     // "Get {rarity} in {n} opens" (fof / ChestInfoPopup.fmy gốc).
     public static string GetPityText(ChestData chest, Color countColor)
     {
-        return string.Format("Get {0} in {1} opens", ShopUIUtil.ColoredRarity(chest.Rarity),
+        return string.Format(Loc.L("UI.Chest.PityRemaining"), ShopUIUtil.ColoredRarity(chest.Rarity),
             ShopUIUtil.Colored(ShopService.GetPityRemaining(chest).ToString(), countColor));
     }
 

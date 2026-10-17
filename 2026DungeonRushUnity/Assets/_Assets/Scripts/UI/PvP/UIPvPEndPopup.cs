@@ -47,14 +47,14 @@ public class UIPvPEndPopup : BaseUI
         }
         else
         {
-            ShowError(string.IsNullOrEmpty(error) ? "Failed to report battle." : error);
+            ShowError(string.IsNullOrEmpty(error) ? Loc.L("Errors.PvP.ReportBattleFailed") : error);
         }
     }
 
     // jpf/jpg.
     private void ShowResult(PendingPvPRewardSettlement s)
     {
-        if (txtTitle != null) txtTitle.text = s.Won ? "Victory!" : "Defeated";
+        if (txtTitle != null) txtTitle.text = s.Won ? Loc.L("Popup.PvP.Victory") : Loc.L("Popup.PvP.Defeat");
         if (txtError != null) txtError.gameObject.SetActive(false);
         if (objResult != null) objResult.SetActive(true);
 
@@ -69,7 +69,7 @@ public class UIPvPEndPopup : BaseUI
 
         btClaim.gameObject.SetActive(true);
         btClaim.interactable = true;
-        if (txtClaim != null) txtClaim.text = "Claim";
+        if (txtClaim != null) txtClaim.text = Loc.L("Common.Claim");
         if (btRetry != null) btRetry.gameObject.SetActive(false);
         if (btClose != null) btClose.gameObject.SetActive(false);
     }
@@ -77,7 +77,7 @@ public class UIPvPEndPopup : BaseUI
     // jpc: lỗi báo kết quả.
     private void ShowError(string message)
     {
-        if (txtTitle != null) txtTitle.text = won ? "Victory!" : "Defeated";
+        if (txtTitle != null) txtTitle.text = won ? Loc.L("Popup.PvP.Victory") : Loc.L("Popup.PvP.Defeat");
         if (objResult != null) objResult.SetActive(false);
         if (txtError != null)
         {
@@ -104,7 +104,7 @@ public class UIPvPEndPopup : BaseUI
             }
             else
             {
-                ShowError(res != null && !string.IsNullOrEmpty(res.message) ? res.message : "Failed to report battle.");
+                ShowError(res != null && !string.IsNullOrEmpty(res.message) ? res.message : Loc.L("Errors.PvP.ReportBattleFailed"));
             }
         });
     }

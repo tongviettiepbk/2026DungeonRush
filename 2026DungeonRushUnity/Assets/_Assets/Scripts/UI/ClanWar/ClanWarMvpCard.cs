@@ -19,8 +19,8 @@ public class ClanWarMvpCard : MonoBehaviour
     private void Awake()
     {
         if (CardButton != null) CardButton.onClick.AddListener(() => onClick?.Invoke());
-        if (MvpLabelText != null) MvpLabelText.text = "MVP";
-        if (MvpNoMembersText != null) MvpNoMembersText.text = "No Members";
+        if (MvpLabelText != null) MvpLabelText.text = Loc.L("Clan.War.Mvp.Label");
+        if (MvpNoMembersText != null) MvpNoMembersText.text = Loc.L("Clan.War.Mvp.NoMembers");
     }
 
     // gcr gốc.

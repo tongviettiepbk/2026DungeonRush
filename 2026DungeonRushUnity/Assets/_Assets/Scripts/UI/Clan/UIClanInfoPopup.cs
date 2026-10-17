@@ -42,13 +42,13 @@ public class UIClanInfoPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TypeLabel, "Type");
-        ClanUIUtil.SetText(MembersLabel, "Members");
-        ClanUIUtil.SetText(PowerLabel, "Power");
-        ClanUIUtil.SetText(TierLabel, "Tier");
-        ClanUIUtil.SetText(JoinButtonText, "Join");
-        ClanUIUtil.SetText(RequestButtonText, "Request");
-        ClanUIUtil.SetText(RequestedText, "Requested");
+        ClanUIUtil.SetText(TypeLabel, Loc.L("Clan.Common.Type"));
+        ClanUIUtil.SetText(MembersLabel, Loc.L("Clan.Common.Members"));
+        ClanUIUtil.SetText(PowerLabel, Loc.L("Clan.Common.Power"));
+        ClanUIUtil.SetText(TierLabel, Loc.L("Clan.Common.Tier"));
+        ClanUIUtil.SetText(JoinButtonText, Loc.L("Clan.Common.Join"));
+        ClanUIUtil.SetText(RequestButtonText, Loc.L("Clan.Common.Request"));
+        ClanUIUtil.SetText(RequestedText, Loc.L("Clan.Common.Requested"));
         if (JoinButton != null) JoinButton.onClick.AddListener(OnJoinClicked);
         if (RequestButton != null) RequestButton.onClick.AddListener(OnRequestClicked);
         if (CloseButton != null) CloseButton.onClick.AddListener(OnCloseClicked);
@@ -76,7 +76,7 @@ public class UIClanInfoPopup : BaseUI
             if (this == null) return;
             if (!ok)
             {
-                if (LoadingView != null) LoadingView.ShowError(error ?? "Failed to load clan data", Load);
+                if (LoadingView != null) LoadingView.ShowError(error ?? Loc.L("Errors.Clan.LoadFailed"), Load);
                 return;
             }
             if (LoadingView != null) LoadingView.Hide();

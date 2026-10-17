@@ -28,10 +28,10 @@ public class UIClanContributionLeaderboardPopup : BaseUI
     {
         base.Awake();
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
-        if (DelayInfoText != null) DelayInfoText.text = "Updates every minute.";
+        if (DelayInfoText != null) DelayInfoText.text = Loc.L("Clan.War.Leaderboard.DelayInfo");
         if (ModeSelector != null)
         {
-            ModeSelector.Setup(new[] { "Daily", "Weekly" });
+            ModeSelector.Setup(new[] { Loc.L("Clan.War.Leaderboard.Daily"), Loc.L("Clan.War.Leaderboard.Weekly") });
             ModeSelector.OnTabSelected += Load;
         }
     }
@@ -53,14 +53,14 @@ public class UIClanContributionLeaderboardPopup : BaseUI
         Clear();
         ClanWarWireDTO war = ClanWarController.Instance.State?.war;
         int day = war != null ? Mathf.Clamp(war.activeDay, 1, 6) : 1;
-        ClanUIUtil.SetText(SubheaderText, mode == MODE_DAILY ? "Day " + day + " Leaderboard" : "Weekly Leaderboard");
+        ClanUIUtil.SetText(SubheaderText, mode == MODE_DAILY ? "Day " + day + (" " + Loc.L("Clan.War.Button.Leaderboard")) : Loc.L("Clan.War.Leaderboard.WeeklySubheader"));
         if (LoadingView != null) LoadingView.ShowLoading();
         ClanWarController.Instance.GetContributionLeaderboard(side.clanId, mode == MODE_DAILY ? "daily" : "weekly", res =>
         {
             if (this == null || id != requestId) return;
             if (res == null)
             {
-                if (LoadingView != null) LoadingView.ShowError("Failed to load clan war data.", () => Load(mode));
+                if (LoadingView != null) LoadingView.ShowError(Loc.L("Errors.ClanWar.LoadFailed"), () => Load(mode));
                 return;
             }
             if (LoadingView != null) LoadingView.Hide();

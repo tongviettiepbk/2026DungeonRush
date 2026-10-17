@@ -43,15 +43,15 @@ public class UICapeDetailPopup : BaseUI
         elementCape.SetData(data, model, isEquipped);
 
         string color = ColorUtility.ToHtmlStringRGB(UITabWing.GetRarityColor(data.rarity));
-        txtName.text = "<color=#" + color + ">" + data.capeName + "</color>";
-        txtRarity.text = "<color=#" + color + ">[" + data.rarity + "]</color>";
+        txtName.text = "<color=#" + color + ">" + Loc.Or(data.localizationKey, data.capeName) + "</color>";
+        txtRarity.text = "<color=#" + color + ">[" + Loc.Rarity(data.rarity) + "]</color>";
         txtDamage.text = UICapePopup.GetDamageText(data, model.level);
         txtHealth.text = UICapePopup.GetHealthText(data, model.level);
 
         txtSubStats.gameObject.SetActive(model.subStats.Count > 0);
         txtSubStats.text = UITabWing.GetSubStatsText(model.subStats);
 
-        txtEquip.text = isEquipped ? "Unequip" : "Equip";
+        txtEquip.text = isEquipped ? Loc.L("Common.Unequip") : Loc.L("Common.Equip");
         imgEquip.color = isEquipped ? UITabWing.DANGER_BUTTON_COLOR : UITabWing.DEFAULT_BUTTON_COLOR;
     }
 

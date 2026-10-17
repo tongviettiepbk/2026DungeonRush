@@ -23,8 +23,8 @@ public class UIClanWarLeaderboardPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TitleText, "Clan Leaderboard");
-        ClanUIUtil.SetText(NoLeaderText, "No champion clan yet");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.War.ClanLeaderboard.Title"));
+        ClanUIUtil.SetText(NoLeaderText, Loc.L("Clan.War.ClanLeaderboard.NoLeader"));
         if (CloseButton != null) CloseButton.onClick.AddListener(Close);
         if (ChampionClanInfoButton != null) ChampionClanInfoButton.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.LeadershipRankPopup));
     }
@@ -45,7 +45,7 @@ public class UIClanWarLeaderboardPopup : BaseUI
             if (this == null) return;
             if (res == null)
             {
-                if (LoadingView != null) LoadingView.ShowError("Failed to load clan war data.", Load);
+                if (LoadingView != null) LoadingView.ShowError(Loc.L("Errors.ClanWar.LoadFailed"), Load);
                 return;
             }
             if (LoadingView != null) LoadingView.Hide();

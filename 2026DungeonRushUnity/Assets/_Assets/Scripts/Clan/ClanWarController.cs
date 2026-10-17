@@ -306,7 +306,7 @@ public class ClanWarController : Singleton<ClanWarController>
     {
         if (State?.war == null)
         {
-            callback?.Invoke(false, "No active clan war.");
+            callback?.Invoke(false, Loc.L("Errors.ClanWar.NoWar"));
             return;
         }
         string warId = State.war.warId;
@@ -315,7 +315,7 @@ public class ClanWarController : Singleton<ClanWarController>
         {
             if (!ok || res == null || !res.success || res.opponent == null || string.IsNullOrEmpty(res.battleToken))
             {
-                callback?.Invoke(false, res != null && !res.success ? ErrorText(res.code, "Failed to start the battle.") : "Failed to start the battle.");
+                callback?.Invoke(false, res != null && !res.success ? ErrorText(res.code, Loc.L("Errors.ClanWar.StartBattleFailed")) : Loc.L("Errors.ClanWar.StartBattleFailed"));
                 return;
             }
             if (State?.war?.pvp != null) State.war.pvp.myTickets = res.tickets;
@@ -418,7 +418,7 @@ public class ClanWarController : Singleton<ClanWarController>
             if (!ok || res == null || !res.success)
             {
                 DebugCustom.LogWarning("[ClanWar] " + fn + " failed | " + raw);
-                callback?.Invoke(false, res != null ? ErrorText(res.code, "Failed to claim the reward.") : "Failed to claim the reward.", null);
+                callback?.Invoke(false, res != null ? ErrorText(res.code, Loc.L("Errors.ClanWar.ClaimFailed")) : Loc.L("Errors.ClanWar.ClaimFailed"), null);
                 return;
             }
             onSuccess?.Invoke(res);
@@ -470,17 +470,17 @@ public class ClanWarController : Singleton<ClanWarController>
     {
         switch (code)
         {
-            case "ERR_NO_WAR": return "No active clan war.";
-            case "ERR_WAR_STATE": return "The war state has changed. Refresh and try again.";
-            case "ERR_RATE_LIMITED": return "Too many requests. Please wait a moment.";
-            case "ERR_NO_TICKETS": return "No tickets remaining.";
-            case "ERR_ALREADY_DEFEATED": return "This enemy has already been defeated.";
-            case "ERR_TARGET_NOT_IN_ROUND": return "This target is not part of the current round.";
-            case "ERR_NOT_ELIGIBLE": return "You are not eligible for this action.";
-            case "ERR_MILESTONE_NOT_REACHED": return "Milestone not reached yet.";
-            case "ERR_ALREADY_CLAIMED": return "Already claimed.";
-            case "ERR_NOTHING_TO_CLAIM": return "Nothing to claim.";
-            case "ERR_NOT_IN_CLAN": return "You are not in a clan";
+            case "ERR_NO_WAR": return Loc.L("Errors.ClanWar.NoWar");
+            case "ERR_WAR_STATE": return Loc.L("Errors.ClanWar.WrongState");
+            case "ERR_RATE_LIMITED": return Loc.L("Errors.ClanWar.RateLimited");
+            case "ERR_NO_TICKETS": return Loc.L("Errors.ClanWar.NoTickets");
+            case "ERR_ALREADY_DEFEATED": return Loc.L("Errors.ClanWar.AlreadyDefeated");
+            case "ERR_TARGET_NOT_IN_ROUND": return Loc.L("Errors.ClanWar.TargetNotInRound");
+            case "ERR_NOT_ELIGIBLE": return Loc.L("Errors.ClanWar.NotEligible");
+            case "ERR_MILESTONE_NOT_REACHED": return Loc.L("Errors.ClanWar.MilestoneNotReached");
+            case "ERR_ALREADY_CLAIMED": return Loc.L("Errors.ClanWar.AlreadyClaimed");
+            case "ERR_NOTHING_TO_CLAIM": return Loc.L("Errors.ClanWar.NothingToClaim");
+            case "ERR_NOT_IN_CLAN": return Loc.L("Errors.Clan.NotInClan");
             default: return fallback;
         }
     }

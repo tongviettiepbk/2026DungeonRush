@@ -65,7 +65,7 @@ public class MasterUpgradeUI : MonoBehaviour
 
         if (isMax)
         {
-            txtQuantityRequest.text = "MAX";
+            txtQuantityRequest.text = Loc.L("Common.Level.Max");
             txtQuantityRequest.color = colorEnough;
             btUpgrade.interactable = false;
             RefreshTutorial();

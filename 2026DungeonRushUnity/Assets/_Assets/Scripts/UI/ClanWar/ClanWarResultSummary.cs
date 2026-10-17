@@ -26,7 +26,7 @@ public class ClanWarResultSummary : MonoBehaviour
 
     private void Awake()
     {
-        if (ResultSubtitleText != null) ResultSubtitleText.text = "Reward Cooldown";
+        if (ResultSubtitleText != null) ResultSubtitleText.text = Loc.L("Clan.War.Result.Subtitle");
     }
 
     // gdg gốc.
@@ -34,13 +34,13 @@ public class ClanWarResultSummary : MonoBehaviour
     {
         if (NormalHeaderRoot != null) NormalHeaderRoot.SetActive(!war.IsLeadership);
         if (LeadershipHeaderRoot != null) LeadershipHeaderRoot.SetActive(war.IsLeadership);
-        if (ResultTitleText != null) ResultTitleText.text = war.IsLeadership ? "Championship War Result" : "War Result";
+        if (ResultTitleText != null) ResultTitleText.text = war.IsLeadership ? Loc.L("Clan.War.Result.LeadershipTitle") : Loc.L("Clan.War.Result.Title");
         ClanWarProgressSection.SetSide(war.myClan, MyBanner, MyClanNameText, MyTierText, MyServerText);
         ClanWarProgressSection.SetSide(war.enemyClan, EnemyBanner, EnemyClanNameText, EnemyTierText, EnemyServerText);
         bool won = war.won ?? (war.winnerClanId == war.myClan?.clanId);
         if (OutcomeText != null)
         {
-            OutcomeText.text = won ? "Win" : "Loss";
+            OutcomeText.text = won ? Loc.L("Clan.War.Result.Win") : Loc.L("Clan.War.Result.Loss");
             OutcomeText.color = won ? WIN : LOSS;
         }
         SetScore(war.myWarScore, war.enemyWarScore);

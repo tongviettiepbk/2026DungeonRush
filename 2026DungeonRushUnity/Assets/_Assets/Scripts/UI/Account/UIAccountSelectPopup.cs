@@ -47,8 +47,8 @@ public class UIAccountSelectPopup : BaseUI
     // jtf gốc: tên (chưa đặt → "Guest"), rồi 3 dòng level người chơi / màn cao nhất / lưu cách đây bao lâu.
     private static void DrawPreview(PreviewData data, TMP_Text txtName, TMP_Text txtProgress)
     {
-        txtName.text = string.IsNullOrEmpty(data.Nickname) ? "Guest" : data.Nickname;
-        txtProgress.text = string.Format("Player Lv. {0}", data.PlayerLevel) + "\n" + GetStageText(data.HighestStageId) + "\n" + GetSavedText(data.LastSaveUtcMs);
+        txtName.text = string.IsNullOrEmpty(data.Nickname) ? Loc.L("Popup.AccountSelect.GuestName") : data.Nickname;
+        txtProgress.text = string.Format(Loc.L("Popup.AccountSelect.PlayerLevel"), data.PlayerLevel) + "\n" + GetStageText(data.HighestStageId) + "\n" + GetSavedText(data.LastSaveUtcMs);
     }
 
     // jth gốc.
@@ -56,7 +56,7 @@ public class UIAccountSelectPopup : BaseUI
     {
         if (stageId <= 0)
         {
-            return "New adventurer";
+            return Loc.L("Popup.AccountSelect.NewAdventurer");
         }
         StaticCampaignData campaign = GameData.staticData.campaign;
         return "Stage " + campaign.GetChapter(stageId) + "-" + campaign.GetStageIndex(stageId);
@@ -67,23 +67,23 @@ public class UIAccountSelectPopup : BaseUI
     {
         if (lastSaveUtcMs <= 0)
         {
-            return "Last save: unknown";
+            return Loc.L("Popup.AccountSelect.SavedUnknown");
         }
 
         long seconds = Math.Max(0, (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - lastSaveUtcMs) / 1000);
         if (seconds < 60)
         {
-            return "Saved just now";
+            return Loc.L("Popup.AccountSelect.SavedJustNow");
         }
         if (seconds < 3600)
         {
-            return string.Format("Saved {0} min ago", seconds / 60);
+            return string.Format(Loc.L("Popup.AccountSelect.SavedMinutesAgo"), seconds / 60);
         }
         if (seconds < 86400)
         {
-            return string.Format("Saved {0}h ago", seconds / 3600);
+            return string.Format(Loc.L("Popup.AccountSelect.SavedHoursAgo"), seconds / 3600);
         }
-        return string.Format("Saved {0}d ago", seconds / 86400);
+        return string.Format(Loc.L("Popup.AccountSelect.SavedDaysAgo"), seconds / 86400);
     }
 
     // jti gốc.

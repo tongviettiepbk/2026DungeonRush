@@ -97,7 +97,7 @@ public class PvPController : Singleton<PvPController>
             if (!ok || res == null || !res.success)
             {
                 DebugCustom.LogWarning("[PvP] openPvP failed | " + raw);
-                callback?.Invoke(false, res != null && !string.IsNullOrEmpty(res.message) ? res.message : "Failed to load PvP.");
+                callback?.Invoke(false, res != null && !string.IsNullOrEmpty(res.message) ? res.message : Loc.L("Errors.PvP.LoadFailed"));
                 return;
             }
 
@@ -157,17 +157,17 @@ public class PvPController : Singleton<PvPController>
         PvPCachedRosterModel roster = User.cachedRoster;
         if (roster == null || string.IsNullOrEmpty(roster.RosterToken) || roster.ExpiresAt <= Now())
         {
-            callback?.Invoke(false, "Opponent roster expired.");
+            callback?.Invoke(false, Loc.L("Errors.PvP.RosterExpired"));
             return;
         }
         if (opponent == null)
         {
-            callback?.Invoke(false, "Opponent not found.");
+            callback?.Invoke(false, Loc.L("Errors.PvP.OpponentNotFound"));
             return;
         }
         if (TotalTickets <= 0)
         {
-            callback?.Invoke(false, "No PvP tickets remaining.");
+            callback?.Invoke(false, Loc.L("Errors.PvP.NoTicketsRemaining"));
             return;
         }
 
@@ -191,7 +191,7 @@ public class PvPController : Singleton<PvPController>
                     User.cachedRoster = null;
                 }
                 GameData.Save();
-                callback?.Invoke(false, res != null && !string.IsNullOrEmpty(res.message) ? res.message : "Failed to start PvP battle.");
+                callback?.Invoke(false, res != null && !string.IsNullOrEmpty(res.message) ? res.message : Loc.L("Errors.PvP.StartBattleFailed"));
                 return;
             }
 
@@ -329,7 +329,7 @@ public class PvPController : Singleton<PvPController>
         ClaimSettlement();
         if (showToast)
         {
-            UIManager.Instance.ShowToastMessage("Applied pending PvP rewards.", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.PvP.AppliedPendingRewards"), isLocalize: false);
         }
         return true;
     }
@@ -345,7 +345,7 @@ public class PvPController : Singleton<PvPController>
             if (!ok || res == null || !res.success)
             {
                 DebugCustom.LogWarning("[PvP] grantPvPAdTicket failed | " + raw);
-                callback?.Invoke(false, res != null && !string.IsNullOrEmpty(res.message) ? res.message : "Failed to grant ticket.");
+                callback?.Invoke(false, res != null && !string.IsNullOrEmpty(res.message) ? res.message : Loc.L("Errors.PvP.GrantTicketFailed"));
                 return;
             }
             callback?.Invoke(true, null);

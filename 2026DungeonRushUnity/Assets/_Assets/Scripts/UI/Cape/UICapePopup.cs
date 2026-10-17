@@ -128,7 +128,7 @@ public class UICapePopup : BaseUI
     private void RefreshSummonLevel()
     {
         int total = GameData.userData.capes.totalSummons;
-        txtSummonLevel.text = "Lvl " + CapeSummonConfig.GetLevel(total);
+        txtSummonLevel.text = Loc.L("Common.Level.Abbrev", CapeSummonConfig.GetLevel(total));
         CapeSummonConfig.GetProgress(total, out int current, out int required, out bool isMax);
         if (isMax)
         {
@@ -341,7 +341,7 @@ public class UICapePopup : BaseUI
     // "<color=#RRGGBB>[Rarity]</color> Tên"
     public static string GetCapeName(CapeData data)
     {
-        return "<color=#" + ColorUtility.ToHtmlStringRGB(UITabWing.GetRarityColor(data.rarity)) + ">[" + data.rarity + "]</color> " + data.capeName;
+        return "<color=#" + ColorUtility.ToHtmlStringRGB(UITabWing.GetRarityColor(data.rarity)) + ">[" + Loc.Rarity(data.rarity) + "]</color> " + Loc.Or(data.localizationKey, data.capeName);
     }
 
     // "+X.X% Damage" (fu.eqx gốc)

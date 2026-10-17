@@ -25,7 +25,7 @@ public class UISignUpPopup : BaseUI
             return;
         }
 
-        UIManager.Instance.ShowToastMessage("Set a nickname first to link your account", isLocalize: false);
+        UIManager.Instance.ShowToastMessage(Loc.L("Popup.Profile.SetNicknameFirst"), isLocalize: false);
         UINicknamePopup popup = UIManager.Instance.LoadUI(UIKey.NicknamePopup) as UINicknamePopup;
         popup.Show(() =>
         {
@@ -64,12 +64,12 @@ public class UISignUpPopup : BaseUI
         string password = inputPassword.text;
         if (UISignInPopup.IsValidEmail(email) == false)
         {
-            UIManager.Instance.ShowToastMessage("Please enter a valid email", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.Auth.Error.InvalidEmail"), isLocalize: false);
             return;
         }
         if (password.Length < MIN_PASSWORD_LENGTH)
         {
-            UIManager.Instance.ShowToastMessage("Password must be at least 6 characters", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.SignUp.Error.PasswordTooShort"), isLocalize: false);
             return;
         }
 
@@ -79,10 +79,10 @@ public class UISignUpPopup : BaseUI
             SetBusy(false);
             if (ok == false)
             {
-                UIManager.Instance.ShowToastMessage(string.IsNullOrEmpty(error) ? "Sign up failed" : error, isLocalize: false);
+                UIManager.Instance.ShowToastMessage(string.IsNullOrEmpty(error) ? Loc.L("Popup.SignUp.Error.Failed") : error, isLocalize: false);
                 return;
             }
-            UIManager.Instance.ShowToastMessage("Account created", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.SignUp.Success"), isLocalize: false);
             Close();
         });
     }

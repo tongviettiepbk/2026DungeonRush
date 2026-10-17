@@ -45,7 +45,7 @@ public class UICloudSavePopup : BaseUI
         AccountController.Instance.SyncNow((ok, error) =>
         {
             SetBusy(false);
-            UIManager.Instance.ShowToastMessage(ok ? "Synced to cloud" : "Sync failed, try again later", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(ok ? Loc.L("Popup.Profile.SyncedToCloud") : Loc.L("Popup.Profile.SyncFailed"), isLocalize: false);
             Close();
         });
     }

@@ -30,7 +30,7 @@ public class ClanWarDayCard : MonoBehaviour
         if (DayLabelText != null) DayLabelText.text = "Day " + day;
         bool concluded = result != null;
         if (WarScoreValueText != null) WarScoreValueText.text = (concluded ? result.warScore : warScore).ToString();
-        if (StateLabelText != null) StateLabelText.text = concluded ? "Winner" : "Not Concluded";
+        if (StateLabelText != null) StateLabelText.text = concluded ? Loc.L("Clan.War.DaysResults.Winner") : Loc.L("Clan.War.DaysResults.NotConcluded");
         if (WinnerNameText != null)
         {
             WinnerNameText.gameObject.SetActive(concluded);

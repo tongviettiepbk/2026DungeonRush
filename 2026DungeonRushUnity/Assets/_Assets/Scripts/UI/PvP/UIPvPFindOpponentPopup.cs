@@ -64,7 +64,7 @@ public class UIPvPFindOpponentPopup : BaseUI
         if (txtError != null)
         {
             txtError.gameObject.SetActive(list.Count == 0);
-            txtError.text = "No opponents found.\nTry again later.";
+            txtError.text = Loc.L("Popup.PvP.NoOpponents");
         }
     }
 
@@ -84,7 +84,7 @@ public class UIPvPFindOpponentPopup : BaseUI
         if (isStarting) return;
         isStarting = true;
         SetInteractable(false);
-        if (txtTitle != null) txtTitle.text = "Starting battle...";
+        if (txtTitle != null) txtTitle.text = Loc.L("Popup.PvP.StartingBattle");
 
         PvPController.Instance.StartBattle(opponent, (ok, message) =>
         {
@@ -106,7 +106,7 @@ public class UIPvPFindOpponentPopup : BaseUI
                 OnEnable();
                 return;
             }
-            if (txtTitle != null) txtTitle.text = "Choose Opponent";
+            if (txtTitle != null) txtTitle.text = Loc.L("Popup.PvP.ChooseOpponent");
             SetInteractable(true);
         });
     }

@@ -16,7 +16,7 @@ public static class ShopUIUtil
     // "<color=#RRGGBB>Rarity</color>" theo bảng màu rarity (GameResources.jgf gốc).
     public static string ColoredRarity(Rarity rarity)
     {
-        return Colored(rarity.ToString(), UITabWing.GetRarityColor(rarity));
+        return Colored(Loc.Rarity(rarity), UITabWing.GetRarityColor(rarity));
     }
 
     public static string Colored(string text, Color color)

@@ -265,11 +265,11 @@ public class PvPMode : BaseMode
         }
 
         string message;
-        if (!done || (!success && result == null)) message = "Result will be synced when the connection recovers.";
-        else if (!success) message = ClanWarController.ErrorText(result.code, "Failed to report battle.");
-        else if (result.alreadyDefeated) message = "This enemy was already defeated by your clan. No points awarded.";
+        if (!done || (!success && result == null)) message = Loc.L("Clan.War.Battle.ResultPending");
+        else if (!success) message = ClanWarController.ErrorText(result.code, Loc.L("Errors.PvP.ReportBattleFailed"));
+        else if (result.alreadyDefeated) message = Loc.L("Clan.War.Battle.AlreadyDefeated");
         else if (result.pointsAwarded > 0) message = "+" + result.pointsAwarded + " Contribution Points earned!";
-        else message = won ? "Victory!" : "Defeated";
+        else message = won ? Loc.L("Popup.PvP.Victory") : Loc.L("Popup.PvP.Defeat");
         UIManager.Instance.ShowToastMessage(message, isLocalize: false);
 
         if (GameController.Instance.isChangingMode)
@@ -313,7 +313,7 @@ public class PvPMode : BaseMode
         float remain = Mathf.Max(0f, totalTime - timer);
         if (lobby.txtTimePvp != null)
         {
-            lobby.txtTimePvp.text = Mathf.CeilToInt(remain) + "s";
+            lobby.txtTimePvp.text = Mathf.CeilToInt(remain) + Loc.L("Common.Time.Seconds");
         }
         if (clockHand != null && totalTime > 0)
         {

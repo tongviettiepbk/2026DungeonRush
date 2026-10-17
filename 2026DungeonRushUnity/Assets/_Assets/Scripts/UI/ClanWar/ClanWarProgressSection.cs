@@ -34,7 +34,7 @@ public class ClanWarProgressSection : MonoBehaviour
     {
         if (NormalHeaderRoot != null) NormalHeaderRoot.SetActive(!war.IsLeadership);
         if (LeadershipHeaderRoot != null) LeadershipHeaderRoot.SetActive(war.IsLeadership);
-        if (ProgressTitleText != null) ProgressTitleText.text = war.IsLeadership ? "Championship War" : "War Progress";
+        if (ProgressTitleText != null) ProgressTitleText.text = war.IsLeadership ? Loc.L("Clan.Battle.LeadershipTitle") : Loc.L("Clan.War.Progress.Title");
         if (ProgressDayText != null) ProgressDayText.text = "Day " + Mathf.Clamp(war.activeDay, 1, 6);
 
         SetSide(war.myClan, MyBanner, MyClanNameText, MyTierText, MyServerText);
@@ -76,7 +76,7 @@ public class ClanWarProgressSection : MonoBehaviour
         if (side == null) return;
         if (banner != null) banner.SetBanner(side.Banner);
         if (name != null) name.text = side.clanName;
-        if (tier != null) tier.text = "Tier " + ClanRoleExt.TierText(side.rewardTier);
+        if (tier != null) tier.text = (Loc.L("Clan.Common.Tier") + " ") + ClanRoleExt.TierText(side.rewardTier);
         if (server != null) server.text = side.server;
     }
 }

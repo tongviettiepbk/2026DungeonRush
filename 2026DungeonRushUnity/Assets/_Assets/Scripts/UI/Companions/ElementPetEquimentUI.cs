@@ -107,7 +107,7 @@ public class ElementPetEquimentUI : MonoBehaviour
     {
         if (model.level >= CompanionUpgradeConfig.MAX_LEVEL)
         {
-            txtProcess.text = "MAX";
+            txtProcess.text = Loc.L("Common.Level.Max");
             imgProcess.fillAmount = 1f;
             return;
         }

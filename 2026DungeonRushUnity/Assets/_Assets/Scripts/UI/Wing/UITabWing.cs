@@ -387,7 +387,7 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         txtInfoLevel.text = "Lv " + level;
 
         btEquip.gameObject.SetActive(model != null);
-        txtEquip.text = isEquipped ? "Unequip" : "Equip";
+        txtEquip.text = isEquipped ? Loc.L("Common.Unequip") : Loc.L("Common.Equip");
 
         btLevelUp.gameObject.SetActive(model != null);
         if (model == null)
@@ -617,13 +617,13 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public static string GetWingName(WingData wing)
     {
         int index = Mathf.Clamp((int)wing.rarity, 0, RARITY_COLORS.Length - 1);
-        return "<color=#" + RARITY_COLORS[index] + ">[" + wing.rarity + "]</color> " + wing.wingName;
+        return "<color=#" + RARITY_COLORS[index] + ">[" + Loc.Rarity(wing.rarity) + "]</color> " + Loc.Or(wing.localizationKey, wing.wingName);
     }
 
     // "Health X\nDamage Y" theo level (vh.lal / vh.lak).
     public static string GetBaseStatText(WingData wing, int level)
     {
-        return "Health " + GearStatCalculator.GetWingHealth(wing, level).ToLetter(false)
+        return (Loc.L("Items.SubStat.Health") + " ") + GearStatCalculator.GetWingHealth(wing, level).ToLetter(false)
             + "\nDamage " + GearStatCalculator.GetWingDamage(wing, level).ToLetter(false);
     }
 

@@ -27,7 +27,7 @@ public class ClanWarClanRowCard : MonoBehaviour
             Banner.SetCrown(isChampion);
         }
         if (NameText != null) NameText.text = row.clanName;
-        if (TierText != null) TierText.text = "Tier " + ClanRoleExt.TierText(row.tier);
+        if (TierText != null) TierText.text = (Loc.L("Clan.Common.Tier") + " ") + ClanRoleExt.TierText(row.tier);
         if (TotalPowerText != null) TotalPowerText.text = ClanUIUtil.PowerText(row.totalPower);
         if (ServerText != null) ServerText.text = row.server;
         if (BackgroundImage != null) BackgroundImage.color = isMine ? HighlightColor : NormalColor;

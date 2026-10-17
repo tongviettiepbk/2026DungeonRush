@@ -38,7 +38,7 @@ public class UIPvPLeaderboardPopup : BaseUI
     protected override void OnEnable()
     {
         base.OnEnable();
-        if (txtTitle != null) txtTitle.text = "Leaderboard";
+        if (txtTitle != null) txtTitle.text = Loc.L("Popup.PvP.Leaderboard.Title");
         SelectTab(0);
     }
 
@@ -69,7 +69,7 @@ public class UIPvPLeaderboardPopup : BaseUI
             SetLoading(false);
             if (res == null)
             {
-                UIManager.Instance.ShowToastMessage("Failed to load leaderboard.", isLocalize: false);
+                UIManager.Instance.ShowToastMessage(Loc.L("Errors.PvP.LoadLeaderboardFailed"), isLocalize: false);
                 return;
             }
             Draw(res);

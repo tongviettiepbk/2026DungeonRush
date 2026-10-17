@@ -363,21 +363,21 @@ public class ClanController : Singleton<ClanController>
     {
         switch (code)
         {
-            case "ERR_NOT_FOUND": return "Clan not found";
-            case "ERR_CONFLICT_STATE_CHANGED": return "State changed, refresh and retry";
-            case "ERR_NOT_IN_CLAN": return "You are not in a clan";
-            case "ERR_FORBIDDEN": return "You don't have permission to do that";
-            case "ERR_VALIDATION": return "Invalid input";
-            case "ERR_ALREADY_IN_CLAN": return "You are already in a clan";
-            case "ERR_REQUEST_ALREADY_PENDING": return "Request already pending";
-            case "ERR_REQUEST_COOLDOWN": return "Daily join request limit reached";
-            case "ERR_REQUEST_NOT_PENDING": return "This request is no longer pending";
-            case "ERR_CLAN_FULL": return "Clan is full";
-            case "ERR_CAPTAIN_LIMIT": return "Already have the maximum number of captains";
-            case "ERR_NAME_TAKEN": return "This clan name is already taken";
-            case "ERR_JOIN_COOLDOWN": return "You must wait 24 hours after leaving a clan before joining another.";
-            case "ERR_INTERNAL": return "Something went wrong, please try again";
-            default: return string.IsNullOrEmpty(fallback) ? "Something went wrong, please try again" : fallback;
+            case "ERR_NOT_FOUND": return Loc.L("Errors.Clan.NotFound");
+            case "ERR_CONFLICT_STATE_CHANGED": return Loc.L("Errors.Clan.StateChanged");
+            case "ERR_NOT_IN_CLAN": return Loc.L("Errors.Clan.NotInClan");
+            case "ERR_FORBIDDEN": return Loc.L("Errors.Clan.Forbidden");
+            case "ERR_VALIDATION": return Loc.L("Errors.Clan.Validation");
+            case "ERR_ALREADY_IN_CLAN": return Loc.L("Errors.Clan.AlreadyInClan");
+            case "ERR_REQUEST_ALREADY_PENDING": return Loc.L("Errors.Clan.RequestAlreadyPending");
+            case "ERR_REQUEST_COOLDOWN": return Loc.L("Errors.Clan.RequestCooldown");
+            case "ERR_REQUEST_NOT_PENDING": return Loc.L("Errors.Clan.RequestNotPending");
+            case "ERR_CLAN_FULL": return Loc.L("Errors.Clan.Full");
+            case "ERR_CAPTAIN_LIMIT": return Loc.L("Errors.Clan.CaptainLimit");
+            case "ERR_NAME_TAKEN": return Loc.L("Errors.Clan.NameTaken");
+            case "ERR_JOIN_COOLDOWN": return Loc.L("Errors.Clan.JoinCooldown");
+            case "ERR_INTERNAL": return Loc.L("Errors.Clan.Generic");
+            default: return string.IsNullOrEmpty(fallback) ? Loc.L("Errors.Clan.Generic") : fallback;
         }
     }
 

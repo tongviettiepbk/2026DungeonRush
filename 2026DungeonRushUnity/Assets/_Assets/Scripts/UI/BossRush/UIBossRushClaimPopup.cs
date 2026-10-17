@@ -49,7 +49,7 @@ public class UIBossRushClaimPopup : BaseUI
     {
         poolId = id;
         gemAmount = 0;
-        if (txtTitle != null) txtTitle.text = "Boss Rush Results";
+        if (txtTitle != null) txtTitle.text = Loc.L("Popup.BossRushClaim.Title");
         SetState(loading: true, error: false);
 
         BossRushController.Instance.Claim(poolId, (res, error) =>
@@ -58,7 +58,7 @@ public class UIBossRushClaimPopup : BaseUI
             if (error != null || res == null)
             {
                 SetState(loading: false, error: true);
-                if (txtError != null) txtError.text = error ?? "Failed to claim rewards. Please try again.";
+                if (txtError != null) txtError.text = error ?? Loc.L("Popup.BossRushClaim.ClaimFailed");
                 return;
             }
 

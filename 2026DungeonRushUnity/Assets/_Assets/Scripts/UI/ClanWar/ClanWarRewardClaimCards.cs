@@ -38,12 +38,12 @@ public class ClanWarRewardClaimCards : MonoBehaviour
 
     private void Awake()
     {
-        ClanUIUtil.SetText(PersonalCardTitleText, "Personal Rewards");
-        ClanUIUtil.SetText(ClanCardTitleText, "Clan Rewards");
-        ClanUIUtil.SetText(PersonalClaimButtonText, "Claim");
-        ClanUIUtil.SetText(ClanClaimButtonText, "Claim");
-        ClanUIUtil.SetText(PersonalClaimedStateText, "Claimed");
-        ClanUIUtil.SetText(ClanClaimedStateText, "Claimed");
+        ClanUIUtil.SetText(PersonalCardTitleText, Loc.L("Clan.War.RewardCard.PersonalTitle"));
+        ClanUIUtil.SetText(ClanCardTitleText, Loc.L("Clan.War.RewardCard.ClanTitle"));
+        ClanUIUtil.SetText(PersonalClaimButtonText, Loc.L("Clan.War.RewardCard.Claim"));
+        ClanUIUtil.SetText(ClanClaimButtonText, Loc.L("Clan.War.RewardCard.Claim"));
+        ClanUIUtil.SetText(PersonalClaimedStateText, Loc.L("Clan.War.RewardCard.Claimed"));
+        ClanUIUtil.SetText(ClanClaimedStateText, Loc.L("Clan.War.RewardCard.Claimed"));
         if (PersonalClaimButton != null) PersonalClaimButton.onClick.AddListener(OnPersonalClicked);
         if (ClanClaimButton != null) ClanClaimButton.onClick.AddListener(OnClanClicked);
     }
@@ -69,7 +69,7 @@ public class ClanWarRewardClaimCards : MonoBehaviour
         bool noReward = !clanClaimed && !eligible;
         if (ClanRewardsView != null) ClanRewardsView.SetRewards(noReward ? null : clan);
         ClanUIUtil.SetActive(ClanClaimButton, !clanClaimed && eligible && clan != null && !clan.IsEmpty);
-        ClanUIUtil.SetText(ClanClaimedStateText, noReward ? NO_CONTRIBUTION_TEXT : "Claimed");
+        ClanUIUtil.SetText(ClanClaimedStateText, noReward ? NO_CONTRIBUTION_TEXT : Loc.L("Clan.War.RewardCard.Claimed"));
         ClanUIUtil.SetActive(ClanClaimedRoot, clanClaimed || noReward);
     }
 

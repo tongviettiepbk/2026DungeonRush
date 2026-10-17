@@ -31,7 +31,7 @@ public class UIBossRushJoinPopup : BaseUI
         base.OnEnable();
         isJoining = false;
         SetLoading(false);
-        if (txtTitle != null) txtTitle.text = "Boss Rush";
+        if (txtTitle != null) txtTitle.text = Loc.L("Popup.BossRushJoin.Title");
         Refresh();
         CheckUnclaimed();
     }
@@ -65,14 +65,14 @@ public class UIBossRushJoinPopup : BaseUI
         bool active = BossRushSchedule.IsActive(now);
 
         if (txtTierName != null) txtTierName.text = GameData.staticData.bossRush.GetTierName(GameData.userData.bossRush.tier);
-        if (txtDescription != null) txtDescription.text = active ? "Fight with an 8-player team and challenge bosses." : "No events today.";
+        if (txtDescription != null) txtDescription.text = active ? Loc.L("Popup.BossRushJoin.Description.Active") : Loc.L("Popup.BossRushJoin.Description.Inactive");
         if (txtTimer != null)
         {
             txtTimer.text = active
                 ? "Ends in: " + BossRushSchedule.FormatRemain(BossRushSchedule.GetEventEnd(now) - now)
                 : "Starts in " + BossRushSchedule.FormatRemain(BossRushSchedule.GetNextEventStart(now) - now);
         }
-        if (txtJoinButton != null) txtJoinButton.text = active || HasUnclaimed ? "Join" : "Ok";
+        if (txtJoinButton != null) txtJoinButton.text = active || HasUnclaimed ? Loc.L("Popup.BossRushJoin.JoinButton") : Loc.L("Popup.BossRushJoin.OkButton");
     }
 
     private static bool HasUnclaimed => string.IsNullOrEmpty(GameData.userData.bossRush.unclaimedPoolId) == false;
@@ -96,7 +96,7 @@ public class UIBossRushJoinPopup : BaseUI
             if (!ok || res == null)
             {
                 // Popup.BossRush.ResultsPreparing gốc: server đang chốt mùa cũ / dựng sảnh mùa mới.
-                string message = res != null && res.preparing ? "Results are being prepared" : "Failed to join Boss Rush. Please try again.";
+                string message = res != null && res.preparing ? Loc.L("Popup.BossRush.ResultsPreparing") : Loc.L("Errors.BossRush.JoinFailed");
                 UIManager.Instance.ShowToastMessage(message, isLocalize: false);
                 return;
             }
@@ -112,7 +112,7 @@ public class UIBossRushJoinPopup : BaseUI
             }
             else
             {
-                UIManager.Instance.ShowToastMessage("No events today.", isLocalize: false);
+                UIManager.Instance.ShowToastMessage(Loc.L("Popup.BossRushJoin.Description.Inactive"), isLocalize: false);
             }
         });
     }

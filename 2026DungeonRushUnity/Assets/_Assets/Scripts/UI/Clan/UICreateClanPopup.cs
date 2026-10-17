@@ -28,16 +28,16 @@ public class UICreateClanPopup : BaseUI
     protected override void Awake()
     {
         base.Awake();
-        ClanUIUtil.SetText(TitleText, "Enter Clan Name");
-        ClanUIUtil.SetText(NameLabel, "Clan Name");
-        ClanUIUtil.SetText(BannerLabel, "Banner");
-        ClanUIUtil.SetText(BrowseButtonText, "Browse");
-        ClanUIUtil.SetText(PublicLabel, "Public");
+        ClanUIUtil.SetText(TitleText, Loc.L("Clan.Create.Title"));
+        ClanUIUtil.SetText(NameLabel, Loc.L("Clan.Common.ClanName"));
+        ClanUIUtil.SetText(BannerLabel, Loc.L("Clan.Common.Banner"));
+        ClanUIUtil.SetText(BrowseButtonText, Loc.L("Clan.Common.Browse"));
+        ClanUIUtil.SetText(PublicLabel, Loc.L("Clan.Common.Public"));
         ClanUIUtil.SetText(CreateButtonText, "Create \n<sprite=0>" + StaticClanData.CREATE_COST_GEM);
         if (NameInput != null)
         {
             NameInput.characterLimit = StaticClanData.NAME_MAX;
-            if (NameInput.placeholder is TMP_Text ph) ph.text = "Clan Name...";
+            if (NameInput.placeholder is TMP_Text ph) ph.text = Loc.L("Clan.Common.NamePlaceholder");
         }
         if (CreateButton != null) CreateButton.onClick.AddListener(OnCreateClicked);
         if (CloseButton != null) CloseButton.onClick.AddListener(OnCloseClicked);
@@ -106,7 +106,7 @@ public class UICreateClanPopup : BaseUI
         SetBusy(false);
         if (!ok)
         {
-            ClanUIUtil.Toast(error ?? "Failed to create clan");
+            ClanUIUtil.Toast(error ?? Loc.L("Errors.Clan.CreateFailed"));
             return;
         }
         GameData.userData.items.Consume(ItemType.GEM, StaticClanData.CREATE_COST_GEM);

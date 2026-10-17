@@ -35,10 +35,10 @@ public class ClanSearchCard : MonoBehaviour
         if (JoinButton != null) JoinButton.onClick.AddListener(() => onJoin?.Invoke(clan));
         if (RequestButton != null) RequestButton.onClick.AddListener(() => onRequest?.Invoke(clan));
         if (CardButton != null) CardButton.onClick.AddListener(() => onClick?.Invoke(clan));
-        ClanUIUtil.SetText(MembersLabel, "Members");
-        ClanUIUtil.SetText(JoinButtonText, "Join");
-        ClanUIUtil.SetText(RequestButtonText, "Request");
-        ClanUIUtil.SetText(RequestedText, "Requested");
+        ClanUIUtil.SetText(MembersLabel, Loc.L("Clan.Common.Members"));
+        ClanUIUtil.SetText(JoinButtonText, Loc.L("Clan.Common.Join"));
+        ClanUIUtil.SetText(RequestButtonText, Loc.L("Clan.Common.Request"));
+        ClanUIUtil.SetText(RequestedText, Loc.L("Clan.Common.Requested"));
     }
 
     // fwg gốc.

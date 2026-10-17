@@ -86,7 +86,7 @@ public class MasteryUI : MonoBehaviour
         MasteryUpgradeData next = GetNextLocked();
         if (next == null)
         {
-            txtQuantityGem.text = "MAX";
+            txtQuantityGem.text = Loc.L("Common.Level.Max");
             txtQuantityGem.color = colorEnough;
             BtSummonMastery.interactable = false;
             return;

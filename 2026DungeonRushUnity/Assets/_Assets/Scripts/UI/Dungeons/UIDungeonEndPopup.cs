@@ -30,7 +30,7 @@ public class UIDungeonEndPopup : BaseUI
 
         if (isWin)
         {
-            txtTitle.text = "Completed";
+            txtTitle.text = Loc.L("Popup.DungeonEnd.SuccessTitle");
             TMP_SpriteAsset spriteAsset = GetSpriteAsset(type);
             if (spriteAsset != null)
             {
@@ -44,8 +44,8 @@ public class UIDungeonEndPopup : BaseUI
         }
         else
         {
-            txtTitle.text = "Defeat";
-            txtInfo.text = "Better luck next time!";
+            txtTitle.text = Loc.L("Popup.DungeonEnd.DefeatTitle");
+            txtInfo.text = Loc.L("Popup.DungeonEnd.DefeatDescription");
         }
     }
 

@@ -40,7 +40,7 @@ public class DailyDealSlotUI : MonoBehaviour
         }
 
         if (RootContainer != null) RootContainer.SetActive(true);
-        ShopUIUtil.SetText(TitleText, string.Format("{0} Deal", TYPE_NAMES[(int)type]));
+        ShopUIUtil.SetText(TitleText, string.Format(Loc.L("UI.Store.DailyDeal.Title"), TYPE_NAMES[(int)type]));
         int count = FillRewards(size, type);
         ApplyLayout(count);
         ShopUIUtil.SetText(PriceText, PurchaseController.Instance.GetPriceText(DailyDealService.GetProductId(size)) ?? "N/A");

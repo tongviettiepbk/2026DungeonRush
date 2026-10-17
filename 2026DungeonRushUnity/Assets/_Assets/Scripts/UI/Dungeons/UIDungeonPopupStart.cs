@@ -54,7 +54,7 @@ public class UIDungeonPopupStart : BaseUI
         DungeonConfig data = GameData.staticData.dungeons.GetData(type);
         DungeonProgress progress = DungeonService.GetProgress(type);
 
-        txtTitle.text = data.displayName;
+        txtTitle.text = data.LocalizedName;
         txtLvl.text = StaticDungeonData.GetDifficultyText(progress.level);
         txtQuantityReward.text = GameData.staticData.dungeons.GetReward(type, progress.level).ToString();
         txtQuantityKeyProcess.text = progress.TotalKeys + "/" + StaticDungeonData.DAILY_KEYS;
@@ -108,7 +108,7 @@ public class UIDungeonPopupStart : BaseUI
         // Đang trong 1 dungeon khác (lobby vẫn bấm được trong trận) → chặn (UI.Dungeon.InProgress gốc).
         if (GameController.Instance.mode != null && GameController.Instance.mode.type != ModeType.DefaultLevel)
         {
-            UIManager.Instance.ShowToastMessage("Dungeon in progress", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(Loc.L("UI.Dungeon.InProgress"), isLocalize: false);
             return;
         }
 

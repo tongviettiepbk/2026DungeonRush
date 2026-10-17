@@ -179,7 +179,7 @@ public class ExperienceUI : MonoBehaviour
     // kfr gốc: Common.Level.Abbrev "Lvl {0}".
     private void RefreshLevelText()
     {
-        if (LevelText != null) LevelText.text = "Lvl " + GameData.userData.player.playerLevel;
+        if (LevelText != null) LevelText.text = Loc.L("Common.Level.Abbrev", GameData.userData.player.playerLevel);
     }
 
     // kfo gốc.
@@ -188,7 +188,7 @@ public class ExperienceUI : MonoBehaviour
         if (PercentageText == null) return;
         if (PlayerExpService.IsMaxLevel)
         {
-            PercentageText.text = "MAX";
+            PercentageText.text = Loc.L("Common.Max");
             return;
         }
 
