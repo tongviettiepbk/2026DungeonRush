@@ -16,4 +16,6 @@ Map (vị trí box) và enemy spawn của DungeonRush **KHÔNG lưu toạ độ 
 - Layout tay chỉ tồn tại dưới dạng schema `GridLevelRuntimeData` (Cells[]+BrushNames[]+EnemyGear[]=CreativeCharacterGearData, SpawnerGear, SnakeData) nhưng KHÔNG ship asset nào.
 - Độ khó = `TierData` 8 bậc (Normal→Hell III) + scaler tiến trình (army_power_level_scaler=20, exponential=√10≈3.162, experience_level_base=49/mult=10).
 
+**ĐÍNH CHÍNH 2026-10-17:** LevelGenerator (8×12, 10–15 box, seed 31577) chỉ là tool Editor; runtime thật = `rw.itr` (9×12, seed level×7912, đối xứng) — xem [[dungonrush-campaign-map-original]] và mục 7 của doc.
+
 Tài liệu đầy đủ: `DecodedData/MAP_AND_SPAWN_MODEL.md`. Xem thêm [[dungonrush-map-grid-background]], [[dungeonrush-config-format]].
