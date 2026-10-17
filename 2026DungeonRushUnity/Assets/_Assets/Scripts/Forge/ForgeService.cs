@@ -12,6 +12,9 @@ public static class ForgeService
     // AutoForgePopup.HammerUnlockLevels — mốc playerLevel mở thêm 1 búa/lượt (khi chưa tới Mastery).
     public static readonly int[] HAMMER_UNLOCK_LEVELS = { 0, 10, 20, 30, 40, 50, 60, 70 };
 
+    // GameResources.StartingLootBoxCount — số búa tặng người mới (remote config starting_loot_box_count).
+    public const int STARTING_LOOT_BOX_COUNT = 240;
+
     // Số ô chọn búa trong popup (Option1..Option1_7).
     public const int HAMMER_OPTION_COUNT = 8;
 

@@ -61,7 +61,7 @@
 - [Reskin đồ hero (art)](dungonrush-hero-equipment-reskin.md) — ảnh gốc 8 slot gom về _ResourceGame/HeroEquipment/; brief art GDD/ART_HERO_EQUIPMENT.md; mapping Gloves→áo, Wing→kính, Cape→tẩu
 - [Anim hero = unit_all](dungonrush-hero-anim-unit-all.md) — 00Hero dùng unit_all.controller; UnitAnimatorController: show→idle, run, đánh gần strike_atk / xa gun_atk; lật hướng theo đối thủ khi đánh; chưa test Play
 - [UI lobby = UIMainGame2](dungonrush-main-ui-uimaingame2.md) — 2026-10-15 đã xoá UiMainGame tự dựng; UIMainGame2 gốc gắn UIMainLobby + 7 page ở Pages; XP/máu boss dùng Slider; LevelText = Tier campaign + icon dungeon theo gốc (2026-10-16)
-- [Loot + Auto Loot theo gốc](dungonrush-forge-auto-loot.md) — 2026-10-15: ForgeUIController + popup gốc, bán đồ = EXP, UserForgeData; builder Tools/DungeonRush/Build Forge UI; chữ popup tiếng Anh (font thiếu dấu)
+- [Loot + Auto Loot theo gốc](dungonrush-forge-auto-loot.md) — người mới +240 búa (gốc); 2026-10-15: ForgeUIController + popup gốc, bán đồ = EXP, UserForgeData; builder Tools/DungeonRush/Build Forge UI; chữ popup tiếng Anh (font thiếu dấu)
 - [Nút Boost xem quảng cáo](dungonrush-ad-boost-button.md) — Boost x2 +5m cạnh Loot = EXP ×AdBoostWorth/AdBoostDuration (Mastery), trần 12 lượt; icon = IsAd; dựng 2026-10-16
 - [FX mảnh EXP campaign](dungonrush-exp-shard-drop.md) — quái chết rơi mảnh exp, thắng bay về hero (LootDropController gốc); dựng 2026-10-16
 - [Thanh exp + lên level](dungonrush-experience-ui-levelup.md) — ExperienceUI + UILevelPopup theo gốc: exp chặn ở mức đầy, bấm Complete mới lên level (+gem); dựng 2026-10-16

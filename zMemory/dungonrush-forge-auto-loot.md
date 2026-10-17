@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: a7a13290-8879-4f3d-a10b-9bf6dc65113c
-  modified: 2026-10-15T11:03:10.476Z
+  modified: 2026-10-17T12:00:00.000Z
 ---
 
 Dựng 2026-10-15 theo reverse libil2cpp (doc: `DecodedData/FORGE_MODEL.md`). User chốt: làm ĐỦ như gốc, bán đồ cộng EXP, popup 1 thẻ.
@@ -24,6 +24,8 @@ Dựng 2026-10-15 theo reverse libil2cpp (doc: `DecodedData/FORGE_MODEL.md`). Us
 
 - Anim/FX nút Loot (2026-10-16, reverse ForgeUI.idn/ied/iee/ids/iei/iem + ForgeButton.ibt/ibu): ForgeUIController thêm state PlayingAnimation — hộp `Box` 0.8→1 OutBack 0.15s → chờ 0.4 → tiếng BoxPunch + PunchRotation(0,0,15) 0.4s → chờ 0.2 → tiếng BoxOpen, ẩn hộp, particle `LootBoxUIParticle` → món nảy 0→1 (OutBack 0.05) + `ItemGlowImage` màu rarity alpha 0.24; bán → particle exp `CoinUIParticle` (chặn 0.1s); gỡ món thu về 0 InBack 0.05. Nút `ForgeButtonView` (port ForgeButton) lún xám suốt lượt loot/auto, nhả khi rảnh; rảnh 3s → vệt sáng `MovingImage` chạy +500 trong 0.4s, nghỉ 2s, lặp (Mask thay SoftMask, node Mask đã bật). Test Play pass.
 - Particle không có UIParticle: root LootBox scale 50 / Coin scale 250 (= Scale3D gốc), renderer sorting = root canvas +1 (set lúc Play). BẪY: renderer bản rip bị `enabled=false` + Coin thiếu material → đã tạo `Prefabs/Fx/Materials/exp_AB.mat`, TSA sprite = box-loot. Âm thanh gốc (AudioConfig): BoxPunch = footstep_wood_wobble_03, BoxOpen = wood_tree_branch_break_03 (đã có trong _Sound).
+
+- Quà người mới (2026-10-17): +240 búa (LOOT_TICKET) trong `UserData.LoadDone` khi isNewUser = `GameResources.StartingLootBoxCount` gốc (remote config `starting_loot_box_count`=240, StartingGem=0); hằng `ForgeService.STARTING_LOOT_BOX_COUNT`. Save cũ không được cộng lại (Editor: phím L +100). Nguồn búa gốc: quà đầu, offline 1/phút, Dragon dungeon 50+1×(lv-1), rương ads, shop/deal, BattlePass, BossRush/PvP. Quái chết KHÔNG rơi búa (LootDropController.hsl chỉ chạy ở chế độ Creative quay quảng cáo).
 
 **Why:** user muốn bỏ 2 prefab tự dựng, dùng prefab gốc và hoàn thiện auto loot.
 **How to apply:** sửa loot thì sửa ForgeUIController/ForgeService; đổi layout popup bằng tay thì đừng chạy lại builder. Xem [[dungonrush-loot-forge-design]], [[dungonrush-main-ui-uimaingame2]], [[dungonrush-mastery-feature]].

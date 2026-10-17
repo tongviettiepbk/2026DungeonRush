@@ -136,6 +136,8 @@ public class UserData
 
         if (isNewUser)
         {
+            // Quà người mới: GameResources.StartingLootBoxCount gốc (remote config starting_loot_box_count = 240).
+            items.Receive(ItemType.LOOT_TICKET, ForgeService.STARTING_LOOT_BOX_COUNT);
             RefreshNewDay();
             Save(true);
         }
