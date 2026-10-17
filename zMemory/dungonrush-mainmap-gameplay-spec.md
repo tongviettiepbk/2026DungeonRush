@@ -45,3 +45,5 @@ Spec MainMap do user mô tả (2026-07-29), là hướng gameplay CHÍNH THỨC 
 **CÒN LẠI (cần Unity):** ~~tag TeamA/TeamB~~ (✅ đã thêm); prefab unit có rig BaseUnit (con Body/FlipPoints/CenterBody/FirePoint/health-bar + Rigidbody2D+AudioSource+AnimationController) gán vào CombatDirector; Hero mặc gear hiển thị (Spine slot); AnimationController Spine thật; verify LIVE. Hero stat hiện là placeholder trên Inspector (sau lấy từ gear/companion).
 
 Liên quan: [[dungonrush-rebuild-progress]], [[dungonrush-map-spawn-procedural]], [[dungonrush-genre-rpg-action]].
+
+**LỖI THỜI 2026-10-17:** enemy KHÔNG thụ động kiểu aggro 3.5/leash nữa (gốc: tầm phát hiện 4, bám mục tiêu, không mục tiêu thì đi tuần); pet KHÔNG lao vào đánh (chỉ đi theo hero) — xem [[dungonrush-movement-original]].

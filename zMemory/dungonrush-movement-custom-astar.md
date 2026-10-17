@@ -23,3 +23,5 @@ Tránh chướng ngại = A* chỉ đi qua ô walkable (loại tường ngay khi
 **Áp dụng khi port sang bản mới:** tự implement A* grid theo mô hình này, đừng gắn NavMeshAgent. Liên quan [[dungonrush-map-spawn-procedural]] (map procedural, grid 9x12+wall) và [[dungonrush-mainmap-gameplay-spec]].
 
 Ghi chú: IL2CPP nên method body bị strip (return null/rỗng); chỉ có chữ ký + tên field + hằng số để suy ra thuật toán.
+
+**ĐÃ PORT 2026-10-17:** A* 8 hướng + lái lực vật lý theo thân hàm gốc — xem [[dungonrush-movement-original]] (doc DecodedData/MOVEMENT_MODEL.md).

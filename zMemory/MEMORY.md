@@ -70,3 +70,4 @@
 - [Battle Pass](dungonrush-battle-pass.md) — dựng theo gốc 2026-10-17 (CHƯA test Play): mốc 20+5k theo HighestLevel, Free/Premium, pool thưởng gốc
 - [Localization theo gốc](dungonrush-localization.md) — 10 ngôn ngữ gốc, key "Popup.X.Y", Loc.L/LocalizeText.key, font fallback Noto, popup chọn ngôn ngữ; XONG 2026-10-17 CHƯA test Play
 - [Map campaign theo gốc](dungonrush-campaign-map-original.md) — rw.itr đối xứng seed level×7912, hero/pet/quái theo GridManager gốc; PointStart sửa; chuyển màn qua cửa trên (không vào cổng dưới — gốc tắt); CHƯA test Play
+- [Di chuyển theo gốc](dungonrush-movement-original.md) — A* 8 hướng, lái lực Rigidbody động, Idle/Move/Patrol, quái phát hiện 4, pet chỉ đi theo; CHƯA test Play
