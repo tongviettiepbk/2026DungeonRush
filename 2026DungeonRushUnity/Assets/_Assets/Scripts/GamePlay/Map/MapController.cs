@@ -10,6 +10,8 @@ using UnityEngine;
 public class MapController : Singleton<MapController>
 {
     public Transform pointStart;                  // Mốc gốc lưới: ô (0,0) neo ĐÚNG tại đây (góc DƯỚI-TRÁI). Null → dùng fallbackOrigin.
+    public Transform topDoor1;                    // Cánh cửa trên bên trái (GameplayEnvironmentRefs.TopDoor1 gốc) — mở khi qua màn.
+    public Transform topDoor2;                    // Cánh cửa trên bên phải (TopDoor2).
     public int[,] Grid { get; private set; }      // Grid[row, col]: 0 = trống, 1 = wall
     public int Rows => Grid != null ? Grid.GetLength(0) : 0;
     public int Cols => Grid != null ? Grid.GetLength(1) : 0;

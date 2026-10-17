@@ -15,13 +15,14 @@ public class AudioManager : Singleton<AudioManager>
         DontDestroyOnLoad(gameObject);
     }
 
-    public void PlaySfx(AudioClip clip)
+    // volumeScale: âm lượng riêng của clip theo AudioConfig gốc (VD DoorOpenVolume 0.151).
+    public void PlaySfx(AudioClip clip, float volumeScale = 1f)
     {
         if (isMuteSfx || clip == null || sfxSource == null)
         {
             return;
         }
 
-        sfxSource.PlayOneShot(clip, SfxVolume);
+        sfxSource.PlayOneShot(clip, SfxVolume * volumeScale);
     }
 }

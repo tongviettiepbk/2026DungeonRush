@@ -190,3 +190,20 @@ Còn với bản hiện tại, để tái tạo gameplay chỉ cần: **grid 9×
 - **Quái** campaign + dungeon (`SpawnController.huu → GridManager.ijx(n)`): ô `x ∈ [−4, 4]`, `y ∈ [5, 12)` walkable, chưa có người,
   nằm trong vùng `ijw((0,0))` (flood-fill 8 hướng, chéo cần cả 2 ô kề vuông góc đi được — `ijj`), bốc `UnityEngine.Random.Range` không trùng.
   Quái i đứng ô i (melee trước, ranged sau). Riêng Dragon (dungeon type 0): đứng `iiz((0, H−3))` với x world = 0.
+
+### 7d. Chuyển màn qua cửa — `LevelTransitionController` (campaign)
+- Kích hoạt: `OnStateChanged(Completed = 6)` khi KHÔNG phải dungeon (`GameController+0xf8`) ⇒ chỉ campaign.
+  `Completed` do `SpawnController.huj` đặt **0.5s** sau khi phe địch chết hết (thua ⇒ `Failed = 5`, không qua cửa).
+- Giá trị scene: `DoorOpenDuration = 0.8`, `FadeDuration = 0.5`; âm `AudioConfig.DoorOpenSound` (= `rock_door_slide_block_move_drag_03`), `DoorOpenVolume = 0.151`.
+- Coroutine `hrq` (qd):
+  1. `hrr` lấy hero chính; `hrv` đóng băng mọi nhân vật; `LootDropController.hsv(hero)` thu loot về hero (cờ xong).
+  2. `hrz`: cửa = `GameplayEnvironmentRefs.TopDoor1/2` (MainDoor / MainDoor_1) nếu `MapConfig.HasDoor`; phát âm cửa;
+     `TopDoor1.DOLocalMoveX(x − 0.8)`, `TopDoor2.DOLocalMoveX(x + 0.8)`, thời gian `0.8 / SpeedBoost`, `Ease.InSine`; chờ hết.
+  3. Đích = cổng trên `(0, H/2 + 0.5)` + `(0, 1.5)`. `hru`: xoay thân hero về đích (400°/s).
+  4. `hrs`: ô đích = `(0, H−1)` nếu `|x+1| > |x|` (x = cột hero) ngược lại `(−1, H−1)`; `PathfindingManager.ikb` (A*),
+     Rigidbody kinematic, mỗi bước `DOMove(iiz(ô), dist / (max(MoveSpeed, 0.5) × SpeedBoost))` `Ease.Linear`.
+  5. `GameplayUI.kjr(FadeDuration)` tối dần, đồng thời `hrt` đi thẳng tới đích sau cửa (cùng tốc độ); chờ tối xong; chờ thu loot xong.
+  6. Không phải boss gate (`fc.ejx`) ⇒ `User.Level + 1`; `SpawnController.NextSpawnAtBottomGate = false`; state Loading → Loaded (dựng màn mới);
+     `hrw` mở băng; `hsa` trả cửa về chỗ cũ; `GameplayUI.kjs(FadeDuration)` sáng dần; `hrx/hry`; state Playing.
+- **`NextSpawnAtBottomGate` luôn TẮT** ở v41 (scene = 0, không code nào bật, coroutine còn gán false) ⇒ màn mới hero vẫn sinh ở ô (0, 2),
+  KHÔNG đi vào từ cổng dưới (`hut` là code chết).

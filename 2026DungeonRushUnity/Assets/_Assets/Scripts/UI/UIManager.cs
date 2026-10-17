@@ -389,6 +389,43 @@ public class UIManager : Singleton<UIManager>
             yield return null;
         }
     }
+
+    // Fade tách 2 nửa (chuyển màn campaign — GameplayUI.kjr/kjs gốc): tối dần rồi GIỮ tối tới khi gọi FadeIn.
+    public void FadeOut(FadeColor color, float duration, UnityAction doneCallback = null)
+    {
+        isFading = true;
+        ActiveShield(true);
+        imgFade.color = color == FadeColor.White ? Color.white : Color.black;
+        StartCoroutine(CoroutineFadeAlpha(0f, 1f, duration, false, doneCallback));
+    }
+
+    public void FadeIn(float duration, UnityAction doneCallback = null)
+    {
+        StartCoroutine(CoroutineFadeAlpha(1f, 0f, duration, true, doneCallback));
+    }
+
+    private IEnumerator CoroutineFadeAlpha(float from, float to, float duration, bool isEnd, UnityAction doneCallback)
+    {
+        imgFade.gameObject.SetActive(true);
+        Color c = imgFade.color;
+        for (float t = 0f; t < duration; t += Time.deltaTime)
+        {
+            c.a = Mathf.Lerp(from, to, t / duration);
+            imgFade.color = c;
+            yield return null;
+        }
+
+        c.a = to;
+        imgFade.color = c;
+        if (isEnd)
+        {
+            isFading = false;
+            ActiveShield(false);
+            imgFade.gameObject.SetActive(false);
+        }
+
+        doneCallback?.Invoke();
+    }
     #endregion
 
     #region Tooltips
