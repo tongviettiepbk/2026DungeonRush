@@ -207,3 +207,13 @@ Còn với bản hiện tại, để tái tạo gameplay chỉ cần: **grid 9×
      `hrw` mở băng; `hsa` trả cửa về chỗ cũ; `GameplayUI.kjs(FadeDuration)` sáng dần; `hrx/hry`; state Playing.
 - **`NextSpawnAtBottomGate` luôn TẮT** ở v41 (scene = 0, không code nào bật, coroutine còn gán false) ⇒ màn mới hero vẫn sinh ở ô (0, 2),
   KHÔNG đi vào từ cổng dưới (`hut` là code chết).
+
+### 7e. Dungeon (Zombie / Dragon / Cultist)
+- Lưới/chướng ngại/hero/pet/quái dùng chung luật campaign (7a–7c); seed chướng ngại = level dungeon thô
+  (`LevelController.OnStateChanged` → `DungeonController.hbz(type)` đọc thẳng level từ User).
+- Rồng (`SpawnController.huu`, dungeonType 0): KHÔNG lấy ô `ijx` mà đứng `iiz((0, H−3))` với x thế giới = 0.
+- **Không chuyển màn qua cửa**: `LevelTransitionController.OnStateChanged` bỏ qua khi `GameController+0xF8` (đang dungeon);
+  thắng/thua dungeon do luồng dungeon riêng xử lý (popup kết quả).
+- Prefab môi trường gốc (`ZombieMapPrefab`, `DragonMapPrefab`, `CultistMapPrefab`): root (0,0), `MapOffset` (0.48, 0.13),
+  **không có cửa**; tường/đồ trang trí riêng từng dungeon (Zombie: ZombieWallPiece, cây, mộ, xương, quan tài, đầu lâu;
+  Dragon: DragonWallPiece, DragonOuterWallPiece, dung nham; Cultist: cultist_wall_piece, cột, cột gãy, nến, sách, ngũ giác).
