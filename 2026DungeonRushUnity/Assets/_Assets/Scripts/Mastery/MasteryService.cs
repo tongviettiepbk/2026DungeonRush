@@ -105,8 +105,9 @@ public static class MasteryService
             return false;
         }
 
+        // Phí 0 (VD AutoLoot Lvl1→2 lúc tutorial) → nâng miễn phí; Consume(0) trả false nên phải bỏ qua.
         int cost = GetUpgradeCost(type);
-        if (GameData.userData.items.Consume(ItemType.GEM, cost) == false)
+        if (cost > 0 && GameData.userData.items.Consume(ItemType.GEM, cost) == false)
         {
             return false;
         }

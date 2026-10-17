@@ -26,6 +26,9 @@ public class CompanionSummonConfig
     public const int BONE_BIG_BASE_COUNT_PER_MULTIPLIER = 35;
     // CompanionTabPage.wke gốc: các bậc hệ số, nút ChangeSummonBoneMultiplier xoay vòng (index không lưu save).
     public static readonly int[] BONE_BIG_MULTIPLIERS = { 1, 2, 3, 5, 10, 20, 30 };
+    // CompanionTabPage.wkd + gsz gốc: Bone ≥ 1000 mới hiện nút đổi hệ số (ẩn nút Bone nhỏ), spacing ButtonsLayout -250.
+    public const int BONE_MULTIPLIER_UNLOCK = 1000;
+    public const float BUTTONS_SPACING_MULTIPLIER = -250f;
 
     // --- Summon bằng quảng cáo (CompanionAdSummonPopup, hàm gốc eby) ---
     //   count = min( round(cap) + adBonus + AD_BASE_BONUS , round(cap) + AD_CAP_OVER_CAPACITY )

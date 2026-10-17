@@ -23,6 +23,7 @@ Step (id → nghĩa / nơi):
 - 3 bấm AutoForge lần đầu `auto_clicked` · 4 bấm Boost `boost_clicked` · 5 bỏ tick Keep AutoForge `auto_unchecked` (3/4/5 chỉ đánh dấu)
 - 6 Dragon dungeon · 7 Zombie Horde (tab Dungeon sáng tay, DungeonTabPage + DungeonPopup.EnterTutorialUI; 7 cần level ≥ mốc)
 - 8 summon pet bằng Bone (tab Companion, SummonBoneTutorialUI khi Bone ≥100) · 13 Quick Equip pet
+  - GỐC (gsm, kiểm 2026-10-18): tay gắn nút Bone LỚN 200 dù điều kiện ≥100 (Zombie lv1 thưởng 100) → người mới bấm không được. USER CHỐT LỆCH GỐC: tay ở nút Bone 100 (CompanionTabPageSummonButton_100/Content/TutorialUI, UIMainGame2). Theo gốc đã sửa: nút nhỏ hiện khi Bone<1000, nút hệ số X khi ≥1000 (spacing -250), nút luôn bấm được, thiếu Bone giá đỏ + bấm im lặng. Quái KHÔNG rơi Bone trong gốc (nhánh combat_drop là code chết, xem DecodedData/LOOT_DROP_MODEL.md); BoneDropChance/BonePerMinute KHÔNG hàm nào đọc.
 - 9 vào mỏ `entered_mine` · 10 chế Wing `crafted_wing` · 11 mua boost Store `buy_boost` (chỉ đánh dấu)
 - 12 Start AutoForge (tay ở nút AutoForge sau step 1) · 20 chọn số búa AutoForge (sau 17)
 - 15 mở khoá Mastery · 17 nâng Mastery (MasteryController.iuj: level ≥ mốc && !17)

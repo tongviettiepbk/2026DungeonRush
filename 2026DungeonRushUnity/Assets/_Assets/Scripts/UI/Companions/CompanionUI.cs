@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 // Trang Companion: 3 slot equip + inventory toàn bộ pet + summon (Ads / Bone nhỏ / Bone lớn) + Summon Level.
 // Logic nằm ở CompanionService; class này chỉ gắn nút + hiển thị. Số liệu reverse xem DecodedData/COMPANION_MODEL.md.
-// Tutorial (CompanionTabPage.gsm gốc): tay chỉ nút Bone lớn khi đã vào Zombie mà chưa summon (step 8, Bone ≥ 100);
+// Tutorial (CompanionTabPage.gsm gốc): tay chỉ khi đã vào Zombie mà chưa summon (step 8, Bone ≥ 100). Gốc gắn tay ở
+// nút Bone LỚN (200) nên người mới có 100 Bone bấm không được → user chốt LỆCH GỐC: gắn tay ở nút Bone 100;
 // sau đó tay chỉ Quick Equip khi bấm sẽ đổi đội hình (step 13).
 public class CompanionUI : MonoBehaviour
 {
@@ -43,9 +44,11 @@ public class CompanionUI : MonoBehaviour
 
     private List<ElementPetEquimentUI> listPetInventory;
     private int multiplierIndex;           // wjp gốc — không lưu save, mở lại game về x1
+    private HorizontalLayoutGroup buttonsLayout;   // ButtonsLayout gốc = cha của các nút summon
 
     private void Awake()
     {
+        buttonsLayout = btSummonX100.transform.parent.GetComponent<HorizontalLayoutGroup>();
         btQuickQuip.onClick.AddListener(OnClickQuickEquip);
         btUpgradeAll.onClick.AddListener(OnClickUpgradeAll);
         btAds.onClick.AddListener(OnClickSummonAds);
@@ -170,17 +173,34 @@ public class CompanionUI : MonoBehaviour
         txtQuantityAds.text = Mathf.Max(0, CompanionService.GetAdSummonRemainingToday()) + "/" + CompanionSummonConfig.AD_DAILY_LIMIT;
         txtQuantitySumonByAds.text = "Summon x" + CompanionService.GetAdSummonCount();
 
-        txtQuantityX100.text = CompanionSummonConfig.BONE_SMALL_COST.ToString();
+        // gsz gốc: Bone ≥ 1000 → ẩn nút Bone nhỏ, hiện nút đổi hệ số, ButtonsLayout spacing -250;
+        // dưới 1000 → ngược lại, spacing 0 và hệ số về x1.
+        bool showMultiplier = bone >= CompanionSummonConfig.BONE_MULTIPLIER_UNLOCK;
+        if (showMultiplier == false)
+            multiplierIndex = 0;
+        if (buttonsLayout != null)
+            buttonsLayout.spacing = showMultiplier ? CompanionSummonConfig.BUTTONS_SPACING_MULTIPLIER : 0f;
+        btSummonX100.gameObject.SetActive(showMultiplier == false);
+        if (btChangeMultiplier != null)
+            btChangeMultiplier.gameObject.SetActive(showMultiplier);
+
+        // gta gốc: nút luôn bấm được, thiếu Bone thì giá tô InsufficientBoneColor (đỏ).
+        txtQuantityX100.text = CostText(CompanionSummonConfig.BONE_SMALL_COST, bone);
         txtQuantitySumonByX100.text = "x" + CompanionService.GetBoneSmallSummonCount();
-        btSummonX100.interactable = bone >= CompanionSummonConfig.BONE_SMALL_COST;
+        btSummonX100.interactable = true;
 
         int multiplier = CurrentMultiplier;
         int bigCost = CompanionService.GetBoneBigCost(multiplier);
-        txtQuantityX200.text = bigCost.ToString();
+        txtQuantityX200.text = CostText(bigCost, bone);
         txtQuantitySumonByX200.text = "x" + CompanionService.GetBoneBigSummonCount(multiplier);
-        btSummonX200.interactable = bone >= bigCost;
+        btSummonX200.interactable = true;
         if (txtMultiplier != null)
             txtMultiplier.text = "x" + multiplier;   // gtm gốc
+    }
+
+    private static string CostText(int cost, double bone)
+    {
+        return bone >= cost ? cost.ToString() : "<color=#FF0000>" + cost + "</color>";
     }
 
     private int CurrentMultiplier => CompanionSummonConfig.BONE_BIG_MULTIPLIERS[multiplierIndex];
@@ -228,10 +248,7 @@ public class CompanionUI : MonoBehaviour
     private void OnSummonDone(List<CompanionSummonResult> results)
     {
         if (results == null)
-        {
-            UIManager.Instance.ShowToastMessage("Không đủ Bone", isLocalize: false);
-            return;
-        }
+            return;   // gtk gốc: thiếu Bone thì bỏ qua, không báo
 
         // gth / gtk / CompanionAdSummonPopup.gqg gốc: summon thành công lần đầu = step 8.
         TutorialService.Complete(FtueStep.SummonCompanion);

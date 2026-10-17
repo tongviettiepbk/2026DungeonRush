@@ -1830,7 +1830,7 @@ MonoBehaviour:
   txtQuantitySumonByX200: {fileID: 4495100510133629447}
   btChangeMultiplier: {fileID: 8678978077088044777}
   txtMultiplier: {fileID: 5805360055952165707}
-  summonBoneTutorial: {fileID: 7696309402799756664}
+  summonBoneTutorial: {fileID: 6355578393264623929}
   quickEquipTutorial: {fileID: 306436149073887900}
 --- !u!1 &231474262684903464
 GameObject:
@@ -34913,7 +34913,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Companions
+  m_text: Mastery
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c01622dc18f208b43a6cfb3c312b5cde, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: efc2647692f7d5b4492c4b7678a22666, type: 2}
@@ -58405,13 +58405,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 753549825104245550}
+  - component: {fileID: 6355578393264623929}
   m_Layer: 5
   m_Name: TutorialUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &753549825104245550
 RectTransform:
   m_ObjectHideFlags: 0
@@ -58432,6 +58433,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6355578393264623929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4386376686222928092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 8942410193216713247}
+  _moveDistance: 30
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!1 &4390934044348881364
 GameObject:
   m_ObjectHideFlags: 0

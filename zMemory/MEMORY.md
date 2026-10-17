@@ -72,3 +72,5 @@
 - [Map campaign theo gốc](dungonrush-campaign-map-original.md) — rw.itr đối xứng seed level×7912, hero/pet/quái theo GridManager gốc; PointStart sửa; chuyển màn qua cửa trên (không vào cổng dưới — gốc tắt); CHƯA test Play
 - [Di chuyển theo gốc](dungonrush-movement-original.md) — A* 8 hướng, lái lực Rigidbody động, Idle/Move/Patrol, quái phát hiện 4, pet chỉ đi theo; CHƯA test Play
 - [Map dungeon hình ảnh gốc](dungonrush-dungeon-map-visual.md) — Zombie/Dragon/Cultist dựng theo prefab rip, không cửa, sprite ở _ResourceGame/Dungeon*; CHƯA test Play (2026-10-17)
+- [Gốc KHÔNG rơi Bone từ quái](dungonrush-no-combat-bone-drop.md) — combat_drop Bone/rương là code chết (BoneDropPrefab null); đừng port; doc LOOT_DROP_MODEL.md
+- [Kế hoạch reskin toàn game](dungonrush-reskin-plan.md) — GDD/RESKIN_PLAN.md: 706/1477 ảnh đang dùng, thay ruột giữ .meta, đề xuất Art/+ArtIncoming/+ArtArchive/; CHỜ duyệt (2026-10-18)
