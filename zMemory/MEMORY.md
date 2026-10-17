@@ -69,4 +69,4 @@
 - [Tutorial FTUE gốc](dungonrush-ftue-tutorial.md) — tay chỉ mềm, 18 step int; 18/18 step đã gắn (21 xong 2026-10-17), USER CHƯA TEST; nút Boss (22) luôn ẩn vì Boss Gate tắt
 - [Battle Pass](dungonrush-battle-pass.md) — dựng theo gốc 2026-10-17 (CHƯA test Play): mốc 20+5k theo HighestLevel, Free/Premium, pool thưởng gốc
 - [Localization theo gốc](dungonrush-localization.md) — 10 ngôn ngữ gốc, key "Popup.X.Y", Loc.L/LocalizeText.key, font fallback Noto, popup chọn ngôn ngữ; XONG 2026-10-17 CHƯA test Play
-- [Map campaign theo gốc](dungonrush-campaign-map-original.md) — rw.itr đối xứng seed level×7912, hero/pet/quái theo GridManager gốc; PointStart sửa; CHƯA test Play, còn chuyển màn qua cửa
+- [Map campaign theo gốc](dungonrush-campaign-map-original.md) — rw.itr đối xứng seed level×7912, hero/pet/quái theo GridManager gốc; PointStart sửa; chuyển màn qua cửa trên (không vào cổng dưới — gốc tắt); CHƯA test Play

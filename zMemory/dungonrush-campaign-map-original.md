@@ -18,6 +18,8 @@ User yêu cầu (2026-10-17): bỏ phần map + object trong map tự dựng, l�
 - `MainMapPrefab` PointStart local (0.5,0.5) → **(0.535, 1.17)** cho ô khớp tường như gốc (gốc: ô (−4,0) = MapOffset + (−3.965, −5.63)).
 - BossRush/PvP override `GetHeroSpawnCell` giữ ô cũ (hàng 0) — chưa đối chiếu gốc.
 
-**Chưa làm (đợt sau):** chuyển màn qua cửa (`LevelTransitionController`: mở cửa, hero đi ra cửa trên, fade, màn sau vào từ cổng dưới `NextSpawnAtBottomGate`); di chuyển A* 8 hướng như PathfindingManager gốc (project đang 4 hướng); camera offset theo MapConfig; PointStart các map dungeon chưa căn; Dragon đứng (0,H−3) gốc.
+**Chuyển màn qua cửa XONG (2026-10-17, compile sạch, CHƯA test Play):** `CampaignMode.RoutineLevelTransition` theo `LevelTransitionController.hrq`: 0.5s sau thắng → thu exp về hero + 2 cánh cửa (MapController.topDoor1/2 = MainDoor/MainDoor_1) trượt ±0.8 trong 0.8s InSine + âm rock_door 0.151 → hero đi A* tới hàng trên (cột giữa/trái giữa) → fade đen 0.5s trong lúc đi ra sau cửa (ô trên cùng giữa + (−0.5, 2.5)) → chờ loot → Build → fade sáng 0.5s. UIManager thêm FadeOut/FadeIn (giữ tối), AudioManager.PlaySfx(clip, volumeScale). **Màn sau KHÔNG vào từ cổng dưới**: NextSpawnAtBottomGate gốc luôn tắt (user từng nghĩ là có). Thua giữ luồng cũ (delayEndGame rồi Build).
+
+**Chưa làm (đợt sau):** di chuyển A* 8 hướng như PathfindingManager gốc (project đang 4 hướng); camera offset theo MapConfig; PointStart các map dungeon chưa căn; Dragon đứng (0,H−3) gốc.
 
 Doc gốc: `DecodedData/MAP_AND_SPAWN_MODEL.md` mục 7. Thay phần đoán cũ ở [[dungonrush-map-spawn-procedural]]; quy ước toạ độ [[dungonrush-map-coord-convention]].
