@@ -20,6 +20,8 @@ User yêu cầu (2026-10-17): bỏ phần map + object trong map tự dựng, l�
 
 **Chuyển màn qua cửa XONG (2026-10-17, compile sạch, CHƯA test Play):** `CampaignMode.RoutineLevelTransition` theo `LevelTransitionController.hrq`: 0.5s sau thắng → thu exp về hero + 2 cánh cửa (MapController.topDoor1/2 = MainDoor/MainDoor_1) trượt ±0.8 trong 0.8s InSine + âm rock_door 0.151 → hero đi A* tới hàng trên (cột giữa/trái giữa) → fade đen 0.5s trong lúc đi ra sau cửa (ô trên cùng giữa + (−0.5, 2.5)) → chờ loot → Build → fade sáng 0.5s. UIManager thêm FadeOut/FadeIn (giữ tối), AudioManager.PlaySfx(clip, volumeScale). **Màn sau KHÔNG vào từ cổng dưới**: NextSpawnAtBottomGate gốc luôn tắt (user từng nghĩ là có). Thua giữ luồng cũ (delayEndGame rồi Build).
 
-**Chưa làm (đợt sau):** di chuyển A* 8 hướng như PathfindingManager gốc (project đang 4 hướng); camera offset theo MapConfig; PointStart các map dungeon chưa căn; Dragon đứng (0,H−3) gốc.
+**Chưa làm (đợt sau):** di chuyển A* 8 hướng như PathfindingManager gốc (project đang 4 hướng); camera offset theo MapConfig; BossRush PointStart chưa căn.
 
 Doc gốc: `DecodedData/MAP_AND_SPAWN_MODEL.md` mục 7. Thay phần đoán cũ ở [[dungonrush-map-spawn-procedural]]; quy ước toạ độ [[dungonrush-map-coord-convention]].
+
+**Dungeon (2026-10-17, compile sạch, CHƯA test Play):** PointStart Zombie/Dragon/Cultist (0.5,0.5) → (0.52,0.52) theo MapOffset gốc (0.48,0.13); rồng đứng cố định ô (rows−3, giữa) lệch −0.5 x (huu gốc); dungeon gốc KHÔNG chuyển màn qua cửa (LevelTransition bỏ qua dungeon). **Lệch gốc còn lại:** 3 prefab map dungeon trong project là bản sao MainMap (tường xám + CỬA) — gốc có tường/đồ trang trí riêng và không có cửa; sprite gốc nằm trong rip (atlas Zombie/Dragon, ảnh Cultist) chưa vào project.
