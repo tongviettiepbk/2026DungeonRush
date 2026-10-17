@@ -32,6 +32,7 @@ public class BaseUnit : MonoBehaviour
     // Mặc định không đạn → enemy/pet giữ nguyên hành vi cũ. Hero nạp từ đồ đang mặc (OnBeginBattle).
     protected bool hasProjectile;
     protected BaseBullet bulletPrefab;
+    protected float projectileSpeed;   // Character.ProjectileSpeed gốc = WeaponData.ProjectileSpeed (0 = giữ tốc prefab đạn)
 
     protected Transform flipPoints;
     protected Collider2D bodyCollider;
@@ -455,6 +456,7 @@ public class BaseUnit : MonoBehaviour
 
         hasProjectile = weapon.hasProjectile;
         bulletPrefab = weapon.bulletPrefab;
+        projectileSpeed = weapon.projectileSpeed;
         stats.attackRange = weapon.attackDistance;
     }
 
@@ -1177,6 +1179,7 @@ public class BaseUnit : MonoBehaviour
         if (hasProjectile && bulletPrefab != null)
         {
             BaseBullet bullet = PoolingController.Instance.GetBullet(bulletPrefab);
+            bullet.speed = projectileSpeed > 0f ? projectileSpeed : bulletPrefab.speed;   // đạn pool dùng chung nhiều vũ khí
             bullet.Active(firePoint, this, target, data);
         }
         else

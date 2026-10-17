@@ -21,9 +21,6 @@ public class StaticMapData
     // Quái chỉ đứng từ hàng 5 trở lên (GridManager.ijx).
     public const int ENEMY_MIN_ROW = 5;
 
-    // (Tự đặt, CHƯA đối chiếu gốc) số hàng dưới Boss Rush dùng xếp ghost đồng đội.
-    public const int PLAYER_SPAWN_ROWS = 2;
-
     // 1 cấu hình map theo môi trường (tương ứng 1 dòng MapConfig gốc): kích thước + camera + cờ.
     public class MapEnvironmentConfig
     {
@@ -40,11 +37,12 @@ public class StaticMapData
 
     public StaticMapData()
     {
-        // Giá trị lấy nguyên từ MapConfig gốc (7 map, tất cả 9×12, đều có cửa).
+        // Giá trị lấy nguyên từ MapConfig gốc (7 map, tất cả 9×12, đều có cửa). Riêng Boss Rush: GameController.hie
+        // gốc ghi đè lưới bằng BossRushConfig.ArenaGridSize = 12×12.
         var list = new List<MapEnvironmentConfig>
         {
             new MapEnvironmentConfig { environment = ModeType.DefaultLevel,       gridWidth = 9, gridHeight = 12, hasDoor = true, spawnObstacles = true,  cameraOrthoSizeOffset = 1f,   cameraPositionOffset = new Vector2(0f, -0.5f) },
-            new MapEnvironmentConfig { environment = ModeType.BossRush,           gridWidth = 9, gridHeight = 12, hasDoor = true, spawnObstacles = false, cameraOrthoSizeOffset = 0f,   cameraPositionOffset = new Vector2(0f,  0f)   },
+            new MapEnvironmentConfig { environment = ModeType.BossRush,           gridWidth = 12, gridHeight = 12, hasDoor = true, spawnObstacles = false, cameraOrthoSizeOffset = 0f,   cameraPositionOffset = new Vector2(0f,  0f)   },
             new MapEnvironmentConfig { environment = ModeType.DragonBossDungeon,  gridWidth = 9, gridHeight = 12, hasDoor = true, spawnObstacles = false, cameraOrthoSizeOffset = 2.5f, cameraPositionOffset = new Vector2(0f, -1.5f) },
             new MapEnvironmentConfig { environment = ModeType.ZombieHordeDungeon, gridWidth = 9, gridHeight = 12, hasDoor = true, spawnObstacles = true,  cameraOrthoSizeOffset = 0.5f, cameraPositionOffset = new Vector2(0f,  0f)   },
             new MapEnvironmentConfig { environment = ModeType.PvP,                gridWidth = 9, gridHeight = 12, hasDoor = true, spawnObstacles = false, cameraOrthoSizeOffset = 1f,   cameraPositionOffset = new Vector2(0f, -1f)   },

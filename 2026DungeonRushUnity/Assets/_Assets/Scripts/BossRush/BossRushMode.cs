@@ -11,14 +11,22 @@ using UnityEngine;
 //   • Đồng hồ FightDuration = 30s; CHỈ hết giờ mới kết thúc (hero chết vẫn chờ) → báo server
 //     damageDealt = damage của HERO CHÍNH (IsMainCharacter), totalDamageDealt = damage CẢ ĐỘI (IsHome).
 //   • Popup "Fight Complete!" (Team Damage + Damage Dealt) → Continue về campaign + mở lại sảnh Boss Rush.
+//   • Đấu trường (BossRushConfig gốc): lưới 12×12 không tường, không chướng ngại; hero ô giữa, ghost 8 ô quanh
+//     (GridManager.ijq); boss ô ngẫu nhiên ngoài vùng 5×5 giữa (ijt); camera bám hero + CameraFollowOffset.
 public class BossRushMode : BaseMode
 {
     [Header("Boss Rush")]
     [Tooltip("Prefab boss theo BossDefinitions (index 0..9: Dark Lich, Black Dragon, ...). Trống → enemyPrefab.")]
     public GameObject[] bossPrefabs;
-    [Tooltip("Hàng spawn boss (0 = dưới cùng).")]
-    public int bossRow = 9;
     public float delayShowResult = 1.5f;     // gốc hik(1.5f)
+    [Tooltip("BossRushConfig.CameraFollowOffset gốc: camera = vị trí người được bám + offset (giữ z).")]
+    public Vector3 cameraFollowOffset = new Vector3(0f, -5f, 0f);
+    private const float CAMERA_LERP_SPEED = 4f;  // LateUpdate gốc: t = min(dt × 4, 1) khi đổi người bám
+
+    private List<Vector2Int> teamCells = new List<Vector2Int>();
+    private Transform cameraTransform;
+    private Vector3 cameraHomePosition;
+    private BaseUnit cameraTarget;
 
     private BossRushBossUnit boss;
     private BossRushBossModel bossModel;
@@ -69,16 +77,20 @@ public class BossRushMode : BaseMode
 
     protected override bool AllowPets => false;
 
-    // Giữ ô hero cũ (hàng 0, cột giữa) — chưa đối chiếu chỗ đứng gốc của mode này (campaign đã theo ijp).
+    // SpawnController.hvj gốc: ô đội = ijq(1 + số ghost) — hero ô đầu (giữa đấu trường), ghost các ô sau.
     protected override Vector2Int GetHeroSpawnCell()
     {
-        return new Vector2Int(0, MapController.Instance.Cols / 2);
+        MapController map = MapController.Instance;
+        return teamCells.Count > 0 ? teamCells[0] : new Vector2Int(map.Rows / 2, map.Cols / 2);
     }
 
     protected override void CreateTeamA()
     {
+        List<BossRushPlayerModel> allies = BossRushFightSession.Allies;
+        teamCells = MapSpawnCells.GetArenaTeamCells(MapController.Instance.Grid, 1 + (allies != null ? allies.Count : 0));
         SpawnHeroAndPets();
-        SpawnGhosts(BossRushFightSession.Allies);
+        SpawnGhosts(allies);
+        StartCameraFollow();
     }
 
     private void SpawnGhosts(List<BossRushPlayerModel> allies)
@@ -90,12 +102,11 @@ public class BossRushMode : BaseMode
 
         MapController map = MapController.Instance;
         ghostsGroup = NewGroup("Ghosts");
-        List<Vector2Int> cells = PickGhostCells(allies.Count);
 
-        for (int i = 0; i < allies.Count && i < cells.Count; i++)
+        for (int i = 0; i < allies.Count && i + 1 < teamCells.Count; i++)
         {
             BossRushPlayerModel ally = allies[i];
-            Vector3 pos = map.CellToWorld(cells[i]);
+            Vector3 pos = map.CellToWorld(teamCells[i + 1]);
             HeroUnit ghost = SpawnUnit<HeroUnit>(heroPrefab, pos, ghostsGroup);
             ghost.gameObject.name = "Ghost_" + ally.PlayerName;
 
@@ -114,31 +125,6 @@ public class BossRushMode : BaseMode
                                BossRushController.ToEnchantmentData(ally.EnchantmentTiers), ally.ShowCloak);
             ghost.SpawnInBattle(BuildHeroStats(), StaticValue.TAG_TEAM_A, pos);
         }
-    }
-
-    // Ô trống ở 2 hàng dưới, trừ ô của hero, ưu tiên gần giữa.
-    private List<Vector2Int> PickGhostCells(int count)
-    {
-        MapController map = MapController.Instance;
-        Vector2Int heroCell = new Vector2Int(0, map.Cols / 2);
-        List<Vector2Int> cells = new List<Vector2Int>();
-        for (int row = 0; row < StaticMapData.PLAYER_SPAWN_ROWS + 1 && row < map.Rows; row++)
-        {
-            for (int col = 0; col < map.Cols; col++)
-            {
-                Vector2Int cell = new Vector2Int(row, col);
-                if (cell != heroCell && map.IsWalkable(cell))
-                {
-                    cells.Add(cell);
-                }
-            }
-        }
-        cells.Sort((a, b) => (a.x * 100 + Mathf.Abs(a.y - heroCell.y)).CompareTo(b.x * 100 + Mathf.Abs(b.y - heroCell.y)));
-        if (cells.Count > count)
-        {
-            cells.RemoveRange(count, cells.Count - count);
-        }
-        return cells;
     }
 
     protected override void CreateTeamB()
@@ -162,8 +148,14 @@ public class BossRushMode : BaseMode
             return;
         }
 
+        // GridManager.ijt: ô trống ngẫu nhiên ngoài vùng 5×5 giữa đấu trường (không đè lên quân đang đứng).
         MapController map = MapController.Instance;
-        Vector2Int cell = new Vector2Int(Mathf.Clamp(bossRow, 0, map.Rows - 1), map.Cols / 2);
+        var occupied = new HashSet<Vector2Int>();
+        for (int i = 0; i < teamA.Count; i++)
+        {
+            if (teamA[i] != null && teamA[i].isTargetable) occupied.Add(map.WorldToCell(teamA[i].Transform.position));
+        }
+        Vector2Int cell = MapSpawnCells.GetArenaBossCell(map.Grid, occupied);
         Vector3 pos = map.CellToWorld(cell);
 
         boss = SpawnUnit<BossRushBossUnit>(prefab, pos, enemiesGroup);
@@ -336,9 +328,69 @@ public class BossRushMode : BaseMode
         return true;
     }
 
+    // ===== Camera bám người chơi (CameraController.gxt / LateUpdate gốc) =====
+
+    private void StartCameraFollow()
+    {
+        if (cameraTransform == null && Camera.main != null)
+        {
+            cameraTransform = Camera.main.transform;
+            cameraHomePosition = cameraTransform.position;
+        }
+        cameraTarget = hero;
+    }
+
+    private void StopCameraFollow()
+    {
+        if (cameraTransform != null)
+        {
+            cameraTransform.position = cameraHomePosition;
+            cameraTransform = null;
+        }
+        cameraTarget = null;
+    }
+
+    // Bám hero; hero gục thì chuyển sang đồng minh còn sống (lerp ×4/s), bám lại người cũ thì đặt thẳng.
+    private void LateUpdate()
+    {
+        if (cameraTransform == null)
+        {
+            return;
+        }
+
+        BaseUnit target = hero != null && hero.isTargetable ? hero : FindAliveAlly();
+        if (target == null)
+        {
+            return;
+        }
+
+        Vector3 goal = target.Transform.position + cameraFollowOffset;
+        goal.z = cameraTransform.position.z;
+        if (target == cameraTarget)
+        {
+            cameraTransform.position = goal;
+        }
+        else
+        {
+            float t = Mathf.Min(Time.deltaTime * CAMERA_LERP_SPEED, 1f);
+            cameraTransform.position = Vector3.Lerp(cameraTransform.position, goal, t);
+        }
+    }
+
+    private BaseUnit FindAliveAlly()
+    {
+        for (int i = 0; i < teamA.Count; i++)
+        {
+            if (teamA[i] != null && teamA[i].isTargetable) return teamA[i];
+        }
+        return null;
+    }
+
     public override void Reset()
     {
+        StopCameraFollow();
         base.Reset();
+        teamCells.Clear();
         boss = null;
         ghostsGroup = null;
         enemiesGroup = null;
@@ -347,6 +399,7 @@ public class BossRushMode : BaseMode
     protected override void OnDisable()
     {
         base.OnDisable();
+        StopCameraFollow();
         SetActiveHud(false);
     }
 }

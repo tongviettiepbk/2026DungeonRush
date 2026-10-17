@@ -175,3 +175,24 @@ Bản `LocalBossRushBackend` chạy offline: tự tạo pool 8 người (7 bot g
 
 Power (rm.iqm → rm.iqj) **[CHẮC]**: `Power = (Attack × (1 + Damage%)) × (HP × (1 + HP% [+ Melee%/Ranged% theo loại vũ khí]))`
 = tích Attack cuối × Máu cuối của hero; gửi lên server trong joinBossRush/updateBossRushPlayer, hiển thị cột Power.
+
+## 9. Đấu trường + hành vi boss trong trận (reverse thân hàm 2026-10-17) [CHẮC]
+
+- **Lưới**: `GameController.hie` → `GridManager.iiy(BossRushConfig.ArenaGridSize)` = **12×12** (không phải 9×12 của MapConfig);
+  `MapConfig.SpawnObstacles = 0` ⇒ không chướng ngại. Prefab `BossRushMapPrefab` gốc: `Walls`, `Corners`, `Doors` **inactive**,
+  `InnerPlane` scale (170.13, 219.58, 155.31) ⇒ sàn trải rộng, không tường cản. `ArenaBoundsThickness` không thấy client đọc.
+- **Đội** (`SpawnController.hvj`): ô = `GridManager.ijq(1 + số ghost)`: ô giữa (x 0, y H/2) nếu trống → hero;
+  ghost bốc ngẫu nhiên không trùng trong 8 ô bao quanh (dy ngoài, dx trong). Hero collider × `PlayerColliderRadiusMultiplier` (1).
+- **Camera** (`CameraController.gxt` + LateUpdate): bám hero, vị trí = người bám + `CameraFollowOffset` (0, −5, 0), giữ z;
+  bám lại người ban đầu thì đặt thẳng, đổi sang người khác thì lerp `t = min(dt × 4, 1)`.
+- **Boss** (`SpawnController.hvm` → `GridManager.ijt`): ô trống ngẫu nhiên khắp lưới TRỪ vùng |x| ≤ 2 và |y − H/2| < 3; quay 180°;
+  `CanMove = Definition.CanMove` (false), collider × 1.5 (`huw`), Rigidbody mass × 5 (`hux`); `BossRushEnemyBehaviorType` = 2.
+  Boss chết → boss kế spawn lại bằng `hvm` (ô ngẫu nhiên mới).
+- **Dời chỗ (RepositionAfterAttack)**: mỗi đòn TRÚNG (`MeleeAttackState.fcc`, `RangeAttackState.fcl/fcm` → `Character.ewo`) đặt
+  `BossRushPendingReposition = true`, `RepositionAtTime = now + RepositionDelay (5)` ⇒ boss đánh liên tục thì cứ bị hoãn.
+  `IdleState.fbq` xét `ewp` (pending và đã tới giờ) ĐẦU TIÊN → `BossRushRepositionState`: bỏ hẹn, ô đích = `iju(ô hiện tại,
+  max(1, SearchRadius = 3))` (ô trống ngẫu nhiên trong vuông bán kính 3, trừ chính nó); khác ô hiện tại → `PhysicsMovementController.htj`
+  (đi bằng lực theo A*, xoay thân theo waypoint), hết path → Idle; không có ô → Idle.
+- **Đòn đánh**: chỉ khác vũ khí — `WeaponType` gốc chỉ có Melee/Range. Rồng/Lich/Hag: Range, tầm 100, đạn tốc **12**
+  (rồng đỏ = `Projectile_Dragon_Red` cầu lửa, rồng xanh `_Green`, rồng đen `_Purple`; Lich tím/đỏ/xanh orb; Hag orb xanh);
+  Ogre: Melee tầm 3 (không đuổi vì CanMove = false). Tốc đạn lấy từ `WeaponData.ProjectileSpeed` (`Character.ProjectileSpeed`).

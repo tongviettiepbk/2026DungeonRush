@@ -67,6 +67,70 @@ public static class MapSpawnCells
         return result;
     }
 
+    // GridManager.ijq (Boss Rush, SpawnController.hvj): ô 0 = ô giữa đấu trường (hàng rows/2, cột giữa) nếu trống,
+    // các ô còn lại bốc ngẫu nhiên không trùng trong 8 ô bao quanh (hàng ngoài / cột trong).
+    public static List<Vector2Int> GetArenaTeamCells(int[,] grid, int count, ICollection<Vector2Int> occupied = null)
+    {
+        var center = new Vector2Int(grid.GetLength(0) / 2, grid.GetLength(1) / 2);
+        var result = new List<Vector2Int>();
+        if (IsFree(grid, center, occupied)) result.Add(center);
+        if (count < 2) return result;
+
+        var around = new List<Vector2Int>();
+        for (int dRow = -1; dRow <= 1; dRow++)
+        {
+            for (int dCol = -1; dCol <= 1; dCol++)
+            {
+                var cell = new Vector2Int(center.x + dRow, center.y + dCol);
+                if ((dRow != 0 || dCol != 0) && IsFree(grid, cell, occupied)) around.Add(cell);
+            }
+        }
+
+        int total = Mathf.Min(count - 1, around.Count);
+        for (int i = 0; i < total; i++)
+        {
+            int index = Random.Range(0, around.Count);
+            result.Add(around[index]);
+            around.RemoveAt(index);
+        }
+        return result;
+    }
+
+    // GridManager.ijt (ô boss Boss Rush, SpawnController.hvm): ô trống ngẫu nhiên khắp lưới, TRỪ vùng 5×5 quanh ô giữa
+    // (|cột − giữa| ≤ 2 và |hàng − rows/2| < 3). Không có ô nào → ô giữa hàng trên cùng.
+    public static Vector2Int GetArenaBossCell(int[,] grid, ICollection<Vector2Int> occupied = null)
+    {
+        int rows = grid.GetLength(0);
+        int cols = grid.GetLength(1);
+        var candidates = new List<Vector2Int>();
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                if (Mathf.Abs(col - cols / 2) <= 2 && Mathf.Abs(row - rows / 2) < 3) continue;
+                var cell = new Vector2Int(row, col);
+                if (IsFree(grid, cell, occupied)) candidates.Add(cell);
+            }
+        }
+        return candidates.Count > 0 ? candidates[Random.Range(0, candidates.Count)] : new Vector2Int(rows - 1, cols / 2);
+    }
+
+    // GridManager.iju (BossRushRepositionState): ô trống ngẫu nhiên trong vuông bán kính radius quanh cell (trừ chính nó).
+    // Không có → trả lại cell.
+    public static Vector2Int GetRandomCellAround(int[,] grid, Vector2Int cell, int radius, ICollection<Vector2Int> occupied = null)
+    {
+        var candidates = new List<Vector2Int>();
+        for (int col = cell.y - radius; col <= cell.y + radius; col++)
+        {
+            for (int row = cell.x - radius; row <= cell.x + radius; row++)
+            {
+                var next = new Vector2Int(row, col);
+                if (next != cell && IsFree(grid, next, occupied)) candidates.Add(next);
+            }
+        }
+        return candidates.Count > 0 ? candidates[Random.Range(0, candidates.Count)] : cell;
+    }
+
     // GridManager.ijo: count ô trống gần center nhất (khoảng cách Euclid). Quét cột ngoài / hàng trong
     // rồi List.Sort như gốc để thứ tự các ô bằng khoảng cách ra y hệt.
     public static List<Vector2Int> GetNearestFreeCells(int[,] grid, Vector2Int center, int count, ICollection<Vector2Int> occupied = null)

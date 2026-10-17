@@ -1,16 +1,18 @@
-using DG.Tweening;
 using UnityEngine;
 
 // Boss Boss Rush (Character.IsBossRushBoss gốc). Chỉ số lấy từ BossRushBossModel của trận:
 //   HP hiện tại/tối đa = máu boss CHUNG của nhóm (server), sát thương = BossDamageByTier[tier] (EnemyAttackPower).
-// Hành vi BossRushBossDefinition: CanMove = false, RepositionAfterAttack — đánh xong chờ RepositionDelay (5s)
-// rồi đổi sang ô trống ngẫu nhiên trong bán kính RepositionSearchRadius (3 ô).
+// Hành vi BossRushBossDefinition (gốc giống nhau cả 10 boss): CanMove = false (không đuổi), RepositionAfterAttack —
+// MỖI đòn trúng hẹn dời chỗ sau RepositionDelay (5s, đòn sau đặt lại hẹn) (Character.ewo); đang Idle mà tới hẹn
+// (ewp) → BossRushRepositionState: chọn ô trống ngẫu nhiên trong vuông bán kính RepositionSearchRadius (3, iju) rồi
+// ĐI tới đó bằng lực theo đường A* (UnitMover), tới nơi về Idle. Khối lượng ×MassMultiplier (5), collider ×1.5.
+// Khác nhau giữa các boss chỉ ở vũ khí: rồng/Lich/Hag bắn đạn tầm 100 tốc 12, Ogre đánh gần tầm 3.
 // Mọi đòn trúng boss được báo về BossRushMode để cộng damage đội / damage của mình (GameController.hif gốc).
 // Animation: rig dùng CharacterAnimatorController gốc (bool IsIdle / IsAttacking). Clip đánh bắn event
 // OnAttackAnimationHit → ra đòn đúng khung hình vung tay, OnAttackAnimationCompleted → về tư thế đứng.
 public class BossRushBossUnit : EnemyUnit
 {
-    private const float REPOSITION_MOVE_TIME = 0.35f;
+    private const float REPOSITION_MOVE_SPEED = 1.5f;   // GameResources.EnemyBaseMoveSpeed (MoveSpeed mặc định của quái)
     private static readonly int ANIM_IS_IDLE = Animator.StringToHash("IsIdle");
     private static readonly int ANIM_IS_ATTACKING = Animator.StringToHash("IsAttacking");
 
@@ -19,8 +21,9 @@ public class BossRushBossUnit : EnemyUnit
     public string DisplayName => Definition != null ? Definition.bossName : "Boss";
 
     private BossRushMode mode;
-    private bool pendingReposition;
-    private float repositionAtTime;
+    private bool pendingReposition;     // Character.BossRushPendingReposition
+    private float repositionAtTime;     // Character.BossRushRepositionAtTime
+    private bool isRepositioning;
     private Animator animator;
     private bool attackReleased;
 
@@ -43,7 +46,7 @@ public class BossRushBossUnit : EnemyUnit
             attack = model.AttackPower,
             maxHp = (float)model.MaxHP,
             attackPerSecond = 1f,
-            moveSpeed = 0f,
+            moveSpeed = REPOSITION_MOVE_SPEED,   // chỉ dùng khi dời chỗ (isMoveable = CanMove = false)
         };
 
         SpawnInBattle(bs, StaticValue.TAG_TEAM_B, position);
@@ -51,11 +54,13 @@ public class BossRushBossUnit : EnemyUnit
         {
             bodyCollider.transform.localScale *= definition.colliderRadiusMultiplier;
         }
+        rigid.mass *= definition.massMultiplier;   // SpawnController.hux
 
         // Máu thật = máu CHUNG còn lại của nhóm (có thể < max).
         hp = System.Math.Min(model.CurrentHP, GetMaxHp());
         UpdateHealthBar();
         pendingReposition = false;
+        isRepositioning = false;
         SetupAnimator();
     }
 
@@ -121,7 +126,7 @@ public class BossRushBossUnit : EnemyUnit
         return taken;
     }
 
-    // ===== RepositionAfterAttack (BossRushRepositionState gốc) =====
+    // ===== RepositionAfterAttack (Character.ewo/ewp + BossRushRepositionState gốc) =====
 
     protected override void OnAttackEnd()
     {
@@ -130,48 +135,65 @@ public class BossRushBossUnit : EnemyUnit
         {
             base.OnAttackEnd();
         }
-        if (Definition != null && Definition.behaviorType == BossRushEnemyBehaviorType.RepositionAfterAttack && !pendingReposition)
+    }
+
+    // Character.ewo: mỗi đòn trúng → hẹn dời chỗ sau RepositionDelay.
+    protected override void ReleaseAttack()
+    {
+        base.ReleaseAttack();
+        if (Definition != null && Definition.behaviorType == BossRushEnemyBehaviorType.RepositionAfterAttack)
         {
             pendingReposition = true;
             repositionAtTime = Time.time + Definition.repositionDelay;
         }
     }
 
-    public override void UpdateBehavior()
+    // IdleState.fbq gốc xét ewp ĐẦU TIÊN: tới hẹn → vào BossRushRepositionState; đang dời chỗ thì đi cho tới nơi.
+    protected override void UpdateIdle()
     {
-        base.UpdateBehavior();
-        if (pendingReposition && !isDead && !isPause && Time.time >= repositionAtTime)
+        if (isRepositioning)
         {
-            pendingReposition = false;
-            Reposition();
+            if (mover.HasPath)
+            {
+                return;
+            }
+            isRepositioning = false;
         }
-    }
 
-    private void Reposition()
-    {
-        MapController map = MapController.Instance;
-        if (map == null || Definition == null)
+        if (pendingReposition && Time.time >= repositionAtTime && StartReposition())
         {
             return;
         }
 
-        Vector2Int current = map.WorldToCell(Transform.position);
-        int r = Definition.repositionSearchRadius;
-        Vector2Int best = current;
-        for (int attempt = 0; attempt < 20; attempt++)
+        base.UpdateIdle();
+    }
+
+    // BossRushRepositionState.ewu: bỏ hẹn, chọn ô quanh (bán kính ≥ 1), đi tới bằng PhysicsMovementController.
+    private bool StartReposition()
+    {
+        pendingReposition = false;
+        MapController map = MapController.Instance;
+        if (map == null || Definition == null)
         {
-            Vector2Int cell = current + new Vector2Int(Random.Range(-r, r + 1), Random.Range(-r, r + 1));
-            if (cell != current && map.IsWalkable(cell))
-            {
-                best = cell;
-                break;
-            }
+            return false;
         }
 
-        if (best != current)
+        Vector2Int current = map.WorldToCell(Transform.position);
+        var occupied = new System.Collections.Generic.HashSet<Vector2Int>();
+        var e = GameController.Instance.activeUnits.GetEnumerator();
+        while (e.MoveNext())
         {
-            Transform.DOKill();
-            Transform.DOMove(map.CellToWorld(best), REPOSITION_MOVE_TIME);
+            BaseUnit unit = e.Current.Value;
+            if (unit != null && unit != this && unit.isTargetable) occupied.Add(map.WorldToCell(unit.Transform.position));
         }
+
+        Vector2Int destination = MapSpawnCells.GetRandomCellAround(map.Grid, current, Mathf.Max(1, Definition.repositionSearchRadius), occupied);
+        if (destination == current || !mover.RequestMoveTo(destination))
+        {
+            return false;
+        }
+
+        isRepositioning = true;
+        return true;
     }
 }
