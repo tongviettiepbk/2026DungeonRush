@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Pet/Companion (TeamA) — ĐI THEO hero và chỉ tấn công enemy trong tầm (spec).
-// Khác Hero: không truy đuổi khắp map. Vòng ưu tiên mỗi tick:
-//   1. Có enemy trong 'engageRange' (đo từ hero) → bám & đánh.
-//   2. Không có → đi theo hero, giữ khoảng 'followDistance'.
+// Pet/Companion (TeamA) — theo Companion gốc: KHÔNG lao vào đánh, chỉ ĐI THEO hero (Companion.giu):
+//   cách hero > FollowDistance (data, 3) → cứ 0.3s tìm đường A* tới ô hero, lái lực (UnitMover tham số Companion);
+//   về trong FollowDistance thì thôi theo. Ra chiêu thì đứng yên 0.3s. Các pet đẩy nhau ra khi gần hơn 1.2 (gip).
+//   Kỹ năng hồi xong + có mục tiêu (quanh hero) là ra đòn ngay tại chỗ đứng.
 //
 // LỚP NỀN companion (bám StickIdle BaseCompanion): giữ CompanionData, quy đổi data → hành vi
 // (nhịp = cooldown, tầm = followDistance/minDistance) và tính SÁT THƯƠNG companion từ data +
@@ -16,8 +16,19 @@ public class PetUnit : BaseUnit
 {
     public BaseUnit owner;               // hero để đi theo (gán khi spawn)
     public float engageRange = 3f;       // chỉ giao chiến enemy trong tầm này quanh hero
-    public float followDistance = 1.5f;  // khoảng cách đứng cạnh hero
-    public float followSlack = 0.4f;     // vùng đệm để khỏi rung khi đã đủ gần
+    public float followDistance = 3f;    // CompanionData.FollowDistance: xa hơn thì đi theo hero
+
+    // Hằng số Companion gốc.
+    private const float FOLLOW_REPATH_INTERVAL = 0.3f;   // vzz: chu kỳ tìm lại đường tới hero
+    private const float CAST_FREEZE = 0.3f;              // gis: đứng yên sau khi ra chiêu
+    private const float SEPARATION_RADIUS = 1.2f;        // wai
+    private const float SEPARATION_FORCE = 15f;          // waj
+    private const float SEPARATION_MIN_SQR = 0.001f;
+
+    private static readonly List<PetUnit> activePets = new List<PetUnit>();
+    private bool isFollowing;
+    private float followRepathTimer;
+    private float castFreezeRemain;
 
     [Tooltip("Vũ khí của pet (cận chiến/bắn xa + tầm đánh). Trống = cận chiến tay không.")]
     [SerializeField] private WeaponData weaponData;
@@ -94,7 +105,7 @@ public class PetUnit : BaseUnit
 
         this.level = Mathf.Max(1, level);
         engageRange = ATTACK_RANGE;
-        followDistance = Mathf.Max(0.5f, data.minDistance);
+        followDistance = data.followDistance;
 
         // Vào trận chờ initialDelay rồi mới được kích hoạt lần đầu.
         cooldownDuration = data.cooldown > 0.01f ? data.cooldown : 1f;
@@ -173,6 +184,7 @@ public class PetUnit : BaseUnit
         }
 
         UpdateBattleState();
+        TickFollow(Time.deltaTime * GameController.Instance.gameSpeed);
         animationController.UpdateSortingOrder();
 
         if (cooldownRemain > 0f)
@@ -186,11 +198,15 @@ public class PetUnit : BaseUnit
     {
         if (!CanReleaseAbility)
         {
-            StopMove();
             return;
         }
 
         base.BeginAttack();
+        if (isAttacking)
+        {
+            isFollowing = false;
+            castFreezeRemain = CAST_FREEZE;
+        }
     }
 
     protected override void UpdateAttack()
@@ -522,86 +538,123 @@ public class PetUnit : BaseUnit
         target = FindNearestEnemyFrom(center, GetAliveEnemies(), engageRange);
     }
 
+    // Pet không đi tới mục tiêu: kỹ năng sẵn sàng + có mục tiêu là ra đòn tại chỗ; di chuyển do TickFollow lo.
     protected override void UpdateIdle()
     {
         FindNextTarget();
-
-        // Chỉ giao chiến khi kỹ năng sẵn sàng; đang hồi chiêu thì đi theo hero.
         if (target != null && CanReleaseAbility)
         {
-            if (IsTargetInAttackRange())
-            {
-                ChangeState(BattleState.Attack);
-            }
-            else if (isMoveable)
-            {
-                ChangeState(BattleState.Move);
-            }
-            return;
-        }
-
-        // Không có enemy / đang hồi chiêu → đi theo hero nếu tụt lại quá xa.
-        if (owner != null && owner.isTargetable && isMoveable)
-        {
-            float d = Vector3.Distance(Transform.position, owner.Transform.position);
-            if (d > followDistance + followSlack)
-            {
-                moveDestination = GetFollowPoint();
-                ChangeState(BattleState.Move);
-            }
+            ChangeState(BattleState.Attack);
         }
     }
 
     protected override void UpdateMove()
     {
-        if (target != null && CanReleaseAbility)
+        ChangeState(BattleState.Idle);
+    }
+
+    protected override void BeginIdle()
+    {
+        animationController.PlayAnimIdle();
+    }
+
+    // ===== Đi theo hero — Companion.Update / giu / giv / gip gốc =====
+
+    protected override UnitMover.Settings MoverSettings => UnitMover.CompanionSettings;
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        activePets.Add(this);
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        activePets.Remove(this);
+    }
+
+    private void TickFollow(float dt)
+    {
+        BaseMode mode = GameController.Instance.mode;
+        if (mode != null && mode.isSkipUpdateBehaviour)
         {
-            // Rời tầm giao chiến (đo từ hero) hoặc mục tiêu chết → thôi đuổi, về theo hero.
-            Vector3 center = owner != null ? owner.Transform.position : Transform.position;
-            bool inEngage = IsTargetAvailable()
-                && VectorUtils.IsInRange(center, target.Transform.position, engageRange);
-
-            if (!inEngage)
-            {
-                target = null;
-                ChangeState(BattleState.Idle);
-                return;
-            }
-
-            moveDestination = target.Transform.position;
-            if (IsTargetInAttackRange())
-            {
-                ChangeState(BattleState.Attack);
-            }
             return;
         }
 
-        // Đang đi theo hero (không có mục tiêu hoặc đang hồi chiêu).
-        if (owner == null || !owner.isTargetable)
+        if (castFreezeRemain > 0f)
         {
-            ChangeState(BattleState.Idle);
+            castFreezeRemain -= dt;
+            mover.ClearPath();
+            rigid.linearVelocity = Vector2.zero;
             return;
         }
 
-        moveDestination = GetFollowPoint();
-        if (Vector3.Distance(Transform.position, owner.Transform.position) <= followDistance)
+        bool wasMoving = mover.HasPath;
+        if (owner != null && owner.isTargetable)
         {
-            ChangeState(BattleState.Idle);
+            float distance = Vector2.Distance(Transform.position, owner.Transform.position);
+            if (distance > followDistance)
+            {
+                if (!isFollowing)
+                {
+                    isFollowing = true;
+                    mover.ClearPath();
+                    followRepathTimer = FOLLOW_REPATH_INTERVAL;
+                }
+
+                followRepathTimer += dt;
+                if (followRepathTimer >= FOLLOW_REPATH_INTERVAL || !mover.HasPath)
+                {
+                    followRepathTimer = 0f;
+                    MapController map = MapController.Instance;
+                    mover.RequestMoveTo(map.ClampCell(map.WorldToCell(owner.Transform.position)));
+                }
+            }
+            else if (isFollowing)
+            {
+                isFollowing = false;
+                mover.ClearPath();
+            }
+        }
+
+        isMoving = mover.HasPath;
+        if (isMoving != wasMoving && !isAttacking)
+        {
+            if (isMoving) animationController.PlayAnimMove();
+            else animationController.PlayAnimIdle();
         }
     }
 
-    // Điểm cách hero 'followDistance' về phía pet (đứng cạnh, không chồng lên hero).
-    private Vector3 GetFollowPoint()
+    // gip: đẩy các pet tách nhau — lực 15 × (1 − d/1.2) khi gần hơn 1.2; rồi lái theo path (đứng yên khi đang ra chiêu).
+    protected override void TickMover(float dt)
     {
-        Vector3 heroPos = owner.Transform.position;
-        Vector3 dir = Transform.position - heroPos;
-        dir.z = 0f;
-        if (dir.sqrMagnitude < 0.0001f)
+        if (castFreezeRemain > 0f)
         {
-            dir = Vector3.right;
+            return;
         }
-        dir.Normalize();
-        return heroPos + dir * followDistance;
+
+        Vector2 position = rigid.position;
+        for (int i = 0; i < activePets.Count; i++)
+        {
+            PetUnit other = activePets[i];
+            if (other == this || other == null)
+            {
+                continue;
+            }
+
+            Vector2 away = position - (Vector2)other.Transform.position;
+            float sqr = away.sqrMagnitude;
+            if (sqr >= SEPARATION_RADIUS * SEPARATION_RADIUS || sqr < SEPARATION_MIN_SQR)
+            {
+                continue;
+            }
+
+            float distance = Mathf.Sqrt(sqr);
+            rigid.AddForce(away / distance * (SEPARATION_FORCE * (1f - distance / SEPARATION_RADIUS)));
+        }
+
+        base.TickMover(dt);
     }
 
     // Companion quay mặt theo mục tiêu; không có mục tiêu thì đồng bộ hướng với hero.

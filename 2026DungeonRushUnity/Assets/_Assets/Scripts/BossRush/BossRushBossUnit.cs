@@ -36,7 +36,7 @@ public class BossRushBossUnit : EnemyUnit
         Model = model;
         Definition = definition;
         isBoss = true;
-        aggroRange = 1000f;     // đánh mọi mục tiêu trong tầm vũ khí, không cần aggro
+        detectionRange = 1000f; // đánh mọi mục tiêu trong tầm vũ khí, không cần tầm phát hiện
 
         var bs = new BaseStats
         {

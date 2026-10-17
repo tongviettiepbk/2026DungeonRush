@@ -19,6 +19,7 @@ public enum BattleState
     Die,
     KnockUp,
     Fear,
+    Patrol,     // PatrolState gốc: quái không có mục tiêu đi loanh quanh ô xuất phát
 }
 
 public class BaseUnit : MonoBehaviour
@@ -38,14 +39,34 @@ public class BaseUnit : MonoBehaviour
     protected AudioSource audioSource;
     protected List<StatModifier> modifiers = new List<StatModifier>();
 
-    // Đích di chuyển hiện tại (world). Move state cập nhật mỗi tick; Moving() đi tới đây (né wall).
-    protected Vector3 moveDestination;
+    // Lái theo đường A* bằng lực vật lý (PhysicsMovementController gốc) — tạo ở SetupRig.
+    protected UnitMover mover;
+    public UnitMover Mover => mover;
 
-    // Đường A* đang bám (chuỗi ô tới đích). Chỉ tính lại khi ô đích đổi hoặc unit lệch khỏi tuyến;
-    // giữa các lần đó Moving() dùng ResolveMove để trôi mượt theo waypoint kế tiếp của path này.
-    private readonly List<Vector2Int> movePath = new List<Vector2Int>();
-    private int movePathIndex;
-    private Vector2Int movePathGoalCell = new Vector2Int(int.MinValue, int.MinValue);
+    // Bộ đếm MoveState gốc (uvu kẹt / uvy đổi mục tiêu / uwa chờ tìm đường) + mốc kiểm tra kẹt.
+    private const float MOVE_STUCK_CHECK_INTERVAL = 1f;     // uvv
+    private const float MOVE_STUCK_DISTANCE = 0.05f;        // uvw
+    private const float MOVE_RETARGET_INTERVAL = 0.15f;     // uvz
+    private const float MOVE_REPATH_INTERVAL = 0.2f;        // uwb
+    private float moveStuckTimer;
+    private float moveRetargetTimer;
+    private float moveRepathTimer;
+    private Vector2 moveLastPosition;
+
+    // PatrolState gốc (Character.CanPatrol): quái không có mục tiêu đi loanh quanh ô xuất phát, tốc độ ×0.5.
+    public bool canPatrol;
+    private const float PATROL_SPEED_FACTOR = 0.5f;
+    private const float PATROL_STUCK_DISTANCE = 0.05f;
+    private const float PATROL_STUCK_TIME = 0.8f;           // uwo
+    private const float PATROL_WAIT_MIN = 0.5f;
+    private const float PATROL_WAIT_MAX = 1.5f;
+    private Vector2Int patrolHomeCell;
+    private bool patrolWaiting;
+    private float patrolWaitTimer;
+    private float patrolWaitDuration;
+    private float patrolStuckTimer;
+    private Vector2 patrolLastPosition;
+    protected float moveSpeedFactor = 1f;
 
     // Tìm mục tiêu (quét toàn bộ unit + cấp list) tốn kém nếu chạy mỗi frame cho từng unit -> giật.
     // Giới hạn ~0.2s/lần, giữ target cũ giữa các nhịp; nextFindTargetTime lệch pha mỗi unit (Renew)
@@ -132,26 +153,36 @@ public class BaseUnit : MonoBehaviour
     private void SetupRig()
     {
         // Rigidbody2D để di chuyển: đặt trên ROOT (cùng transform với logic vị trí). Prefab rip để
-        // Rigidbody2D ở con "Soldier" -> nếu chỉ dùng nó thì art tách khỏi root khi MovePosition.
+        // Rigidbody2D ở con "Soldier" -> nếu chỉ dùng nó thì art tách khỏi root khi di chuyển.
         rigid = GetComponent<Rigidbody2D>();
         if (rigid == null)
         {
             rigid = gameObject.AddComponent<Rigidbody2D>();
-            rigid.bodyType = RigidbodyType2D.Kinematic;
-            rigid.gravityScale = 0f;
-            rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
 
-        // Vô hiệu hoá mọi Rigidbody2D ở con (VD trên "Soldier") để art đi theo root thay vì tự
-        // mô phỏng vật lý riêng (đứng yên khi root di chuyển).
+        // Thông số Rigidbody2D của SoldierPrefab gốc: động (lái bằng lực, va chạm nhau + chướng ngại),
+        // mass 1, cản 2, không trọng lực, khoá xoay, nội suy, va chạm liên tục.
+        rigid.bodyType = RigidbodyType2D.Dynamic;
+        rigid.mass = 1f;
+        rigid.linearDamping = 2f;
+        rigid.angularDamping = 0.05f;
+        rigid.gravityScale = 0f;
+        rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rigid.interpolation = RigidbodyInterpolation2D.Interpolate;
+        rigid.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        // Bỏ Rigidbody2D ở con (VD trên "Soldier") → collider con gắn vào Rigidbody root, art đi theo root.
         Rigidbody2D[] childBodies = GetComponentsInChildren<Rigidbody2D>(true);
         for (int i = 0; i < childBodies.Length; i++)
         {
             if (childBodies[i] != rigid)
             {
                 childBodies[i].simulated = false;
+                Destroy(childBodies[i]);
             }
         }
+
+        mover = new UnitMover(rigid, MoverSettings);
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -241,7 +272,37 @@ public class BaseUnit : MonoBehaviour
             return;
         }
 
-        Moving();
+        TickMover(Time.fixedDeltaTime * GameController.Instance.gameSpeed);
+    }
+
+    // Bộ tham số lái: hero/quái = PhysicsMovementController trong GameplayScene; pet override.
+    protected virtual UnitMover.Settings MoverSettings => UnitMover.CharacterSettings;
+
+    // PhysicsMovementController.htk gốc: chỉ đẩy lực khi trận đang chạy (GameState Playing).
+    // moveSpeed = 0 (VD rồng) → không đẩy.
+    protected virtual void TickMover(float dt)
+    {
+        BaseMode mode = GameController.Instance.mode;
+        if (mover == null || !mover.HasPath || !isEnableMove || (mode != null && mode.isSkipUpdateBehaviour))
+        {
+            return;
+        }
+
+        float speed = stats.moveSpeed * moveSpeedFactor * GameController.Instance.gameSpeed;
+        if (speed <= 0f)
+        {
+            return;
+        }
+
+        mover.Tick(dt, speed);
+
+        // Gốc xoay thân theo hướng đi (htu/hto); project lật trái/phải theo vận tốc ngang.
+        float vx = rigid.linearVelocity.x;
+        if (Mathf.Abs(vx) > MINIMUM_UPDATE_DIRECTION_VALUE)
+        {
+            Face(vx > 0f);
+        }
+        animationController.SetTimeScaleAnimMoveBySpeed();
     }
 
     protected virtual void OnEnable()
@@ -333,6 +394,8 @@ public class BaseUnit : MonoBehaviour
 
         isMoving = false;
         isAttacking = false;
+        mover?.Stop();
+        moveSpeedFactor = 1f;
 
         stateCurrent = BattleState.None;
         animationController?.Reset();
@@ -572,6 +635,10 @@ public class BaseUnit : MonoBehaviour
     public virtual void Pause()
     {
         isPause = true;
+        if (rigid != null && rigid.bodyType == RigidbodyType2D.Dynamic)
+        {
+            rigid.linearVelocity = Vector2.zero;   // vật lý động không tự dừng khi pause bằng cờ
+        }
         animationController.Pause();
         hpBar?.Pause();
         rigid.DOPause();
@@ -622,6 +689,7 @@ public class BaseUnit : MonoBehaviour
             case BattleState.Move: UpdateMove(); break;
             case BattleState.Attack: UpdateAttack(); break;
             case BattleState.Fear: UpdateFear(); break;
+            case BattleState.Patrol: UpdatePatrol(); break;
         }
     }
 
@@ -634,11 +702,20 @@ public class BaseUnit : MonoBehaviour
 
         if (isForceChange || stateCurrent != newState)
         {
+            if (stateCurrent == BattleState.Patrol && newState != BattleState.Patrol)
+            {
+                EndPatrol();
+            }
+
             stateCurrent = newState;
             switch (stateCurrent)
             {
                 case BattleState.Idle:
                     BeginIdle();
+                    break;
+
+                case BattleState.Patrol:
+                    BeginPatrol();
                     break;
 
                 case BattleState.Move:
@@ -664,7 +741,8 @@ public class BaseUnit : MonoBehaviour
     //Attack
     protected virtual void UpdateAttack() { }
 
-    //Idle
+    //Idle — IdleState.fbq gốc: mỗi frame chọn mục tiêu (SelectTarget). Cận chiến vào tầm → đánh; bắn xa
+    // vào tầm và thấy mục tiêu → bắn; còn lại đi tới nếu được di chuyển. Không có mục tiêu: quái đi tuần (canPatrol).
     protected virtual void UpdateIdle()
     {
         if (IsReadyAutoSkill())
@@ -672,24 +750,23 @@ public class BaseUnit : MonoBehaviour
             return;
         }
 
-        if (IsTargetAvailable())
+        target = SelectTarget();
+        if (target == null)
         {
-            if (IsTargetInAttackRange())
+            if (canPatrol && isMoveable)
             {
-                ChangeState(BattleState.Attack);
+                ChangeState(BattleState.Patrol);
             }
-            else
-            {
-                FindNextTarget();
-                if (target != null && isMoveable)
-                {
-                    ChangeState(BattleState.Move);
-                }
-            }
+            return;
         }
-        else
+
+        if (IsInAttackPosition())
         {
-            FindNextTarget();
+            ChangeState(BattleState.Attack);
+        }
+        else if (isMoveable)
+        {
+            ChangeState(BattleState.Move);
         }
     }
 
@@ -699,7 +776,33 @@ public class BaseUnit : MonoBehaviour
         animationController.PlayAnimIdle();
     }
 
-    //Move
+    // GridCombatController.hor gốc: kẻ địch còn sống gần nhất trên toàn map (phe người chơi).
+    // Quái override = hos (chỉ trong tầm phát hiện). Đang bị khiêu khích thì giữ mục tiêu.
+    protected virtual BaseUnit SelectTarget()
+    {
+        if (crowdController.isTaunted && IsTargetAvailable())
+        {
+            return target;
+        }
+
+        return FindNearestEnemyAmong(GetAliveEnemies());
+    }
+
+    // Đánh xa = vũ khí có đạn (cùng điều kiện PlayAnimAttack / ReleaseAttack).
+    protected virtual bool IsRangedAttacker => hasProjectile && bulletPrefab != null;
+
+    // MoveState.fcg / GridCombatController.hot + hou gốc: trong tầm đánh; bắn xa còn phải thấy mục tiêu.
+    protected virtual bool IsInAttackPosition()
+    {
+        if (!IsTargetInAttackRange())
+        {
+            return false;
+        }
+
+        return !IsRangedAttacker || MapController.HasLineOfSight(Transform.position, target.Transform.position);
+    }
+
+    //Move — MoveState gốc.
     protected virtual void UpdateMove()
     {
         if (IsReadyAutoSkill())
@@ -707,19 +810,71 @@ public class BaseUnit : MonoBehaviour
             return;
         }
 
-        if (IsTargetAvailable())
+        if (!IsTargetAvailable())
         {
-            // Bám mục tiêu: cập nhật đích để Moving() đi theo.
-            moveDestination = target.Transform.position;
+            StopMove();
+            ChangeState(BattleState.Idle);
+            return;
+        }
 
-            if (IsTargetInAttackRange())
+        if (IsInAttackPosition())
+        {
+            StopMove();
+            ChangeState(BattleState.Attack);
+            return;
+        }
+
+        float dt = Time.deltaTime * GameController.Instance.gameSpeed;
+        if (!mover.HasPath)
+        {
+            // Chưa có đường (vừa tới nơi / tìm không ra) → 0.2s thử tìm lại.
+            moveRepathTimer += dt;
+            if (moveRepathTimer >= MOVE_REPATH_INTERVAL)
             {
-                ChangeState(BattleState.Attack);
+                moveRepathTimer = 0f;
+                ResetMoveTimers();
+                RepathToTarget();
+            }
+            return;
+        }
+
+        moveRepathTimer = 0f;
+
+        // Mục tiêu đã sang ô khác ô đích → tìm đường lại ngay.
+        if (MapController.Instance.WorldToCell(target.Transform.position) != mover.Goal)
+        {
+            ResetMoveTimers();
+            RepathToTarget();
+            return;
+        }
+
+        // 0.15s xét lại kẻ địch gần nhất, đổi mục tiêu thì tìm đường lại.
+        moveRetargetTimer += dt;
+        if (moveRetargetTimer >= MOVE_RETARGET_INTERVAL)
+        {
+            moveRetargetTimer = 0f;
+            BaseUnit nearest = SelectTarget();
+            if (nearest != null && nearest != target)
+            {
+                target = nearest;
+                ResetMoveTimers();
+                RepathToTarget();
+                return;
             }
         }
-        else
+
+        // Mỗi 1s: đi chưa được 0.05 → coi như kẹt, tìm đường lại.
+        moveStuckTimer += dt;
+        if (moveStuckTimer >= MOVE_STUCK_CHECK_INTERVAL)
         {
-            ChangeState(BattleState.Idle);
+            Vector2 position = Transform.position;
+            float moved = Vector2.Distance(position, moveLastPosition);
+            moveLastPosition = position;
+            moveStuckTimer = 0f;
+            if (moved < MOVE_STUCK_DISTANCE)
+            {
+                RepathToTarget();
+            }
         }
     }
 
@@ -727,113 +882,214 @@ public class BaseUnit : MonoBehaviour
     {
         isMoving = true;
         animationController.PlayAnimMove();
+        moveRepathTimer = MOVE_REPATH_INTERVAL;
+        ResetMoveTimers();
+        RepathToTarget();
     }
 
     public virtual void StopMove()
     {
         isMoving = false;
+        mover?.Stop();
     }
 
-    // Di chuyển liên tục tới moveDestination, né ô wall qua MapController.ResolveMove.
-    // Chạy trong FixedUpdate (physics). moveSpeed=0 (VD boss DragonBoss) → đứng yên.
-    protected virtual void Moving()
+    private void ResetMoveTimers()
     {
-        if (!isMoving || !isEnableMove || isAttacking)
+        moveStuckTimer = 0f;
+        moveRetargetTimer = 0f;
+        moveLastPosition = Transform.position;
+    }
+
+    // MoveState.fcf gốc: chọn lại mục tiêu, ô đích = ô mục tiêu (cận chiến) hoặc ô bắn (bắn xa, fch);
+    // không tới được thì thử 8 ô quanh đích (đi được, chưa có ai đứng); vẫn không được → đứng Idle.
+    private void RepathToTarget()
+    {
+        BaseUnit next = SelectTarget();
+        if (next == null)
+        {
+            StopMove();
+            ChangeState(BattleState.Idle);
+            return;
+        }
+        target = next;
+
+        MapController map = MapController.Instance;
+        Vector2Int goal = map.ClampCell(map.WorldToCell(target.Transform.position));
+        if (IsRangedAttacker)
+        {
+            goal = FindFiringCell(goal);
+        }
+
+        if (mover.RequestMoveTo(goal))
         {
             return;
         }
 
-        float speed = stats.moveSpeed * GameController.Instance.gameSpeed;
-        if (speed <= 0f)
+        var neighbors = new List<Vector2Int>(8);
+        MapSpawnCells.GetNeighbors8(map.Grid, goal, neighbors);
+        for (int i = 0; i < neighbors.Count; i++)
         {
+            Vector2Int cell = neighbors[i];
+            if (map.IsWalkable(cell) && !map.IsOccupiedByOther(cell, this) && mover.RequestMoveTo(cell))
+            {
+                return;
+            }
+        }
+
+        StopMove();
+        ChangeState(BattleState.Idle);
+    }
+
+    // MoveState.fch gốc: ô bắn cho đơn vị bắn xa — trong vuông bán kính max(1, floor(tầm) − 1) quanh mục tiêu,
+    // đi được, cách mục tiêu ≥ nửa tầm, thấy được mục tiêu; chọn ô GẦN mục tiêu nhất. Không có → ô mục tiêu.
+    private Vector2Int FindFiringCell(Vector2Int targetCell)
+    {
+        MapController map = MapController.Instance;
+        float range = stats.attackRange;
+        int radius = Mathf.Max(1, Mathf.FloorToInt(range) - 1);
+        float minDistance = range * 0.5f;
+        Vector2 targetPosition = target.Transform.position;
+
+        Vector2Int best = targetCell;
+        float bestDistance = float.MaxValue;
+        for (int dCol = -radius; dCol <= radius; dCol++)
+        {
+            for (int dRow = -radius; dRow <= radius; dRow++)
+            {
+                var cell = new Vector2Int(targetCell.x + dRow, targetCell.y + dCol);
+                if (!map.IsWalkable(cell))
+                {
+                    continue;
+                }
+
+                Vector2 position = map.CellToWorld(cell);
+                float distance = Vector2.Distance(position, targetPosition);
+                if (distance < minDistance || distance >= bestDistance || !MapController.HasLineOfSight(position, targetPosition))
+                {
+                    continue;
+                }
+
+                best = cell;
+                bestDistance = distance;
+            }
+        }
+        return best;
+    }
+
+    //Patrol — PatrolState gốc.
+    protected virtual void BeginPatrol()
+    {
+        patrolHomeCell = MapController.Instance.WorldToCell(Transform.position);
+        patrolWaiting = false;
+        patrolWaitTimer = 0f;
+        patrolStuckTimer = 0f;
+        patrolLastPosition = Transform.position;
+        moveSpeedFactor = PATROL_SPEED_FACTOR;
+        PickPatrolCell();
+    }
+
+    protected virtual void EndPatrol()
+    {
+        moveSpeedFactor = 1f;
+        StopMove();
+    }
+
+    protected virtual void UpdatePatrol()
+    {
+        BaseUnit found = SelectTarget();
+        if (found != null)
+        {
+            target = found;
+            ChangeState(BattleState.Move);
             return;
         }
 
-        Vector3 pos = Transform.position;
-        Vector3 aim = NextMovePoint(pos);      // waypoint kế tiếp theo A* (hoặc thẳng đích nếu không có path)
-        Vector3 to = aim - pos;
-        to.z = 0f;
-
-        float dist = to.magnitude;
-        if (dist <= 0.001f)
+        float dt = Time.deltaTime * GameController.Instance.gameSpeed;
+        if (patrolWaiting)
         {
+            patrolWaitTimer += dt;
+            if (patrolWaitTimer >= patrolWaitDuration)
+            {
+                patrolWaiting = false;
+                PickPatrolCell();
+            }
             return;
         }
 
-        Vector3 dir = to / dist;
-        float step = Mathf.Min(speed * Time.fixedDeltaTime, dist);
-        Vector3 next = MapController.Instance.ResolveMove(pos, dir, step);
+        if (!mover.HasPath)
+        {
+            StartPatrolWait();
+            return;
+        }
 
-        rigid.MovePosition(next);
-        Face(moveDestination);
-        animationController.SetTimeScaleAnimMoveBySpeed();
+        // Đi chưa được 0.05 trong frame này dồn đủ 0.8s → dừng, đứng chờ.
+        Vector2 position = Transform.position;
+        if (Vector2.Distance(position, patrolLastPosition) < PATROL_STUCK_DISTANCE)
+        {
+            patrolStuckTimer += dt;
+            if (patrolStuckTimer >= PATROL_STUCK_TIME)
+            {
+                StopMove();
+                StartPatrolWait();
+            }
+        }
+        else
+        {
+            patrolStuckTimer = 0f;
+        }
+        patrolLastPosition = position;
     }
 
-    // Điểm world unit nên nhắm tới bước này (tầng định tuyến của di chuyển lai A* + steering):
-    //   - map chưa sẵn sàng, cùng ô với đích, hoặc không có đường → nhắm thẳng moveDestination (hành vi cũ);
-    //   - còn lại → bám waypoint kế tiếp của path A*, chỉ tính lại đường khi ô đích đổi hoặc unit lệch tuyến.
-    private Vector3 NextMovePoint(Vector3 pos)
+    // PatrolState.fcj: xáo 8 ô quanh ô xuất phát, đi tới ô đầu tiên (khác ô đang đứng, đi được); không có → đứng chờ.
+    private void PickPatrolCell()
     {
-        var map = MapController.Instance;
-        if (map == null || !map.IsReady)
+        MapController map = MapController.Instance;
+        var offsets = new List<Vector2Int>(8);
+        for (int dCol = -1; dCol <= 1; dCol++)
         {
-            return moveDestination;
+            for (int dRow = -1; dRow <= 1; dRow++)
+            {
+                if (dCol != 0 || dRow != 0)
+                {
+                    offsets.Add(new Vector2Int(dRow, dCol));
+                }
+            }
+        }
+        for (int i = offsets.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (offsets[i], offsets[j]) = (offsets[j], offsets[i]);
         }
 
-        Vector2Int selfCell = map.WorldToCell(pos);
-        Vector2Int goalCell = map.WorldToCell(moveDestination);
-        if (selfCell == goalCell)
+        Vector2Int current = map.WorldToCell(Transform.position);
+        for (int i = 0; i < offsets.Count; i++)
         {
-            return moveDestination;   // đã cùng ô đích → đi thẳng cho mượt, không cần A*
+            Vector2Int cell = patrolHomeCell + offsets[i];
+            if (cell == current || !map.IsWalkable(cell))
+            {
+                continue;
+            }
+
+            patrolStuckTimer = 0f;
+            if (mover.RequestMoveTo(cell))
+            {
+                isMoving = true;
+                animationController.PlayAnimMove();
+            }
+            return;
         }
 
-        if (goalCell != movePathGoalCell)
-        {
-            RebuildMovePath(selfCell, goalCell);          // đích đổi ô → tính lại đường
-        }
-        else if (movePath.Count > 0 && !SyncMovePathIndex(selfCell))
-        {
-            RebuildMovePath(selfCell, goalCell);          // cùng đích nhưng đã lệch khỏi tuyến → tính lại
-        }
-
-        // Hết waypoint (không có đường) hoặc chỉ còn ô đích → nhắm thẳng đích thật cho mượt.
-        if (movePathIndex >= movePath.Count - 1)
-        {
-            return moveDestination;
-        }
-
-        return map.CellToWorld(movePath[movePathIndex]);
+        StartPatrolWait();
     }
 
-    // Tính lại path A* từ ô hiện tại tới ô đích, rồi trỏ waypoint kế tiếp (bỏ ô xuất phát).
-    private void RebuildMovePath(Vector2Int selfCell, Vector2Int goalCell)
+    private void StartPatrolWait()
     {
-        movePathGoalCell = goalCell;
-        movePath.Clear();
-        List<Vector2Int> path = MapController.Instance.FindPath(selfCell, goalCell);
-        if (path != null)
-        {
-            movePath.AddRange(path);
-        }
-        movePathIndex = 0;
-        SyncMovePathIndex(selfCell);
-    }
-
-    // Tiến chỉ số waypoint theo ô hiện tại của unit (bỏ các ô đã đi qua).
-    // Trả false nếu unit không còn đứng trên tuyến (đã bị đẩy sang ô lạ) → cần tính lại đường.
-    private bool SyncMovePathIndex(Vector2Int selfCell)
-    {
-        if (movePath.Count == 0)
-        {
-            return false;
-        }
-
-        while (movePathIndex < movePath.Count && movePath[movePathIndex] == selfCell)
-        {
-            movePathIndex++;
-        }
-
-        return movePathIndex > 0 && movePath[movePathIndex - 1] == selfCell;
+        patrolWaiting = true;
+        patrolWaitTimer = 0f;
+        patrolWaitDuration = Random.Range(PATROL_WAIT_MIN, PATROL_WAIT_MAX);
+        patrolStuckTimer = 0f;
+        isMoving = false;
+        animationController.PlayAnimIdle();
     }
 
     public virtual void EndWaitBossAppear()
@@ -1537,6 +1793,7 @@ public class BaseUnit : MonoBehaviour
 
         crowdController.fearMovePoint = MapController.Instance.ClampPointInMap(point);
         Face(crowdController.fearMovePoint);
+        mover?.Stop();
         stateCurrent = BattleState.Fear;
     }
 

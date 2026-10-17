@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Quản tất cả phần cơ bản của map trong 1 trận: giữ ma trận wall (0/1),
-// chuyển đổi ô lưới ↔ world, tìm đường A*, và di chuyển liên tục né wall theo frame.
+// Quản tất cả phần cơ bản của map trong 1 trận (GridManager + PathfindingManager gốc): giữ ma trận
+// chướng ngại (0/1), chuyển đổi ô lưới ↔ world, tìm đường A* 8 hướng, kiểm tra tầm nhìn (raycast).
 //
-// Hero/enemy gọi MapController.Instance.FindPath(...) để lấy list ô ngắn nhất đi tới đích,
-// hoặc ResolveMove/ClampPointInMap cho bước di chuyển trôi mượt né wall.
-// (Đã hợp nhất CombatMap cũ vào đây — 1 nguồn sự thật cho map.)
+// Unit gọi MapController.Instance.FindPath(...) lấy list ô tới đích; việc lái theo path do UnitMover
+// (PhysicsMovementController gốc) đảm nhiệm. (Đã hợp nhất CombatMap cũ vào đây — 1 nguồn sự thật cho map.)
 public class MapController : Singleton<MapController>
 {
     public Transform pointStart;                  // Mốc gốc lưới: ô (0,0) neo ĐÚNG tại đây (góc DƯỚI-TRÁI). Null → dùng fallbackOrigin.
@@ -27,8 +26,8 @@ public class MapController : Singleton<MapController>
     private Vector3 minWorld;                     // biên dưới-trái vùng đi được (componentwise min 2 góc)
     private Vector3 maxWorld;                     // biên trên-phải vùng đi được (componentwise max 2 góc)
 
-    // Các hướng thử "lách" khi hướng thẳng bị wall chặn (độ, ± quanh hướng gốc).
-    private static readonly float[] SteerAngles = { 25f, -25f, 50f, -50f, 75f, -75f, 90f, -90f };
+    // Layer chướng ngại (LevelLoader.itp gốc gán layer "Obstacle"; prefab MainObstacle... đều layer 12).
+    public const int OBSTACLE_LAYER = 12;
 
     // MapController nằm TRÊN mapPrefab → khi prefab được Instantiate, tự nhận mình là Singleton Instance
     // (bảo đảm Instance là bản CÓ PointStart, không phải bản rỗng do Singleton auto-tạo).
@@ -120,74 +119,111 @@ public class MapController : Singleton<MapController>
         return point;
     }
 
-    // Giải quyết 1 bước di chuyển liên tục có né wall:
-    //   - đi thẳng theo dir nếu ô đích đi được;
-    //   - nếu bị chặn, thử lách sang các hướng lệch dần (SteerAngles);
-    //   - không hướng nào đi được → đứng yên.
-    public Vector3 ResolveMove(Vector3 from, Vector3 dir, float step)
+    // GridManager.ijc: kẹp ô vào trong lưới.
+    public Vector2Int ClampCell(Vector2Int cell)
     {
-        if (!IsReady) return from + dir * step;
-
-        Vector3 straight = ClampPointInMap(from + dir * step);
-        if (IsWalkable(straight)) return straight;
-
-        for (int i = 0; i < SteerAngles.Length; i++)
-        {
-            Vector3 steered = Quaternion.Euler(0f, 0f, SteerAngles[i]) * dir;
-            Vector3 candidate = ClampPointInMap(from + steered * step);
-            if (IsWalkable(candidate)) return candidate;
-        }
-        return from;
+        return new Vector2Int(Mathf.Clamp(cell.x, 0, Rows - 1), Mathf.Clamp(cell.y, 0, Cols - 1));
     }
 
-    // ===== Tìm đường =====
+    // Ô đang có unit khác đứng (cờ "occupied" của ô GridManager gốc — chỉ tính nhân vật, không tính pet).
+    public bool IsOccupiedByOther(Vector2Int cell, BaseUnit self)
+    {
+        var e = GameController.Instance.activeUnits.GetEnumerator();
+        while (e.MoveNext())
+        {
+            BaseUnit unit = e.Current.Value;
+            if (unit != null && unit != self && unit.isTargetable && WorldToCell(unit.Transform.position) == cell)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    // A* 4 hướng, heuristic Manhattan. Trả list ô từ start → goal (bao gồm cả 2 đầu).
-    // Rỗng nếu không có đường (hoặc goal là wall / ngoài biên). start==goal → [start].
+    // GridCombatController.hoz: tầm nhìn từ from tới to — raycast chỉ vào layer chướng ngại; gần (< 0.01) coi như thấy.
+    public static bool HasLineOfSight(Vector2 from, Vector2 to)
+    {
+        Vector2 delta = to - from;
+        float distance = delta.magnitude;
+        if (distance < 0.01f) return true;
+
+        RaycastHit2D hit = Physics2D.Raycast(from, delta / distance, distance, 1 << OBSTACLE_LAYER);
+        return hit.collider == null;
+    }
+
+    // ===== Tìm đường — PathfindingManager.ikb gốc =====
+    // A* 8 hướng (lân cận GridManager.ijk: chéo cần cả 2 ô kề vuông góc đi được), chi phí thẳng 1 / chéo 1.414,
+    // bước chéo xuất phát từ ô sát chướng ngại (ike) ×3; heuristic octile; mở nút có f nhỏ nhất (gặp trước thắng);
+    // tối đa 1000 lượt mở. Đích phải đi được. Trả list ô từ start → goal (gồm cả 2 đầu); rỗng nếu không tới được.
+    private const float STRAIGHT_COST = 1f;
+    private const float DIAGONAL_COST = 1.414f;
+    private const float WALL_DIAGONAL_PENALTY = 3f;
+    private const int MAX_EXPANSIONS = 999;
+
+    private class PathNode
+    {
+        public Vector2Int cell;
+        public float g;
+        public float h;
+        public PathNode parent;
+    }
+
     public List<Vector2Int> FindPath(Vector2Int start, Vector2Int goal)
     {
         var path = new List<Vector2Int>();
-        if (!IsReady) return path;
-        if (!InBounds(start) || !InBounds(goal)) return path;
-        if (IsWall(goal)) return path;
-        if (start == goal) { path.Add(start); return path; }
+        if (!IsReady || !InBounds(start) || !InBounds(goal) || IsWall(goal)) return path;
 
-        var open = new List<Vector2Int> { start };                 // ô cần xét (open set nhỏ, quét tuyến tính)
-        var cameFrom = new Dictionary<Vector2Int, Vector2Int>();
-        var gScore = new Dictionary<Vector2Int, int> { [start] = 0 };
-        var fScore = new Dictionary<Vector2Int, int> { [start] = Heuristic(start, goal) };
-        var closed = new HashSet<Vector2Int>();
+        // Dictionary như gốc: thứ tự duyệt khi chọn f nhỏ nhất (hoà thì nút gặp trước) khớp bản gốc.
+        var open = new Dictionary<Vector2Int, PathNode>();
+        var closed = new Dictionary<Vector2Int, PathNode>();
+        var neighbors = new List<Vector2Int>(8);
+        open.Add(start, new PathNode { cell = start, g = 0f, h = Heuristic(start, goal) });
 
-        while (open.Count > 0)
+        for (int expansion = 0; open.Count > 0; expansion++)
         {
-            // Lấy ô có fScore nhỏ nhất.
-            int bestIndex = 0;
-            int bestFScore = fScore[open[0]];
-            for (int i = 1; i < open.Count; i++)
+            PathNode current = null;
+            float bestF = float.MaxValue;
+            foreach (PathNode node in open.Values)
             {
-                int candidateF = fScore.TryGetValue(open[i], out int value) ? value : int.MaxValue;
-                if (candidateF < bestFScore) { bestFScore = candidateF; bestIndex = i; }
+                float f = node.g + node.h;
+                if (f < bestF)
+                {
+                    bestF = f;
+                    current = node;
+                }
             }
 
-            Vector2Int current = open[bestIndex];
-            if (current == goal) return Reconstruct(cameFrom, current);
+            if (current.cell == goal) return Reconstruct(current);
 
-            open.RemoveAt(bestIndex);
-            closed.Add(current);
+            open.Remove(current.cell);
+            closed.Add(current.cell, current);
 
-            for (int dirIndex = 0; dirIndex < Dirs.Length; dirIndex++)
+            MapSpawnCells.GetNeighbors8(Grid, current.cell, neighbors);
+            for (int i = 0; i < neighbors.Count; i++)
             {
-                Vector2Int next = current + Dirs[dirIndex];
-                if (!IsWalkable(next) || closed.Contains(next)) continue;
+                Vector2Int next = neighbors[i];
+                if (closed.ContainsKey(next) || !IsWalkable(next)) continue;
 
-                int tentativeG = gScore[current] + 1;
-                if (gScore.TryGetValue(next, out int neighborG) && tentativeG >= neighborG) continue;
+                bool diagonal = Mathf.Abs(next.x - current.cell.x) == 1 && Mathf.Abs(next.y - current.cell.y) == 1;
+                float cost = diagonal ? DIAGONAL_COST : STRAIGHT_COST;
+                if (diagonal && TouchesWall(current.cell)) cost *= WALL_DIAGONAL_PENALTY;
 
-                cameFrom[next] = current;
-                gScore[next] = tentativeG;
-                fScore[next] = tentativeG + Heuristic(next, goal);
-                if (!open.Contains(next)) open.Add(next);
+                float g = current.g + cost;
+                if (open.TryGetValue(next, out PathNode existing))
+                {
+                    if (g < existing.g)
+                    {
+                        existing.g = g;
+                        existing.parent = current;
+                    }
+                }
+                else
+                {
+                    open.Add(next, new PathNode { cell = next, g = g, h = Heuristic(next, goal), parent = current });
+                }
             }
+
+            if (expansion > MAX_EXPANSIONS - 1) break;
         }
         return path; // không tới được
     }
@@ -198,27 +234,38 @@ public class MapController : Singleton<MapController>
         return FindPath(WorldToCell(startWorld), WorldToCell(goalWorld));
     }
 
-    private static int Heuristic(Vector2Int a, Vector2Int b)
+    // PathfindingManager.ikd: octile — 1.414 × min(Δ) + |Δx − Δy|.
+    private static float Heuristic(Vector2Int a, Vector2Int b)
     {
-        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+        int dRow = Mathf.Abs(a.x - b.x);
+        int dCol = Mathf.Abs(a.y - b.y);
+        return DIAGONAL_COST * Mathf.Min(dRow, dCol) + Mathf.Abs(dRow - dCol);
     }
 
-    private static List<Vector2Int> Reconstruct(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int current)
+    // PathfindingManager.ike: 1 trong 4 ô kề vuông góc (trong lưới) là chướng ngại.
+    private bool TouchesWall(Vector2Int cell)
     {
-        var path = new List<Vector2Int> { current };
-        while (cameFrom.TryGetValue(current, out Vector2Int previous))
+        for (int i = 0; i < Dirs4.Length; i++)
         {
-            current = previous;
-            path.Add(current);
+            Vector2Int next = cell + Dirs4[i];
+            if (InBounds(next) && Grid[next.x, next.y] != 0) return true;
+        }
+        return false;
+    }
+
+    private static List<Vector2Int> Reconstruct(PathNode node)
+    {
+        var path = new List<Vector2Int>();
+        for (; node != null; node = node.parent)
+        {
+            path.Add(node.cell);
         }
         path.Reverse();
         return path;
     }
 
-    // 4 hướng lân cận theo (row, col): xuống (+row), lên (-row), phải (+col), trái (-col).
-    private static readonly Vector2Int[] Dirs =
+    private static readonly Vector2Int[] Dirs4 =
     {
-        new Vector2Int(1, 0), new Vector2Int(-1, 0),
-        new Vector2Int(0, 1), new Vector2Int(0, -1),
+        new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(-1, 0), new Vector2Int(0, -1),
     };
 }

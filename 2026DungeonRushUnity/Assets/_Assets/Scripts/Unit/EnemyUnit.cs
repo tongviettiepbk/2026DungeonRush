@@ -1,15 +1,16 @@
 using UnityEngine;
 
-// Enemy (TeamB) — hành vi THỤ ĐỘNG đúng spec:
-//   KHÔNG tự đi tìm hero. Chỉ khi mục tiêu lọt vào 'aggroRange' (vùng tấn công) thì:
-//     - đã trong tầm đánh  → attack luôn,
-//     - còn trong aggro nhưng ngoài tầm đánh → đi tới cho vào tầm rồi đánh.
-//   Mục tiêu rời aggro → bỏ target, đứng yên (base UpdateIdle chuyển về Idle).
-// Đạt được bằng cách chỉ chọn target trong aggroRange; ngoài ra tái dùng nguyên state machine.
+// Enemy (TeamB) — theo Character phe "Away" gốc (GridCombatController.hos):
+//   chỉ nhắm hero/đồng minh trong TẦM PHÁT HIỆN = max(DetectionRange, tầm đánh), DetectionRange = 0 thì lấy
+//   GameResources.EnemyDetectionRange = 4. Đã có mục tiêu còn sống thì BÁM TIẾP dù mục tiêu chạy ra xa.
+//   Không có mục tiêu → đi tuần quanh ô xuất phát (SoldierPrefab gốc CanMove = CanPatrol = true).
+//   Dungeon có theme EnemyCanMove = false (rồng) → moveSpeed 0 → không đi, không tuần.
 public class EnemyUnit : BaseUnit
 {
-    [Tooltip("Bán kính vùng tấn công: mục tiêu vào đây enemy mới phản ứng.")]
-    public float aggroRange = 3.5f;
+    private const float DEFAULT_DETECTION_RANGE = 4f;   // GameResources.EnemyDetectionRange
+
+    [Tooltip("Tầm phát hiện riêng (Character.DetectionRange). 0 = dùng mặc định gốc 4.")]
+    public float detectionRange;
     public bool isBoss;
 
     [Tooltip("Vũ khí quái thường (cận chiến/bắn xa + tầm đánh). Trống = cận chiến tay không.")]
@@ -38,25 +39,31 @@ public class EnemyUnit : BaseUnit
             moveSpeed = info.moveSpeed,
         };
 
+        isMoveable = info.moveSpeed > 0f;
+        canPatrol = isMoveable;
+
         SpawnInBattle(bs, StaticValue.TAG_TEAM_B, position);
     }
 
-    // Thụ động: chỉ nhắm mục tiêu đã ở trong aggroRange; ngoài vùng → null (đứng yên).
-    protected override void FindNearestTarget()
+    // GridCombatController.hos: đối thủ gần nhất trong tầm phát hiện; không có thì giữ mục tiêu cũ còn sống.
+    protected override BaseUnit SelectTarget()
     {
-        target = FindNearestEnemyAmong(GetAliveEnemies(), aggroRange);
-    }
-
-    // Leash: mục tiêu rời aggroRange thì coi như "không còn mục tiêu" ở MỌI state
-    // (kể cả đang Move) → enemy dừng đuổi, về đứng yên. Nếu không, base UpdateMove sẽ
-    // đuổi vô hạn vì không lọc lại tầm.
-    public override bool IsTargetAvailable()
-    {
-        if (!base.IsTargetAvailable())
+        if (crowdController.isTaunted && IsTargetAvailable())
         {
-            return false;
+            return target;
         }
 
-        return VectorUtils.IsInRange(Transform.position, target.Transform.position, aggroRange);
+        float range = Mathf.Max(detectionRange > 0f ? detectionRange : DEFAULT_DETECTION_RANGE, stats.attackRange);
+        BaseUnit nearest = FindNearestEnemyAmong(GetAliveEnemies(), range);
+        if (nearest == null && IsTargetAvailable())
+        {
+            return target;
+        }
+        return nearest;
+    }
+
+    protected override void FindNearestTarget()
+    {
+        target = SelectTarget();
     }
 }

@@ -87,25 +87,22 @@ public static class MapSpawnCells
         return cells.GetRange(0, Mathf.Min(count, cells.Count));
     }
 
-    // GridManager.ijw: flood-fill 8 hướng từ start (ijk có chéo; đi chéo cần CẢ 2 ô kề vuông góc đi được — ijj).
+    // GridManager.ijw: flood-fill 8 hướng từ start (lân cận ijk có chéo).
     public static HashSet<Vector2Int> GetReachableCells(int[,] grid, Vector2Int start)
     {
         var visited = new HashSet<Vector2Int>();
         if (!IsWalkable(grid, start)) return visited;
 
         var queue = new Queue<Vector2Int>();
+        var neighbors = new List<Vector2Int>(8);
         queue.Enqueue(start);
         visited.Add(start);
         while (queue.Count > 0)
         {
-            Vector2Int current = queue.Dequeue();
-            for (int i = 0; i < Dirs8.Length; i++)
+            GetNeighbors8(grid, queue.Dequeue(), neighbors);
+            for (int i = 0; i < neighbors.Count; i++)
             {
-                Vector2Int dir = Dirs8[i];
-                Vector2Int next = current + dir;
-                if (!InBounds(grid, next)) continue;
-                if (dir.x != 0 && dir.y != 0
-                    && !(IsWalkable(grid, new Vector2Int(current.x, next.y)) && IsWalkable(grid, new Vector2Int(next.x, current.y)))) continue;
+                Vector2Int next = neighbors[i];
                 if (visited.Contains(next) || !IsWalkable(grid, next)) continue;
 
                 visited.Add(next);
@@ -113,6 +110,23 @@ public static class MapSpawnCells
             }
         }
         return visited;
+    }
+
+    // GridManager.ijk(cell, true): 4 ô thẳng trong lưới, rồi 4 ô chéo trong lưới mà CẢ 2 ô kề vuông góc
+    // đều đi được (ijj). Chưa lọc ô đích có đi được hay không.
+    public static void GetNeighbors8(int[,] grid, Vector2Int cell, List<Vector2Int> result)
+    {
+        result.Clear();
+        for (int i = 0; i < Dirs8.Length; i++)
+        {
+            Vector2Int dir = Dirs8[i];
+            Vector2Int next = cell + dir;
+            if (!InBounds(grid, next)) continue;
+            if (dir.x != 0 && dir.y != 0
+                && !(IsWalkable(grid, new Vector2Int(cell.x, next.y)) && IsWalkable(grid, new Vector2Int(next.x, cell.y)))) continue;
+
+            result.Add(next);
+        }
     }
 
     // GridManager.ijc: kẹp ô vào trong lưới.
