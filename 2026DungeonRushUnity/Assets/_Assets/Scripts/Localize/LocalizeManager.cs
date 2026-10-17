@@ -14,12 +14,14 @@ using UnityEditor;
 public class LocalizeManager : Singleton<LocalizeManager>
 {
     public TextAsset defaultLanguageTextFile;
-    public LanguageID testLanguage = LanguageID.Vietnamese;
+    // Editor: ép ngôn ngữ khi test (English = không ép).
+    public LanguageID testLanguage = LanguageID.English;
 
     public LanguageID curLanguage { get; private set; } = LanguageID.English;
 
     public const string KEY_BREAKLINE = "<br>";
-    public const string DATA_KEY_LANGUAGE = "LocalizeLanguage";
+    // Gốc lưu MÃ locale ("en", "tr"...) trong Settings (LocalizationController.ddf → SettingsController.dkl).
+    public const string DATA_KEY_LANGUAGE = "LocalizeLanguageCode";
     public const string PATH_LOCALIZE_FILES_FULL = "Assets/_Assets/Resources/" + PATH_LOCALIZE_FILES;
     public const string PATH_LOCALIZE_FILES = "Json/Localize/Languages/";
     public const string PATH_ADDITIONAL_FILES = "Json/Localize/Categories/";
@@ -58,15 +60,25 @@ public class LocalizeManager : Singleton<LocalizeManager>
         {
             LoadNewLanguage(curLanguage);
         }
+        else
+        {
+            curDictionary = defaultDictionary;
+        }
 
         initialized = true;
     }
 
     private void LoadDefaultLanguage()
     {
+        // Singleton tự tạo (không qua prefab) thì chưa gán file → nạp thẳng từ Resources.
+        if (defaultLanguageTextFile == null)
+        {
+            defaultLanguageTextFile = Resources.Load<TextAsset>(PATH_LOCALIZE_FILES + string.Format("{0}-{1}", (int)defaultLanguage, defaultLanguage));
+        }
+
         if (defaultLanguageTextFile != null)
         {
-            defaultDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(defaultLanguageTextFile.text);
+            defaultDictionary = ParseDictionary(defaultLanguageTextFile.text);
 
             TextAsset[] additionalTextFiles = Resources.LoadAll<TextAsset>(PATH_ADDITIONAL_FILES);
             for (int i = 0; i < additionalTextFiles.Length; i++)
@@ -95,24 +107,36 @@ public class LocalizeManager : Singleton<LocalizeManager>
         }
     }
 
+    // ddj gốc: chuỗi trong bảng ghi xuống dòng dạng "\\n" (2 ký tự) → đổi thành xuống dòng thật.
+    private static Dictionary<string, string> ParseDictionary(string json)
+    {
+        Dictionary<string, string> dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+        List<string> keys = new List<string>(dict.Keys);
+        for (int i = 0; i < keys.Count; i++)
+        {
+            string value = dict[keys[i]];
+            if (!string.IsNullOrEmpty(value) && value.Contains("\\n"))
+            {
+                dict[keys[i]] = value.Replace("\\n", "\n");
+            }
+        }
+        return dict;
+    }
+
+    // ddt gốc: lần đầu chưa chọn thì lấy theo ngôn ngữ máy, ngoài 10 ngôn ngữ → English.
     private LanguageID GetLanguageID()
     {
         switch (Application.systemLanguage)
         {
-            case SystemLanguage.Vietnamese: return LanguageID.Vietnamese;
-            case SystemLanguage.Korean: return LanguageID.Korean;
-            case SystemLanguage.Russian: return LanguageID.Russian;
-            case SystemLanguage.Chinese: return LanguageID.Chinese;
-            case SystemLanguage.Japanese: return LanguageID.Japanese;
+            case SystemLanguage.Turkish: return LanguageID.Turkish;
+            case SystemLanguage.Arabic: return LanguageID.Arabic;
             case SystemLanguage.French: return LanguageID.French;
             case SystemLanguage.German: return LanguageID.German;
-            case SystemLanguage.Portuguese: return LanguageID.Portuguese;
             case SystemLanguage.Italian: return LanguageID.Italian;
-            case SystemLanguage.Indonesian: return LanguageID.Indonesian;
-            case SystemLanguage.Thai: return LanguageID.Thai;
-            case SystemLanguage.Polish: return LanguageID.Polish;
+            case SystemLanguage.Japanese: return LanguageID.Japanese;
+            case SystemLanguage.Korean: return LanguageID.Korean;
             case SystemLanguage.Spanish: return LanguageID.Spanish;
-            case SystemLanguage.Turkish: return LanguageID.Turkish;
+            case SystemLanguage.Portuguese: return LanguageID.PortugueseBR;
         }
 
         return LanguageID.English;
@@ -120,9 +144,9 @@ public class LocalizeManager : Singleton<LocalizeManager>
 
     private void LoadCurrentLanguage()
     {
-        LanguageID language = GetLanguageID();
-        int id = PlayerPrefs.GetInt(DATA_KEY_LANGUAGE, (int)language);
-        curLanguage = (LanguageID)id;
+        string code = PlayerPrefs.GetString(DATA_KEY_LANGUAGE, string.Empty);
+        LanguageID id;
+        curLanguage = LanguageCode.TryParse(code, out id) ? id : GetLanguageID();
 
 #if UNITY_EDITOR
         if (testLanguage != LanguageID.English)
@@ -150,7 +174,7 @@ public class LocalizeManager : Singleton<LocalizeManager>
                 try
                 {
                     curLanguage = newLanguage;
-                    curDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(textAsset.text);
+                    curDictionary = ParseDictionary(textAsset.text);
                 }
                 catch
                 {
@@ -169,6 +193,19 @@ public class LocalizeManager : Singleton<LocalizeManager>
         }
     }
 
+    // ddf gốc (chọn ở LanguageSelectPopup): lưu mã locale, nạp bảng, đóng hết popup rồi nạp lại màn chơi chính
+    // (gốc load lại GameplayScene) để mọi chữ — kể cả chữ code tự gán — vẽ lại theo ngôn ngữ mới.
+    public void ChangeLanguage(LanguageID newLanguage)
+    {
+        PlayerPrefs.SetString(DATA_KEY_LANGUAGE, newLanguage.ToCode());
+        PlayerPrefs.Save();
+        LoadNewLanguage(newLanguage);
+        this.PostEvent(EventID.ChangeLanguage);
+        UIManager.Instance.HideAllActiveUI();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(StaticValue.SCENE_MAINGAME);
+    }
+
+    // eu.L(table, key) gốc. Thiếu bản dịch → lấy tiếng Anh; thiếu luôn key → trả key.
     public string GetLocalizeText(string key, bool isToUpper = false)
     {
         if (string.IsNullOrEmpty(key))
@@ -176,16 +213,14 @@ public class LocalizeManager : Singleton<LocalizeManager>
             return string.Empty;
         }
 
-        if (defaultDictionary.ContainsKey(key) == false)
+        string translatedWords;
+        if (curDictionary.TryGetValue(key, out translatedWords) == false || string.IsNullOrEmpty(translatedWords))
         {
-            DebugCustom.LogWarning("[Localize] Key not found=" + key);
-        }
-
-        string translatedWords = key;
-
-        if (curDictionary.ContainsKey(key) && string.IsNullOrEmpty(curDictionary[key]) == false)
-        {
-            translatedWords = curDictionary[key];
+            if (defaultDictionary.TryGetValue(key, out translatedWords) == false || string.IsNullOrEmpty(translatedWords))
+            {
+                DebugCustom.LogWarning("[Localize] Key not found=" + key);
+                translatedWords = key;
+            }
         }
 
         if (isToUpper)
@@ -196,6 +231,26 @@ public class LocalizeManager : Singleton<LocalizeManager>
         {
             return translatedWords;
         }
+    }
+
+    // eu.L(table, key, args) gốc: chuỗi có {0}, {1}...
+    public string GetLocalizeTextFormat(string key, params object[] args)
+    {
+        string str = GetLocalizeText(key);
+        try
+        {
+            return string.Format(str, args);
+        }
+        catch (FormatException)
+        {
+            return str;
+        }
+    }
+
+    // Có key trong bảng gốc không (UI cũ còn truyền chữ tiếng Anh thay vì key).
+    public bool HasKey(string key)
+    {
+        return !string.IsNullOrEmpty(key) && defaultDictionary.ContainsKey(key);
     }
 
     public string GetLocalizeTextSuffix(string key, string suffix, bool isToUpper = false)
@@ -389,20 +444,15 @@ public class LocalizeManager : Singleton<LocalizeManager>
 
         switch (id)
         {
-            case LanguageID.Vietnamese: lang = SystemLanguage.Vietnamese; break;
-            case LanguageID.Korean: lang = SystemLanguage.Korean; break;
-            case LanguageID.Russian: lang = SystemLanguage.Russian; break;
-            case LanguageID.Chinese: lang = SystemLanguage.Chinese; break;
-            case LanguageID.Japanese: lang = SystemLanguage.Japanese; break;
+            case LanguageID.Turkish: lang = SystemLanguage.Turkish; break;
+            case LanguageID.Arabic: lang = SystemLanguage.Arabic; break;
             case LanguageID.French: lang = SystemLanguage.French; break;
             case LanguageID.German: lang = SystemLanguage.German; break;
-            case LanguageID.Portuguese: lang = SystemLanguage.Portuguese; break;
             case LanguageID.Italian: lang = SystemLanguage.Italian; break;
-            case LanguageID.Indonesian: lang = SystemLanguage.Indonesian; break;
-            case LanguageID.Thai: lang = SystemLanguage.Thai; break;
-            case LanguageID.Polish: lang = SystemLanguage.Polish; break;
+            case LanguageID.Japanese: lang = SystemLanguage.Japanese; break;
+            case LanguageID.Korean: lang = SystemLanguage.Korean; break;
             case LanguageID.Spanish: lang = SystemLanguage.Spanish; break;
-            case LanguageID.Turkish: lang = SystemLanguage.Turkish; break;
+            case LanguageID.PortugueseBR: lang = SystemLanguage.Portuguese; break;
         }
 
         return Get2LetterISOCodeFromSystemLanguage(lang);

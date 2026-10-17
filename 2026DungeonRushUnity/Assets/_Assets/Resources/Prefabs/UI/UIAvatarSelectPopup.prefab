@@ -344,6 +344,7 @@ GameObject:
   - component: {fileID: 3430534855616647657}
   - component: {fileID: 671577343923259059}
   - component: {fileID: 5583537230763498200}
+  - component: {fileID: 4515543797890910534}
   m_Layer: 0
   m_Name: NicknameText
   m_TagString: Untagged
@@ -514,6 +515,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4515543797890910534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2708532094122798891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.Avatar.Title
+  sourceText: Select Avatar
+  isUpperCharacters: 0
 --- !u!1 &3912961223142926792
 GameObject:
   m_ObjectHideFlags: 0

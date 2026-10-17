@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4255175225871024595}
   - component: {fileID: 1590146695029997646}
   - component: {fileID: 5909281983749923949}
+  - component: {fileID: 1398388843878024640}
   m_Layer: 0
   m_Name: TitleText
   m_TagString: Untagged
@@ -182,6 +183,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1398388843878024640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204080673177130461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.SignIn.Title
+  sourceText: Sign In
+  isUpperCharacters: 0
 --- !u!1 &1305812510847506137
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,6 +398,7 @@ GameObject:
   - component: {fileID: 9165274372072618683}
   - component: {fileID: 8670831511792132870}
   - component: {fileID: 1487188197687351556}
+  - component: {fileID: 6568836169057890020}
   m_Layer: 0
   m_Name: Placeholder
   m_TagString: Untagged
@@ -528,6 +545,21 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &6568836169057890020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2429297937544147700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.Auth.EmailPlaceholder
+  sourceText: Enter Email
+  isUpperCharacters: 0
 --- !u!1 &3020476719057200196
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,6 +1248,7 @@ GameObject:
   - component: {fileID: 3644493907878477312}
   - component: {fileID: 2800877452644258757}
   - component: {fileID: 3766095383547803834}
+  - component: {fileID: 2383799629509312328}
   m_Layer: 0
   m_Name: SignUpTextButton
   m_TagString: Untagged
@@ -1386,6 +1419,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2383799629509312328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6027407116020582620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.SignIn.SwitchToSignUp
+  sourceText: Don't have an account? Sign up
+  isUpperCharacters: 0
 --- !u!1 &6764063211174023665
 GameObject:
   m_ObjectHideFlags: 0
@@ -1578,6 +1626,7 @@ GameObject:
   - component: {fileID: 4591182227900600178}
   - component: {fileID: 3226049610728694157}
   - component: {fileID: 6182189273618020407}
+  - component: {fileID: 5133592328575988772}
   m_Layer: 0
   m_Name: ForgotPasswordButton
   m_TagString: Untagged
@@ -1748,6 +1797,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5133592328575988772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7326950093959160833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.SignIn.ForgotPassword
+  sourceText: Forgot password?
+  isUpperCharacters: 0
 --- !u!1 &7857349464727408245
 GameObject:
   m_ObjectHideFlags: 0
@@ -1835,6 +1899,7 @@ GameObject:
   - component: {fileID: 1480977907690341602}
   - component: {fileID: 4707982249493794239}
   - component: {fileID: 788806722215002272}
+  - component: {fileID: 546856690054713183}
   m_Layer: 0
   m_Name: Placeholder
   m_TagString: Untagged
@@ -1981,6 +2046,21 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &546856690054713183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7937628759173084151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.Auth.PasswordPlaceholder
+  sourceText: Enter Password
+  isUpperCharacters: 0
 --- !u!1 &8456137909799523993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2303,6 +2383,7 @@ GameObject:
   - component: {fileID: 4208287003095691838}
   - component: {fileID: 8205086139638221273}
   - component: {fileID: 3189059259252780875}
+  - component: {fileID: 1750333646094034195}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -2429,6 +2510,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1750333646094034195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8922406040158510185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.SignIn.Button
+  sourceText: Sign In
+  isUpperCharacters: 0
 --- !u!1 &9125300235975714798
 GameObject:
   m_ObjectHideFlags: 0

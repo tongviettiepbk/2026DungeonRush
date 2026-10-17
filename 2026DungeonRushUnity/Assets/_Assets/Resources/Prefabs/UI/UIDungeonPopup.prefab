@@ -2833,6 +2833,7 @@ GameObject:
   - component: {fileID: 1358402561508227846}
   - component: {fileID: 2306391386040560058}
   - component: {fileID: 3418305344199502330}
+  - component: {fileID: 8935859206618922255}
   m_Layer: 0
   m_Name: DifficultyText
   m_TagString: Untagged
@@ -2959,6 +2960,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8935859206618922255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117585688147665952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Difficulty
+  sourceText: Difficulty
+  isUpperCharacters: 0
 --- !u!1 &1533269885544677858
 GameObject:
   m_ObjectHideFlags: 0
@@ -2970,6 +2986,7 @@ GameObject:
   - component: {fileID: 6139278216487048133}
   - component: {fileID: 1751777141120822333}
   - component: {fileID: 257012985052115838}
+  - component: {fileID: 1143526815000885083}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -3096,6 +3113,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1143526815000885083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533269885544677858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: UI.Dungeon.SweepButton
+  sourceText: Sweep Last
+  isUpperCharacters: 0
 --- !u!1 &1579762243951179632
 GameObject:
   m_ObjectHideFlags: 0
@@ -4025,6 +4057,7 @@ GameObject:
   - component: {fileID: 4731758579343928952}
   - component: {fileID: 2363823008740765060}
   - component: {fileID: 1078106261168294950}
+  - component: {fileID: 5197955088519544065}
   m_Layer: 0
   m_Name: RewardInfoText
   m_TagString: Untagged
@@ -4151,6 +4184,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5197955088519544065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4690688483127326861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Reward
+  sourceText: Reward
+  isUpperCharacters: 0
 --- !u!1 &4701555150627383155
 GameObject:
   m_ObjectHideFlags: 0
@@ -7074,24 +7122,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &3430635057489862574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6303050479536490181}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
-  _child: {fileID: 4563361363854030490}
-  _moveDistance: 30
-  _moveDuration: 0.5
-  _scaleDuration: 0.25
-  _moveEase: 4
-  _scaleEase: 27
 --- !u!224 &5873081224866534033
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7112,6 +7142,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 22}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3430635057489862574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6303050479536490181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 4563361363854030490}
+  _moveDistance: 30
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!1 &6384630132160432749
 GameObject:
   m_ObjectHideFlags: 0
@@ -7332,6 +7380,7 @@ GameObject:
   - component: {fileID: 5576044119320203516}
   - component: {fileID: 4037069336997273264}
   - component: {fileID: 7553504355167205030}
+  - component: {fileID: 1849319129830804236}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -7458,6 +7507,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1849319129830804236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7548291005391904603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: UI.Dungeon.EnterButton
+  sourceText: Enter
+  isUpperCharacters: 0
 --- !u!1 &7606037438879600815
 GameObject:
   m_ObjectHideFlags: 0

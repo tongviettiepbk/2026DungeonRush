@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 7477815509610984050}
   - component: {fileID: 2262012323407276975}
   - component: {fileID: 7306702027162924923}
+  - component: {fileID: 1277261852216584312}
   m_Layer: 0
   m_Name: TierText
   m_TagString: Untagged
@@ -274,6 +275,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1277261852216584312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181516431222194936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.Level.TierHeader
+  sourceText: Tier
+  isUpperCharacters: 0
 --- !u!1 &194952724649292326
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,6 +610,7 @@ GameObject:
   - component: {fileID: 7763949158346121381}
   - component: {fileID: 5972317137726593095}
   - component: {fileID: 6607682473025702696}
+  - component: {fileID: 2874072694406321615}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -720,6 +737,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2874072694406321615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707588339694373948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Divine
+  sourceText: Divine
+  isUpperCharacters: 0
 --- !u!1 &789060666282616755
 GameObject:
   m_ObjectHideFlags: 0
@@ -1835,6 +1867,7 @@ GameObject:
   - component: {fileID: 5276059653296470853}
   - component: {fileID: 4978166612833356263}
   - component: {fileID: 2717353112115033634}
+  - component: {fileID: 132095631986616037}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -1961,6 +1994,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &132095631986616037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1844936656551587957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Mythic
+  sourceText: Mythic
+  isUpperCharacters: 0
 --- !u!1 &1868245608815341314
 GameObject:
   m_ObjectHideFlags: 0
@@ -3383,6 +3431,7 @@ GameObject:
   - component: {fileID: 300295733791842398}
   - component: {fileID: 1634496592951690937}
   - component: {fileID: 2011916251038513304}
+  - component: {fileID: 8542458050752835573}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -3509,6 +3558,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8542458050752835573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3267613046030000313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Common
+  sourceText: Common
+  isUpperCharacters: 0
 --- !u!1 &3292135861192525705
 GameObject:
   m_ObjectHideFlags: 0
@@ -3619,24 +3683,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &779651576308435590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3449373287462491893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
-  _child: {fileID: 6842077920921296095}
-  _moveDistance: 30
-  _moveDuration: 0.5
-  _scaleDuration: 0.25
-  _moveEase: 4
-  _scaleEase: 27
 --- !u!224 &3833106588876604011
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3657,6 +3703,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &779651576308435590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3449373287462491893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b523c7755b6eb4f9e804571436a7422a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUI
+  _child: {fileID: 6842077920921296095}
+  _moveDistance: 30
+  _moveDuration: 0.5
+  _scaleDuration: 0.25
+  _moveEase: 4
+  _scaleEase: 27
 --- !u!1 &3461736442792662136
 GameObject:
   m_ObjectHideFlags: 0
@@ -5232,6 +5296,7 @@ GameObject:
   - component: {fileID: 3115502955303674333}
   - component: {fileID: 4120196920970621267}
   - component: {fileID: 6882461011804236599}
+  - component: {fileID: 565753348156719461}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -5358,6 +5423,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &565753348156719461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4671171093927067883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Rare
+  sourceText: Rare
+  isUpperCharacters: 0
 --- !u!1 &4697249502856719851
 GameObject:
   m_ObjectHideFlags: 0
@@ -5723,6 +5803,7 @@ GameObject:
   - component: {fileID: 5162737842678125250}
   - component: {fileID: 5810044909284033455}
   - component: {fileID: 642718754215914320}
+  - component: {fileID: 819247529425531250}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -5849,6 +5930,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &819247529425531250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4773812381813245602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Uncommon
+  sourceText: Uncommon
+  isUpperCharacters: 0
 --- !u!1 &4857601412566533869
 GameObject:
   m_ObjectHideFlags: 0
@@ -6781,6 +6877,7 @@ GameObject:
   - component: {fileID: 548512183228245751}
   - component: {fileID: 8032756180216873762}
   - component: {fileID: 2557890924465521208}
+  - component: {fileID: 4874787323527549751}
   m_Layer: 0
   m_Name: Label
   m_TagString: Untagged
@@ -6907,6 +7004,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4874787323527549751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5805839234836865307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.Level.RewardsTitle
+  sourceText: Rewards
+  isUpperCharacters: 0
 --- !u!1 &5903035553643227685
 GameObject:
   m_ObjectHideFlags: 0
@@ -6918,6 +7030,7 @@ GameObject:
   - component: {fileID: 726804557387855884}
   - component: {fileID: 7459334512124234016}
   - component: {fileID: 1499713225571400501}
+  - component: {fileID: 5482418426032788371}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -7044,6 +7157,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5482418426032788371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5903035553643227685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Epic
+  sourceText: Epic
+  isUpperCharacters: 0
 --- !u!1 &5910943057717691247
 GameObject:
   m_ObjectHideFlags: 0
@@ -7829,6 +7957,7 @@ GameObject:
   - component: {fileID: 3753345405290076369}
   - component: {fileID: 3946173825864259766}
   - component: {fileID: 6376451631378366839}
+  - component: {fileID: 3361546113729736411}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -7955,6 +8084,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3361546113729736411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6467114560381287943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Artifact
+  sourceText: Artifact
+  isUpperCharacters: 0
 --- !u!1 &6588410284273175931
 GameObject:
   m_ObjectHideFlags: 0
@@ -8719,6 +8863,7 @@ GameObject:
   - component: {fileID: 7840276286274104159}
   - component: {fileID: 1363061771999695181}
   - component: {fileID: 2930072715473268805}
+  - component: {fileID: 7709652120689825331}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -8845,6 +8990,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7709652120689825331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6983761706841149597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Immortal
+  sourceText: Immortal
+  isUpperCharacters: 0
 --- !u!1 &7120626736585546853
 GameObject:
   m_ObjectHideFlags: 0
@@ -8856,6 +9016,7 @@ GameObject:
   - component: {fileID: 758379391720655037}
   - component: {fileID: 441909274986084657}
   - component: {fileID: 6210486912973883370}
+  - component: {fileID: 75360173314615306}
   m_Layer: 0
   m_Name: InfoText
   m_TagString: Untagged
@@ -8982,6 +9143,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &75360173314615306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7120626736585546853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.Level.Info
+  sourceText: Rarity Table
+  isUpperCharacters: 0
 --- !u!1 &7163249522114973512
 GameObject:
   m_ObjectHideFlags: 0
@@ -9218,6 +9394,7 @@ GameObject:
   - component: {fileID: 6119054105805231574}
   - component: {fileID: 7473566852753197563}
   - component: {fileID: 4206750394039146382}
+  - component: {fileID: 9216730395807182880}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -9344,6 +9521,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &9216730395807182880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7548559918679905815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Ancient
+  sourceText: Ancient
+  isUpperCharacters: 0
 --- !u!1 &7573425804010362678
 GameObject:
   m_ObjectHideFlags: 0
@@ -10233,6 +10425,7 @@ GameObject:
   - component: {fileID: 6090113463114372502}
   - component: {fileID: 9144311101615651215}
   - component: {fileID: 8676965928065401143}
+  - component: {fileID: 2378304802197313393}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -10359,6 +10552,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2378304802197313393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8957941654751770868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Legendary
+  sourceText: Legendary
+  isUpperCharacters: 0
 --- !u!1 &9074900469632715034
 GameObject:
   m_ObjectHideFlags: 0

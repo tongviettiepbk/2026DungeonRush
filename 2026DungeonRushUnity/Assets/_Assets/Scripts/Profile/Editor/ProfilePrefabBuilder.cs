@@ -87,18 +87,16 @@ public static class ProfilePrefabBuilder
         WireAccountSection(ui, popup);
 
         ui.btDiscord = Btn(popup, SETTINGS + "Discord/DiscordButton");
+        WireLanguageButton(ui, popup);
 
         // Tính năng project chưa có: giữ nguyên bố cục gốc, bấm báo "coming soon".
         ui.listButtonComingSoon = new List<Button>
         {
             Btn(profile, "RedeemCodeButton"),
             Btn(popup, SETTINGS + "Country/CountryButton"),
-            Btn(popup, SETTINGS + "Language/LanguageButton"),
             Btn(popup, SETTINGS + "ReportBug/ReportButton"),
         };
-        // Chữ mẫu của bản rip: cờ ngôn ngữ (gốc chỉ bật khi có hình); "Redeem Code" bị ngắt 2 dòng với font project.
-        Text(popup, SETTINGS + "Language/LanguageButton/Content/LanguageName").text = "English";
-        Find(popup, SETTINGS + "Language/LanguageButton/Content/FlagImage").GetComponent<Image>().enabled = false;
+        // "Redeem Code" bị ngắt 2 dòng với font project.
         Text(profile, "RedeemCodeButton/Content/RedeemCodeText").textWrappingMode = TextWrappingModes.NoWrap;
         return Finish(Save(root, "UIProfilePopup"));
     }
@@ -132,6 +130,82 @@ public static class ProfilePrefabBuilder
         PrefabUtility.SaveAsPrefabAsset(root, path, out bool ok);
         PrefabUtility.UnloadPrefabContents(root);
         return Finish("UIProfilePopup account " + (ok ? "wired" : "FAILED"));
+    }
+
+    // Nút Language (EditLanguageButton / LanguageFlagImage / LanguageNameText gốc): cờ + tên vẽ lúc chạy (krj).
+    private static void WireLanguageButton(UIProfilePopup ui, Transform popup)
+    {
+        ui.btLanguage = Btn(popup, SETTINGS + "Language/LanguageButton");
+        ui.imgLanguageFlag = Find(popup, SETTINGS + "Language/LanguageButton/Content/FlagImage").GetComponent<Image>();
+        ui.txtLanguageName = Text(popup, SETTINGS + "Language/LanguageButton/Content/LanguageName");
+        ui.txtLanguageName.text = "English";
+    }
+
+    // Nối nút Language vào UIProfilePopup đang có (không dựng lại, giữ chỉnh sửa bố cục bằng tay).
+    [MenuItem("Tools/DungeonRush/Build Profile UI/Profile Popup - Wire Language Only")]
+    public static string WireProfileLanguage()
+    {
+        string path = OUT + "UIProfilePopup.prefab";
+        GameObject root = PrefabUtility.LoadPrefabContents(path);
+        UIProfilePopup ui = root.GetComponent<UIProfilePopup>();
+        Transform popup = Find(root.transform, "ContentAll/ProfilePopup");
+        WireLanguageButton(ui, popup);
+        ui.listButtonComingSoon.Remove(ui.btLanguage);
+        PrefabUtility.SaveAsPrefabAsset(root, path, out bool ok);
+        PrefabUtility.UnloadPrefabContents(root);
+        return Finish("UIProfilePopup language " + (ok ? "wired" : "FAILED"));
+    }
+
+    // ===== Chọn ngôn ngữ (LanguageSelectPopup gốc) =====
+
+    private const string RIP_SETTINGS = "Assets/_Assets/Prefabs/UI/Settings/";
+    private const string FLAGS = "Assets/_Assets/_ResourceGame/_CommingUse/Flags/";
+
+    // Languages gốc của LanguageSelectPopup (thứ tự, tên hiển thị, cờ trích từ xapk — giữ cả khoảng trắng thừa như gốc).
+    private static readonly string[][] LANGUAGES =
+    {
+        new[] { "en", "English", "GB" },
+        new[] { "tr", "Türkçe", "TR" },
+        new[] { "ar", "عربي", "SA" },
+        new[] { "fr", "Français", "FR" },
+        new[] { "de", "Deutsch ", "DE" },
+        new[] { "it", "Italiano", "IT" },
+        new[] { "ja", "日本語 ", "JP" },
+        new[] { "ko", "한국인", "KR" },
+        new[] { "es", "Español", "ES" },
+        new[] { "pt-BR", "Português", "BR" },
+    };
+
+    [MenuItem("Tools/DungeonRush/Build Profile UI/Language Select Popup")]
+    public static string BuildLanguageSelectPopup()
+    {
+        // Ô ngôn ngữ (LanguageItemUI gốc): Image gốc = cờ, Selected = dấu tích, LanguageName = tên.
+        GameObject item = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(RIP_SETTINGS + "LanguageItemUI.prefab"));
+        PrefabUtility.UnpackPrefabInstance(item, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+        ElementLanguageUI e = item.AddComponent<ElementLanguageUI>();
+        e.imgFlag = item.GetComponent<Image>();
+        e.txtName = Text(item.transform, "LanguageName");
+        e.objSelected = Find(item.transform, "Selected").gameObject;
+        e.btSelect = item.GetComponent<Button>();
+        if (!AssetDatabase.IsValidFolder(BUILT)) AssetDatabase.CreateFolder("Assets/_Assets/Prefabs/UINew", "Profile");
+        string itemPath = BUILT + "/LanguageItemUI.prefab";
+        PrefabUtility.SaveAsPrefabAsset(item, itemPath);
+        Object.DestroyImmediate(item);
+
+        GameObject root = NewRoot("UILanguageSelectPopup", out Transform popup, RIP_SETTINGS + "LanguageSelectPopup.prefab");
+        UILanguageSelectPopup ui = root.AddComponent<UILanguageSelectPopup>();
+        ui.isPopup = true;
+        ui.btClose = Btn(popup, "Content/CloseButton");
+        ui.gridContent = Find(popup, "Content/Scroll View/Viewport/GridLayout");
+        ui.elementPrefab = AssetDatabase.LoadAssetAtPath<ElementLanguageUI>(itemPath);
+        ui.languages = new List<UILanguageSelectPopup.LanguageOption>();
+        foreach (string[] l in LANGUAGES)
+        {
+            Sprite flag = AssetDatabase.LoadAssetAtPath<Sprite>(FLAGS + l[2] + ".png");
+            if (flag == null) Debug.LogWarning("[ProfilePrefabBuilder] Thiếu cờ " + l[2]);
+            ui.languages.Add(new UILanguageSelectPopup.LanguageOption { code = l[0], displayName = l[1], flag = flag });
+        }
+        return Finish(Save(root, "UILanguageSelectPopup"));
     }
 
     // ===== Tài khoản: Sign In / Sign Up / chọn save / Cloud Backup / đặt tên =====

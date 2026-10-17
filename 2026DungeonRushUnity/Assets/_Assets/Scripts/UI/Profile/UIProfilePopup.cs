@@ -8,7 +8,8 @@ using UnityEngine.UI;
 //  - Settings: âm lượng Sound FX / Music (slider, tay nắm ghi On/Off), rung, tài khoản (Sign In / Up ↔ Sign Out, Sync Now),
 //    User ID (nút chép), phiên bản.
 // Discord (kqz gốc): mở app Discord, 0.15s sau mà game chưa xuống nền thì mở link web.
-// Nút của tính năng project chưa có (redeem code, quốc gia, ngôn ngữ, báo lỗi)
+// Nút Language → UILanguageSelectPopup; dòng nút hiện cờ + tên ngôn ngữ đang dùng (krj gốc).
+// Nút của tính năng project chưa có (redeem code, quốc gia, báo lỗi)
 // nằm trong listButtonComingSoon — bấm chỉ báo "coming soon".
 public class UIProfilePopup : BaseUI
 {
@@ -47,6 +48,11 @@ public class UIProfilePopup : BaseUI
     public Button btSyncNow;
     public Image imgSyncLoading;
 
+    [Header("Language")]
+    public Button btLanguage;
+    public Image imgLanguageFlag;
+    public TMP_Text txtLanguageName;
+
     public Button btDiscord;
     public List<Button> listButtonComingSoon;
 
@@ -71,6 +77,8 @@ public class UIProfilePopup : BaseUI
         btCopyUserId.onClick.AddListener(OnClickCopyUserId);
         if (btDiscord != null)
             btDiscord.onClick.AddListener(OnClickDiscord);
+        if (btLanguage != null)
+            btLanguage.onClick.AddListener(OnClickLanguage);
         sliderSound.onValueChanged.AddListener(OnSoundChanged);
         sliderMusic.onValueChanged.AddListener(OnMusicChanged);
         toggleVibrate.onChanged = OnVibrateChanged;
@@ -79,7 +87,8 @@ public class UIProfilePopup : BaseUI
             listButtonComingSoon[i].onClick.AddListener(OnClickComingSoon);
         }
 
-        tabSelector.Setup(new[] { "Profile", "Settings" });
+        // krh gốc.
+        tabSelector.Setup(new[] { L("Popup.Profile.Tab.Profile"), L("Popup.Profile.Tab.Settings") });
         tabSelector.OnTabSelected += ShowPage;
         EventDispatcher.Instance.RegisterListener(EventID.AvatarChanged, OnAvatarChanged);
         EventDispatcher.Instance.RegisterListener(EventID.NicknameChanged, OnNicknameChanged);
@@ -104,6 +113,7 @@ public class UIProfilePopup : BaseUI
         DrawProfile();
         DrawSettings();
         DrawAccount();
+        DrawLanguage();
     }
 
     // kqj gốc: mở thẳng một trang (Cloud Backup mở Settings).
@@ -192,7 +202,7 @@ public class UIProfilePopup : BaseUI
     private void DrawVolumeStatus(TMP_Text text, Image handle, float value)
     {
         bool isOn = value > 0f;
-        text.text = isOn ? "ON" : "OFF";
+        text.text = L(isOn ? "Common.On" : "Common.Off");
         handle.color = isOn ? UITabWing.DEFAULT_BUTTON_COLOR : UITabWing.DISABLED_BUTTON_COLOR;
     }
 
@@ -211,11 +221,11 @@ public class UIProfilePopup : BaseUI
     {
         AccountController account = AccountController.Instance;
         bool isLinked = account.IsLinked;
-        txtAccountButton.text = isLinked ? "Sign Out" : "Sign In / Up";
+        txtAccountButton.text = L(isLinked ? "Popup.Profile.SignOut" : "Popup.Profile.SignInUp");
         txtAccountInfo.gameObject.SetActive(isLinked);
         if (isLinked)
         {
-            txtAccountInfo.text = string.Format("{0} · Last sync: {1}", account.Email, account.GetLastSyncText());
+            txtAccountInfo.text = LocalizeManager.Instance.GetLocalizeTextFormat("Popup.Profile.AccountInfo", account.Email, account.GetLastSyncText());
         }
         btSyncNow.gameObject.SetActive(isLinked && isSyncing == false);
         UISpinner.Set(imgSyncLoading, isLinked && isSyncing);
@@ -242,7 +252,7 @@ public class UIProfilePopup : BaseUI
 
         AccountController.Instance.SignOut((ok, error) =>
         {
-            UIManager.Instance.ShowToastMessage(ok ? "Signed out" : "Sign-out failed", isLocalize: false);
+            UIManager.Instance.ShowToastMessage(L(ok ? "Popup.Profile.SignedOut" : "Popup.Profile.SignOutFailed"), isLocalize: false);
         });
     }
 
@@ -260,11 +270,11 @@ public class UIProfilePopup : BaseUI
         {
             isSyncing = false;
             DrawAccount();
-            string message = "Synced to cloud";
+            string message = L("Popup.Profile.SyncedToCloud");
             if (ok == false)
             {
                 bool isRateLimited = string.IsNullOrEmpty(error) == false && error.Contains(CloudSaveController.ERROR_RATE_LIMITED);
-                message = isRateLimited ? "Synced recently, try again later" : "Sync failed, try again later";
+                message = L(isRateLimited ? "Popup.Profile.SyncedRecently" : "Popup.Profile.SyncFailed");
             }
             UIManager.Instance.ShowToastMessage(message, isLocalize: false);
         });
@@ -274,12 +284,40 @@ public class UIProfilePopup : BaseUI
     private void OnClickCopyUserId()
     {
         GUIUtility.systemCopyBuffer = FirebaseManager.Instance.Uid;
-        UIManager.Instance.ShowToastMessage("User ID copied", isLocalize: false);
+        UIManager.Instance.ShowToastMessage(L("Popup.Profile.UserIdCopied"), isLocalize: false);
+    }
+
+    // ===== Language =====
+
+    // krj gốc: tìm ngôn ngữ đang dùng trong danh sách của LanguageSelectPopup → cờ (không có thì tắt Image) + tên.
+    private void DrawLanguage()
+    {
+        string code = LocalizeManager.Instance.curLanguage.ToCode();
+        UILanguageSelectPopup.LanguageOption option = UILanguageSelectPopup.GetOption(code);
+        if (imgLanguageFlag != null)
+        {
+            bool hasFlag = option != null && option.flag != null;
+            if (hasFlag)
+                imgLanguageFlag.sprite = option.flag;
+            imgLanguageFlag.enabled = hasFlag;
+        }
+        if (txtLanguageName != null)
+            txtLanguageName.text = option != null ? option.displayName : code;
+    }
+
+    private void OnClickLanguage()
+    {
+        UIManager.Instance.LoadUI(UIKey.LanguageSelectPopup);
+    }
+
+    private static string L(string key)
+    {
+        return LocalizeManager.Instance.GetLocalizeText(key);
     }
 
     private void OnClickComingSoon()
     {
-        UIManager.Instance.ShowToastMessage("Coming soon", isLocalize: false);
+        UIManager.Instance.ShowToastMessage(L("Errors.ComingSoon"), isLocalize: false);
     }
 
     // kqz gốc.

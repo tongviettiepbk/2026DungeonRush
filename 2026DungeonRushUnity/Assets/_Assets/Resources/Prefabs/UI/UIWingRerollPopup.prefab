@@ -968,6 +968,7 @@ GameObject:
   - component: {fileID: 1488660058678975025}
   - component: {fileID: 4935139708405516973}
   - component: {fileID: 456776709778577366}
+  - component: {fileID: 72522328278982414}
   m_Layer: 5
   m_Name: RerollText
   m_TagString: Untagged
@@ -1094,6 +1095,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &72522328278982414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3348944673885219835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: UI.Wings.Reroll
+  sourceText: Reroll
+  isUpperCharacters: 0
 --- !u!1 &3417816237692056129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1142,6 +1158,7 @@ GameObject:
   - component: {fileID: 4739225686573792718}
   - component: {fileID: 922283669717160623}
   - component: {fileID: 1903782773453851542}
+  - component: {fileID: 1457207548399979646}
   m_Layer: 5
   m_Name: EquippedText
   m_TagString: Untagged
@@ -1268,6 +1285,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1457207548399979646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3478841883283992228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Equipped
+  sourceText: Equipped
+  isUpperCharacters: 0
 --- !u!1 &4153759080382854896
 GameObject:
   m_ObjectHideFlags: 0
@@ -1352,6 +1384,7 @@ GameObject:
   - component: {fileID: 888346876251605916}
   - component: {fileID: 349924032928790764}
   - component: {fileID: 9059441669017398514}
+  - component: {fileID: 909690986298376899}
   m_Layer: 0
   m_Name: LockText
   m_TagString: Untagged
@@ -1478,6 +1511,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &909690986298376899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4690269557106288629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: UI.Wings.RerollLock
+  sourceText: Lock
+  isUpperCharacters: 0
 --- !u!1 &4796500690785614131
 GameObject:
   m_ObjectHideFlags: 0
@@ -2069,6 +2117,7 @@ GameObject:
   - component: {fileID: 7647737901836976518}
   - component: {fileID: 9119927520491088476}
   - component: {fileID: 6286809756977038266}
+  - component: {fileID: 5563623216576477907}
   m_Layer: 0
   m_Name: TitleText
   m_TagString: Untagged
@@ -2195,6 +2244,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5563623216576477907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9080894831962616952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: UI.Wings.RerollHeader
+  sourceText: Reroll Substats
+  isUpperCharacters: 0
 --- !u!1 &9174851735675549152
 GameObject:
   m_ObjectHideFlags: 0

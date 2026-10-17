@@ -19,6 +19,7 @@ public class UIKey
     public const string PlayerPopup = "UIPlayerPopup";
     public const string AvatarSelectPopup = "UIAvatarSelectPopup";
     public const string ProfilePopup = "UIProfilePopup";
+    public const string LanguageSelectPopup = "UILanguageSelectPopup";
     public const string OfflineEarningPopup = "UIOfflineEarningPopup";
     public const string LevelPopup = "UILevelPopup";
     public const string SignInPopup = "UISignInPopup";

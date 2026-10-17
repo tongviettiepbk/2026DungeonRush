@@ -285,6 +285,7 @@ GameObject:
   - component: {fileID: 909164804725464475}
   - component: {fileID: 1511235974917715143}
   - component: {fileID: 4333842580464200391}
+  - component: {fileID: 7197412293463356242}
   m_Layer: 0
   m_Name: ChancesText
   m_TagString: Untagged
@@ -413,6 +414,23 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7197412293463356242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006071254706548129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: UI.Chest.ChancePerItem
+  sourceText: 'Chances per item
+
+'
+  isUpperCharacters: 0
 --- !u!1 &1085940985671500399
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,6 +786,7 @@ GameObject:
   - component: {fileID: 6019354176490367511}
   - component: {fileID: 5217134980075436564}
   - component: {fileID: 7741189031711198528}
+  - component: {fileID: 4259153385482231541}
   m_Layer: 0
   m_Name: RealtimePityInfo
   m_TagString: Untagged
@@ -894,6 +913,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4259153385482231541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1658067744005214255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: UI.Chest.PityRemaining
+  sourceText: Get X in X opens
+  isUpperCharacters: 0
 --- !u!1 &1802114077676831346
 GameObject:
   m_ObjectHideFlags: 0
@@ -1252,6 +1286,7 @@ GameObject:
   - component: {fileID: 6525225331730120068}
   - component: {fileID: 8882702419628229230}
   - component: {fileID: 1682583695536433350}
+  - component: {fileID: 1957860540186399414}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -1378,6 +1413,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1957860540186399414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3577679827975331728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Mythic
+  sourceText: Mythic
+  isUpperCharacters: 0
 --- !u!1 &3584418333069442568
 GameObject:
   m_ObjectHideFlags: 0
@@ -1601,6 +1651,7 @@ GameObject:
   - component: {fileID: 3896306377228121269}
   - component: {fileID: 2778456356746386325}
   - component: {fileID: 4777363811842211635}
+  - component: {fileID: 8041616270559990505}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -1727,6 +1778,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8041616270559990505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4081963944706307524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Legendary
+  sourceText: Legendary
+  isUpperCharacters: 0
 --- !u!1 &4166352604663340224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1922,6 +1988,7 @@ GameObject:
   - component: {fileID: 4407384244287961396}
   - component: {fileID: 1298857741777159067}
   - component: {fileID: 7261580329074471712}
+  - component: {fileID: 792303209340342670}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -2048,6 +2115,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &792303209340342670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4901994744654197030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Common
+  sourceText: Common
+  isUpperCharacters: 0
 --- !u!1 &5964164375999108533
 GameObject:
   m_ObjectHideFlags: 0
@@ -2347,6 +2429,7 @@ GameObject:
   - component: {fileID: 2625259687096557135}
   - component: {fileID: 759681144975111191}
   - component: {fileID: 2751525322174921311}
+  - component: {fileID: 4967973306047255172}
   m_Layer: 0
   m_Name: ContainsDescription
   m_TagString: Untagged
@@ -2473,6 +2556,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4967973306047255172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6569822208081989982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: UI.Chest.Contains
+  sourceText: When the counter is full, your next open is guaranteed a top-rarity
+    item.
+  isUpperCharacters: 0
 --- !u!1 &6591089449220804491
 GameObject:
   m_ObjectHideFlags: 0
@@ -2888,6 +2987,7 @@ GameObject:
   - component: {fileID: 5169932032352912052}
   - component: {fileID: 3338660483452120023}
   - component: {fileID: 8106702243255758011}
+  - component: {fileID: 4824392222413743877}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -3014,6 +3114,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4824392222413743877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8043291263999314562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Uncommon
+  sourceText: Uncommon
+  isUpperCharacters: 0
 --- !u!1 &8046730946983090602
 GameObject:
   m_ObjectHideFlags: 0
@@ -3025,6 +3140,7 @@ GameObject:
   - component: {fileID: 5243917400506781826}
   - component: {fileID: 1329341779607196195}
   - component: {fileID: 6284160291075894873}
+  - component: {fileID: 7090483147407339357}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -3151,6 +3267,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7090483147407339357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8046730946983090602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Epic
+  sourceText: Epic
+  isUpperCharacters: 0
 --- !u!1 &8360901410443315093
 GameObject:
   m_ObjectHideFlags: 0
@@ -3162,6 +3293,7 @@ GameObject:
   - component: {fileID: 3251776203344475001}
   - component: {fileID: 4231911949583943762}
   - component: {fileID: 3688399083098902475}
+  - component: {fileID: 2179401990553142968}
   m_Layer: 0
   m_Name: RarityText
   m_TagString: Untagged
@@ -3288,6 +3420,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2179401990553142968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8360901410443315093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Rarity.Rare
+  sourceText: Rare
+  isUpperCharacters: 0
 --- !u!1 &8996416930504505046
 GameObject:
   m_ObjectHideFlags: 0

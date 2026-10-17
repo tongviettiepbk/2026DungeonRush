@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 6156804715211823013}
   - component: {fileID: 2333976676997474749}
   - component: {fileID: 2720122270791065702}
+  - component: {fileID: 4943729659537320781}
   m_Layer: 0
   m_Name: TitleText
   m_TagString: Untagged
@@ -212,6 +213,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4943729659537320781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532206358400085190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.Nickname.Title
+  sourceText: Enter Nickname
+  isUpperCharacters: 0
 --- !u!1 &858613689395627994
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,6 +291,7 @@ GameObject:
   - component: {fileID: 1965724289665739974}
   - component: {fileID: 4457790730350257528}
   - component: {fileID: 2544853906955939733}
+  - component: {fileID: 6779726491093432158}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -401,6 +418,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6779726491093432158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812672259398789142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.Enter
+  sourceText: Enter
+  isUpperCharacters: 0
 --- !u!1 &2298585829766054690
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,6 +785,7 @@ GameObject:
   - component: {fileID: 8199586353949624165}
   - component: {fileID: 1581515982967119511}
   - component: {fileID: 7238435433075151016}
+  - component: {fileID: 1268917141410350734}
   m_Layer: 0
   m_Name: Placeholder
   m_TagString: Untagged
@@ -899,6 +932,21 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &1268917141410350734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5006865391369713692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.Nickname.Placeholder
+  sourceText: Enter Nickname...
+  isUpperCharacters: 0
 --- !u!1 &5368635519476530637
 GameObject:
   m_ObjectHideFlags: 0

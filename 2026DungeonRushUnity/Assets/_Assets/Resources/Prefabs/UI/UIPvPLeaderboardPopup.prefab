@@ -1271,6 +1271,7 @@ GameObject:
   - component: {fileID: 8686722863028523041}
   - component: {fileID: 6998383063692966144}
   - component: {fileID: 5916137211960262729}
+  - component: {fileID: 7630607892786726872}
   m_Layer: 0
   m_Name: RankText
   m_TagString: Untagged
@@ -1397,6 +1398,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7630607892786726872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4140283427055428975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Common.TOP100
+  sourceText: ------------  TOP 100  --------------
+  isUpperCharacters: 0
 --- !u!1 &4273291395788621769
 GameObject:
   m_ObjectHideFlags: 0
@@ -2641,6 +2657,7 @@ GameObject:
   - component: {fileID: 6614437859206036444}
   - component: {fileID: 5257383024115171641}
   - component: {fileID: 8243014124204200999}
+  - component: {fileID: 6873261250691861795}
   m_Layer: 0
   m_Name: TitleText
   m_TagString: Untagged
@@ -2767,3 +2784,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6873261250691861795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9107287021077316292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
+  key: Popup.PvP.Leaderboard.Title
+  sourceText: Leaderboard
+  isUpperCharacters: 0
