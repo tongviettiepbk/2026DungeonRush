@@ -51,33 +51,39 @@ public class GameDataTester : MonoBehaviour
     private void TestGenerateLevel()
     {
         int stageId = GameData.userData.campaign.stageIdCurrent;
-        CampaignLevelBuilder.CampaignLevel level = CampaignLevelBuilder.Build(stageId);
+        int level = GameData.staticData.campaign.GetLevel(stageId);
+        CampaignLevelBuilder.CampaignLevel map = CampaignLevelBuilder.Build(stageId, ModeType.DefaultLevel, level);
 
-        int rows = level.grid.GetLength(0);
-        int cols = level.grid.GetLength(1);
-        var playerSpawns = new HashSet<Vector2Int>(level.playerSpawnCells);
+        int rows = map.grid.GetLength(0);
+        int cols = map.grid.GetLength(1);
+        Vector2Int heroCell = MapSpawnCells.GetHeroSpawnCell(map.grid);
+        List<EnemySpawnGenerator.EnemySpawnInfo> enemies = EnemySpawnGenerator.Generate(stageId,
+            MapSpawnCells.FindEnemySpawnCells(map.grid, EnemySpawnGenerator.CampaignCount(stageId)));
+        var enemyCells = new HashSet<Vector2Int>();
+        for (int i = 0; i < enemies.Count; i++) enemyCells.Add(enemies[i].cell);
+
         var sb = new System.Text.StringBuilder();
-        sb.AppendLine($"[Map] stage={stageId} env={level.environment} walls={level.obstacles.Count} enemies={level.enemies.Count}");
-        // In từ hàng TRÊN (row rows-1) xuống row 0. # = wall(1), . = spawn quân, D = cửa, khoảng trắng = trống(0).
+        sb.AppendLine($"[Map] stage={stageId} level={level} walls={map.obstacles.Count} enemies={enemies.Count}");
+        // In từ hàng TRÊN (row rows-1) xuống row 0. # = chướng ngại, H = hero, E = quái, khoảng trắng = trống.
         for (int row = rows - 1; row >= 0; row--)
         {
             string line = "";
             for (int col = 0; col < cols; col++)
             {
                 var c = new Vector2Int(row, col);
-                if (level.grid[row, col] == 1) line += "#";
-                else if (c == level.doorCell) line += "D";
-                else if (playerSpawns.Contains(c)) line += ".";
+                if (map.grid[row, col] == 1) line += "#";
+                else if (c == heroCell) line += "H";
+                else if (enemyCells.Contains(c)) line += "E";
                 else line += " ";
             }
             sb.AppendLine("|" + line + "|");
         }
         DebugCustom.Log(sb.ToString());
 
-        for (int i = 0; i < level.enemies.Count; i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
-            EnemySpawnGenerator.EnemySpawnInfo e = level.enemies[i];
-            DebugCustom.Log($"[Enemy {i}] cell={e.cell} lv={e.level} hp={e.health:0} atk={e.attackPower:0} boss={e.isBoss}");
+            EnemySpawnGenerator.EnemySpawnInfo e = enemies[i];
+            DebugCustom.Log($"[Enemy {i}] cell={e.cell} lv={e.level} hp={e.health:0} atk={e.attackPower:0} ranged={e.isRanged}");
         }
     }
 

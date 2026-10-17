@@ -162,14 +162,14 @@ public class BaseMode : MonoBehaviour
     // Nạp file/config enemy riêng của mode (nếu có). Mode con override.
     protected virtual void LoadEnemyFiles() { }
 
-    // Dựng màn: build level procedural từ stageId → nạp map (wall/A*/toạ độ ô↔world) vào
+    // Dựng màn: build lưới + chướng ngại theo level gốc → nạp map (wall/A*/toạ độ ô↔world) vào
     // MapController → dựng environment + obstacle. Mode con thường KHÔNG cần override (chỉ khác ở team).
     protected virtual void CreateMap()
     {
         EnsureGameDataLoaded();
 
         int stageId = overrideStageId > 0 ? overrideStageId : GameData.userData.campaign.stageIdCurrent;
-        currentLevel = CampaignLevelBuilder.Build(stageId, type, GetMapSeedKey());
+        currentLevel = CampaignLevelBuilder.Build(stageId, type, GetLayoutLevel(stageId));
 
         container = new GameObject("_Combat").transform;
         container.SetParent(transform, false);
@@ -185,10 +185,11 @@ public class BaseMode : MonoBehaviour
         SpawnObstacles(map, currentLevel.obstacles);
     }
 
-    // Khoá seed layout map: 0 = theo stage campaign. Dungeon override (layout theo level dungeon).
-    protected virtual int GetMapSeedKey()
+    // Level đưa vào LevelLoader.itp gốc làm seed chướng ngại: campaign = level liên tục (1-1=1, 2-1=11...).
+    // Dungeon override (layout theo level dungeon).
+    protected virtual int GetLayoutLevel(int stageId)
     {
-        return 0;
+        return GameData.staticData.campaign.GetLevel(stageId);
     }
 
     // Dựng environment (mapPrefab mang MapController + PointStart). Đặt prefab tại transform.position;
@@ -454,15 +455,20 @@ public class BaseMode : MonoBehaviour
             return;
         }
 
-        // Hero đứng giữa hàng spawn DƯỚI cùng (row = 0).
-        Vector2Int heroCell = new Vector2Int(0, MapController.Instance.Cols / 2);
+        Vector2Int heroCell = GetHeroSpawnCell();
         Vector3 heroPos = MapController.Instance.CellToWorld(heroCell);
 
         alliesGroup = NewGroup("Allies");
         hero = SpawnUnit<HeroUnit>(heroPrefab, heroPos, alliesGroup);
         hero.SpawnInBattle(BuildHeroStats(), StaticValue.TAG_TEAM_A, heroPos);
 
-        SyncPets();
+        SyncPets(true);
+    }
+
+    // Ô sinh hero — gốc SpawnController.hus → GridManager.ijp: ô trống gần (hàng 2, cột giữa) nhất.
+    protected virtual Vector2Int GetHeroSpawnCell()
+    {
+        return MapSpawnCells.GetHeroSpawnCell(MapController.Instance.Grid);
     }
 
     private Transform alliesGroup;
@@ -473,10 +479,16 @@ public class BaseMode : MonoBehaviour
     // Đồng bộ pet trong trận với danh sách equip (save UserCompanionData, tối đa 3), đi theo hero.
     // Gọi lúc dựng màn VÀ ngay khi đổi equip ở CompanionUI (không phải chờ màn sau):
     //   • Pet đang trong trận mà đã bỏ equip → gỡ khỏi trận.
-    //   • Pet mới equip chưa có trong trận → spawn quanh vị trí hero hiện tại.
+    //   • Pet mới equip chưa có trong trận → spawn cạnh hero (ô theo CompanionController gốc, xem MapSpawnCells).
     // Prefab riêng từng con load theo assetName (CompanionData.LoadPrefab) — SetupCompanion đổ
     // data của con đang equip vào (chỉ số + cooldown + level trong save).
     public void SyncPets()
+    {
+        SyncPets(false);
+    }
+
+    // isLevelStart: đầu màn xếp hàng dưới hero (gmd); giữa trận chọn ô trống gần nhất (gmf).
+    private void SyncPets(bool isLevelStart)
     {
         if (hero == null || isEndMode || !AllowPets)
         {
@@ -502,7 +514,9 @@ public class BaseMode : MonoBehaviour
             pets.RemoveAt(i);
         }
 
-        Vector3 heroPos = hero.transform.position;
+        // Pet cần spawn mới (gmd gốc chỉ đếm con có prefab).
+        var newData = new List<CompanionData>();
+        var newPrefabs = new List<GameObject>();
         for (int i = 0; i < equipped.Count; i++)
         {
             if (GetPet(equipped[i]) != null)
@@ -523,13 +537,28 @@ public class BaseMode : MonoBehaviour
                 continue;
             }
 
-            // Rải pet quanh hero.
-            float angle = (360f / equipped.Count) * i * Mathf.Deg2Rad;
-            Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 0.8f;
-            Vector3 petPos = MapController.Instance.ClampPointInMap(heroPos + offset);
+            newData.Add(data);
+            newPrefabs.Add(petPrefab);
+        }
 
-            PetUnit pet = SpawnUnit<PetUnit>(petPrefab, petPos, alliesGroup);
-            pet.SetupCompanion(data, hero, user.GetLevel(data.assetName), petPos);
+        MapController map = MapController.Instance;
+        Vector2Int heroCell = map.WorldToCell(hero.transform.position);
+        var taken = new HashSet<Vector2Int>();
+        for (int i = 0; i < pets.Count; i++)
+        {
+            if (pets[i] != null) taken.Add(map.WorldToCell(pets[i].transform.position));
+        }
+
+        for (int i = 0; i < newData.Count; i++)
+        {
+            Vector2Int cell = isLevelStart
+                ? MapSpawnCells.GetPetStartCell(map.Grid, heroCell, i, newData.Count)
+                : MapSpawnCells.GetPetJoinCell(map.Grid, heroCell, taken);
+            taken.Add(cell);
+            Vector3 petPos = map.CellToWorld(cell);
+
+            PetUnit pet = SpawnUnit<PetUnit>(newPrefabs[i], petPos, alliesGroup);
+            pet.SetupCompanion(newData[i], hero, user.GetLevel(newData[i].assetName), petPos);
             pets.Add(pet);
         }
     }

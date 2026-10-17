@@ -151,3 +151,42 @@ Bản build này **không chứa** asset `GridLevelRuntimeData`. Nếu bản gam
 3. Dựng lại lưới: `for y,x: brush = BrushNames[Cells[y*Width+x]]`.
 
 Còn với bản hiện tại, để tái tạo gameplay chỉ cần: **grid 9×12 (vùng chơi 8×12) + LevelGenerator procedural (params ở mục 2) + KeepClearZones cho cổng/cửa + DungeonThemeData cho gear enemy + Tier cho độ khó.**
+
+---
+
+## 7. THÂN HÀM GỐC (reverse libil2cpp v41, 2026-10-17) — đính chính mục 2/3
+
+> Mục 2 ở trên đoán từ instance `LevelGenerator` trong scene (công cụ Editor, 8×12, 10–15 box). Runtime THẬT
+> không dùng nó mà dùng `rw` ("RuntimeLevelObstacleGenerator") qua `LevelController.hpv/hpw → LevelLoader.itp → rw.itr`.
+
+### 7a. Lưới — `GridManager`
+- `GameController.hhs` → `GridManager.iiy(MapConfig.GridWidth, GridHeight)` ⇒ lưới **9×12**, CellSize 1, Resolution 1, `GridOrigin = Vector2.zero`.
+- Ô gốc `(x, y)`: `x ∈ [-W/2, W - W/2)` = **[-4, 4]** (cột giữa x = 0), `y ∈ [0, 12)`.
+- `iiz` (ô → world): `(x + 0.5, y + 0.5 − H/2)` = `(x + 0.5, y − 5.5)` ⇒ map tâm (0.5, 0); camera bù +0.5 khi W lẻ (`iiu`).
+- Prefab `MainMapPrefab` gốc: root (0,0), `MapOffset` (0.465, 0.13), cửa trên ở `MapOffset + (±0.635, 6.355)`, tường ±6.5 ⇒ khớp lưới trên.
+- `LevelLoader.iti`: cổng trên `(0, H/2 + 0.5)`, cổng dưới `(0, −H/2 − 0.5)`.
+
+### 7b. Chướng ngại — `rw.itr(level, keepClear)`
+- `level` = **campaign: `User.Level`** (level liên tục, `UserController.drx`) / dungeon: level dungeon.
+- Vùng cấm `LevelLoader.itq`: "Player Spawn" = (x toàn bộ, y 0..2); "Enemy Spawn" = (x toàn bộ, y 9..11).
+- Ứng viên `itt`: **chỉ nửa trái** x = −4..−1, y = 0..11 (quét x ngoài, y trong), trừ vùng cấm ⇒ y 3..8 (24 ô).
+- `for round 0..99`: `count = new Random(level×7912 + round×1000).Next(5, 11)`;
+  `for try 0..9`: `rng = new Random(level×7912 + round×1000 + try)`; `itv` bốc `count` ô (`Next(0, pool.Count)` + `RemoveAt`);
+  `itw` thêm ô **lật gương** (W lẻ: `x → −x`; W chẵn: `x → −x−1`); `itx` bỏ trùng; `ity` = BFS 8 hướng từ (0,0) tới (0, H−1)
+  (đi chéo chỉ bị chặn khi CẢ 2 ô kề vuông góc là box) ⇒ nhận layout đầu tiên hợp lệ.
+- Hết 1000 lần → `iua(level)`: `Random(level)`, 6 lần `x = Next(1−W/2, −1)`, `y = Next(3, H−3)` + ô gương.
+- Hệ quả: map **đối xứng trái–phải**, **cột giữa luôn trống**, 10–20 box, chỉ ở hàng 3..8.
+- `LevelLoader.itp`: mỗi ô Instantiate `prefabs[UnityEngine.Random.Range(0, n)]` tại `iiz(cell)`, tên `Obstacle_{x}_{y}`,
+  layer "Obstacle", thêm Collider + `Rigidbody2D` Static, `GridManager.ijf` đánh dấu ô không đi được.
+- Prefab: `MapConfig.ObstaclePrefabs` (MainMap 1 prefab); rỗng thì `GameResources.jgj(level).ObstaclePrefabs` (TierData).
+  `MapConfig.SpawnObstacles = 0` ⇒ không sinh.
+
+### 7c. Chỗ đứng quân
+- **Hero** (`SpawnController.hvs → hus`): `GridManager.ijp(n) = ijo((0, 2), n)` = n ô trống gần (0,2) nhất
+  (`ijo`: quét x ngoài / y trong, ô walkable & chưa có người, `List.Sort` theo khoảng cách Euclid). Campaign: 1 nhân vật ⇒ ô (0, 2).
+  Nếu `SpawnController.NextSpawnAtBottomGate` (sau khi qua cửa màn trước) ⇒ `hut` sinh ở **cổng dưới** thay vì (0,2).
+- **Pet** đầu màn (`CompanionController.gmd`): N pet, pet thứ k ở `ijc(heroX + (k − (N−1)/2)×2, heroY − 1)` (hàng ngay dưới hero,
+  cách 2 cột, canh giữa, chỉ kẹp biên). Đổi pet giữa trận (`gme → gmf`): ô đầu tiên trong `ijo(ijc(hero + (0,−1)), 20)` chưa bị pet khác giữ.
+- **Quái** campaign + dungeon (`SpawnController.huu → GridManager.ijx(n)`): ô `x ∈ [−4, 4]`, `y ∈ [5, 12)` walkable, chưa có người,
+  nằm trong vùng `ijw((0,0))` (flood-fill 8 hướng, chéo cần cả 2 ô kề vuông góc đi được — `ijj`), bốc `UnityEngine.Random.Range` không trùng.
+  Quái i đứng ô i (melee trước, ranged sau). Riêng Dragon (dungeon type 0): đứng `iiz((0, H−3))` với x world = 0.

@@ -61,14 +61,6 @@ public class MapController : Singleton<MapController>
         }
     }
 
-    // Sinh map mới ngay trong controller (dùng khi không qua CampaignLevelBuilder).
-    public int[,] Generate(MapGenerator.Params genParams, Vector3 origin, bool centerHorizontally = true)
-    {
-        int[,] grid = MapGenerator.Generate(genParams);
-        SetMap(grid, origin, centerHorizontally);
-        return grid;
-    }
-
     public void Clear()
     {
         IsReady = false;

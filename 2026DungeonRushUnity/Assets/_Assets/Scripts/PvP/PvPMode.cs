@@ -56,6 +56,12 @@ public class PvPMode : BaseMode
         SpawnHeroAndPets();
     }
 
+    // Giữ ô hero cũ (hàng 0, cột giữa) — chưa đối chiếu chỗ đứng gốc của mode này (campaign đã theo ijp).
+    protected override Vector2Int GetHeroSpawnCell()
+    {
+        return new Vector2Int(0, MapController.Instance.Cols / 2);
+    }
+
     // SpawnController.hvg gốc: đối thủ ở cột giữa, hàng trên cùng lùi PvPEnemyYOffset ô.
     protected override void CreateTeamB()
     {

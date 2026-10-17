@@ -38,9 +38,12 @@ public class CampaignMode : BaseMode
         SpawnHeroAndPets();
     }
 
+    // SpawnController.huu gốc: ô quái = GridManager.ijx (ô trống hàng ≥5 đi tới được, bốc ngẫu nhiên).
     protected override void CreateTeamB()
     {
-        SpawnEnemies(currentLevel.enemies);
+        int stageId = currentLevel.stageId;
+        List<Vector2Int> cells = MapSpawnCells.FindEnemySpawnCells(MapController.Instance.Grid, EnemySpawnGenerator.CampaignCount(stageId));
+        SpawnEnemies(EnemySpawnGenerator.Generate(stageId, cells));
     }
 
     // Dọn màn cũ trước khi dựng lại (BaseMode.Reset lo container + hero/pet + ResetBattle).

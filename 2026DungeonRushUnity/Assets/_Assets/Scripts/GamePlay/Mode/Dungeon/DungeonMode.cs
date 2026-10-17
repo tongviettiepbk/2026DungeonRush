@@ -33,7 +33,7 @@ public class DungeonMode : BaseMode
 
     // Gốc LevelController.hpv → LevelLoader.itp(level) → rw.itr: seed = level dungeon × 7912 (+1000/lần thử)
     // ⇒ mỗi level dungeon 1 layout cố định, KHÔNG phụ thuộc màn campaign.
-    protected override int GetMapSeedKey()
+    protected override int GetLayoutLevel(int stageId)
     {
         return dungeonLevel;
     }
@@ -43,65 +43,11 @@ public class DungeonMode : BaseMode
         SpawnHeroAndPets();
     }
 
-    // GridManager.ijx(count) — chỗ đứng quái dungeon (dùng chung): ô trống ở nửa trên (row ≥ 5),
-    // nằm trong vùng liên thông với hero (ijw flood-fill — map có obstacle có thể tạo ô kín),
-    // rồi bốc ngẫu nhiên từng ô không trùng (Random.Range + RemoveAt). Thiếu ô → trả ít hơn count.
-    private const int ENEMY_MIN_ROW = 5;
-
+    // GridManager.ijx(count) — chỗ đứng quái (dùng chung với campaign): ô trống từ hàng 5, đi tới được từ
+    // hàng 0 cột giữa (flood-fill 8 hướng), bốc ngẫu nhiên không trùng. Thiếu ô → trả ít hơn count.
     protected List<Vector2Int> PickEnemyCells(int count)
     {
-        MapController map = MapController.Instance;
-        HashSet<Vector2Int> reachable = FloodFill(map, new Vector2Int(0, map.Cols / 2));
-
-        var candidates = new List<Vector2Int>();
-        for (int row = ENEMY_MIN_ROW; row < map.Rows; row++)
-        {
-            for (int col = 0; col < map.Cols; col++)
-            {
-                var cell = new Vector2Int(row, col);
-                if (reachable.Contains(cell))
-                {
-                    candidates.Add(cell);
-                }
-            }
-        }
-
-        var result = new List<Vector2Int>();
-        while (result.Count < count && candidates.Count > 0)
-        {
-            int index = Random.Range(0, candidates.Count);
-            result.Add(candidates[index]);
-            candidates.RemoveAt(index);
-        }
-        return result;
-    }
-
-    // Các ô đi được nối liền với start (4 hướng).
-    private static HashSet<Vector2Int> FloodFill(MapController map, Vector2Int start)
-    {
-        var visited = new HashSet<Vector2Int>();
-        if (!map.IsWalkable(start))
-        {
-            return visited;
-        }
-
-        var queue = new Queue<Vector2Int>();
-        queue.Enqueue(start);
-        visited.Add(start);
-        Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
-        while (queue.Count > 0)
-        {
-            Vector2Int cell = queue.Dequeue();
-            for (int i = 0; i < dirs.Length; i++)
-            {
-                Vector2Int next = cell + dirs[i];
-                if (map.IsWalkable(next) && visited.Add(next))
-                {
-                    queue.Enqueue(next);
-                }
-            }
-        }
-        return visited;
+        return MapSpawnCells.FindEnemySpawnCells(MapController.Instance.Grid, count);
     }
 
     protected override void CalculateResult(bool isWin)

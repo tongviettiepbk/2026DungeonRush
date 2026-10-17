@@ -69,6 +69,12 @@ public class BossRushMode : BaseMode
 
     protected override bool AllowPets => false;
 
+    // Giữ ô hero cũ (hàng 0, cột giữa) — chưa đối chiếu chỗ đứng gốc của mode này (campaign đã theo ijp).
+    protected override Vector2Int GetHeroSpawnCell()
+    {
+        return new Vector2Int(0, MapController.Instance.Cols / 2);
+    }
+
     protected override void CreateTeamA()
     {
         SpawnHeroAndPets();

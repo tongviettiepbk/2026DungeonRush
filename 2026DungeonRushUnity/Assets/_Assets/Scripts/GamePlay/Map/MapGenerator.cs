@@ -1,91 +1,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Sinh map procedural — tái tạo thuật toán LevelGenerator gốc của DungeonRush.
+// Sinh chướng ngại (box) của map — port NGUYÊN thuật toán gốc `rw.itr` ("RuntimeLevelObstacleGenerator",
+// reverse libil2cpp v41; gọi từ LevelController.hpv → LevelLoader.itp(level) → rw.itr(level, keepClear)).
 //
-// KẾT QUẢ: ma trận 2 chiều int[rows, cols] với 0 = ô trống (đi được), 1 = ô có wall.
-// Ô = Vector2Int(x = row, y = col), (0,0) góc trên-trái; truy cập grid[cell.x, cell.y] = grid[row, col].
-// Bảo đảm luôn có đường đi từ ô start tới ô goal (BFS + thử lại, fallback giảm số wall).
-// Cùng seed → cùng layout (deterministic). Xem DecodedData/MAP_AND_SPAWN_MODEL.md.
+// KẾT QUẢ: int[rows, cols], 0 = trống, 1 = chướng ngại. Cùng level → cùng layout (seed cố định).
 //
-// Generator CHỈ lo wall. Spawn quân / cổng enemy / cửa nằm ở StaticMapData (layout helper),
-// không nhét vào ma trận này nữa.
+// Toạ độ GỐC (GridManager): ô (x, y), x ∈ [-cols/2, cols - cols/2), y ∈ [0, rows). Cột giữa là x = 0.
+// Đổi sang lưới của project: row = y, col = x + cols/2 (xem [[dungonrush-map-coord-convention]]).
+//
+// Luật gốc:
+//   - Vùng cấm (LevelLoader.itq): "Player Spawn" = 3 hàng dưới (y 0..2), "Enemy Spawn" = 3 hàng trên.
+//   - Ứng viên = CHỈ nửa TRÁI (x < 0) ngoài vùng cấm; bốc count = Next(5, 11) ô rồi LẬT GƯƠNG sang phải
+//     (cột lẻ: x → -x, cột chẵn: x → -x-1) ⇒ map luôn đối xứng, với 9 cột thì cột giữa luôn trống.
+//   - Seed: đếm số ô = Random(level×7912 + vòng×1000); bốc ô = Random(level×7912 + vòng×1000 + lần thử).
+//     100 vòng × 10 lần thử, nhận layout đầu tiên còn đường 8 hướng từ (0,0) lên (0, rows-1).
+//   - Hết lượt mà không ra → fallback `iua`: 6 cặp ô đối xứng ngẫu nhiên Random(level).
 public static class MapGenerator
 {
-    public class Params
+    private const int SEED_PER_LEVEL = 7912;     // rw.its: level × 0x1EE8
+    private const int SEED_PER_ROUND = 1000;
+    private const int ROUNDS = 100;              // xue
+    private const int TRIES_PER_ROUND = 10;      // xud
+    private const int PICK_MIN = 5;              // xub (ctor gán 5)
+    private const int PICK_MAX = 10;             // xuc (ctor gán 10) — Next(PICK_MIN, PICK_MAX + 1)
+    private const int FALLBACK_PAIRS = 6;        // iua
+
+    // level: level dùng làm seed (campaign = level campaign liên tục; dungeon = level dungeon).
+    // spawnObstacles = false (MapConfig.SpawnObstacles = 0: Boss/PvP/Dragon) → lưới trống.
+    public static int[,] Generate(int level, int cols, int rows, bool spawnObstacles)
     {
-        public int cols;
-        public int rows;
-        public int seed;
-        public int minWalls = StaticMapData.MIN_OBSTACLE_COUNT;
-        public int maxWalls = StaticMapData.MAX_OBSTACLE_COUNT;
-        public int maxAttempts = StaticMapData.MAX_GENERATION_ATTEMPTS;
-        public Vector2Int start;                  // ô đầu (luôn giữ trống, phải tới được goal)
-        public Vector2Int goal;                   // ô cuối (luôn giữ trống)
-        public IEnumerable<Vector2Int> keepClear; // ô không được đặt wall (hàng spawn, cửa...)
-    }
-
-    // Trả int[rows, cols]: 0 = trống, 1 = wall.
-    public static int[,] Generate(Params parameters)
-    {
-        int cols = parameters.cols;
-        int rows = parameters.rows;
-        var random = new System.Random(parameters.seed);
-
-        // Ô cấm đặt wall: start + goal + keepClear.
-        var blocked = new HashSet<Vector2Int> { parameters.start, parameters.goal };
-        if (parameters.keepClear != null)
-        {
-            foreach (var cell in parameters.keepClear) blocked.Add(cell);
-        }
-
-        // Ứng viên đặt wall = mọi ô trong lưới trừ ô cấm.
-        var candidates = new List<Vector2Int>();
-        for (int row = 0; row < rows; row++)
-        {
-            for (int col = 0; col < cols; col++)
-            {
-                var cell = new Vector2Int(row, col);
-                if (!blocked.Contains(cell)) candidates.Add(cell);
-            }
-        }
-
-        int targetWallCount = random.Next(parameters.minWalls, parameters.maxWalls + 1);
-        targetWallCount = Mathf.Min(targetWallCount, candidates.Count);
-
-        // Thử tối đa maxAttempts lần để ra layout còn thông start→goal.
-        List<Vector2Int> chosenWalls = null;
-        int attempts = Mathf.Max(1, parameters.maxAttempts);
-        for (int attempt = 0; attempt < attempts; attempt++)
-        {
-            var pickedWalls = PickRandom(candidates, targetWallCount, random);
-            if (IsConnected(cols, rows, pickedWalls, parameters.start, parameters.goal))
-            {
-                chosenWalls = pickedWalls;
-                break;
-            }
-        }
-
-        // Fallback: giảm dần số wall cho tới khi thông (cùng lắm = 0 wall).
-        if (chosenWalls == null)
-        {
-            for (int count = targetWallCount - 1; count >= 0 && chosenWalls == null; count--)
-            {
-                var pickedWalls = PickRandom(candidates, count, random);
-                if (IsConnected(cols, rows, pickedWalls, parameters.start, parameters.goal)) chosenWalls = pickedWalls;
-            }
-            chosenWalls = chosenWalls ?? new List<Vector2Int>();
-        }
-
         var grid = new int[rows, cols];
-        for (int i = 0; i < chosenWalls.Count; i++)
+        if (!spawnObstacles)
         {
-            grid[chosenWalls[i].x, chosenWalls[i].y] = 1;
+            return grid;
+        }
+
+        var shape = new Shape(cols, rows);
+        List<Vector2Int> obstacles = GenerateOriginal(level, shape);
+        for (int i = 0; i < obstacles.Count; i++)
+        {
+            Vector2Int cell = obstacles[i];
+            grid[cell.y, cell.x + shape.half] = 1;
         }
         return grid;
     }
 
-    // Gom danh sách ô wall (grid==1) — tiện cho tầng spawn Instantiate prefab.
+    // Gom danh sách ô chướng ngại (grid==1) theo (row, col) — tiện cho tầng spawn Instantiate prefab.
     public static List<Vector2Int> CollectWalls(int[,] grid)
     {
         var walls = new List<Vector2Int>();
@@ -101,49 +62,166 @@ public static class MapGenerator
         return walls;
     }
 
-    // Chọn ngẫu nhiên count ô khác nhau từ pool (Fisher–Yates một phần, deterministic theo random).
-    private static List<Vector2Int> PickRandom(List<Vector2Int> pool, int count, System.Random random)
+    // Kích thước lưới theo cách gốc tính (rw ctor): half = cols/2, xMax (loại trừ) = cols - half.
+    private struct Shape
     {
-        var copy = new List<Vector2Int>(pool);
-        count = Mathf.Clamp(count, 0, copy.Count);
-        for (int i = 0; i < count; i++)
+        public readonly int cols, rows, half, xMax;
+        public readonly bool odd;
+
+        public Shape(int cols, int rows)
         {
-            int j = random.Next(i, copy.Count);
-            (copy[i], copy[j]) = (copy[j], copy[i]);
+            this.cols = cols;
+            this.rows = rows;
+            half = cols / 2;
+            xMax = cols - half;
+            odd = (cols & 1) == 1;
         }
-        return copy.GetRange(0, count);
+
+        public int Mirror(int x) => odd ? -x : -x - 1;
+
+        // Ô thuộc vùng cấm "Player Spawn" (y 0..2) / "Enemy Spawn" (y rows-3..rows-1)? (rw.itu)
+        public bool InKeepClear(Vector2Int cell)
+        {
+            return cell.y <= StaticMapData.KEEP_CLEAR_ROWS - 1 || cell.y >= rows - StaticMapData.KEEP_CLEAR_ROWS;
+        }
     }
 
-    // BFS 4 hướng: từ start có tới được goal mà không đi qua ô wall không?
-    private static bool IsConnected(int cols, int rows, List<Vector2Int> walls, Vector2Int start, Vector2Int goal)
+    // rw.itr — trả list ô theo toạ độ GỐC (x, y).
+    private static List<Vector2Int> GenerateOriginal(int level, Shape shape)
     {
-        var blocked = new HashSet<Vector2Int>(walls);
-        if (blocked.Contains(goal) || blocked.Contains(start)) return false;
-        if (start == goal) return true;
+        int baseSeed = level * SEED_PER_LEVEL;
+        for (int round = 0; round < ROUNDS; round++)
+        {
+            int roundSeed = baseSeed + round * SEED_PER_ROUND;
+            int count = new NetRandom(roundSeed).Next(PICK_MIN, PICK_MAX + 1);
+
+            for (int attempt = 0; attempt < TRIES_PER_ROUND; attempt++)
+            {
+                var random = new NetRandom(roundSeed + attempt);
+                List<Vector2Int> candidates = Candidates(shape);
+                if (candidates.Count == 0)
+                {
+                    return new List<Vector2Int>();
+                }
+
+                List<Vector2Int> obstacles = Dedupe(Mirror(Pick(count, candidates, random), shape));
+                if (HasPath(obstacles, shape))
+                {
+                    return obstacles;
+                }
+            }
+        }
+
+        return Fallback(level, shape);
+    }
+
+    // rw.itt: ô nửa trái (x = -half..-1), quét x ngoài / y trong, bỏ ô trong vùng cấm.
+    private static List<Vector2Int> Candidates(Shape shape)
+    {
+        var cells = new List<Vector2Int>();
+        for (int x = -shape.half; x < 0; x++)
+        {
+            for (int y = 0; y < shape.rows; y++)
+            {
+                var cell = new Vector2Int(x, y);
+                if (!shape.InKeepClear(cell)) cells.Add(cell);
+            }
+        }
+        return cells;
+    }
+
+    // rw.itv: bốc min(count, pool) ô không trùng — idx = Next(0, pool.Count), RemoveAt.
+    private static List<Vector2Int> Pick(int count, List<Vector2Int> candidates, NetRandom random)
+    {
+        var picked = new List<Vector2Int>();
+        var pool = new List<Vector2Int>(candidates);
+        int total = Mathf.Min(count, pool.Count);
+        for (int i = 0; i < total; i++)
+        {
+            int index = random.Next(0, pool.Count);
+            picked.Add(pool[index]);
+            pool.RemoveAt(index);
+        }
+        return picked;
+    }
+
+    // rw.itw: giữ ô đã bốc + thêm ô lật gương (nếu không rơi vào vùng cấm).
+    private static List<Vector2Int> Mirror(List<Vector2Int> picked, Shape shape)
+    {
+        var result = new List<Vector2Int>(picked);
+        for (int i = 0; i < picked.Count; i++)
+        {
+            var mirror = new Vector2Int(shape.Mirror(picked[i].x), picked[i].y);
+            if (!shape.InKeepClear(mirror)) result.Add(mirror);
+        }
+        return result;
+    }
+
+    // rw.itx: bỏ trùng, giữ thứ tự xuất hiện.
+    private static List<Vector2Int> Dedupe(List<Vector2Int> cells)
+    {
+        var seen = new HashSet<Vector2Int>();
+        var result = new List<Vector2Int>();
+        for (int i = 0; i < cells.Count; i++)
+        {
+            if (seen.Add(cells[i])) result.Add(cells[i]);
+        }
+        return result;
+    }
+
+    // rw.ity + itz: BFS 8 hướng từ (0,0) tới (0, rows-1) né chướng ngại. Đi chéo chỉ bị chặn
+    // khi CẢ 2 ô kề vuông góc đều là chướng ngại.
+    private static bool HasPath(List<Vector2Int> obstacles, Shape shape)
+    {
+        var blocked = new HashSet<Vector2Int>(obstacles);
+        var start = new Vector2Int(0, 0);
+        var goal = new Vector2Int(0, shape.rows - 1);
+        if (blocked.Contains(start) || blocked.Contains(goal)) return false;
 
         var visited = new HashSet<Vector2Int> { start };
         var queue = new Queue<Vector2Int>();
         queue.Enqueue(start);
-
         while (queue.Count > 0)
         {
-            var current = queue.Dequeue();
-            for (int dirIndex = 0; dirIndex < Dirs.Length; dirIndex++)
+            Vector2Int current = queue.Dequeue();
+            if (current == goal) return true;
+
+            for (int i = 0; i < Dirs8.Length; i++)
             {
-                var next = current + Dirs[dirIndex];
-                if (next == goal) return true;
-                if (next.x < 0 || next.x >= rows || next.y < 0 || next.y >= cols
-                    || blocked.Contains(next) || !visited.Add(next)) continue;
+                Vector2Int dir = Dirs8[i];
+                Vector2Int next = current + dir;
+                if (next.x < -shape.half || next.x >= shape.xMax || next.y < 0 || next.y >= shape.rows) continue;
+                if (blocked.Contains(next) || visited.Contains(next)) continue;
+                if (dir.x != 0 && dir.y != 0
+                    && blocked.Contains(new Vector2Int(next.x, current.y))
+                    && blocked.Contains(new Vector2Int(current.x, current.y + dir.y))) continue;
+
+                visited.Add(next);
                 queue.Enqueue(next);
             }
         }
         return false;
     }
 
-    // 4 hướng lân cận theo (row, col).
-    private static readonly Vector2Int[] Dirs =
+    // rw.iua: 6 lần bốc x = Next(1-half, -1), y = Next(3, rows-3) + ô lật gương.
+    private static List<Vector2Int> Fallback(int level, Shape shape)
     {
-        new Vector2Int(1, 0), new Vector2Int(-1, 0),
-        new Vector2Int(0, 1), new Vector2Int(0, -1),
+        var random = new NetRandom(level);
+        var cells = new List<Vector2Int>();
+        for (int i = 0; i < FALLBACK_PAIRS; i++)
+        {
+            int x = random.Next(1 - shape.half, -1);
+            int y = random.Next(StaticMapData.KEEP_CLEAR_ROWS, shape.rows - StaticMapData.KEEP_CLEAR_ROWS);
+            cells.Add(new Vector2Int(x, y));
+            cells.Add(new Vector2Int(shape.Mirror(x), y));
+        }
+        return Dedupe(cells);
+    }
+
+    // rw.itz: thứ tự hướng của gốc (4 thẳng rồi 4 chéo).
+    private static readonly Vector2Int[] Dirs8 =
+    {
+        new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(0, -1), new Vector2Int(-1, 0),
+        new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, -1), new Vector2Int(-1, 1),
     };
 }

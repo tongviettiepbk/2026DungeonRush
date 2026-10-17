@@ -3,27 +3,26 @@ using UnityEngine;
 
 // Config tĩnh của map, dựng lại từ MapConfig gốc của DungeonRush (DecodedData/tables/MapConfig).
 // Map trong DungeonRush KHÔNG lưu toạ độ box/enemy cố định — chỉ lưu kích thước lưới + cờ
-// SpawnObstacles; layout thật sinh procedural lúc runtime (xem MapGenerator).
+// SpawnObstacles; layout thật sinh procedural lúc runtime (xem MapGenerator = rw.itr gốc).
 //
-// Tham số sinh (obstacle 10-15, seed, MaxGenerationAttempts...) đọc từ instance LevelGenerator
-// trong GameplayScene gốc — chi tiết ở DecodedData/MAP_AND_SPAWN_MODEL.md.
+// Luật đặt ô/quân gốc (LevelLoader.itq, GridManager.ijp/ijx) — chi tiết ở DecodedData/MAP_AND_SPAWN_MODEL.md.
 public class StaticMapData
 {
-    // Kích thước lưới chơi thực: 9×12, TẤT CẢ ô đều đi được (wall nằm trong đó).
-    // (Chốt gameplay 2026-07-29: vùng chơi 9×12 đầy đủ, không trừ cột viền.)
+    // Kích thước lưới chơi thực: 9×12 (MapConfig.GridWidth/GridHeight → GridManager.iiy).
     public const int GRID_WIDTH = 9;
     public const int GRID_HEIGHT = 12;
 
-    // Khoảng số obstacle random mỗi màn (LevelGenerator: Min=10, Max=15).
-    public const int MIN_OBSTACLE_COUNT = 10;
-    public const int MAX_OBSTACLE_COUNT = 15;
+    // Vùng cấm đặt chướng ngại (LevelLoader.itq): "Player Spawn" = 3 hàng dưới, "Enemy Spawn" = 3 hàng trên.
+    public const int KEEP_CLEAR_ROWS = 3;
 
-    // Số lần thử sinh lại để đảm bảo map còn đường đi (LevelGenerator.MaxGenerationAttempts).
-    public const int MAX_GENERATION_ATTEMPTS = 10;
+    // Ô gốc sinh hero (GridManager.ijp: ô trống gần (x 0, y 2) nhất) — hàng 2, cột giữa.
+    public const int HERO_SPAWN_ROW = 2;
 
-    // Số hàng dưới cùng dành cho spawn quân người chơi, số hàng trên cùng cho enemy + cửa.
+    // Quái chỉ đứng từ hàng 5 trở lên (GridManager.ijx).
+    public const int ENEMY_MIN_ROW = 5;
+
+    // (Tự đặt, CHƯA đối chiếu gốc) số hàng dưới Boss Rush dùng xếp ghost đồng đội.
     public const int PLAYER_SPAWN_ROWS = 2;
-    public const int ENEMY_SPAWN_ROWS = 2;
 
     // 1 cấu hình map theo môi trường (tương ứng 1 dòng MapConfig gốc): kích thước + camera + cờ.
     public class MapEnvironmentConfig
@@ -63,62 +62,5 @@ public class StaticMapData
     public MapEnvironmentConfig GetConfig(ModeType environment)
     {
         return configByEnv.TryGetValue(environment, out MapEnvironmentConfig cfg) ? cfg : null;
-    }
-
-    // ===== Layout spawn/cửa (suy từ kích thước lưới — KHÔNG nằm trong ma trận wall) =====
-
-    // Cửa (cũng là cổng enemy): giữa hàng TRÊN cùng (row = rows-1, vì row tăng đi lên).
-    public static Vector2Int GetDoorCell(int cols, int rows)
-    {
-        return new Vector2Int(rows - 1, cols / 2);
-    }
-
-    // Ô spawn quân người chơi: PLAYER_SPAWN_ROWS hàng dưới cùng.
-    public static List<Vector2Int> GetPlayerSpawnCells(int cols, int rows)
-    {
-        return BottomRows(cols, rows, PLAYER_SPAWN_ROWS);
-    }
-
-    // Ô spawn enemy khả dụng: ENEMY_SPAWN_ROWS hàng trên cùng, trừ ô wall (grid==1).
-    public static List<Vector2Int> GetEnemySpawnCells(int cols, int rows, int[,] grid)
-    {
-        var cells = new List<Vector2Int>();
-        foreach (var cell in TopRows(cols, rows, ENEMY_SPAWN_ROWS))
-        {
-            if (grid == null || grid[cell.x, cell.y] == 0) cells.Add(cell);
-        }
-        return cells;
-    }
-
-    // Ô cấm đặt wall = hàng spawn quân + hàng spawn enemy + cửa (để map luôn có lối vào/ra).
-    public static HashSet<Vector2Int> GetKeepClearCells(int cols, int rows)
-    {
-        var set = new HashSet<Vector2Int>();
-        foreach (var cell in BottomRows(cols, rows, PLAYER_SPAWN_ROWS)) set.Add(cell);
-        foreach (var cell in TopRows(cols, rows, ENEMY_SPAWN_ROWS)) set.Add(cell);
-        set.Add(GetDoorCell(cols, rows));
-        return set;
-    }
-
-    // Ô của rowCount hàng DƯỚI cùng (row = 0 .. rowCount-1, vì row tăng đi lên).
-    private static List<Vector2Int> BottomRows(int cols, int rows, int rowCount)
-    {
-        var cells = new List<Vector2Int>();
-        for (int row = 0; row < rowCount && row < rows; row++)
-        {
-            for (int col = 0; col < cols; col++) cells.Add(new Vector2Int(row, col));
-        }
-        return cells;
-    }
-
-    // Ô của rowCount hàng TRÊN cùng (row = rows-rowCount .. rows-1).
-    private static List<Vector2Int> TopRows(int cols, int rows, int rowCount)
-    {
-        var cells = new List<Vector2Int>();
-        for (int row = Mathf.Max(0, rows - rowCount); row < rows; row++)
-        {
-            for (int col = 0; col < cols; col++) cells.Add(new Vector2Int(row, col));
-        }
-        return cells;
     }
 }

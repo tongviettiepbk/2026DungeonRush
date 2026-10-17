@@ -1,85 +1,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Ghép MapGenerator + EnemySpawnGenerator thành 1 màn campaign hoàn chỉnh từ stageId.
-// Đây là entry point tầng gameplay sẽ gọi để dựng màn (thay cho việc load asset layout,
-// vì DungeonRush sinh procedural — xem DecodedData/MAP_AND_SPAWN_MODEL.md).
+// Dựng lưới 1 màn (thay cho việc load asset layout, vì DungeonRush sinh procedural —
+// xem DecodedData/MAP_AND_SPAWN_MODEL.md). Gốc: EnvironmentController lấy MapConfig theo môi trường →
+// GridManager.iiy(GridWidth, GridHeight) → LevelLoader.itp(level) sinh chướng ngại (MapGenerator).
 //
-// MapGenerator chỉ trả ma trận wall 0/1; spawn/cửa được suy từ StaticMapData và gói vào
-// CampaignLevel để tầng scene (BaseMode/CampaignMode) dùng.
+// Chỗ đứng hero/pet/quái KHÔNG nằm ở đây — tầng mode chọn lúc spawn (MapSpawnCells), như SpawnController gốc.
 public static class CampaignLevelBuilder
 {
     public class CampaignLevel
     {
         public int stageId;
         public ModeType environment;
+        public int layoutLevel;                      // level làm seed chướng ngại (campaign: level liên tục; dungeon: level dungeon)
 
-        public int[,] grid;                          // 0 = trống, 1 = wall
+        public int[,] grid;                          // 0 = trống, 1 = chướng ngại
         public List<Vector2Int> obstacles;           // ô grid==1 (tiện spawn prefab)
-
-        public List<Vector2Int> playerSpawnCells;    // hàng dưới
-        public List<Vector2Int> enemySpawnCells;     // hàng trên (đã trừ wall)
-        public Vector2Int doorCell;                  // cửa = cổng enemy (giữa hàng trên); boss spawn tại đây
-
-        public List<EnemySpawnGenerator.EnemySpawnInfo> enemies;
     }
 
-    // mapSeedKey > 0: seed layout theo khoá riêng thay cho stageId (dungeon dùng level dungeon — gốc rw.itr(level)).
-    public static CampaignLevel Build(int stageId, ModeType environment = ModeType.DefaultLevel, int mapSeedKey = 0)
+    public static CampaignLevel Build(int stageId, ModeType environment, int layoutLevel)
     {
         StaticMapData.MapEnvironmentConfig envCfg = GameData.staticData.map.GetConfig(environment);
 
-        // Vùng chơi = toàn bộ lưới 9×12 (chốt 2026-07-29, không trừ cột viền).
         int cols = envCfg != null ? envCfg.gridWidth : StaticMapData.GRID_WIDTH;
         int rows = envCfg != null ? envCfg.gridHeight : StaticMapData.GRID_HEIGHT;
+        bool spawnObstacles = envCfg == null || envCfg.spawnObstacles;
 
-        var door = StaticMapData.GetDoorCell(cols, rows);
-        var start = new Vector2Int(0, cols / 2);          // giữa hàng spawn quân DƯỚI cùng (row = 0)
-
-        int minWalls = StaticMapData.MIN_OBSTACLE_COUNT;
-        int maxWalls = StaticMapData.MAX_OBSTACLE_COUNT;
-        // Map không sinh box (Boss/PvP) → ép 0 wall.
-        if (envCfg != null && !envCfg.spawnObstacles)
-        {
-            minWalls = 0;
-            maxWalls = 0;
-        }
-
-        int[,] grid = MapGenerator.Generate(new MapGenerator.Params
-        {
-            cols = cols,
-            rows = rows,
-            seed = SeedFromStage(mapSeedKey > 0 ? mapSeedKey : stageId),   // cùng màn → cùng layout
-            minWalls = minWalls,
-            maxWalls = maxWalls,
-            start = start,
-            goal = door,
-            keepClear = StaticMapData.GetKeepClearCells(cols, rows),
-        });
-
-        var level = new CampaignLevel
+        int[,] grid = MapGenerator.Generate(layoutLevel, cols, rows, spawnObstacles);
+        return new CampaignLevel
         {
             stageId = stageId,
             environment = environment,
+            layoutLevel = layoutLevel,
             grid = grid,
             obstacles = MapGenerator.CollectWalls(grid),
-            playerSpawnCells = StaticMapData.GetPlayerSpawnCells(cols, rows),
-            enemySpawnCells = StaticMapData.GetEnemySpawnCells(cols, rows, grid),
-            doorCell = door,
         };
-        level.enemies = EnemySpawnGenerator.Generate(stageId, level.enemySpawnCells, level.doorCell);
-        return level;
-    }
-
-    // Trộn stageId thành seed ổn định (không phụ thuộc hash string của .NET).
-    private static int SeedFromStage(int stageId)
-    {
-        unchecked
-        {
-            int seed = stageId * 73856093;
-            seed ^= (seed >> 13);
-            seed *= 19349663;
-            return seed & 0x7fffffff;
-        }
     }
 }

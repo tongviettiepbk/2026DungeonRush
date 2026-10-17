@@ -89,11 +89,19 @@ public static class EnemySpawnGenerator
         public bool isBoss;            // campaign không dùng (để tương thích code cũ)
     }
 
-    // stageId theo convention campaign (101, 102... 201...). bossCell chừa sẵn (campaign không boss).
-    public static List<EnemySpawnInfo> Generate(int stageId, List<Vector2Int> enemySpawnCells, Vector2Int bossCell)
+    // Số quái của màn campaign (preset.melee + preset.ranged) — để chọn trước bấy nhiêu ô (GridManager.ijx).
+    public static int CampaignCount(int stageId)
+    {
+        Preset preset = PresetForLevel(GameData.staticData.campaign.GetLevel(stageId));
+        return preset.melee + preset.ranged;
+    }
+
+    // stageId theo convention campaign (101, 102... 201...). cells = ô đã chọn sẵn (MapSpawnCells.FindEnemySpawnCells);
+    // quái thứ i đứng ô thứ i như SpawnController.huu gốc, thiếu ô thì cắt bớt quái.
+    public static List<EnemySpawnInfo> Generate(int stageId, List<Vector2Int> cells)
     {
         var result = new List<EnemySpawnInfo>();
-        if (enemySpawnCells == null || enemySpawnCells.Count == 0) return result;
+        if (cells == null || cells.Count == 0) return result;
 
         var campaign = GameData.staticData.campaign;
         // Level campaign LIÊN TỤC: 1-1=1 ... 1-10=10, 2-1=11 ... (globalStage).
@@ -112,14 +120,13 @@ public static class EnemySpawnGenerator
         float rangedDmg = Mathf.Max(1f, Round(Mathf.Sqrt(perUnitPower / RATIO_RANGED) * RANGED_DMG_MULT));
         float rangedHp = Mathf.Max(1f, Round(Mathf.Sqrt(perUnitPower * RATIO_RANGED)));
 
-        int total = Mathf.Min(unitCount, enemySpawnCells.Count);   // không đủ ô thì cắt bớt
+        int total = Mathf.Min(unitCount, cells.Count);   // không đủ ô thì cắt bớt
         for (int i = 0; i < total; i++)
         {
             bool ranged = i >= preset.melee;                       // melee trước, ranged sau
-            Vector2Int cell = enemySpawnCells[i * enemySpawnCells.Count / total];
             result.Add(new EnemySpawnInfo
             {
-                cell = cell, level = level,
+                cell = cells[i], level = level,
                 attackPower = ranged ? rangedDmg : meleeDmg,
                 health = ranged ? rangedHp : meleeHp,
                 attackSpeed = 1f, moveSpeed = ENEMY_MOVE_SPEED,
@@ -281,60 +288,5 @@ public static class EnemySpawnGenerator
     private static float Round(float v)
     {
         return (float)Math.Round((double)v, MidpointRounding.ToEven);
-    }
-
-    // System.Random bản Mono/.NET Framework (subtractive PRNG) — để shuffle khớp game gốc.
-    private sealed class NetRandom
-    {
-        private const int MBIG = int.MaxValue;
-        private const int MSEED = 161803398;
-        private readonly int[] seedArray = new int[56];
-        private int inext, inextp;
-
-        public NetRandom(int seed)
-        {
-            int subtraction = (seed == int.MinValue) ? int.MaxValue : Math.Abs(seed);
-            int mj = MSEED - subtraction;
-            seedArray[55] = mj;
-            int mk = 1;
-            for (int i = 1; i < 55; i++)
-            {
-                int ii = (21 * i) % 55;
-                seedArray[ii] = mk;
-                mk = mj - mk;
-                if (mk < 0) mk += MBIG;
-                mj = seedArray[ii];
-            }
-            for (int k = 1; k < 5; k++)
-            {
-                for (int i = 1; i < 56; i++)
-                {
-                    seedArray[i] -= seedArray[1 + (i + 30) % 55];
-                    if (seedArray[i] < 0) seedArray[i] += MBIG;
-                }
-            }
-            inext = 0;
-            inextp = 21;
-        }
-
-        private int InternalSample()
-        {
-            int locINext = inext, locINextp = inextp;
-            if (++locINext >= 56) locINext = 1;
-            if (++locINextp >= 56) locINextp = 1;
-            int retVal = seedArray[locINext] - seedArray[locINextp];
-            if (retVal == MBIG) retVal--;
-            if (retVal < 0) retVal += MBIG;
-            seedArray[locINext] = retVal;
-            inext = locINext;
-            inextp = locINextp;
-            return retVal;
-        }
-
-        public int Next(int minValue, int maxValue)
-        {
-            long range = (long)maxValue - minValue;
-            return (int)((InternalSample() * (1.0 / MBIG)) * range) + minValue;
-        }
     }
 }
