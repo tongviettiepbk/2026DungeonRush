@@ -19,6 +19,7 @@ Kế hoạch: `GDD/RESKIN_PLAN.md`. User chốt 2026-10-18: reskin CHỈ thay h�
 - Chưa làm: nền map (shader lưới 5_Maps, mockup #998783/#76767E), bảng Rarity Table ở LevelPopup còn màu cũ, mockup có ô cash + hàng 3 nút dưới (lobby không có → bỏ).
 - Lobby đợt 2 (2026-10-18): nút theo số đo mockup (Auto/Boost 277x155 tâm ±358, Loot 340x140); TRẠNG THÁI KHOÁ = hàng nút dưới mockup: Auto chưa tới AUTO_USABLE_LEVEL → btn_gray (ForgeUIController.imgAutoTop/sprAutoLocked), Loot khoá (đang loot/auto) → btn_red (ForgeButtonView.lockedTopSprite theo Interactable), Boost đang chạy → btn_blue (BoostButtonView gọi SetLockedVisual). 3 ảnh khoá = đổi màu btn_green fit theo màu mockup. Nhãn Boost 1 dòng "Boost x2 +5m", bỏ icon quảng cáo. Thanh EXP cao 52; fill từng bị tối vì Slider (interactable=false) tô disabledColor → đã đặt transition None.
 - Lạ (chưa rõ nguyên nhân): 1 lần Play qua MCP, GameData.userData giữa phiên bị thay bằng bản trống (level 0, gem 0) dù UI vẫn hiện Lvl 13; PlayerPrefs vẫn nguyên; chạy lại không tái diễn. Gặp lại thì dừng Play ngay, kiểm key_user_player.
+- Chữ lobby (user chốt 2026-10-18): mọi text UIMainGame2 (trừ Pages) = font `Fonts/Asap/Asap-SemiBold` + material `Asap-SemiBold-Outline-Black` (chữ trắng viền đen, giống 2026IdleSava). Viền là Underlay dilate 1 → Game view nhỏ (<~1080 rộng) hiện ô xám quanh từng chữ; xem ở độ phân giải cố định 1080x2160.
 
 **Why:** user chuẩn bị reskin cả game theo mockup `ArtIncoming/_Concept/Lobby/lobby demo.png`.
 
