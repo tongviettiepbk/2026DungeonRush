@@ -93,7 +93,7 @@ Assets/_Assets/
     │   └── HUD/                  thanh máu
     ├── 2_Icons/
     │   ├── Avatar/  Chest/  Currency/  Enchantment/  Loot/  Mastery/
-    │   ├── Companion/            (+ _Icons1-5)
+    │   ├── Companion/            18 icon pet tier_XX_pet_YY_icon (khớp ảnh thân 4_Characters/Pets)
     │   └── Flags/                (+ Language/ = 10 cờ chọn ngôn ngữ)
     ├── 3_Equipment/
     │   ├── 00_EmptySlot … 08_Wing    icon 241 món + ô trống
@@ -138,8 +138,8 @@ ArtArchive/                       ← ngoài Assets: ảnh không ai dùng (_Com
 | 10 cờ trong `_CommingUse/Flags` | `Art/2_Icons/Flags/Language` |
 | `_ResourceGame/MasteryIcons` + `Mastery` | `Art/2_Icons/Mastery` |
 | `_ResourceGame/Enchantment` | `Art/2_Icons/Enchantment` |
-| `_ResourceGame/CompanionIcons` | `Art/2_Icons/Companion` |
-| `_ResourceGame/_NonDefile/_Icons1-5` | `Art/2_Icons/Companion/_Icons1-5` |
+| `_ResourceGame/CompanionIcons` (đổi tên theo gốc `tier_XX_pet_YY_icon`, bỏ 2 bản trùng) | `Art/2_Icons/Companion` |
+| `_ResourceGame/_NonDefile/_Icons1-5` + 9 `tier_0[4-6]_pet_*_icon` ở `Companion` cũ | `Art/2_Icons/Companion` |
 | `_ResourceGame/Loot` | `Art/2_Icons/Loot` |
 | `_ResourceGame/HeroEquipment/*` | `Art/3_Equipment/*` |
 | `_ArtReskin/Items/*/…-L01-A` (6 ảnh hero đang mặc) | `Art/3_Equipment/OnBody` |

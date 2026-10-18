@@ -12,6 +12,8 @@ Kế hoạch: `GDD/RESKIN_PLAN.md`. User chốt 2026-10-18: reskin CHỈ thay h�
 - Kiểm: 706 ảnh đang dùng trước/sau, 0 GUID gãy mới, Play Root→Login→MainGame 0 lỗi. 12 builder + 8 tool đã sửa đường dẫn. Đã xoá object `unit_base_all` (tắt) khỏi Root.unity.
 - Tool: `Scripts/Art/Editor/ArtReskinTool.cs` (menu Tools/DungeonRush/Reskin: Kiểm tra / Apply Reskin / Xuất CSV + thư mục gương), `tools/art_contact_sheets.py` (chạy bằng tools/.venv). Apply = ghi đè PNG cùng đường dẫn, giữ .meta, nhân PPU + viền 9-slice theo tỉ lệ ảnh mới/cũ (giữ kích thước hiển thị), bỏ qua thư mục `_`*, idempotent.
 
+- 2026-10-18: `Art/2_Icons/Companion/` gom phẳng 18 icon pet tên gốc `tier_XX_pet_YY_icon` (khớp `4_Characters/Pets/tier_XX_pet_YY.png`, tra qua prefab pet); 7 file tên data đã đổi tên, 2 bản trùng (Lightning_Single, Bomber_AOE_Bomb) → ArtArchive/Companion, SO trỏ sang bản gốc.
+
 **Why:** user chuẩn bị reskin cả game theo mockup `ArtIncoming/_Concept/Lobby/lobby demo.png`.
 
 **How to apply:** ảnh art mới → thả vào `ArtIncoming/<đường dẫn y hệt Art/>` → Apply Reskin → đọc reskin_report.txt. Ảnh mới gán tay vào `Art/`. KHÔNG chạy lại builder prefab cũ sau khi reskin (ghi đè chỉnh tay). Chuyển asset trong Unity: KHÔNG tạo thư mục trong StartAssetEditing (Unity sinh "X 1", "X 2"... thừa). Chưa commit đợt 0 (chờ user). Xem [[dungonrush-hero-equipment-reskin]], [[dungonrush-resource-dedupe-rule]].
