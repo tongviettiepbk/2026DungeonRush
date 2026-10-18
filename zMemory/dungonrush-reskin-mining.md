@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-mining
-description: "Reskin Mining 2026-10-19 theo mockup _Concept/Mining (CHƯA commit) — kit Mastery + ảnh art giao ở 1_UIKit/Mining, ChatGPT vẽ 7 icon quặng + icon Rarity, khối quặng = đất art + icon; nút dụng cụ đổi sprite; CẤM chạy lại Build Mining"
+description: "Reskin Mining 2026-10-19 theo mockup _Concept/Mining (commit 075395e) — kit Mastery + ảnh art giao ở 1_UIKit/Mining, ChatGPT vẽ 7 icon quặng + icon Rarity, khối quặng = đất art + icon; nút dụng cụ đổi sprite; CẤM chạy lại Build Mining"
 metadata:
   node_type: memory
   type: project
@@ -8,7 +8,7 @@ metadata:
   modified: 2026-10-18T17:33:03.007Z
 ---
 
-Reskin Mining 2026-10-19 (CHƯA commit, test Play OK: lưới/khối/đổi nút dụng cụ). Mockup `ArtIncoming/_Concept/Mining/` (Mining demo + Mining Offer demo, `_art/` 8 ảnh). Ảnh so: `_Concept/Mining/compare_mockup_vs_game.png`, `play_mining.png`.
+Reskin Mining 2026-10-19 (đã commit 075395e, test Play OK: lưới/khối/đổi nút dụng cụ). Mockup `ArtIncoming/_Concept/Mining/` (Mining demo + Mining Offer demo, `_art/` 8 ảnh). Ảnh so: `_Concept/Mining/compare_mockup_vs_game.png`, `play_mining.png`.
 
 - `tools/reskin/gen_mining.py` → `Art/1_UIKit/Mining/` (btn_square_gray = nút Rarity, btn_square_yellow = nút Offer, ore_slot, world_frame 870 viền đen 5, depth_track/fill, btn_gray cùng khuôn Mastery/btn_blue, badge_discount sao 8 cánh) + `5_Maps/Mining/stone_block.png` (khối Stone RIÊNG — KHÔNG ghi đè Campaign/stone_obstacle dùng chung) + khối quặng `<ore>_mine.png` = đất art 100px + icon 68%.
 - ChatGPT (Codex, `_Concept/Mining/gen/`, ref = crop mockup): 7 icon quặng + `mining (1).png` (nút Rarity). Diamond = THẠCH ANH TÍM theo mockup, vẽ nền xanh lá rồi đảo màu → tách (`tools/reskin/key_mining_icons.py`). `*_character.png` = bản icon dụng cụ mới đợt Shop. Ghi đè qua ArtIncoming + Apply Reskin (18 ảnh).
