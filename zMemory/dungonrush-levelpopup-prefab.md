@@ -17,3 +17,5 @@ Popup bảng rarity trong screenshot (crown "Level N", "Rarity Table", 10 dòng 
 - **ĐÃ STRIP** 5 script logic gốc (class thật: `LevelPopup` controller, `LocalizedLabel`, `RarityPatternEffect`, `PressButtonUI`, entrance/open-anim) → layout thuần, CHƯA có logic điền %/XP/reward. Wire controller sau: đổ % từ ForgeData ([[dungonrush-loot-forge-design]]), XP từ `experience_required_per_level.csv`.
 
 Text tier % hiện là placeholder gốc (`%20`, `Lv.1/Lv2`). Bản tự dựng `RarityTablePopup.prefab` (đoán sprite) ĐÃ XOÁ.
+
+2026-10-18: bản dùng thật là `Resources/Prefabs/UI/UILevelPopup.prefab` (builder LevelPopupPrefabBuilder) — ĐÃ reskin theo mockup, KHÔNG chạy lại builder (ghi đè). Xem [[dungonrush-reskin-plan]].

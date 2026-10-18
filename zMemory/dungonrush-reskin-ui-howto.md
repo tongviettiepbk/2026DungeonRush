@@ -36,7 +36,13 @@ Cách reskin 1 màn UI (đã làm trọn lobby UIMainGame2, commit 2fe6b79 + 453
 - Code đè màu/sprite lúc chạy: ForgeButtonView (default/pressed color), ExperienceUI (màu nút Level), ElementEquipmentUILobby (nền rarity) → đọc code trước khi chỉnh prefab.
 - Viền chữ TMP kiểu Underlay dilate 1: Game view nhỏ (~400px rộng) hiện Ô XÁM quanh từng chữ — không phải lỗi; xem ở độ phân giải cố định 1080x2160. Chụp kiểm ở 1080: thêm GameViewSize tạm qua reflection rồi gỡ.
 - Scene MainGame có override riêng trên instance UIMainGame2 (màu/cỡ chữ user chỉnh) → chặn thay đổi prefab; kiểm `PrefabUtility.GetPropertyModifications`, chỉ revert đúng property cần, KHÔNG lưu scene của user.
+- Tách nền magenta: `key_magenta_icon.py` làm màu TÍM (gem, rương mythic) bán trong suốt → dùng `fit_icon_to_old.py` (nền = gần đúng #FF00FF, chỉ khử viền dải 3px; ghi đè icon giữ đúng W×H ảnh cũ lấy từ git HEAD) — học ở Shop [[dungonrush-reskin-shop]].
+- Image của prefab RIP giữ `pixelsPerUnitMultiplier` ≠1 (1.3–3.7) → thay sprite 9-slice mới thì viền mỏng/méo; đặt lại 1.
+- Chụp kiểm KHÔNG cần Play: `EditorSceneManager.NewPreviewScene` + Camera (cam.scene) + Canvas ScreenSpaceCamera → RenderTexture 1080x2160 (làm ở Rarity Table). Đóng preview có thể sinh `Singleton EventDispatcher` ở DontDestroyOnLoad → DestroyImmediate.
 - Chụp kiểm: Play scene Root → tap → đóng UIOfflineEarningPopup + ẩn UIOfferPopup → `manage_camera screenshot` (không supersize — mất UI overlay), ghép cạnh mockup bằng PIL.
+
+- Tool editor (2026-10-18): `Scripts/Art/Editor/UICaptureTool.Capture(prefab, png, setup)` chụp popup 1080x2160 trong preview scene (ép rebuild layout); `ReskinPrefabUtil` Open/Place(x,y,w,h theo pixel mockup)/Img/Header/Close/Fonts/Save — prefab popup có Canvas gốc size 0, scale 0, PIVOT (0,0) → Open tạm đặt 1080x2160 pivot giữa rồi Save trả lại. Gọi qua execute_code (codedom: viết `UnityEngine.Object`, không `Object`).
+- Ảnh `manage_camera screenshot` trong Play bị MỜ TRẮNG vùng popup = kênh alpha (lớp tối 0.59) → bỏ alpha (merge RGB) trước khi xem, không phải lỗi UI. Lưu vào `Captures/` (project-relative) rồi xoá.
 
 **Why:** user sẽ reskin tiếp các màn khác theo cùng concept; quy trình này đã được duyệt và chạy được.
 **How to apply:** reskin màn mới → làm lần lượt mục 1→4, hỏi user khi mockup có phần màn hiện tại không có. Xem [[dungonrush-reskin-plan]], [[dungonrush-resource-dedupe-rule]], [[dungonrush-unity-mcp-editmode-test]].
