@@ -12,6 +12,6 @@ Bấm ô avatar ở lobby (`UIMainLobby.btProfile`) → `UIProfilePopup` (UIKey.
 
 **Đã nối 2026-10-13 ([[dungonrush-account-system]]):** nút đổi tên → UINicknamePopup; mục Account (Sign In / Up ↔ Sign Out, Sync Now, dòng email · Last sync).
 
-**Còn "coming soon" (`listButtonComingSoon`, giữ nguyên bố cục gốc):** Redeem Code (`Prefabs/UI/Settings/RedeemCodePopup`), Discord, Country (`CountrySelectPopup`, cờ ở `_ResourceGame/_CommingUse/Flags`), Report Bug, Restore Purchase (đang ẩn như rip). Chưa có: nhạc nền (musicVolume mới lưu), rung thật, PowerButton chưa có hành động, User ID rỗng khi chưa đăng nhập Firebase, `UIMainLobby.txtNamePlayer` vẫn chưa gán tên.
+**Còn "coming soon" (`listButtonComingSoon`, giữ nguyên bố cục gốc):** Redeem Code (`Prefabs/UI/Settings/RedeemCodePopup`), Discord, Country (`CountrySelectPopup`, cờ ở `Art/2_Icons/Flags/Language`), Report Bug, Restore Purchase (đang ẩn như rip). Chưa có: nhạc nền (musicVolume mới lưu), rung thật, PowerButton chưa có hành động, User ID rỗng khi chưa đăng nhập Firebase, `UIMainLobby.txtNamePlayer` vẫn chưa gán tên.
 **Language (2026-10-17):** nút Language mở UILanguageSelectPopup, hiện cờ + tên ngôn ngữ đang dùng — [[dungonrush-localization]].
 Xem [[dungonrush-boss-rush-model]] (popup xem người khác + avatar), [[dungonrush-uinew-prefab-folder]].

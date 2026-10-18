@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Batch: lay prefab UI GOC (layout + anh) tu AssetRipper/xapk -> Prefabs/UI/<Feature>/.
-# Gop 3 buoc dump(xapk il2cpp) -> join(_ResourceGame) -> rewire, load xapk/typetree 1 LAN.
+# Gop 3 buoc dump(xapk il2cpp) -> join(Art/) -> rewire, load xapk/typetree 1 LAN.
 # Dung:  tools/.venv/bin/python tools/extract_ui_batch.py [Feature ...]   (khong tham so = tat ca)
 # Port trung thuc tu dump_levelpopup_sprites.py / join_levelpopup_sprites.js / rewire_levelpopup.js.
 import os, sys, zipfile, tempfile, glob, struct, json, re, hashlib
@@ -11,7 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 XAPK = os.path.join(ROOT, "Dungeon+Rush_41_APKPure.xapk")
 GA   = os.path.join(ROOT, "AssetRipper", "AuxiliaryFiles", "GameAssemblies")
 GOBJ = os.path.join(ROOT, "AssetRipper", "ExportedProject", "Assets", "GameObject")
-RES  = os.path.join(ROOT, "2026DungeonRushUnity", "Assets", "_Assets", "_ResourceGame")
+RES  = os.path.join(ROOT, "2026DungeonRushUnity", "Assets", "_Assets", "Art")
 UIDIR= os.path.join(ROOT, "2026DungeonRushUnity", "Assets", "_Assets", "Prefabs", "UI")
 CACHE= os.path.join(ROOT, "tools", "_rewire"); os.makedirs(CACHE, exist_ok=True)
 
@@ -127,7 +127,7 @@ for o in env.objects:
         if d: name2go.setdefault(d.get("m_Name"), []).append(o)
 print("[setup] xong. GameObjects:", sum(len(v) for v in name2go.values()), flush=True)
 
-# ---- NAME2GUID tu _ResourceGame (*.png.meta) ----
+# ---- NAME2GUID tu Art/ (*.png.meta) ----
 NAME2GUID = {}
 for dp, _, fns in os.walk(RES):
     for fn in fns:
@@ -137,7 +137,7 @@ for dp, _, fns in os.walk(RES):
             m = re.search(r"guid: ([0-9a-f]{32})", open(os.path.join(dp, fn), encoding="utf-8").read())
             if m: NAME2GUID[nm] = m.group(1)
 ALIAS = {"gem_icon": "gem"}
-print("[setup] sprite _ResourceGame:", len(NAME2GUID), flush=True)
+print("[setup] sprite Art/:", len(NAME2GUID), flush=True)
 
 # ======================= DUMP: doc sprite name theo DFS tu xapk =======================
 def dump_names(target):

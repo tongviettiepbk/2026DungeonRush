@@ -10,7 +10,7 @@ using UnityEngine.UI;
 // Dựng toàn bộ asset hệ Đào mỏ theo bản gốc (Tools/DungeonRush/Build Mining/All):
 //   - layer "Mining" (camera mỏ chỉ render layer này, camera chính bỏ layer này)
 //   - Animations/Weapons/Weapon_Hammer_AnimatorController (gốc dùng chung cho cả 3 dụng cụ)
-//   - _ResourceGame/MapMaterials/_MiningGridMaterial (nền lưới nâu, Custom/GridShader)
+//   - Art/5_Maps/Campaign/Materials/_MiningGridMaterial (nền lưới nâu, Custom/GridShader)
 //   - Prefabs/Mining/MiningBlock + MiningWorld (camera, BlockParent, nhân vật rig Soldier, 2 tấm nền)
 //   - Resources/Scriptable Objects/Mining/MiningConfig (số liệu DecodedData/tables/MiningConfig.json)
 //   - Resources/Prefabs/UI/UIMiningPopup, UIMiningRarityPopup, UIMiningOfferPopup (bọc bản rip Prefabs/UI/Mining)
@@ -25,11 +25,11 @@ public static class MiningPrefabBuilder
     private const string WORLD_PATH = WORLD_DIR + "MiningWorld.prefab";
     private const string CONFIG_DIR = "Assets/_Assets/Resources/Scriptable Objects/Mining/";
     private const string CONFIG_PATH = CONFIG_DIR + "MiningConfig.asset";
-    private const string MATERIAL_PATH = "Assets/_Assets/_ResourceGame/MapMaterials/_MiningGridMaterial.mat";
+    private const string MATERIAL_PATH = "Assets/_Assets/Art/5_Maps/Campaign/Materials/_MiningGridMaterial.mat";
     private const string HAMMER_PATH = "Assets/_Assets/Animations/Weapons/Weapon_Hammer_AnimatorController.overrideController";
     private const string CHARACTER_CONTROLLER = "Assets/_Assets/Animations/Heroes/CharacterAnimatorController.controller";
     private const string PUNCH_CONTROLLER = "Assets/_Assets/Animations/Heroes/PunchAnimatorController.overrideController";
-    private const string RESOURCE = "Assets/_Assets/_ResourceGame/";
+    private const string RESOURCE = "Assets/_Assets/Art/";
     private const string FX = "Assets/_Assets/Prefabs/Fx/Mining/";
 
     [MenuItem("Tools/DungeonRush/Build Mining/All")]
@@ -82,7 +82,7 @@ public static class MiningPrefabBuilder
     [MenuItem("Tools/DungeonRush/Build Mining/Fix Ore Particles")]
     public static string FixOreParticles()
     {
-        Sprite chunk = AssetDatabase.LoadAssetAtPath<Sprite>(RESOURCE + "Loot/box-loot.png");
+        Sprite chunk = AssetDatabase.LoadAssetAtPath<Sprite>(RESOURCE + "2_Icons/Loot/box-loot.png");
         Material mat = AssetDatabase.LoadAssetAtPath<Material>("Assets/_Assets/Prefabs/Fx/Materials/box_loot_AB.mat");
         if (chunk == null || mat == null)
         {
@@ -226,7 +226,7 @@ public static class MiningPrefabBuilder
         MiningController controller = root.AddComponent<MiningController>();
 
         Material mat = AssetDatabase.LoadAssetAtPath<Material>(MATERIAL_PATH);
-        Sprite square = AssetDatabase.LoadAssetAtPath<Sprite>(RESOURCE + "_NonDefile/Square.png");
+        Sprite square = AssetDatabase.LoadAssetAtPath<Sprite>(RESOURCE + "1_UIKit/Common/Square.png");
         Transform plane1 = NewPlane("Plane1", root.transform, square, mat, Vector3.zero);
         Transform plane2 = NewPlane("Plane2", root.transform, square, mat, new Vector3(0f, -10f, 0f));
 
@@ -524,7 +524,7 @@ public static class MiningPrefabBuilder
         ui.txtGoldenPickaxeDailyLimit = Text(popup, C + "GoldenPickaxeButton/Content/GoldPickaxeAdParent/GoldPickaxeLimitCountText");
 
         // Icon quảng cáo "<sprite=0>" trong chữ giới hạn ads/ngày.
-        TMP_SpriteAsset adIcon = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>(RESOURCE + "Currency/IsAd.asset");
+        TMP_SpriteAsset adIcon = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>(RESOURCE + "2_Icons/Currency/IsAd.asset");
         ui.txtPickaxeDailyLimit.spriteAsset = adIcon;
         ui.txtDrillDailyLimit.spriteAsset = adIcon;
         ui.txtGoldenPickaxeDailyLimit.spriteAsset = adIcon;
@@ -668,11 +668,11 @@ public static class MiningPrefabBuilder
 
     private static TMP_Text Text(Transform root, string path) => Find(root, path).GetComponent<TMP_Text>();
 
-    // Sprite theo tên đúng trong _ResourceGame (ưu tiên thư mục con `folderHint` nếu có).
+    // Sprite theo tên đúng trong Art/ (ưu tiên thư mục con `folderHint` nếu có).
     private static Sprite FindSprite(string name, string folderHint = null)
     {
         Sprite fallback = null;
-        foreach (string guid in AssetDatabase.FindAssets(name + " t:Sprite", new[] { "Assets/_Assets/_ResourceGame" }))
+        foreach (string guid in AssetDatabase.FindAssets(name + " t:Sprite", new[] { "Assets/_Assets/Art" }))
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
             if (Path.GetFileNameWithoutExtension(path) != name)

@@ -11,7 +11,7 @@ public static class PvPPrefabBuilder
 {
     private const string RIP = "Assets/_Assets/Prefabs/UI/PvP/";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/";
-    private const string CUR = "Assets/_Assets/_ResourceGame/Currency/";
+    private const string CUR = "Assets/_Assets/Art/2_Icons/Currency/";
 
     [MenuItem("Tools/DungeonRush/Build PvP UI Prefabs")]
     public static string BuildAll()
@@ -256,7 +256,7 @@ public static class PvPPrefabBuilder
     private static TMP_SpriteAsset LoadIcon(string assetName)
     {
         TMP_SpriteAsset asset = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>(CUR + assetName + ".asset");
-        if (asset == null) asset = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>("Assets/_Assets/_ResourceGame/MasteryIcons/" + assetName + ".asset");
+        if (asset == null) asset = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>("Assets/_Assets/Art/2_Icons/Mastery/" + assetName + ".asset");
         return asset;
     }
 

@@ -11,7 +11,7 @@ public static class LevelPopupPrefabBuilder
 {
     private const string RIP = "Assets/_Assets/Resources/Prefabs/UI/LevelPopup.prefab";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/UILevelPopup.prefab";
-    private const string CUR = "Assets/_Assets/_ResourceGame/Currency/";
+    private const string CUR = "Assets/_Assets/Art/2_Icons/Currency/";
     private const string SOUND = "Assets/_Assets/_Sound/UI/";
     private const string CONTENT = "ContentTransform/Background/";
     private const string TABLE = CONTENT + "RarityTable/VerticalLayout/";

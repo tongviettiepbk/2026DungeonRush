@@ -8,7 +8,7 @@ metadata:
   originSessionId: 4f72cd6e-7c63-4229-9f86-d9a65eb6dace
 ---
 
-Khi gear (Gloves/Weapons/Armor…) trong project bị **thiếu icon** (`icon: {fileID: 0}`): nguyên nhân gốc là texture icon chưa import (guid mồ côi vì AssetRipper export không có .meta — xem [[assetripper-export-no-meta]]). Decoded CSV (vd `DecodedData/tables/GlovesData.csv`) CÓ ref icon nhưng guid đó không tồn tại trong project. Pipeline gán icon hiện tại chỉ khớp theo TÊN FILE `_ResourceGame/GearIcons/<assetName>.png`; SO nào không có PNG cùng tên → mất icon.
+Khi gear (Gloves/Weapons/Armor…) trong project bị **thiếu icon** (`icon: {fileID: 0}`): nguyên nhân gốc là texture icon chưa import (guid mồ côi vì AssetRipper export không có .meta — xem [[assetripper-export-no-meta]]). Decoded CSV (vd `DecodedData/tables/GlovesData.csv`) CÓ ref icon nhưng guid đó không tồn tại trong project. Pipeline gán icon hiện tại chỉ khớp theo TÊN FILE `Art/3_Equipment/GearIcons/<assetName>.png`; SO nào không có PNG cùng tên → mất icon.
 
 **Cách lấy icon ĐÚNG (đã chạy 2026-09-01 cho 11 Gloves enemy):**
 1. Item ScriptableObject (CultistGloveData_Melee…) **KHÔNG ở `bin/Data`** mà ở `sharedassets0.assets` — file này bị chia `.split00..split80` (81 phần). UnityPy `UnityPy.load(<thư mục bin/Data đã bung>)` tự ghép split.

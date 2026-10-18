@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Nền ô item theo rarity (GameResources.jgr / RarityBackgroundSprites gốc), index = Rarity.
-// Asset: Resources/Scriptable Objects/UI/RarityBackgroundConfig (sprite _ResourceGame/BgRarity/tier_XX_background).
+// Asset: Resources/Scriptable Objects/UI/RarityBackgroundConfig (sprite Art/1_UIKit/Rarity/tier_XX_background).
 [CreateAssetMenu(fileName = "RarityBackgroundConfig", menuName = "DungOnRush/Rarity Background Config")]
 public class RarityBackgroundConfig : ScriptableObject
 {

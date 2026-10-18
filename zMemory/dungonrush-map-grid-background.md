@@ -12,11 +12,11 @@ Nền (background) của map trong DungOnRush KHÔNG phải file ảnh. Mỗi ma
 - **InnerPlane** = sàn xám sáng có lưới
 - **OuterPlane** = viền tối bao quanh
 
-Cả hai render bằng **`Custom/GridShader`** (procedural grid: `_BackgroundColor`, `_LineColor`, `_GridSize`, `_LineWidth`, `_Padding`, `_Roundness`, noise). Tường/cửa mới là bitmap thật (`wall_piece_black_and_white.png`, `wall_corner_piece.png`, `door.png` ở `_ResourceGame/MainMap/`).
+Cả hai render bằng **`Custom/GridShader`** (procedural grid: `_BackgroundColor`, `_LineColor`, `_GridSize`, `_LineWidth`, `_Padding`, `_Roundness`, noise). Tường/cửa mới là bitmap thật (`wall_piece_black_and_white.png`, `wall_corner_piece.png`, `door.png` ở `Art/5_Maps/Campaign/`).
 
-**Bẫy:** shader từ AssetRipper (`AssetRipper/.../Shader/Custom_GridShader.shader`) chỉ là `//DummyShaderTextExporter` — logic vẽ lưới đã mất, chỉ còn Properties. Đã **viết lại shader cho URP** tại `_Assets/_ResourceGame/Shaders/Custom_GridShader.shader` (guid `fdef1b5b391dcce49beb9be2d597560d` để material link được).
+**Bẫy:** shader từ AssetRipper (`AssetRipper/.../Shader/Custom_GridShader.shader`) chỉ là `//DummyShaderTextExporter` — logic vẽ lưới đã mất, chỉ còn Properties. Đã **viết lại shader cho URP** tại `_Assets/Art/5_Maps/Campaign/Shaders/Custom_GridShader.shader` (guid `fdef1b5b391dcce49beb9be2d597560d` để material link được).
 
-Đã tạo 7 material tại `_Assets/_ResourceGame/MapMaterials/` với ĐÚNG guid mà prefab trỏ (trước đó bị missing). Map guid→material (Inner→guid):
+Đã tạo 7 material tại `_Assets/Art/5_Maps/Campaign/Materials/` với ĐÚNG guid mà prefab trỏ (trước đó bị missing). Map guid→material (Inner→guid):
 - Main: Inner `af827e28d9d8ae94a8605c7df0478a35`, Outer `293757cc2196fbf438685e6922f2c99a`
 - BossRush: single `f032a4b906e78ec4b9e2f55c54423162`
 - Dragon: Inner `6ab8ef1d67a476541840fa1d527f3a61`, Outer `47fc3fc43362ed34999a6cd78f4e132d`

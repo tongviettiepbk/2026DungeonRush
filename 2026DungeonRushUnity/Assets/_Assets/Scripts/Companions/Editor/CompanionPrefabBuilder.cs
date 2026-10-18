@@ -10,7 +10,7 @@ public static class CompanionPrefabBuilder
 {
     private const string RIP = "Assets/_Assets/Prefabs/UI/Pet/CompanionAdSummonPopup.prefab";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/UICompanionAdSummonPopup.prefab";
-    private const string AD_ICON = "Assets/_Assets/_ResourceGame/Currency/IsAd.asset";
+    private const string AD_ICON = "Assets/_Assets/Art/2_Icons/Currency/IsAd.asset";
     private const string CONTENT = "ContentTransform/NewItem/";
 
     [MenuItem("Tools/DungeonRush/Build Companion UI/Ad Summon Popup")]

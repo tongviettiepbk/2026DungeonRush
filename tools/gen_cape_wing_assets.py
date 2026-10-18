@@ -7,10 +7,10 @@ SRC = os.path.join(ROOT, "AssetRipper", "ExportedProject", "Assets", "MonoBehavi
 PROJ = os.path.join(ROOT, "2026DungeonRushUnity", "Assets", "_Assets")
 CAPE_OUT = os.path.join(PROJ, "Resources", "Scriptable Objects", "Gears", "Capes")
 WING_OUT = os.path.join(PROJ, "Resources", "Scriptable Objects", "Gears", "Wings")
-ICON_DIR = os.path.join(PROJ, "_ResourceGame", "GearIcons")
+ICON_DIR = os.path.join(PROJ, "Art", "3_Equipment", "GearIcons")
 IMG_DIRS = [os.path.join(ROOT, "DecodedData", d) for d in
             ("_img_tmp", "_img_tmp_bc", "_img_tmp_d", "_img_tmp_e", "_img_tmp_f", "_img_tmp_gh", "_img_tmp_i")]
-TEMPLATE_META = os.path.join(PROJ, "_ResourceGame", "Avatar", "angel.png.meta")
+TEMPLATE_META = os.path.join(PROJ, "Art", "2_Icons", "Avatar", "angel.png.meta")
 
 CAPE_GUID = "1420b4d46853ed149a2f7aa8b7069cde"
 CAPECFG_GUID = "10ef4fa273635064081a8fe8632b217a"

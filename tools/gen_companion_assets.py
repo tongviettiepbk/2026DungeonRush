@@ -7,9 +7,9 @@ ROOT = r"E:\00Work\00Project\2026DungOnRush"
 JSON = os.path.join(ROOT, "DecodedData", "tables", "CompanionData.json")
 PROJ = os.path.join(ROOT, "2026DungeonRushUnity", "Assets", "_Assets")
 OUT = os.path.join(PROJ, "Resources", "Scriptable Objects", "Companions")
-ICON_DIR = os.path.join(PROJ, "_ResourceGame", "CompanionIcons")
+ICON_DIR = os.path.join(PROJ, "Art", "2_Icons", "Companion")
 IMG_DIR = os.path.join(ROOT, "DecodedData", "_img_tmp_d")
-TEMPLATE_META = os.path.join(PROJ, "_ResourceGame", "Avatar", "angel.png.meta")
+TEMPLATE_META = os.path.join(PROJ, "Art", "2_Icons", "Avatar", "angel.png.meta")
 
 SCRIPT_GUID = "3f8b1d6a9c2e4f5b8a0d7c3e6f1b4a29"  # = CompanionData.cs.meta
 

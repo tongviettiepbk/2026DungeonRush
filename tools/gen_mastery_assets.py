@@ -13,14 +13,14 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 JSON = os.path.join(ROOT, "DecodedData", "tables", "MasteryUpgradeData.json")
 PROJ = os.path.join(ROOT, "2026DungeonRushUnity", "Assets", "_Assets")
 OUT = os.path.join(PROJ, "Resources", "Scriptable Objects", "Mastery")
-ICON_DIR = os.path.join(PROJ, "_ResourceGame", "MasteryIcons")
+ICON_DIR = os.path.join(PROJ, "Art", "2_Icons", "Mastery")
 IMG_DIR = os.path.join(ROOT, "DecodedData", "_img_tmp_gh")
 RIP_TEX = os.path.join(ROOT, "AssetRipper", "ExportedProject", "Assets", "Texture2D")
 RIP_SHEETS = os.path.join(ROOT, "AssetRipper", "ExportedProject", "Assets", "Resources", "spritesheets")
 LOCALIZATION = os.path.join(ROOT, "DecodedData", "localization", "strings_en.json")
 # TMP_SpriteAsset mau cua TMP Essentials (lay header + material nhung).
 TMP_SPRITE_TEMPLATE = os.path.join(PROJ, "..", "TextMesh Pro", "Resources", "Sprite Assets", "EmojiOne.asset")
-TEMPLATE_META = os.path.join(PROJ, "_ResourceGame", "Avatar", "angel.png.meta")
+TEMPLATE_META = os.path.join(PROJ, "Art", "2_Icons", "Avatar", "angel.png.meta")
 
 # = guid trong Mastery/MasteryUpgradeData.cs.meta
 SCRIPT_GUID = "bb8ede901b5248dab77d845e4d8b6d54"

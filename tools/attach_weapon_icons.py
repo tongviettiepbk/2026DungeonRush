@@ -7,9 +7,9 @@ ROOT = r"E:\00Work\00Project\2026DungOnRush"
 SRC_ASSET = os.path.join(ROOT, "AssetRipper", "ExportedProject", "Assets", "MonoBehaviour")
 IMG = os.path.join(ROOT, "DecodedData", "_img_tmp_bc")
 PROJ = os.path.join(ROOT, "2026DungeonRushUnity", "Assets", "_Assets")
-ICON_DIR = os.path.join(PROJ, "_ResourceGame", "WeaponIcons")
+ICON_DIR = os.path.join(PROJ, "Art", "3_Equipment", "WeaponIcons")
 WEAPON_DIR = os.path.join(PROJ, "Resources", "Scriptable Objects", "Weapons")
-TEMPLATE_META = os.path.join(PROJ, "_ResourceGame", "Avatar", "angel.png.meta")
+TEMPLATE_META = os.path.join(PROJ, "Art", "2_Icons", "Avatar", "angel.png.meta")
 
 boss = ["CultistWeaponData_Melee","CultistWeaponData_Ranged","DragonWeaponData","GreenDragonWeaponData",
         "Lych2WeaponData","Lych3WeaponData","LychWeaponData","Ogre1WeaponData","Ogre2WeaponData",

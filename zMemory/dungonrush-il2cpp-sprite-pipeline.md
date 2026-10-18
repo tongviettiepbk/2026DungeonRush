@@ -21,7 +21,7 @@ Máy đã cài **Python 3.12** user-scope: `C:\Users\StarGear\AppData\Local\Prog
 
 **Rewire prefab ripped → project (dùng được):** RUNBOOK đầy đủ ở `tools/PREFAB_REWIRE_GUIDE.md`. 3 tool ở `tools/` đã GENERIC (nhận tên prefab làm argv, mặc định LevelPopup):
 - `dump_levelpopup_sprites.py <Ten>` → dump Image→sprite + ghi `tools/_rewire/<Ten>.images.txt`
-- `join_levelpopup_sprites.js <Ten>` → tự tra name→guid từ `_ResourceGame`, ghi `<Ten>.spritemap.json` (join theo thứ tự DFS, phải 0 xung đột)
+- `join_levelpopup_sprites.js <Ten>` → tự tra name→guid từ `Art`, ghi `<Ten>.spritemap.json` (join theo thứ tự DFS, phải 0 xung đột)
 - `rewire_levelpopup.js <Ten>` → thay guid UGUI/TMP+font, map sprite, **auto-strip mọi MonoBehaviour script game** (giữ engine đã remap), guid meta cố định, in cảnh báo nếu UI class chưa map.
 
 Quy tắc strip generic: giữ MB nếu guid ∈ {6 target engine guid} ∪ {UGUI d3e719, TMP 67dfb1}; còn lại = script game → strip (layout-only). Kết quả LevelPopup: [[dungonrush-levelpopup-prefab]].

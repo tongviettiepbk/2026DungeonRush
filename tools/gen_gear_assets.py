@@ -7,10 +7,10 @@ ROOT = r"E:\00Work\00Project\2026DungOnRush"
 SRC = os.path.join(ROOT, "AssetRipper", "ExportedProject", "Assets", "MonoBehaviour")
 PROJ = os.path.join(ROOT, "2026DungeonRushUnity", "Assets", "_Assets")
 RES = os.path.join(PROJ, "Resources", "Scriptable Objects", "Gears")
-ICON_DIR = os.path.join(PROJ, "_ResourceGame", "GearIcons")
+ICON_DIR = os.path.join(PROJ, "Art", "3_Equipment", "GearIcons")
 IMG_DIRS = [os.path.join(ROOT, "DecodedData", d) for d in
             ("_img_tmp", "_img_tmp_bc", "_img_tmp_d", "_img_tmp_e", "_img_tmp_f", "_img_tmp_gh", "_img_tmp_i")]
-TEMPLATE_META = os.path.join(PROJ, "_ResourceGame", "Avatar", "angel.png.meta")
+TEMPLATE_META = os.path.join(PROJ, "Art", "2_Icons", "Avatar", "angel.png.meta")
 
 GEAR_SCRIPT_GUID = "db263ffe4d7dc7a40852fe2457c254f0"  # GearItemData.cs (Unity tu sinh)
 

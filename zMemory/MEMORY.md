@@ -52,13 +52,13 @@
 - [Clan + Clan War](dungonrush-clan-clanwar.md) — dựng + commit 2026-10-10; GD ở GDD/CLAN_DESIGN.md (đọc trước khi code tiếp); CHƯA test Play
 - [Store / Shop](dungonrush-shop-system.md) — dựng 2026-10-10 theo gốc: rương+pity, Daily Deals, boost exp, gói gem; PurchaseController BASE chưa có SDK; còn OfferPopup/RewardedChest
 - [Khuôn viết GD](gd-doc-layout.md) — GD nằm ở GDD/ (gốc repo), theo khuôn GDD/BOSS_RUSH_DESIGN.md: mỗi luật 1 gạch + 1 nhãn cuối dòng, bảng mỗi ô 1 số; ảnh dùng cú pháp markdown
-- [Quy tắc ảnh trùng _ResourceGame](dungonrush-resource-dedupe-rule.md) — giữ tên gốc game, bỏ bản tên data (*Icons); viền khác thì giữ bản có viền; dò trùng trước khi sinh icon mới
+- [Quy tắc ảnh trùng Art](dungonrush-resource-dedupe-rule.md) — giữ tên gốc game, bỏ bản tên data (*Icons); viền khác thì giữ bản có viền; dò trùng trước khi sinh icon mới
 - [Thư mục prefab UINew](dungonrush-uinew-prefab-folder.md) — Prefabs/UINew/<TínhNăng>/ = prefab dùng tham chiếu trực tiếp (không Resources); Prefabs/UI = nguồn rip cho builder
 - [Data test online + bộ test](dungonrush-online-test-data.md) — emulator: `npm run seed` (1000 người + 10 clan + war), `npm run test:seed` 45 ca; giả đồng hồ bằng handler.run + mock.timers để test logic theo ngày
 - [Profile popup (hồ sơ + Settings)](dungonrush-profile-popup.md) — UIProfilePopup mở từ ô avatar lobby, dựng 2026-10-12; slider âm lượng/rung/User ID/đổi tên/Account chạy, 5 nút còn "coming soon" (redeem, ngôn ngữ...)
 - [Thưởng offline (Combat Summary)](dungonrush-offline-earning.md) — dựng 2026-10-13 theo gốc: trần 4h × Mastery, exp/phút = exp 1 màn, 1 rương/phút, X = nhận ×1, ads ×2; nút lobby + QuickEarnings chưa làm
 - [Tài khoản + cloud save](dungonrush-account-system.md) — khách mặc định, Sign Up gắn email, Sign In/Forgot/Sign Out, Choose Save; dựng + test Play 2026-10-13, chưa commit; cách test không làm mất save Editor
-- [Reskin đồ hero (art)](dungonrush-hero-equipment-reskin.md) — ảnh gốc 8 slot gom về _ResourceGame/HeroEquipment/; brief art GDD/ART_HERO_EQUIPMENT.md; mapping Gloves→áo, Wing→kính, Cape→tẩu
+- [Reskin đồ hero (art)](dungonrush-hero-equipment-reskin.md) — ảnh gốc 8 slot gom về Art/3_Equipment/; brief art GDD/ART_HERO_EQUIPMENT.md; mapping Gloves→áo, Wing→kính, Cape→tẩu
 - [Anim hero = unit_all](dungonrush-hero-anim-unit-all.md) — 00Hero dùng unit_all.controller; UnitAnimatorController: show→idle, run, đánh gần strike_atk / xa gun_atk; lật hướng theo đối thủ khi đánh; chưa test Play
 - [UI lobby = UIMainGame2](dungonrush-main-ui-uimaingame2.md) — 2026-10-15 đã xoá UiMainGame tự dựng; UIMainGame2 gốc gắn UIMainLobby + 7 page ở Pages; XP/máu boss dùng Slider; LevelText = Tier campaign + icon dungeon theo gốc (2026-10-16)
 - [Loot + Auto Loot theo gốc](dungonrush-forge-auto-loot.md) — người mới +240 búa (gốc); 2026-10-15: ForgeUIController + popup gốc, bán đồ = EXP, UserForgeData; builder Tools/DungeonRush/Build Forge UI; chữ popup tiếng Anh (font thiếu dấu)
@@ -71,6 +71,6 @@
 - [Localization theo gốc](dungonrush-localization.md) — 10 ngôn ngữ gốc, key "Popup.X.Y", Loc.L/LocalizeText.key, font fallback Noto, popup chọn ngôn ngữ; XONG 2026-10-17 CHƯA test Play
 - [Map campaign theo gốc](dungonrush-campaign-map-original.md) — rw.itr đối xứng seed level×7912, hero/pet/quái theo GridManager gốc; PointStart sửa; chuyển màn qua cửa trên (không vào cổng dưới — gốc tắt); CHƯA test Play
 - [Di chuyển theo gốc](dungonrush-movement-original.md) — A* 8 hướng, lái lực Rigidbody động, Idle/Move/Patrol, quái phát hiện 4, pet chỉ đi theo; CHƯA test Play
-- [Map dungeon hình ảnh gốc](dungonrush-dungeon-map-visual.md) — Zombie/Dragon/Cultist dựng theo prefab rip, không cửa, sprite ở _ResourceGame/Dungeon*; CHƯA test Play (2026-10-17)
+- [Map dungeon hình ảnh gốc](dungonrush-dungeon-map-visual.md) — Zombie/Dragon/Cultist dựng theo prefab rip, không cửa, sprite ở Art/5_Maps/Dungeon*; CHƯA test Play (2026-10-17)
 - [Gốc KHÔNG rơi Bone từ quái](dungonrush-no-combat-bone-drop.md) — combat_drop Bone/rương là code chết (BoneDropPrefab null); đừng port; doc LOOT_DROP_MODEL.md
-- [Kế hoạch reskin toàn game](dungonrush-reskin-plan.md) — GDD/RESKIN_PLAN.md: 706/1477 ảnh đang dùng, thay ruột giữ .meta, đề xuất Art/+ArtIncoming/+ArtArchive/; CHỜ duyệt (2026-10-18)
+- [Reskin toàn game](dungonrush-reskin-plan.md) — CHỈ thay hình; đợt 0 XONG nhánh reskin: Art/<1_UIKit..7_FX>, ArtIncoming/ gương + ArtArchive/, menu Tools/DungeonRush/Reskin/Apply Reskin (2026-10-18)

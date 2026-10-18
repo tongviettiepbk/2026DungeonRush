@@ -18,7 +18,7 @@ Toàn bộ ảnh gốc đã gom về một thư mục, chia theo loại đồ (m
 
 ## 2. Thư mục ảnh gốc
 
-Đường dẫn trong project Unity: `2026DungeonRushUnity/Assets/_Assets/_ResourceGame/HeroEquipment/`
+Đường dẫn trong project Unity: `2026DungeonRushUnity/Assets/_Assets/Art/3_Equipment/`
 
 | Thư mục | Nội dung | Số ảnh |
 |---|---|---|
@@ -33,7 +33,7 @@ Toàn bộ ảnh gốc đã gom về một thư mục, chia theo loại đồ (m
 | `07_Cape` | Áo choàng | 12 |
 | `08_Wing` | Cánh | 10 |
 
-Art mới đã vẽ nằm ở `2026DungeonRushUnity/Assets/_Assets/_ArtReskin/Items/` (mục 5).
+Art mới đã vẽ nằm ở `ArtIncoming/_Concept/Items/` (mục 5); 6 món L01-A đang gắn hero ở `Art/3_Equipment/OnBody/`.
 
 ## 3. Tổng quan 8 loại đồ
 
@@ -117,7 +117,7 @@ Kích thước ảnh art mới đã vẽ (ảnh gắn người):
 
 ### 4.4. Màu nền theo tier
 
-Ô item trong game tô nền theo tier (ảnh `_ResourceGame/BgRarity/tier_XX_background.png`).
+Ô item trong game tô nền theo tier (ảnh `Art/1_UIKit/Rarity/tier_XX_background.png`).
 
 | Tier | Độ hiếm | Màu nền |
 |---|---|---|
@@ -216,7 +216,7 @@ Mỗi hàng là một tier, mỗi cột là một mẫu. Chữ dưới ô là m�
 
 1. Mỗi món giao 1 icon và (với 6 loại hiện trên người) 1 ảnh gắn người.
 2. Đặt tên theo cột "Tên file mới" trong phụ lục; ảnh gắn người thêm đuôi `_body`, ví dụ `hats-L03-B_body.png`.
-3. Chia thư mục theo loại đồ giống `_ArtReskin/Items/` hiện tại.
+3. Chia thư mục theo loại đồ giống `ArtIncoming/_Concept/Items/` hiện tại.
 4. Dev gán ảnh vào data của từng món.
 
 ## 8. Chưa chốt

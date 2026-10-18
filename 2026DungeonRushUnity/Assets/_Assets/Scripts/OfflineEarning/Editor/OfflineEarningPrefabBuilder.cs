@@ -11,8 +11,8 @@ public static class OfflineEarningPrefabBuilder
 {
     private const string RIP = "Assets/_Assets/Prefabs/UI/Settings/OfflineEarningPopup.prefab";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/UIOfflineEarningPopup.prefab";
-    private const string CUR = "Assets/_Assets/_ResourceGame/Currency/";
-    private const string MASTERY_ICONS = "Assets/_Assets/_ResourceGame/MasteryIcons/";
+    private const string CUR = "Assets/_Assets/Art/2_Icons/Currency/";
+    private const string MASTERY_ICONS = "Assets/_Assets/Art/2_Icons/Mastery/";
     private const string CONTENT = "ContentTransform/Background/";
 
     [MenuItem("Tools/DungeonRush/Build Offline Earning UI/Offline Earning Popup")]

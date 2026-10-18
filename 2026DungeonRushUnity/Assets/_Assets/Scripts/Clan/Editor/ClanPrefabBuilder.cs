@@ -20,8 +20,8 @@ public static class ClanPrefabBuilder
     private const string BUILT = "Assets/_Assets/Prefabs/UINew/Clan";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/";
     private const string CATALOG = "Assets/_Assets/Resources/Scriptable Objects/UI/ClanBannerCatalog.asset";
-    private const string RES = "Assets/_Assets/_ResourceGame/";
-    private const string CUR = "Assets/_Assets/_ResourceGame/Currency/";
+    private const string RES = "Assets/_Assets/Art/6_Features/";
+    private const string CUR = "Assets/_Assets/Art/2_Icons/Currency/";
     private static readonly string[] RIP_DIRS =
     {
         "Assets/_Assets/Prefabs/UI/Clan/", "Assets/_Assets/Prefabs/UI/ClanWar/", "Assets/_Assets/Prefabs/UI/Forge/",
@@ -379,7 +379,7 @@ public static class ClanPrefabBuilder
 
     private static Sprite FindSprite(string name)
     {
-        foreach (string guid in AssetDatabase.FindAssets(name + " t:Sprite", new[] { "Assets/_Assets/_ResourceGame" }))
+        foreach (string guid in AssetDatabase.FindAssets(name + " t:Sprite", new[] { "Assets/_Assets/Art" }))
         {
             string p = AssetDatabase.GUIDToAssetPath(guid);
             if (Path.GetFileNameWithoutExtension(p) == name) return AssetDatabase.LoadAssetAtPath<Sprite>(p);

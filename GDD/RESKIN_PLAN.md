@@ -1,6 +1,6 @@
 # Reskin DungeonRush — Kế hoạch & chia thư mục
 
-Cập nhật: 2026-10-18. Concept mới: hero vịt, UI phẳng kiểu cartoon (mockup ở `_ArtReskin/Lobby/lobby demo.png`, `_ArtReskin/Companion/companion demo.png`).
+Cập nhật: 2026-10-18 (đợt 0 xong). Concept mới: hero vịt, UI phẳng kiểu cartoon (mockup ở `ArtIncoming/_Concept/Lobby/lobby demo.png`, `ArtIncoming/_Concept/Companion/companion demo.png`).
 Brief đồ hero đã có riêng ở `GDD/ART_HERO_EQUIPMENT.md`.
 
 | Ký hiệu | Nghĩa |
@@ -12,7 +12,7 @@ Brief đồ hero đã có riêng ở `GDD/ART_HERO_EQUIPMENT.md`.
 
 ---
 
-## 1. Hiện trạng ảnh trong project
+## 1. Hiện trạng ảnh trong project (trước đợt 0)
 
 ### 1.1. Con số
 
@@ -51,104 +51,128 @@ Brief đồ hero đã có riêng ở `GDD/ART_HERO_EQUIPMENT.md`.
 
 ## 2. Nguyên tắc kỹ thuật
 
-### 2.1. "Thay ruột, giữ vỏ" **[ĐỀ XUẤT]**
+### 2.1. "Thay ruột, giữ vỏ" **[CHỐT]**
 
-- Ảnh mới được ghi ĐÈ lên file PNG cũ, giữ nguyên tên file và file `.meta`. **[ĐỀ XUẤT]**
-- GUID không đổi → mọi prefab, SO, scene tự hiện ảnh mới, không phải gán lại tay. **[ĐỀ XUẤT]**
-- Chỉ chỉnh lại trong `.meta` khi cần: viền 9-slice, pivot, Pixels Per Unit. **[ĐỀ XUẤT]**
+- Reskin chỉ thay hình, giữ nguyên bố cục UI hiện tại. **[CHỐT]**
+- Ảnh mới được ghi ĐÈ lên file PNG cũ, giữ nguyên tên file và file `.meta`. **[CHỐT]**
+- GUID không đổi → mọi prefab, SO, scene tự hiện ảnh mới, không phải gán lại tay. **[CHỐT]**
+- Ảnh mới to/nhỏ hơn ảnh cũ: Pixels Per Unit và viền 9-slice tự nhân theo tỉ lệ → kích thước hiển thị như cũ. **[CHỐT]**
 - Chỉ đặt tên mới + gán lại khi concept đổi cấu trúc (vd hero ghép từng bộ phận, đồ hiện trên người). **[ĐỀ XUẤT]**
 
-### 2.2. Thư mục "gương" cho art giao hàng **[ĐỀ XUẤT]**
+### 2.2. Thư mục "gương" cho art giao hàng **[CHỐT]**
 
-- Art giao vào thư mục `ArtIncoming/` có cây thư mục và tên file Y HỆT `Art/`. **[ĐỀ XUẤT]**
-- Một lệnh Editor `Tools/DungeonRush/Apply Reskin` chép từng file sang `Art/` cùng đường dẫn, giữ `.meta`. **[ĐỀ XUẤT]**
-- Lệnh in báo cáo: file đã thay, file lệch tỉ lệ so với ảnh cũ, file có 9-slice cần chỉnh viền, file không có bản cũ để thay. **[ĐỀ XUẤT]**
-- Ảnh gốc vẫn còn trong git (tag `pre-reskin`) để so sánh hoặc quay lại. **[ĐỀ XUẤT]**
+- Art giao vào `ArtIncoming/` (gốc repo) có cây thư mục và tên file Y HỆT `Art/`; thư mục gương đã dựng sẵn. **[CHỐT]**
+- Unity → `Tools/DungeonRush/Reskin/1. Kiểm tra ArtIncoming (không ghi)` → xem trước. **[CHỐT]**
+- Unity → `Tools/DungeonRush/Reskin/2. Apply Reskin` → ghi đè, giữ `.meta`. **[CHỐT]**
+- Báo cáo ở `ArtIncoming/_Reference/reskin_report.txt`: file lệch tỉ lệ, 9-slice cần xem lại, file sai tên/không có bản cũ. **[CHỐT]**
+- File đã thay cộng dồn vào `ArtIncoming/_Reference/reskin_log.csv`. **[CHỐT]**
+- Thư mục/file bắt đầu bằng `_` hoặc `.` bị bỏ qua (`_Concept`, `_Reference`). **[CHỐT]**
+- Chạy lại với file y hệt thì bỏ qua, không nhân PPU chồng. **[CHỐT]**
+- Ảnh gốc vẫn còn trong git (tag `pre-reskin`) để so sánh hoặc quay lại. **[CHỐT]**
 
-### 2.3. Bảng theo dõi **[ĐỀ XUẤT]**
+### 2.3. Bảng theo dõi **[CHỐT]**
 
-- Xuất 1 file CSV: mỗi dòng 1 ảnh đang dùng — đường dẫn, kích thước, có 9-slice không, số prefab dùng, trạng thái (cũ / đã thay). **[ĐỀ XUẤT]**
-- Xuất ảnh xem trước (contact sheet) cho từng thư mục, giống `GDD/img/hero_equipment/`. **[ĐỀ XUẤT]**
-- Art nhìn contact sheet để biết vẽ gì; dev nhìn CSV để biết còn thiếu gì. **[ĐỀ XUẤT]**
+- `Tools/DungeonRush/Reskin/3. Xuất bảng ảnh (CSV) + thư mục gương` → `ArtIncoming/_Reference/art_manifest.csv`. **[CHỐT]**
+- Mỗi dòng 1 ảnh trong `Art/`: kích thước, PPU, 9-slice + viền, đang dùng không, số chỗ dùng, trạng thái cũ / đã thay. **[CHỐT]**
+- Contact sheet từng thư mục: `tools/.venv/bin/python tools/art_contact_sheets.py` → `ArtIncoming/_Reference/sheets/`. **[CHỐT]**
+- Hướng dẫn ngắn cho đội art: `ArtIncoming/README.md`. **[CHỐT]**
 
 ---
 
-## 3. Cấu trúc thư mục mới **[ĐỀ XUẤT]**
+## 3. Cấu trúc thư mục **[CHỐT]**
 
 ### 3.1. Cây thư mục
 
 ```
 Assets/_Assets/
-├── Art/                      ← đổi tên từ _ResourceGame, CHỈ chứa ảnh đang dùng
-│   ├── 1_UIKit/
-│   │   ├── Common/           khung, nút, thanh, tab, ribbon, icon hệ thống
-│   │   ├── Rarity/           nền ô theo tier
-│   │   └── HUD/              thanh máu, chữ sát thương
-│   ├── 2_Icons/
-│   │   ├── Currency/  Chest/  Avatar/  Flags/  Mastery/
-│   │   ├── Enchantment/  Companion/  Loot/  Misc/
-│   ├── 3_Equipment/          giữ nguyên 00_EmptySlot … 08_Wing + InGame/ (vũ khí cầm tay)
-│   ├── 4_Characters/
-│   │   ├── Hero/  Enemies/  Bosses/  Pets/
-│   ├── 5_Maps/
-│   │   ├── Campaign/  DungeonZombie/  DungeonDragon/  DungeonCultist/  Mining/  BossRush/
-│   ├── 6_Features/           ảnh chỉ 1 màn dùng: Clan/  PvP/  Forge/ ...
-│   └── 7_FX/
-└── ...
+└── Art/                          ← thay _ResourceGame + Graphics, CHỈ chứa ảnh game dùng
+    ├── 1_UIKit/
+    │   ├── Common/               khung, nút, thanh, tab, ribbon, icon hệ thống
+    │   ├── PetUI/                khung riêng trang pet (trùng tên ảnh Common, viền khác)
+    │   ├── Rarity/               nền ô theo tier
+    │   └── HUD/                  thanh máu
+    ├── 2_Icons/
+    │   ├── Avatar/  Chest/  Currency/  Enchantment/  Loot/  Mastery/
+    │   ├── Companion/            (+ _Icons1-5)
+    │   └── Flags/                (+ Language/ = 10 cờ chọn ngôn ngữ)
+    ├── 3_Equipment/
+    │   ├── 00_EmptySlot … 08_Wing    icon 241 món + ô trống
+    │   ├── OnBody/               ảnh gắn lên hero (6 món L01-A)
+    │   ├── InGame/               vũ khí cầm tay, mũi tên
+    │   ├── Projectiles/          đạn theo tier
+    │   └── GearIcons/  WeaponIcons/  Items/  Wing/
+    ├── 4_Characters/
+    │   ├── Hero/                 vịt (Hero.png) + soldier cũ
+    │   ├── Enemies/
+    │   └── Pets/
+    ├── 5_Maps/
+    │   ├── Campaign/             (+ Materials/ lưới, Shaders/ GridShader)
+    │   └── DungeonZombie/  DungeonDragon/  DungeonCultist/  Mining/
+    ├── 6_Features/
+    │   └── BossRush/  Clan/  Forge/  Misc/  PvP/
+    └── 7_FX/
 
-ArtIncoming/                  ← ngoài Assets (gốc repo): art giao hàng, cây Y HỆT Art/
-    └── _Concept/             mockup, demo, style guide
-ArtArchive/                   ← ngoài Assets: ~670 ảnh không dùng (chủ yếu _CommingUse)
+ArtIncoming/                      ← ngoài Assets: art giao hàng, cây Y HỆT Art/
+    ├── _Concept/                 mockup + art mới chưa gắn (cũ là _ArtReskin)
+    └── _Reference/               contact sheet, CSV, báo cáo
+ArtArchive/                       ← ngoài Assets: ảnh không ai dùng (_CommingUse, HeroEquipment.zip)
 ```
 
-- Tầng 1 chia theo MẢNG VIỆC của art (UI kit, icon, đồ, nhân vật, map, FX), tầng 2 mới theo tính năng. **[ĐỀ XUẤT]**
-- Lý do: mỗi thư mục tầng 1 = 1 đợt giao hàng, 1 contact sheet, 1 người vẽ; không phải lục 40 thư mục tính năng. **[ĐỀ XUẤT]**
-- Số thứ tự đầu tên = thứ tự làm (mục 4). **[ĐỀ XUẤT]**
-- `ArtIncoming/` và `ArtArchive/` để ngoài `Assets` → Unity không import ảnh dở dang, project nhẹ hơn. **[ĐỀ XUẤT]**
+- Tầng 1 chia theo MẢNG VIỆC của art, tầng 2 theo tính năng. **[CHỐT]**
+- Mỗi thư mục tầng 1 = 1 đợt giao hàng (mục 4), số thứ tự đầu tên = thứ tự làm. **[CHỐT]**
+- `ArtIncoming/` và `ArtArchive/` ngoài `Assets` → Unity không import ảnh dở dang / ảnh thừa. **[CHỐT]**
 
 ### 3.2. Đối chiếu cũ → mới
 
 | Thư mục cũ | Thư mục mới |
 |---|---|
 | `_ResourceGame/UI` | `Art/1_UIKit/Common` |
-| `_ResourceGame/PetUI` | `Art/1_UIKit/Common` |
-| `_ResourceGame/_NonDefile` | `Art/1_UIKit/Common` |
+| `_ResourceGame/_NonDefile/Square, White1px` | `Art/1_UIKit/Common` |
+| `_ResourceGame/PetUI` | `Art/1_UIKit/PetUI` |
 | `_ResourceGame/BgRarity` | `Art/1_UIKit/Rarity` |
 | `Graphics/Ingame` | `Art/1_UIKit/HUD` |
-| `_ResourceGame/Currency` | `Art/2_Icons/Currency` |
+| `_ResourceGame/Currency` + `_CommingUse/Currency/diamond_icon` | `Art/2_Icons/Currency` |
 | `_ResourceGame/Chest` | `Art/2_Icons/Chest` |
 | `_ResourceGame/Avatar` | `Art/2_Icons/Avatar` |
-| `_ResourceGame/Flags` + 10 cờ trong `_CommingUse/Flags` | `Art/2_Icons/Flags` |
+| `_ResourceGame/Flags` | `Art/2_Icons/Flags` |
+| 10 cờ trong `_CommingUse/Flags` | `Art/2_Icons/Flags/Language` |
 | `_ResourceGame/MasteryIcons` + `Mastery` | `Art/2_Icons/Mastery` |
 | `_ResourceGame/Enchantment` | `Art/2_Icons/Enchantment` |
 | `_ResourceGame/CompanionIcons` | `Art/2_Icons/Companion` |
-| `_ResourceGame/HeroEquipment` | `Art/3_Equipment` |
-| `GearIcons`, `WeaponIcons`, `Items`, `Weapon`, `Wing` | `Art/3_Equipment` (dò trùng trước) |
-| `_ArtReskin/Items` + `DemoHero/Hero.png` | `Art/3_Equipment` + `Art/4_Characters/Hero` |
-| `_ResourceGame/Character` | `Art/4_Characters/Hero` |
+| `_ResourceGame/_NonDefile/_Icons1-5` | `Art/2_Icons/Companion/_Icons1-5` |
+| `_ResourceGame/Loot` | `Art/2_Icons/Loot` |
+| `_ResourceGame/HeroEquipment/*` | `Art/3_Equipment/*` |
+| `_ArtReskin/Items/*/…-L01-A` (6 ảnh hero đang mặc) | `Art/3_Equipment/OnBody` |
+| `_ResourceGame/Weapon` | `Art/3_Equipment/InGame` |
+| `_ResourceGame/_NonDefile/_Common_Uncommon…` (mũi tên) | `Art/3_Equipment/Projectiles` |
+| `GearIcons`, `WeaponIcons`, `Items`, `Wing` | `Art/3_Equipment/<cùng tên>` |
+| `_ResourceGame/Character` + `_ArtReskin/DemoHero/Hero.png` | `Art/4_Characters/Hero` |
 | `_ResourceGame/Enemies` | `Art/4_Characters/Enemies` |
 | `_ResourceGame/Companion` | `Art/4_Characters/Pets` |
 | `_ResourceGame/MainMap` | `Art/5_Maps/Campaign` |
+| `_ResourceGame/MapMaterials`, `Shaders` | `Art/5_Maps/Campaign/Materials`, `Shaders` |
 | `_ResourceGame/Dungeon*` | `Art/5_Maps/Dungeon*` |
 | `_ResourceGame/Mining` + 8 ảnh `_CommingUse/Mining` | `Art/5_Maps/Mining` |
-| `_ResourceGame/Clan` | `Art/6_Features/Clan` |
+| `_ResourceGame/Clan`, `BossRush`, `PvP`, `Forge`, `Misc` | `Art/6_Features/<cùng tên>` |
 | `_ResourceGame/Fx` | `Art/7_FX` |
-| `_ResourceGame/_CommingUse` (phần không dùng) | `ArtArchive/` |
-| `_ArtReskin/Lobby`, `Companion`, ảnh demo | `ArtIncoming/_Concept` |
+| `_ResourceGame/_CommingUse` (656 ảnh không dùng) + `HeroEquipment.zip` | `ArtArchive/` |
+| 3 ảnh `Items/Gloves, Helmet, Necklace` không dùng | `ArtArchive/Items` |
+| `_ArtReskin/*` còn lại (mockup, 54 món art mới) | `ArtIncoming/_Concept` |
 
-- Thư mục không phải ảnh (`MapMaterials`, `Shaders`, `_Spine`, `_QuackBag` animator) giữ nguyên chỗ, chỉ ảnh mới chuyển. **[ĐỀ XUẤT]**
-- Chuyển bằng `AssetDatabase.MoveAsset` qua UnityMCP (giữ GUID), kiểm lại bằng đếm ảnh đang dùng trước/sau phải bằng nhau. **[ĐỀ XUẤT]**
+- `_Spine`, `_QuackBag` (animator/anim hero), `Fonts` giữ nguyên chỗ. **[CHỐT]**
+- Chuyển bằng `AssetDatabase.MoveAsset` (giữ GUID); trước/sau đều 706 ảnh đang dùng, 0 tham chiếu gãy mới. **[ĐO]**
 
-### 3.3. Thứ phải sửa theo khi đổi đường dẫn
+### 3.3. Đã sửa theo khi đổi đường dẫn
 
-- 12 builder Editor (`*PrefabBuilder.cs`) có hằng đường dẫn `_ResourceGame/...` → sửa hằng. **[ĐO]**
-- 8 tool Python/JS trong `tools/` trỏ `_ResourceGame` → sửa đường dẫn. **[ĐO]**
+- 12 builder Editor (`*PrefabBuilder.cs`) + comment `RarityBackgroundConfig.cs`: hằng `_ResourceGame/...` → `Art/...`; 48 đường dẫn cứng đều trỏ tới file có thật. **[ĐO]**
+- 8 tool trong `tools/` → `Art/`. **[ĐO]**
+- Tool rip prefab (`extract_ui_batch.py`, `join_levelpopup_sprites.js`) giờ chỉ dò tên sprite trong `Art/`; ảnh đã lưu trữ ở `ArtArchive/` không còn được nối. **[ĐO]**
 - Code chạy game: không có chỗ nào phải sửa. **[ĐO]**
-- Sau khi reskin, KHÔNG chạy lại builder prefab cũ: builder dựng lại prefab từ đầu sẽ xoá chỉnh tay. **[ĐỀ XUẤT]**
+- Sau khi reskin, KHÔNG chạy lại builder prefab cũ: builder dựng lại prefab từ đầu sẽ xoá chỉnh tay. **[CHỐT]**
 
 ---
 
-## 4. Các đợt làm **[ĐỀ XUẤT]**
+## 4. Các đợt làm
 
 ### 4.1. Bảng tổng
 
@@ -166,21 +190,21 @@ ArtArchive/                   ← ngoài Assets: ~670 ảnh không dùng (chủ 
 - UI kit làm TRƯỚC: chỉ 121 ảnh nhưng gần như popup nào cũng dùng → đổi xong là cả game đổi màu. **[ĐỀ XUẤT]**
 - Đồ hero là đợt lớn nhất; đã xong 60/241 món (mẫu A, 6 loại × 10 tier). **[ĐO]**
 
-### 4.2. Đợt 0 — Dọn (dev, làm trước khi art giao)
+### 4.2. Đợt 0 — Dọn (dev) — XONG 2026-10-18
 
-1. Commit các thay đổi đang dở trên `main`, tạo nhánh `reskin`, gắn tag `pre-reskin`.
-2. Chuyển 19 ảnh đang dùng ra khỏi `_CommingUse`.
-3. Chuyển ~670 ảnh không dùng ra `ArtArchive/`, ~100 ảnh art mới chưa gắn trong `_ArtReskin` ra `ArtIncoming/` (cả hai ngoài Assets).
-4. Gỡ tham chiếu `Root.unity` → `_ExportTemp/unit_base_all.prefab`.
-5. Đổi `_ResourceGame` → `Art/` theo bảng 3.2, sửa hằng builder + tool.
-6. Viết lệnh `Apply Reskin` + xuất CSV theo dõi + contact sheet từng thư mục.
-7. Kiểm: số ảnh đang dùng trước/sau bằng nhau, Play 3 scene không lỗi missing sprite.
+1. ✅ Commit việc đang dở trên `main` (c9eab7a), gắn tag `pre-reskin`, làm tiếp trên nhánh `reskin`.
+2. ✅ Chuyển 19 ảnh đang dùng ra khỏi `_CommingUse`.
+3. ✅ 656 + 3 ảnh không dùng → `ArtArchive/`; 100 ảnh mockup/art mới chưa gắn → `ArtIncoming/_Concept/`.
+4. ✅ Xoá object `unit_base_all` (đang tắt) khỏi `Root.unity`.
+5. ✅ Đổi `_ResourceGame` + `Graphics` → `Art/` theo bảng 3.2, sửa hằng builder + tool.
+6. ✅ `Scripts/Art/Editor/ArtReskinTool.cs` + `tools/art_contact_sheets.py`; đã thử ảnh 2×, ảnh 9-slice, ảnh lệch tỉ lệ, ảnh sai tên.
+7. ✅ 706/706 ảnh đang dùng, 0 GUID gãy mới, Play Root → Login → MainGame 0 lỗi.
 
 ### 4.3. Đợt 2 — UI kit + font
 
 - Đổi font: tạo TMP Font Asset từ font mới, đặt làm font chính, giữ Noto làm fallback cho 10 ngôn ngữ. **[ĐỀ XUẤT]**
 - 12 material viền chữ (`*-Outline-*.mat`) dựng lại cho font mới. **[ĐO]**
-- Ảnh 9-slice: art gửi kèm số px viền 4 cạnh, dev nhập vào `.meta`. **[ĐỀ XUẤT]**
+- Ảnh 9-slice (18 ảnh): Apply Reskin tự nhân viền theo tỉ lệ; viền vẽ khác hẳn thì art gửi số px 4 cạnh, dev sửa tay. **[ĐỀ XUẤT]**
 
 ### 4.4. Đợt 5 — Nhân vật
 
@@ -203,8 +227,8 @@ ArtArchive/                   ← ngoài Assets: ~670 ảnh không dùng (chủ 
 - [ ] Style guide 1 trang: bảng màu, độ dày nét viền, bo góc, bóng đổ.
 - [ ] Font mới + giấy phép dùng thương mại; font phải có đủ dấu tiếng Việt nếu bật ngôn ngữ VN.
 - [ ] Quy cách giao file: PNG nền trong suốt, ĐÚNG tên file cũ, ĐÚNG thư mục gương.
-- [ ] Độ phân giải: giữ bằng ảnh cũ hay gấp đôi (gấp đôi thì dev chỉnh Pixels Per Unit).
-- [ ] Mockup các màn chính ngoài Lobby và Companion: Store, Dungeon, Event, Clan, popup chi tiết đồ.
+- [ ] Độ phân giải: giữ bằng ảnh cũ hay gấp đôi (gấp đôi thì Apply Reskin tự chỉnh Pixels Per Unit).
+- [ ] Gửi đội art: `ArtIncoming/` (README + `_Reference/sheets` + `art_manifest.csv`).
 
 ### 5.2. Ngoài ảnh trong game
 
@@ -227,13 +251,12 @@ ArtArchive/                   ← ngoài Assets: ~670 ảnh không dùng (chủ 
 
 ### 7.1. Chờ bạn quyết
 
-- Reskin chỉ thay hình, hay đổi cả bố cục UI? Mockup lobby có 5 tab dưới và 8 ô đồ ngay ở lobby, khác bố cục hiện tại (7 trang). **[CHỜ BẠN]**
-- Đồng ý cấu trúc `Art/` + `ArtIncoming/` + `ArtArchive/` ở mục 3? **[CHỜ BẠN]**
 - Có đổi âm thanh (`_Sound`, 57 file) trong đợt này không? **[CHỜ BẠN]**
 - Có đổi tên game / bundle id không? **[CHỜ BẠN]**
 - Nhẫn, dây chuyền, vũ khí tầm xa, Cape 6 tier vs tẩu 10 tier (xem `ART_HERO_EQUIPMENT.md`). **[CHỜ BẠN]**
 
 ### 7.2. Tình trạng
 
-- Đã làm: khảo sát, đếm ảnh đang dùng, brief đồ hero, 60 món đồ mới + thân vịt gắn vào `00Hero`.
-- Chưa làm: toàn bộ đợt 0 (dọn + chia thư mục + lệnh Apply Reskin).
+- Đã chốt: chỉ thay hình, giữ bố cục UI; cấu trúc `Art/` + `ArtIncoming/` + `ArtArchive/`.
+- Đã làm: đợt 0 (mục 4.2) trên nhánh `reskin`; brief đồ hero; 60 món đồ mới + thân vịt gắn vào `00Hero`.
+- Chưa làm: đợt 1 trở đi (chờ art).

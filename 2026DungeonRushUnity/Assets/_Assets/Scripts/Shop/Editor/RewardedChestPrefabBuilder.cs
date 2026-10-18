@@ -10,7 +10,7 @@ public static class RewardedChestPrefabBuilder
 {
     private const string RIP = "Assets/_Assets/Prefabs/UI/Shop/RewardedChestPopup.prefab";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/UIRewardedChestPopup.prefab";
-    private const string CUR = "Assets/_Assets/_ResourceGame/Currency/";
+    private const string CUR = "Assets/_Assets/Art/2_Icons/Currency/";
     private const string CONTENT = "ContentTransform/";
 
     [MenuItem("Tools/DungeonRush/Build Shop UI/Rewarded Chest Popup")]

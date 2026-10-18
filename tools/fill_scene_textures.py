@@ -185,7 +185,7 @@ def process(scene):
     print("   Image path (export): %d | matched path: %d | sprite mapped: %d | missing: %d | ambiguous path: %d"%(
         len(exp_pm), len(g2n), sum(1 for v in spritemap.values() if v), len(missing), ambiguous))
     print("   distinct export sprite guid: %d | stripped script comp: %d"%(total_guids,n_removed))
-    if missing: print("   sprite thieu _ResourceGame:", ", ".join(sorted(missing)))
+    if missing: print("   sprite thieu Art/:", ", ".join(sorted(missing)))
 
 if __name__=="__main__":
     scenes=sys.argv[1:] or ["GameplayScene","StarterScene"]

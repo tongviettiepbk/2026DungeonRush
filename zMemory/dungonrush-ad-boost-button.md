@@ -9,6 +9,6 @@ Nút Boost ở ForgeUI lobby = **xem quảng cáo → EXP ×AdBoostWorth trong A
 - Mastery bật: hệ số = nhánh AdBoostWorth (mặc định x2, Lvl1 x2.1 … x4), thời lượng = AdBoostDuration (mặc định 300s); tắt → x2 / 300s (EconomyController).
 - Xem khi đang chạy → cộng thêm 1 lượt, trần 12 × thời lượng. Hiện từ playerLevel ≥ 3. Nhân dồn với Lifetime/X2/X5 trong ShopService.GetExpMultiplier.
 - Nhãn gốc runtime: "<sprite=0>Boost x{0}\n+{1}" (thời lượng format kiểu "5m"; "+5 min" trong scene rip chỉ là chữ đặt sẵn).
-- **Icon mặt cười** = TMP rơi về EmojiOne vì ButtonText spriteAsset null → gốc gán `IsAd` (_ResourceGame/Currency/IsAd.asset).
+- **Icon mặt cười** = TMP rơi về EmojiOne vì ButtonText spriteAsset null → gốc gán `IsAd` (Art/2_Icons/Currency/IsAd.asset).
 - Code: ShopService.AdBoost* + UserShopData.adBoostEndTime + UI/MainLobby/BoostButtonView (dùng ForgeButtonView cho hiệu ứng ấn, màu xanh gốc). UIMainLobby.boostButton thay btBoost.
 - Test Play OK (Editor ads trả Finished). Chưa commit. Liên quan [[dungonrush-mastery-feature]], [[dungonrush-shop-system]], [[dungonrush-mediation-ads]].

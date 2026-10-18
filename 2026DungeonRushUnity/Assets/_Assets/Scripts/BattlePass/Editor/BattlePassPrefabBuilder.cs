@@ -11,8 +11,8 @@ public static class BattlePassPrefabBuilder
 {
     private const string RIP = "Assets/_Assets/Prefabs/UI/BattlePass/";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/UIBattlePassPopup.prefab";
-    private const string CUR = "Assets/_Assets/_ResourceGame/Currency/";
-    private const string MASTERY_ICONS = "Assets/_Assets/_ResourceGame/MasteryIcons/";
+    private const string CUR = "Assets/_Assets/Art/2_Icons/Currency/";
+    private const string MASTERY_ICONS = "Assets/_Assets/Art/2_Icons/Mastery/";
     private const string BG = "ContentTransform/Background/";
     private const string CONTENT = BG + "Scroll View/Viewport/Content/";
 

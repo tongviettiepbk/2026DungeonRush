@@ -22,7 +22,7 @@ public static class ShopPrefabBuilder
     private const string BUILT = "Assets/_Assets/Prefabs/UINew/Shop";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/";
     private const string DATA = "Assets/_Assets/Resources/Scriptable Objects/Shop";
-    private const string CUR = "Assets/_Assets/_ResourceGame/Currency/";
+    private const string CUR = "Assets/_Assets/Art/2_Icons/Currency/";
 
     // Component phụ của gốc không port (hiệu ứng nhấn / nhãn localize tĩnh / lưới ảo hoá).
     private static readonly HashSet<string> SKIP = new HashSet<string>
@@ -551,7 +551,7 @@ public static class ShopPrefabBuilder
 
     private static Sprite FindSprite(string name)
     {
-        foreach (string guid in AssetDatabase.FindAssets(name + " t:Sprite", new[] { "Assets/_Assets/_ResourceGame" }))
+        foreach (string guid in AssetDatabase.FindAssets(name + " t:Sprite", new[] { "Assets/_Assets/Art" }))
         {
             string p = AssetDatabase.GUIDToAssetPath(guid);
             if (Path.GetFileNameWithoutExtension(p) == name) return AssetDatabase.LoadAssetAtPath<Sprite>(p);
@@ -563,7 +563,7 @@ public static class ShopPrefabBuilder
     private static TMP_SpriteAsset LoadIcon(string assetName)
     {
         TMP_SpriteAsset asset = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>(CUR + assetName + ".asset");
-        if (asset == null) asset = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>("Assets/_Assets/_ResourceGame/MasteryIcons/" + assetName + ".asset");
+        if (asset == null) asset = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>("Assets/_Assets/Art/2_Icons/Mastery/" + assetName + ".asset");
         return asset;
     }
 

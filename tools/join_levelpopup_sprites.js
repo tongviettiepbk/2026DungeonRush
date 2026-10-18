@@ -1,4 +1,4 @@
-// Join export-sprite-guid <-> ten sprite that (dump tu xapk) theo thu tu DFS, roi tu tra guid _ResourceGame.
+// Join export-sprite-guid <-> ten sprite that (dump tu xapk) theo thu tu DFS, roi tu tra guid Art/.
 // Dung:  node tools/join_levelpopup_sprites.js <TenPrefab>   (mac dinh LevelPopup)
 // Vao:  tools/_rewire/<Ten>.images.txt  (do dump sinh)  +  AssetRipper export prefab
 // Ra:   tools/_rewire/<Ten>.spritemap.json  (export-guid -> target-guid) + bao sprite thieu.
@@ -7,10 +7,10 @@ const ROOT = path.resolve(__dirname, "..");
 const TARGET = process.argv[2] || "LevelPopup";
 const SRC = `${ROOT}/AssetRipper/ExportedProject/Assets/GameObject/${TARGET}.prefab`;
 const IMAGES = `${ROOT}/tools/_rewire/${TARGET}.images.txt`;
-const RES = `${ROOT}/2026DungeonRushUnity/Assets/_Assets/_ResourceGame`;
+const RES = `${ROOT}/2026DungeonRushUnity/Assets/_Assets/Art`;
 const OUT = `${ROOT}/tools/_rewire/${TARGET}.spritemap.json`;
 
-// 1) index ten sprite -> guid tu _ResourceGame (glob *.png.meta)
+// 1) index ten sprite -> guid tu Art/ (glob *.png.meta)
 function walkMeta(dir, acc) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
@@ -86,5 +86,5 @@ for (const [g, name] of Object.entries(g2n)) {
 }
 fs.writeFileSync(OUT, JSON.stringify(map, null, 2));
 console.log(`distinct guids: ${Object.keys(g2n).length}  conflicts: ${conflict}`);
-if (missing.size) console.log("SPRITE THIEU trong _ResourceGame (de trong):", [...missing].join(", "));
+if (missing.size) console.log("SPRITE THIEU trong Art/ (de trong):", [...missing].join(", "));
 console.log("-> wrote", OUT);

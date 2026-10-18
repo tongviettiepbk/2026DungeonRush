@@ -15,7 +15,7 @@ public static class ProfilePrefabBuilder
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/";
     // Prefab dùng bằng tham chiếu trực tiếp (ô avatar).
     private const string BUILT = "Assets/_Assets/Prefabs/UINew/Profile";
-    private const string CUR = "Assets/_Assets/_ResourceGame/Currency/";
+    private const string CUR = "Assets/_Assets/Art/2_Icons/Currency/";
     private const string TAB_ITEM = "Assets/_Assets/Prefabs/UINew/Clan/TabSelectorItemUI.prefab";
     private const string SETTINGS = "Content/SettingsPage/VerticalLayout/";
     private const string LAYOUT = "Content/Loaded/VerticalLayout/";
@@ -159,7 +159,7 @@ public static class ProfilePrefabBuilder
     // ===== Chọn ngôn ngữ (LanguageSelectPopup gốc) =====
 
     private const string RIP_SETTINGS = "Assets/_Assets/Prefabs/UI/Settings/";
-    private const string FLAGS = "Assets/_Assets/_ResourceGame/_CommingUse/Flags/";
+    private const string FLAGS = "Assets/_Assets/Art/2_Icons/Flags/Language/";
 
     // Languages gốc của LanguageSelectPopup (thứ tự, tên hiển thị, cờ trích từ xapk — giữ cả khoảng trắng thừa như gốc).
     private static readonly string[][] LANGUAGES =

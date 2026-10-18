@@ -5,7 +5,7 @@ metadata:
   type: project
 ---
 
-Ngày 2026-09-20: lấy **128 prefab UI** còn lại từ `AssetRipper/ExportedProject/Assets/GameObject/` vào `2026DungeonRushUnity/Assets/_Assets/Prefabs/UI/<Feature>/` (giống cách đã làm Pet=Companion). Layout-only (đã strip script game, wire controller sau) + map sprite từ `_ResourceGame`.
+Ngày 2026-09-20: lấy **128 prefab UI** còn lại từ `AssetRipper/ExportedProject/Assets/GameObject/` vào `2026DungeonRushUnity/Assets/_Assets/Prefabs/UI/<Feature>/` (giống cách đã làm Pet=Companion). Layout-only (đã strip script game, wire controller sau) + map sprite từ `Art`.
 
 **20 thư mục feature** (số prefab): Battle 8, BattlePass 4, BossRush 5, Cape 5, Chat 3, Clan 13, ClanWar 10, Common 5, Dungeon 3, Enchantment 6, Events 3, Forge 4, Gear 6, Mastery 2, Mining 3, Profile 10, PvP 8, Settings 14, Shop 12, Wing 4. (Pet 6 đã có trước.)
 

@@ -1,13 +1,17 @@
 ---
 name: dungonrush-reskin-plan
-description: Kế hoạch reskin toàn game (concept vịt) ở GDD/RESKIN_PLAN.md — "thay ruột giữ .meta", đề xuất Art/ + ArtIncoming/ + ArtArchive/, 8 đợt; CHỜ user duyệt
+description: Reskin toàn game (concept vịt) — CHỈ thay hình giữ bố cục; đợt 0 XONG trên nhánh reskin: _ResourceGame→Art/<1_UIKit..7_FX>, ArtIncoming/ (gương) + ArtArchive/, lệnh Tools/DungeonRush/Reskin/Apply Reskin
 metadata:
   type: project
 ---
-2026-10-18 viết `GDD/RESKIN_PLAN.md`. Số đo: 1477 ảnh trong _Assets, 706 đang dùng lúc chạy (lần GUID từ 3 scene build + Resources/), 656 ảnh không dùng nằm ở `_ResourceGame/_CommingUse` nhưng 19 ảnh trong đó LẠI đang dùng (10 cờ, 8 Mining, 1 diamond). Code không nạp ảnh theo đường dẫn → chuyển thư mục/ghi đè PNG không phải sửa code; chỉ 12 `*PrefabBuilder.cs` + 8 tool trong `tools/` có hằng `_ResourceGame/...`. Root.unity đang trỏ `_ExportTemp/unit_base_all.prefab`.
+Kế hoạch: `GDD/RESKIN_PLAN.md`. User chốt 2026-10-18: reskin CHỈ thay hình, GIỮ bố cục UI hiện tại; duyệt cấu trúc thư mục.
 
-Đề xuất (CHƯA duyệt): đổi `_ResourceGame` → `Art/` chia tầng 1 theo mảng art (1_UIKit, 2_Icons, 3_Equipment, 4_Characters, 5_Maps, 6_Features, 7_FX); `ArtIncoming/` (gốc repo, cây y hệt Art/) + lệnh Editor `Apply Reskin` ghi đè PNG giữ .meta; `ArtArchive/` ngoài Assets. Thứ tự: dọn → style guide → UI kit+font → icon → đồ hero → nhân vật → map → FX/Clan/app icon.
+Đợt 0 xong 2026-10-18 trên nhánh `reskin` (tag `pre-reskin` = trạng thái trước khi chuyển, commit c9eab7a trên main):
+- `_ResourceGame` + `Graphics/Ingame` → `Assets/_Assets/Art/` chia tầng 1 theo mảng art: 1_UIKit (Common/PetUI/Rarity/HUD), 2_Icons (… Flags/Language = 10 cờ ngôn ngữ), 3_Equipment (00_EmptySlot..08_Wing + OnBody/InGame/Projectiles/GearIcons/…), 4_Characters (Hero/Enemies/Pets), 5_Maps (Campaign[+Materials,Shaders]/Dungeon*/Mining), 6_Features (Clan/BossRush/PvP/Forge/Misc), 7_FX. Bảng cũ→mới ở mục 3.2 của GDD.
+- Ngoài Assets (gốc repo): `ArtIncoming/` (cây gương + `_Concept` = _ArtReskin cũ, `_Reference` = sheets/CSV/báo cáo, README cho art), `ArtArchive/` (_CommingUse 656 ảnh không dùng + HeroEquipment.zip).
+- Kiểm: 706 ảnh đang dùng trước/sau, 0 GUID gãy mới, Play Root→Login→MainGame 0 lỗi. 12 builder + 8 tool đã sửa đường dẫn. Đã xoá object `unit_base_all` (tắt) khỏi Root.unity.
+- Tool: `Scripts/Art/Editor/ArtReskinTool.cs` (menu Tools/DungeonRush/Reskin: Kiểm tra / Apply Reskin / Xuất CSV + thư mục gương), `tools/art_contact_sheets.py` (chạy bằng tools/.venv). Apply = ghi đè PNG cùng đường dẫn, giữ .meta, nhân PPU + viền 9-slice theo tỉ lệ ảnh mới/cũ (giữ kích thước hiển thị), bỏ qua thư mục `_`*, idempotent.
 
-**Why:** user chuẩn bị reskin cả game theo mockup `_ArtReskin/Lobby/lobby demo.png` (bố cục khác hiện tại: 5 tab, 8 ô đồ ở lobby).
+**Why:** user chuẩn bị reskin cả game theo mockup `ArtIncoming/_Concept/Lobby/lobby demo.png`.
 
-**How to apply:** chưa làm đợt 0 nào; chờ user trả lời mục 7.1 (chỉ thay hình hay đổi bố cục, duyệt cấu trúc thư mục). Chuyển ảnh bằng AssetDatabase.MoveAsset qua UnityMCP, đếm lại ảnh đang dùng trước/sau. Xem [[dungonrush-hero-equipment-reskin]], [[dungonrush-resource-dedupe-rule]], [[dungonrush-uinew-prefab-folder]].
+**How to apply:** ảnh art mới → thả vào `ArtIncoming/<đường dẫn y hệt Art/>` → Apply Reskin → đọc reskin_report.txt. Ảnh mới gán tay vào `Art/`. KHÔNG chạy lại builder prefab cũ sau khi reskin (ghi đè chỉnh tay). Chuyển asset trong Unity: KHÔNG tạo thư mục trong StartAssetEditing (Unity sinh "X 1", "X 2"... thừa). Chưa commit đợt 0 (chờ user). Xem [[dungonrush-hero-equipment-reskin]], [[dungonrush-resource-dedupe-rule]].

@@ -20,9 +20,9 @@ public static class ForgePrefabBuilder
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/";
     private const string ITEM_ELEMENT_OUT = "Assets/_Assets/Prefabs/UINew/Forge/ItemElementUI.prefab";
     private const string LOBBY = "Assets/_Assets/Prefabs/UI/UIMainGame2.prefab";
-    private const string STAT_ARROW_UP = "Assets/_Assets/_ResourceGame/UI/stat_arrow_up.png";
-    private const string STAT_ARROW_DOWN = "Assets/_Assets/_ResourceGame/UI/stat_arrow_down.png";
-    private const string BOX_SPRITE_ASSET = "Assets/_Assets/_ResourceGame/MasteryIcons/IsBox.asset";
+    private const string STAT_ARROW_UP = "Assets/_Assets/Art/1_UIKit/Common/stat_arrow_up.png";
+    private const string STAT_ARROW_DOWN = "Assets/_Assets/Art/1_UIKit/Common/stat_arrow_down.png";
+    private const string BOX_SPRITE_ASSET = "Assets/_Assets/Art/2_Icons/Mastery/IsBox.asset";
     // Chữ "Lv.N" trên ô item: bản rip mất viền của font gốc → viền đen để đọc được trên nền rarity sáng.
     private const string LEVEL_TEXT_MATERIAL = "Assets/_Assets/Fonts/NotoSans/NotoSans-SemiBold-Outline-Black.mat";
 
