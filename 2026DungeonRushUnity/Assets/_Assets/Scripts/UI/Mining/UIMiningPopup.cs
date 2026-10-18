@@ -42,6 +42,9 @@ public class UIMiningPopup : BaseUI, IPointerClickHandler, IPointerDownHandler, 
     public TMP_Text txtPickaxeDailyLimit;
     public TMP_Text txtDrillDailyLimit;
     public TMP_Text txtGoldenPickaxeDailyLimit;
+    // Reskin: nút đang chọn đổi sprite xanh, nút khác xám (thay cho tô màu DEFAULT/PASSIVE).
+    public Sprite sprToolSelected;
+    public Sprite sprToolPassive;
 
     [Header("Quặng")]
     public TMP_Text txtCoal;
@@ -368,7 +371,16 @@ public class UIMiningPopup : BaseUI, IPointerClickHandler, IPointerDownHandler, 
         if (objAd != null) objAd.SetActive(count < 1);
         if (img != null)
         {
-            img.color = count > 0 && tool == selected ? DEFAULT_BUTTON_COLOR : PASSIVE_BUTTON_COLOR;
+            bool active = count > 0 && tool == selected;
+            if (sprToolSelected != null && sprToolPassive != null)
+            {
+                img.sprite = active ? sprToolSelected : sprToolPassive;
+                img.color = Color.white;
+            }
+            else
+            {
+                img.color = active ? DEFAULT_BUTTON_COLOR : PASSIVE_BUTTON_COLOR;
+            }
         }
 
         if (count > 0)

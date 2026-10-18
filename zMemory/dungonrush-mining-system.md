@@ -19,4 +19,4 @@ Dựng 2026-10-16 theo reverse il2cpp v41 + asset gốc đọc thẳng APK (Unit
 - Gói Mining Offer: ShopService.GrantProduct → MiningService.GrantOffer; giá chưa có (hiện "N/A").
 - Chưa làm: chấm đỏ Mining ở ô Wing lobby (ItemUI.MiningNotificationUI gốc), TMP sprite icon quặng `<sprite=0>`.
 
-**How to apply:** sửa hình/prefab thì chạy lại từng mục menu Build Mining (ghi đè). Test Play: backup PlayerPrefs key_user_items + key_user_mining TRƯỚC mỗi lần test (user có thể đã tự chơi giữa chừng) rồi khôi phục đúng bản đó. Xem [[dungonrush-wing-cape-todo]], [[dungonrush-reverse-native-il2cpp]], [[dungonrush-il2cpp-sprite-pipeline]].
+**How to apply:** ĐÃ RESKIN 2026-10-19 → KHÔNG chạy lại menu Build Mining (ghi đè prefab UI + config, mất reskin; xem [[dungonrush-reskin-mining]]); trừ Fix Ore Particles. Test Play: backup PlayerPrefs key_user_items + key_user_mining TRƯỚC mỗi lần test (user có thể đã tự chơi giữa chừng) rồi khôi phục đúng bản đó. Xem [[dungonrush-wing-cape-todo]], [[dungonrush-reverse-native-il2cpp]], [[dungonrush-il2cpp-sprite-pipeline]].
