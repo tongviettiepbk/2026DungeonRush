@@ -76,3 +76,4 @@
 - [Reskin toàn game](dungonrush-reskin-plan.md) — CHỈ thay hình; đợt 0 XONG (Art/<1_UIKit..7_FX>, ArtIncoming/ gương, Apply Reskin); lobby UIMainGame2 reskin XONG + commit 2026-10-18 (2fe6b79, 453853f); Companion/Mastery/Rarity/Profile/Gameplay/Battle Pass reskin XONG + commit
 - [Cách reskin 1 màn UI](dungonrush-reskin-ui-howto.md) — quy trình lobby: nhóm A ghi đè/B ảnh mới+prefab, pha màu thay ChatGPT cho hình học, ChatGPT cho icon, bẫy TMP sprite/Slider/Game view nhỏ; script tools/reskin/
 - [Reskin gameplay](dungonrush-reskin-gameplay.md) — map tường/sàn vẽ code, quái vịt đen ChatGPT trên rig hero, 3 popup đồ/offer kit Mastery; 2026-10-18 CHƯA commit
+- [Reskin Shop](dungonrush-reskin-shop.md) — StoreTabPage theo mockup 2026-10-18: khung art + 19 icon ChatGPT ghi đè giữ size cũ + 6 gói gem; bẫy tách nền tím; đã commit
