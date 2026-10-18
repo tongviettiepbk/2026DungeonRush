@@ -56,6 +56,9 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public TMP_Text txtEquip;
     public Button btMining;
     public GameObject objMiningNotification;
+    // Reskin: nút bật = sprite xanh, tắt = sprite xám (thay cho tô DEFAULT/DISABLED_BUTTON_COLOR).
+    public Sprite sprButtonOn;
+    public Sprite sprButtonOff;
 
     [Header("Info")]
     public Image imgInfoBackground;
@@ -379,7 +382,7 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         txtCraftResource.text = GetOreText(wing.craftOreType, ore, wing.craftOreCost);
         objCraftArea.SetActive(model == null);
         objRerollArea.SetActive(model != null);
-        imgCraft.color = model != null || ore >= wing.craftOreCost ? DEFAULT_BUTTON_COLOR : DISABLED_BUTTON_COLOR;
+        SetButtonState(imgCraft, model != null || ore >= wing.craftOreCost, sprButtonOn, sprButtonOff);
 
         bool isEquipped = WingService.IsEquipped(wing);
         objEquipped.SetActive(isEquipped);
@@ -399,7 +402,7 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         {
             txtLevelUpResource.text = "Max Level";
             txtLevelUpResource.color = Color.white;
-            imgLevelUp.color = DISABLED_BUTTON_COLOR;
+            SetButtonState(imgLevelUp, false, sprButtonOn, sprButtonOff);
             return;
         }
 
@@ -407,7 +410,7 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         int cost = WingService.GetLevelUpCost(wing, model.level);
         txtLevelUpResource.text = GetOreText(wing.levelUpOreType, levelUpOre, cost);
         txtLevelUpResource.color = levelUpOre >= cost ? Color.white : Color.red;
-        imgLevelUp.color = levelUpOre >= cost ? DEFAULT_BUTTON_COLOR : DISABLED_BUTTON_COLOR;
+        SetButtonState(imgLevelUp, levelUpOre >= cost, sprButtonOn, sprButtonOff);
     }
 
     // ----- Nút -----
@@ -599,6 +602,18 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     }
 
     // ----- Helper dùng chung cho các UI Wing -----
+
+    // Nút bật/tắt: có sprite reskin thì đổi sprite (màu trắng), chưa gán thì tô màu như gốc.
+    public static void SetButtonState(Image img, bool isOn, Sprite sprOn, Sprite sprOff)
+    {
+        if (sprOn != null && sprOff != null)
+        {
+            img.sprite = isOn ? sprOn : sprOff;
+            img.color = Color.white;
+            return;
+        }
+        img.color = isOn ? DEFAULT_BUTTON_COLOR : DISABLED_BUTTON_COLOR;
+    }
 
     private Sprite GetBgRarity(Rarity rarity)
     {

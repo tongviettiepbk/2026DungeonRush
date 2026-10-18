@@ -20,6 +20,8 @@ public class UIWingRerollPopup : BaseUI
     public Image imgReroll;
     public TMP_Text txtRerollResource;
     public Button btClose;
+    public Sprite sprButtonOn;
+    public Sprite sprButtonOff;
 
     private readonly List<ElementSubStatRerollUI> listElement = new List<ElementSubStatRerollUI>();
     private WingData wing;
@@ -94,7 +96,7 @@ public class UIWingRerollPopup : BaseUI
 
         txtRerollResource.text = UITabWing.GetOreText(wing.rerollOreType, ore, cost);
         txtRerollResource.color = ore >= cost ? Color.white : Color.red;
-        imgReroll.color = ore >= cost && lockedCount < count ? UITabWing.DEFAULT_BUTTON_COLOR : UITabWing.DISABLED_BUTTON_COLOR;
+        UITabWing.SetButtonState(imgReroll, ore >= cost && lockedCount < count, sprButtonOn, sprButtonOff);
     }
 
     // laf

@@ -12,10 +12,11 @@ public class UIWingCraftPopup : BaseUI
     public Image imgWingIcon;
     public TMP_Text txtResource;
     public Button btCancel;
-    public Image imgCancel;
     public Button btCraft;
     public Image imgCraft;
     public TMP_Text txtCraft;
+    public Sprite sprButtonOn;
+    public Sprite sprButtonOff;
 
     private WingData wing;
     private Action onCrafted;
@@ -40,14 +41,13 @@ public class UIWingCraftPopup : BaseUI
     private void Refresh()
     {
         imgWingIcon.sprite = wing.icon;
-        imgCancel.color = UITabWing.DANGER_BUTTON_COLOR;
 
         int ore = WingService.GetOre(wing.craftOreType);
         bool isEnough = ore >= wing.craftOreCost;
         txtResource.text = UITabWing.GetOreText(wing.craftOreType, ore, wing.craftOreCost);
         txtResource.color = isEnough ? Color.white : Color.red;
         txtCraft.text = WingService.GetOwned(wing) != null ? Loc.L("UI.Wings.Reroll") : Loc.L("UI.Wings.Craft");
-        imgCraft.color = isEnough ? UITabWing.DEFAULT_BUTTON_COLOR : UITabWing.DISABLED_BUTTON_COLOR;
+        UITabWing.SetButtonState(imgCraft, isEnough, sprButtonOn, sprButtonOff);
     }
 
     // kye
