@@ -56,6 +56,7 @@ public class UIPlayerPopup : BaseUI
     public void ShowLoading(string userId)
     {
         this.userId = userId;
+        txtName.text = string.Empty; // tên nằm trên thanh tiêu đề (ngoài objLoaded) → xoá tên người trước
         objLoaded.SetActive(false);
         objLoading.SetActive(true);
         rectContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, loadingHeight);
