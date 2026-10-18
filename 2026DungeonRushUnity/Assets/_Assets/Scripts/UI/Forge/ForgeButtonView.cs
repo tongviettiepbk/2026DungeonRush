@@ -25,6 +25,12 @@ public class ForgeButtonView : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     public Color defaultBottomColor = new Color(0.47450984f, 0.027450982f, 0.098039225f, 1f);
     public Color pressedBottomColor = new Color(0.16862746f, 0.16862746f, 0.16862746f, 1f);
 
+    // Reskin: trạng thái khoá đổi hẳn ảnh nắp (mockup: Loot khoá = nút đỏ, Boost đang chạy = nút xanh dương).
+    // lockedTopSprite null = không đổi ảnh. Nút Loot khoá theo Interactable; Boost gọi SetLockedVisual riêng.
+    public Sprite lockedTopSprite;
+    public Graphic label;
+    public Color labelLockedColor = Color.white;
+
     // Nhả tay trên nút (OnReleased gốc) — kể cả khi kéo ra ngoài rồi thả.
     public Action onReleased;
 
@@ -32,11 +38,41 @@ public class ForgeButtonView : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     private float shadowStartY;
     private Tween tween;
     private bool interactable = true;
+    private bool isLockedVisual;
+    private Sprite normalTopSprite;
+    private Color labelNormalColor;
+    private bool isNormalCached;
 
     public bool Interactable
     {
         get => interactable;
-        set => interactable = value;
+        set
+        {
+            interactable = value;
+            if (lockedTopSprite != null)
+                SetLockedVisual(!value);
+        }
+    }
+
+    public void SetLockedVisual(bool locked)
+    {
+        if (isNormalCached == false)
+        {
+            isNormalCached = true;
+            if (topImage != null) normalTopSprite = topImage.sprite;
+            if (label != null) labelNormalColor = label.color;
+        }
+        if (isLockedVisual == locked || lockedTopSprite == null)
+            return;
+
+        isLockedVisual = locked;
+        if (topImage != null)
+        {
+            topImage.sprite = locked ? lockedTopSprite : normalTopSprite;
+            if (locked) topImage.color = defaultTopColor;
+        }
+        if (label != null)
+            label.color = locked ? labelLockedColor : labelNormalColor;
     }
 
     private void Awake()
@@ -66,7 +102,8 @@ public class ForgeButtonView : MonoBehaviour, IPointerDownHandler, IPointerUpHan
 
     public void Press()
     {
-        if (topImage != null) topImage.color = pressedTopColor;
+        // Đang hiện ảnh khoá thì giữ nguyên màu ảnh khoá, không phủ xám.
+        if (topImage != null) topImage.color = isLockedVisual ? defaultTopColor : pressedTopColor;
         if (bottomImage != null) bottomImage.color = pressedBottomColor;
 
         tween?.Kill();

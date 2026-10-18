@@ -73,4 +73,4 @@
 - [Di chuyển theo gốc](dungonrush-movement-original.md) — A* 8 hướng, lái lực Rigidbody động, Idle/Move/Patrol, quái phát hiện 4, pet chỉ đi theo; CHƯA test Play
 - [Map dungeon hình ảnh gốc](dungonrush-dungeon-map-visual.md) — Zombie/Dragon/Cultist dựng theo prefab rip, không cửa, sprite ở Art/5_Maps/Dungeon*; CHƯA test Play (2026-10-17)
 - [Gốc KHÔNG rơi Bone từ quái](dungonrush-no-combat-bone-drop.md) — combat_drop Bone/rương là code chết (BoneDropPrefab null); đừng port; doc LOOT_DROP_MODEL.md
-- [Reskin toàn game](dungonrush-reskin-plan.md) — CHỈ thay hình; đợt 0 XONG nhánh reskin: Art/<1_UIKit..7_FX>, ArtIncoming/ gương + ArtArchive/, menu Tools/DungeonRush/Reskin/Apply Reskin (2026-10-18)
+- [Reskin toàn game](dungonrush-reskin-plan.md) — CHỈ thay hình; đợt 0 XONG (Art/<1_UIKit..7_FX>, ArtIncoming/ gương, Apply Reskin); lobby UIMainGame2 reskin XONG 2026-10-18 chưa commit; bẫy TMP sprite asset

@@ -40,6 +40,9 @@ public class UIMainLobby : BaseUI
     [Header("MID")]
     public Button btAutoPet;
     public TMP_Text txtAutoPet;
+    // Reskin: màu nền nút auto theo trạng thái (mockup lobby: ON xanh lá, OFF xám).
+    public Color autoPetOnColor = new Color(0.388f, 0.682f, 0.259f, 1f);
+    public Color autoPetOffColor = new Color(0.404f, 0.404f, 0.404f, 1f);
     public List<ElementPetUILobby> listElementPet;
 
     public ExperienceUI experienceUI;     // thanh exp đáy (BottomUI/ExperienceUI)
@@ -516,8 +519,11 @@ public class UIMainLobby : BaseUI
     // Chữ trên nút auto: AUTO ON khi pet tự kích hoạt, AUTO OFF khi người chơi bấm tay.
     private void UpdateAutoPetVisual()
     {
+        bool isAuto = GameData.userData.companions.isAutoActive;
         if (txtAutoPet != null)
-            txtAutoPet.text = GameData.userData.companions.isAutoActive ? Loc.L(PET_AUTO_KEY) : Loc.L(PET_OFF_KEY);
+            txtAutoPet.text = isAuto ? Loc.L(PET_AUTO_KEY) : Loc.L(PET_OFF_KEY);
+        if (btAutoPet != null && btAutoPet.image != null)
+            btAutoPet.image.color = isAuto ? autoPetOnColor : autoPetOffColor;
     }
 
     #endregion

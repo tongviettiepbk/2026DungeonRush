@@ -4,7 +4,7 @@ using UnityEngine;
 
 // Port BoostButton gốc (nút "Boost x2 +5m" cạnh nút Loot): xem quảng cáo → EXP nhận được ×AdBoostWorth
 // trong AdBoostDuration giây; xem tiếp khi đang chạy thì cộng dồn, trần 12 lượt. Logic ở ShopService (AdBoost*).
-//  - Nhãn (jwh): "<sprite=0>" + "Boost x{mult}\n+{thời lượng}", sprite 0 = icon quảng cáo (IsAd).
+//  - Nhãn (jwh) gốc: "<sprite=0>" + "Boost x{mult}\n+{thời lượng}", sprite 0 = icon quảng cáo (IsAd); reskin đổi thành 1 dòng, xem LABEL_FORMAT.
 //  - Đang chạy (jwe/jwf): hiện chữ thời gian còn lại + thanh Overlay dài theo còn lại / trần.
 //  - Ẩn khi playerLevel < VisibleAtPlayerLevel (3).
 // Hiệu ứng ấn/nhả dùng ForgeButtonView (cùng kiểu nút với Loot gốc).
@@ -13,7 +13,9 @@ public class BoostButtonView : MonoBehaviour
     // jwf: chiều rộng Overlay = tỉ lệ còn lại × 220.838 + 13.712 (ykx / ykw gốc).
     private const float OVERLAY_MIN_WIDTH = 13.712f;
     private const float OVERLAY_RANGE_WIDTH = 220.838f;
-    private const string LABEL_FORMAT = "Boost x{0}\n+{1}"; // UI.Boost.Label (EN)
+    // Reskin (mockup lobby): icon tia sét nằm trên, nhãn 1 dòng "Boost x2 +5m", bỏ icon quảng cáo đầu nhãn.
+    private const string LABEL_FORMAT = "Boost x{0} <size=75%>+{1}</size>"; // UI.Boost.Label (EN) gốc: "Boost x{0}\n+{1}"
+    private const float ORIGINAL_TOP_WIDTH = 228f; // bề ngang nắp nút gốc mà 2 hằng Overlay ở trên tính theo
 
     public ForgeButtonView pressView;
     public TMP_Text txtLabel;
@@ -80,7 +82,7 @@ public class BoostButtonView : MonoBehaviour
             lastMultiplier = multiplier;
             lastDuration = duration;
             if (txtLabel != null)
-                txtLabel.text = "<sprite=0>" + string.Format(LABEL_FORMAT, FormatMultiplier(multiplier), ShopUIUtil.FormatDuration(duration));
+                txtLabel.text = string.Format(LABEL_FORMAT, FormatMultiplier(multiplier), ShopUIUtil.FormatDuration(duration));
         }
 
         long remaining = ShopService.GetAdBoostRemaining();
@@ -89,6 +91,9 @@ public class BoostButtonView : MonoBehaviour
         lastRemaining = remaining;
 
         bool isActive = remaining > 0;
+        // Reskin: boost đang chạy = trạng thái khoá → nắp xanh dương.
+        if (pressView != null)
+            pressView.SetLockedVisual(isActive);
         ShopUIUtil.SetActive(txtRemainingTime, isActive);
         ShopUIUtil.SetActive(overlay, isActive);
         if (!isActive)
@@ -98,7 +103,9 @@ public class BoostButtonView : MonoBehaviour
         if (overlay != null)
         {
             float fill = Mathf.Clamp01((float)remaining / ShopService.GetAdBoostMaxDuration());
-            overlay.sizeDelta = new Vector2(fill * OVERLAY_RANGE_WIDTH + OVERLAY_MIN_WIDTH, overlay.sizeDelta.y);
+            RectTransform top = overlay.parent as RectTransform;
+            float scale = top != null ? top.rect.width / ORIGINAL_TOP_WIDTH : 1f;
+            overlay.sizeDelta = new Vector2((fill * OVERLAY_RANGE_WIDTH + OVERLAY_MIN_WIDTH) * scale, overlay.sizeDelta.y);
         }
     }
 

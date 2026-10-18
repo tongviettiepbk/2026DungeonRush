@@ -35,6 +35,8 @@ public class ForgeUIController : MonoBehaviour
     public GameObject objAutoButton;     // cả nút Auto — ẩn khi chưa tới level hiện
     public GameObject objAutoRunning;    // vòng xoay khi auto đang chạy
     public GameObject objAutoIdle;       // chữ "AUTO" khi auto đang tắt
+    public Image imgAutoTop;             // reskin: nắp nút Auto — chưa tới level dùng được thì đổi sang ảnh khoá (xám)
+    public Sprite sprAutoLocked;
     public Transform itemList;
     public ItemElementView itemPrefab;
     public float autoRotateSpeed = 360f;
@@ -258,7 +260,21 @@ public class ForgeUIController : MonoBehaviour
             objAutoRunning.SetActive(isAuto);
         if (objAutoIdle != null)
             objAutoIdle.SetActive(isAuto == false);
+        RefreshAutoLockVisual();
         RefreshTutorials();
+    }
+
+    private Sprite sprAutoNormal;
+
+    // Reskin: Auto hiện từ AUTO_VISIBLE_LEVEL nhưng chỉ bấm được từ AUTO_USABLE_LEVEL → khoảng giữa hiện nắp xám.
+    private void RefreshAutoLockVisual()
+    {
+        if (imgAutoTop == null || sprAutoLocked == null || GameData.userData == null)
+            return;
+        if (sprAutoNormal == null)
+            sprAutoNormal = imgAutoTop.sprite;
+        bool isLocked = GameData.userData.player.playerLevel < ForgeService.AUTO_USABLE_LEVEL;
+        imgAutoTop.sprite = isLocked ? sprAutoLocked : sprAutoNormal;
     }
 
     private void OnTutorialStepCompleted(FtueStep step)
