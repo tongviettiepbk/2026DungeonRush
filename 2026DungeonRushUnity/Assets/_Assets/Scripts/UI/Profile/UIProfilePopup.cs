@@ -36,6 +36,8 @@ public class UIProfilePopup : BaseUI
     public Slider sliderMusic;
     public TMP_Text txtMusicStatus;
     public Image imgMusicHandle;
+    public Sprite sprHandleOn;      // reskin: núm bật = xanh, tắt = xám (đổi sprite thay cho tô màu)
+    public Sprite sprHandleOff;
     public ToggleButton toggleVibrate;
     public TMP_Text txtUserId;
     public Button btCopyUserId;
@@ -203,7 +205,7 @@ public class UIProfilePopup : BaseUI
     {
         bool isOn = value > 0f;
         text.text = L(isOn ? "Common.On" : "Common.Off");
-        handle.color = isOn ? UITabWing.DEFAULT_BUTTON_COLOR : UITabWing.DISABLED_BUTTON_COLOR;
+        handle.sprite = isOn ? sprHandleOn : sprHandleOff;
     }
 
     // Project chưa có chỗ nào rung — mới lưu lựa chọn.

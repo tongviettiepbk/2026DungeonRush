@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 // Nút gạt bật/tắt (ToggleButton gốc): núm trượt sang phải khi bật, sang trái khi tắt và đổi màu; chữ ON/OFF nằm
 // phía đối diện núm. Bấm thì đảo trạng thái rồi báo onChanged.
+// Reskin: núm đổi sprite (OnSprite/OffSprite) thay cho tô màu, phần đầy OnFill chỉ hiện khi bật.
 public class ToggleButton : MonoBehaviour
 {
     private const float MOVE_DURATION = 0.15f;
@@ -15,6 +16,9 @@ public class ToggleButton : MonoBehaviour
     public RectTransform ChildRectTransform;
     public Button Button;
     public TextMeshProUGUI StatusText;
+    public Sprite OnSprite;
+    public Sprite OffSprite;
+    public GameObject OnFill;
     public float Padding;   // khoảng cách tâm núm tới mép khung
 
     public Action<bool> onChanged;
@@ -55,8 +59,9 @@ public class ToggleButton : MonoBehaviour
             ChildRectTransform.anchoredPosition = new Vector2(knobX, ChildRectTransform.anchoredPosition.y);
         }
 
-        ChildButtonImage.color = isOn ? UITabWing.DEFAULT_BUTTON_COLOR : UITabWing.DISABLED_BUTTON_COLOR;
-        StatusText.text = isOn ? "ON" : "OFF";
+        ChildButtonImage.sprite = isOn ? OnSprite : OffSprite;
+        OnFill.SetActive(isOn);
+        StatusText.text = Loc.L(isOn ? "Common.On" : "Common.Off");   // reskin: "On/Off" như tay nắm slider
         RectTransform text = StatusText.rectTransform;
         text.anchoredPosition = new Vector2(isOn ? textX : -textX, text.anchoredPosition.y);
     }
