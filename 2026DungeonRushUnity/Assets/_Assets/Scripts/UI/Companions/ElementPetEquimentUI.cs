@@ -15,6 +15,7 @@ public class ElementPetEquimentUI : MonoBehaviour
     public Button btEquipPet;
     public Button btRemovePet;
 
+    public Image imgBackground;     // nền ô = khung rarity (RarityBackgroundConfig), như ô đồ lobby
     public Image imgIcon;
     public GameObject objLock;
     public TMP_Text txtLv;
@@ -69,6 +70,10 @@ public class ElementPetEquimentUI : MonoBehaviour
         bool canEquip = isOwned && isEquipped == false && user.GetEquipped().Count < UserCompanionData.MAX_EQUIPPED;
 
         objAddArea.SetActive(false);
+        if (imgBackground != null)
+        {
+            imgBackground.sprite = RarityBackgroundConfig.Get(data.rarity);
+        }
         imgIcon.gameObject.SetActive(true);
         imgIcon.sprite = data.icon;
 

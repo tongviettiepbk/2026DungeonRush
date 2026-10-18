@@ -63,7 +63,7 @@ public class UICompanionAdSummonPopup : BaseUI
         }
 
         SummonButton.interactable = true;
-        SummonButtonImage.color = UITabWing.DEFAULT_BUTTON_COLOR;
+        SummonButtonImage.color = Color.white;   // ảnh nút đã có màu (btn_yellow), không tô thêm
         SummonButtonText.text = (isNoAds ? string.Empty : "<sprite=0>") + remaining + "/" + CompanionSummonConfig.AD_DAILY_LIMIT
             + "\nSummon x" + count;
     }

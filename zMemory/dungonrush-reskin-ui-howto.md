@@ -30,6 +30,7 @@ Cách reskin 1 màn UI (đã làm trọn lobby UIMainGame2, commit 2fe6b79 + 453
 - Mockup có phần lobby không có (ô cash, hàng 3 nút) → bỏ, giữ bố cục.
 
 **6. Bẫy đã dính**
+- Project Linear color space: ảnh đen bán trong suốt (lớp tối art giao, vd 50%) trên UI ra NHẠT hơn Photoshop (50% → chỉ tối ~27%). Bù alpha a' = 1-(1-a)^2.2 khi xuất ảnh (gen_companion_frames.py). Tô màu Image.color (nhân) thì không bị.
 - Ảnh nằm trong TMP sprite asset (vd `IsGem.asset`) đổi cỡ → sửa glyphRect/metrics tay; Apply Reskin không tự làm.
 - Slider `interactable=false` + transition ColorTint → fill bị tô disabledColor (vàng thành nâu) → đặt transition None.
 - Code đè màu/sprite lúc chạy: ForgeButtonView (default/pressed color), ExperienceUI (màu nút Level), ElementEquipmentUILobby (nền rarity) → đọc code trước khi chỉnh prefab.

@@ -20,6 +20,7 @@ public class UIPetInfo : BaseUI
     public TMP_Text txtRarity;
 
     [Space(20)]
+    public Image imgBackground;     // nền ô = khung rarity (RarityBackgroundConfig)
     public Image imgIcon;
     public Image imgLock;
     public TMP_Text textLv;
@@ -81,6 +82,10 @@ public class UIPetInfo : BaseUI
         txtOwnEffect.text = (Loc.L("Items.SubStat.Damage") + " ") + Highlight(FormatNumber(CompanionService.GetOwnAttack(data, level)))
                           + " Health " + Highlight(FormatNumber(CompanionService.GetOwnHealth(data, level)));
 
+        if (imgBackground != null)
+        {
+            imgBackground.sprite = RarityBackgroundConfig.Get(data.rarity);
+        }
         imgIcon.sprite = data.icon;
         imgIcon.gameObject.SetActive(isOwned);
         imgLock.gameObject.SetActive(isOwned == false);
