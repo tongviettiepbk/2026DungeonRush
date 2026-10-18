@@ -74,7 +74,7 @@ public class UIRewardedChestPopup : BaseUI
         }
 
         AdButton.interactable = isWaitingAd == false;
-        AdButtonImage.color = UITabWing.DEFAULT_BUTTON_COLOR;
+        AdButtonImage.color = Color.white;   // ảnh nút đã có màu (btn_green), không tô thêm
         AdButtonText.text = isWaitingAd ? Loc.L("Common.Loading") : (GameData.userData.shop.isNoAdsBought ? Loc.L("Common.Claim") : "<sprite=0>Claim");
     }
 
