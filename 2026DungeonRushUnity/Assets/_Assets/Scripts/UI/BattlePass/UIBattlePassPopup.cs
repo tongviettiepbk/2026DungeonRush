@@ -12,10 +12,13 @@ public class UIBattlePassPopup : BaseUI
     public float LevelElementTopPadding = 100f;
     public float LevelElementSpacing = 80f;
     public float RewardElementHeight = 150f;
-    public Color RewardClaimedColor = new Color(0.6981132f, 0.6981132f, 0.6981132f, 1f);
-    public Color RewardNotReachedColor = new Color(0.16862746f, 0.16862746f, 0.16862746f, 1f);
-    public Color RewardClaimableColor = new Color(0.078431375f, 0.62352943f, 0.9921569f, 1f);
-    public Color LevelNotReachedColor = new Color(0.16862746f, 0.16862746f, 0.16862746f, 1f);
+    // Reskin: nền ô thưởng / ô mốc theo trạng thái — đã nhận (xanh dương), tới mốc (xanh lá), chưa tới (xám).
+    public Sprite RewardClaimedSprite;
+    public Sprite RewardClaimableSprite;
+    public Sprite RewardNotReachedSprite;
+    public Sprite LevelClaimedSprite;
+    public Sprite LevelReachedSprite;
+    public Sprite LevelNotReachedSprite;
 
     public ScrollRect ScrollRect;
     public RectTransform LevelsTransform;          // cột mốc giữa
@@ -77,7 +80,7 @@ public class UIBattlePassPopup : BaseUI
         {
             int level = BattlePassService.START_LEVEL + i * BattlePassService.REWARD_INTERVAL;
             float y = -(LevelElementTopPadding + i * rowHeight);
-            GetLevelView(i).Setup(level, LevelNotReachedColor);
+            GetLevelView(i).Setup(level, GetLevelSprite(level));
             Place(levels[i].transform, y);
             GetCell(i * 2, FreeRewardPrefab, FreeRewardsTransform).Setup(BattlePassService.GetReward(level, false), this);
             Place(cells[i * 2].transform, y);
@@ -90,9 +93,17 @@ public class UIBattlePassPopup : BaseUI
         float height = LevelElementTopPadding * 2f + (count - 1) * rowHeight;
         RectTransform content = ScrollRect.content;
         content.sizeDelta = new Vector2(content.sizeDelta.x, height);
-        RefreshFill(count, rowHeight);
+        RefreshFill(height, rowHeight);
         RefreshBuyButton();
         ScrollToFirstClaimable(rowHeight, height);
+    }
+
+    // Ô mốc: đã nhận thưởng Free → xanh dương, tới mốc → xanh lá, chưa tới → xám.
+    private Sprite GetLevelSprite(int level)
+    {
+        if (BattlePassService.IsClaimed(level, false))
+            return LevelClaimedSprite;
+        return BattlePassService.IsReached(level) ? LevelReachedSprite : LevelNotReachedSprite;
     }
 
     private BattlePassLevelView GetLevelView(int index)
@@ -121,15 +132,14 @@ public class UIBattlePassPopup : BaseUI
         rt.anchoredPosition = new Vector2(0f, y);
     }
 
-    // Thanh fill dọc cột mốc: dài tới mốc cao nhất đã đạt.
-    private void RefreshFill(int count, float rowHeight)
+    // Thanh fill dọc cột mốc: thanh nền (FillBarParent) giãn theo cả Content, fill từ đỉnh tới mốc cao nhất đã đạt.
+    private void RefreshFill(float height, float rowHeight)
     {
         if (FillBarRectTransform == null || FillBarParentRectTransform == null)
             return;
-        float total = (count - 1) * rowHeight;
-        FillBarParentRectTransform.sizeDelta = new Vector2(FillBarParentRectTransform.sizeDelta.x, total);
         float reached = (BattlePassService.GetHighestLevel() - BattlePassService.START_LEVEL) / (float)BattlePassService.REWARD_INTERVAL;
-        FillBarRectTransform.sizeDelta = new Vector2(FillBarRectTransform.sizeDelta.x, Mathf.Clamp(reached * rowHeight, 0f, total));
+        float fill = reached < 0f ? 0f : LevelElementTopPadding + reached * rowHeight;
+        FillBarRectTransform.sizeDelta = new Vector2(FillBarRectTransform.sizeDelta.x, Mathf.Clamp(fill, 0f, height));
     }
 
     private void ScrollToFirstClaimable(float rowHeight, float height)
@@ -174,6 +184,12 @@ public class UIBattlePassPopup : BaseUI
         {
             if (cell != null && cell.gameObject.activeSelf)
                 cell.Refresh();
+        }
+        for (int i = 0; i < levels.Count; i++)
+        {
+            int level = BattlePassService.START_LEVEL + i * BattlePassService.REWARD_INTERVAL;
+            if (levels[i].gameObject.activeSelf)
+                levels[i].Setup(level, GetLevelSprite(level));
         }
     }
 

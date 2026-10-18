@@ -10,4 +10,5 @@ Dựng 2026-10-17, commit 64ef2be, USER CHƯA TEST Play.
 - UI: `UI/BattlePass/` UIBattlePassPopup + BattlePassRewardCellView + BattlePassLevelView + BattlePassButtonView (node UIMainGame2/SafeArea/BattlepassButton). Builder `Tools/DungeonRush/Build Battle Pass UI/Battle Pass Popup`.
 - Save: UserShopData.isPremiumBattlePassBought / claimedFree/PremiumBattlePassRewards; sản phẩm `lootio.battlepass` (giá $9.99 [SUY]).
 - Lệch có chủ đích: bố cục ô đặt tuyến tính theo padding/spacing gốc, không dùng pool 30 ô; icon Cloak / key Cultist chưa có TMP sprite asset nên hiện số không icon.
+- Reskin 2026-10-18 (xem [[dungonrush-reskin-plan]]): KHÔNG chạy lại builder Battle Pass (ghi đè reskin + dựng lại VerticalLayoutGroup đã gỡ).
 Xem [[dungonrush-shop-system]], [[dungonrush-follow-original-strict]].

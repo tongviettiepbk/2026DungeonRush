@@ -2,23 +2,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Ô số mốc giữa 2 hàng thưởng (BattlePassLevelElementUI gốc, juf): chưa tới mốc thì nền tối.
+// Ô số mốc giữa 2 hàng thưởng (BattlePassLevelElementUI gốc, juf): nền theo trạng thái mốc (popup chọn sprite).
 public class BattlePassLevelView : MonoBehaviour
 {
     public TMP_Text LevelText;
     public Image BackgroundImage;
 
-    private Color reachedColor;
-    private bool isColorCached;
-
-    public void Setup(int level, Color notReachedColor)
+    public void Setup(int level, Sprite background)
     {
-        if (isColorCached == false)
-        {
-            isColorCached = true;
-            reachedColor = BackgroundImage.color;
-        }
         LevelText.text = level.ToString();
-        BackgroundImage.color = BattlePassService.IsReached(level) ? reachedColor : notReachedColor;
+        BackgroundImage.sprite = background;
     }
 }

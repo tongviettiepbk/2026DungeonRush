@@ -42,7 +42,7 @@ public class BattlePassRewardCellView : MonoBehaviour
 
         if (CheckMarkImage != null) CheckMarkImage.SetActive(isClaimed);
         if (LockImage != null) LockImage.SetActive(isLocked);
-        BackgroundImage.color = isClaimed ? popup.RewardClaimedColor : (isReached ? popup.RewardClaimableColor : popup.RewardNotReachedColor);
+        BackgroundImage.sprite = isClaimed ? popup.RewardClaimedSprite : (isReached ? popup.RewardClaimableSprite : popup.RewardNotReachedSprite);
         Button.interactable = canClaim;
         if (NotificationUI != null) NotificationUI.SetActive(canClaim);
     }
