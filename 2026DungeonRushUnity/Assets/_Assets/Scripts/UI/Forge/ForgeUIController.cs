@@ -558,6 +558,7 @@ public class ForgeUIController : MonoBehaviour
         GameData.Save();
         this.PostEvent(EventID.EquipmentChanged, item.EquipSlot);
         owner.RefreshEquipment();
+        RateUsService.OnItemEquipped(item.rarity);
     }
 
     // hep/hey gốc: bán lấy EXP.

@@ -78,3 +78,4 @@
 - [Reskin gameplay](dungonrush-reskin-gameplay.md) — map tường/sàn vẽ code, quái vịt đen ChatGPT trên rig hero, 3 popup đồ/offer kit Mastery; 2026-10-18 CHƯA commit
 - [Reskin Shop](dungonrush-reskin-shop.md) — StoreTabPage + 5 popup Shop (kit Mastery, ribbon_tint tô rarity) 2026-10-18: khung art + 19 icon ChatGPT ghi đè giữ size cũ + 6 gói gem; bẫy tách nền tím; đã commit
 - [Reskin Mining](dungonrush-reskin-mining.md) — 2026-10-19 CHƯA commit: kit Mastery + art 1_UIKit/Mining, ChatGPT 7 icon quặng (diamond=thạch anh tím), nút dụng cụ đổi sprite; CẤM chạy lại Build Mining
+- [Rate Us](dungonrush-rate-us.md) — dựng + reskin 2026-10-19 theo gốc: trigger đồ Rare/Epic lần đầu, max 3 lần, Submit ≥4 sao mở store; doc RATE_US_MODEL.md; đã commit

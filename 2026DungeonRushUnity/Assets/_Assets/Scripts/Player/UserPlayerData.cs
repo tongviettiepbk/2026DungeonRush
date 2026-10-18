@@ -10,6 +10,13 @@ public class UserPlayerData : BaseUserData
     // Exp tích trong level hiện tại (chưa trừ ngưỡng để lên level tiếp).
     public int playerExperience { get; set; }
 
+    // Rate Us (User gốc: IsRateUsSubmitted / RateUsShowCount / IsRateUsFirst*Shown) — RateUsService.
+    public bool isRateUsSubmitted { get; set; }
+    public int rateUsShowCount { get; set; }
+    public bool isRateUsFirstGreenEquipShown { get; set; }
+    public bool isRateUsFirstPurpleEquipShown { get; set; }
+    public bool isRateUsFirstDragonWinShown { get; set; }
+
     protected override string GetDataKey()
     {
         return UserData.DATA_KEY_PLAYER;

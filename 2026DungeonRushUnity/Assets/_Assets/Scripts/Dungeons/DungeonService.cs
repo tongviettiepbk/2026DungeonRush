@@ -114,6 +114,7 @@ public static class DungeonService
         progress.level++;
         User.isDataChanged = true;
         GameData.Save(true);
+        RateUsService.OnDungeonWin(type);
         return amount;
     }
 
