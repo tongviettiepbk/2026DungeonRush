@@ -348,7 +348,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 11400000, guid: dfe81869251a77b4d8c61b239e3e9699, type: 2}
+  m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
@@ -575,7 +575,7 @@ MonoBehaviour:
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 11400000, guid: dfe81869251a77b4d8c61b239e3e9699, type: 2}
+  m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
@@ -1595,6 +1595,7 @@ GameObject:
   - component: {fileID: 268475079198822705}
   - component: {fileID: 433781690942605646}
   - component: {fileID: 234860809661125801}
+  - component: {fileID: 52671840331507195}
   m_Layer: 5
   m_Name: Immortal
   m_TagString: Untagged
@@ -1643,7 +1644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1659,6 +1660,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &52671840331507195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5046223220594054421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62cccc4f5056245ac9a2cd9c5f638e46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RarityPatternEffect
+  animationType: 1
+  duration: 5
+  moveDistance: 0
+  rotationDegrees: 360
+  ease: 1
 --- !u!1 &5135098368540373503
 GameObject:
   m_ObjectHideFlags: 0
@@ -2020,6 +2038,7 @@ GameObject:
   - component: {fileID: 1524455979643739379}
   - component: {fileID: 7831505384371355384}
   - component: {fileID: 5056158363294665740}
+  - component: {fileID: 416598636931114719}
   m_Layer: 5
   m_Name: Divine
   m_TagString: Untagged
@@ -2068,7 +2087,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2084,6 +2103,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 4
+--- !u!114 &416598636931114719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6195235465513189277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62cccc4f5056245ac9a2cd9c5f638e46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RarityPatternEffect
+  animationType: 2
+  duration: 5
+  moveDistance: 128
+  rotationDegrees: 0
+  ease: 1
 --- !u!1 &6444786123060991518
 GameObject:
   m_ObjectHideFlags: 0
@@ -2527,6 +2563,7 @@ GameObject:
   - component: {fileID: 8359188247532728303}
   - component: {fileID: 4509397178219951347}
   - component: {fileID: 351910706997369352}
+  - component: {fileID: 8749537504429146700}
   m_Layer: 5
   m_Name: Mask
   m_TagString: Untagged
@@ -2594,6 +2631,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1.85
+--- !u!114 &8749537504429146700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7564288884390987051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
+  m_ShowMaskGraphic: 0
 --- !u!1 &8153063413218940315
 GameObject:
   m_ObjectHideFlags: 0
@@ -2738,6 +2788,7 @@ GameObject:
   - component: {fileID: 997574255610675049}
   - component: {fileID: 6067829203606575926}
   - component: {fileID: 4892913023999059354}
+  - component: {fileID: 3907406052040771067}
   m_Layer: 5
   m_Name: Ancient
   m_TagString: Untagged
@@ -2786,7 +2837,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2802,6 +2853,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 2
+--- !u!114 &3907406052040771067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8175270929656992297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62cccc4f5056245ac9a2cd9c5f638e46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RarityPatternEffect
+  animationType: 0
+  duration: 5
+  moveDistance: 128.5
+  rotationDegrees: 0
+  ease: 1
 --- !u!1 &8253827363139021416
 GameObject:
   m_ObjectHideFlags: 0

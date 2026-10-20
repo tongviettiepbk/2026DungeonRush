@@ -51,7 +51,7 @@ public static class CompanionFx
         line.endColor = color;
         line.startWidth = width;
         line.endWidth = width;
-        line.sortingOrder = 500;
+        line.sortingOrder = StaticValue.SORTING_ORDER_WORLD_HUD - 10; // trên unit/FX, dưới canvas lobby (100)
         line.numCapVertices = 2;
         line.positionCount = 0;
         line.enabled = false;

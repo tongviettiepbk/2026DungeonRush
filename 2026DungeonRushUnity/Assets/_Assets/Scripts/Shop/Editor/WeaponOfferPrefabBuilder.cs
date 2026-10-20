@@ -30,6 +30,8 @@ public static class WeaponOfferPrefabBuilder
         view.objAncient = Optional(element, "BackgroundImage/Mask/Ancient");
         view.objImmortal = Optional(element, "BackgroundImage/Mask/Immortal");
         view.objDivine = Optional(element, "BackgroundImage/Mask/Divine");
+        // Bản rip mất SoftMask + RarityPatternEffect → pattern tràn khỏi ô, đứng yên; gắn lại như Forge.
+        ForgePrefabBuilder.AddRarityPatternFx(element);
         foreach (string hide in new[] { "BackgroundImage/NotificationUI", "BackgroundImage/TutorialUI", "LockedImage" })
             Find(element, hide).gameObject.SetActive(false);
         ui.ItemElementUI = view;

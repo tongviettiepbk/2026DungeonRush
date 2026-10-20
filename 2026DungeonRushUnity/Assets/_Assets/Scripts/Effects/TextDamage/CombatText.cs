@@ -82,8 +82,8 @@ public class CombatText : MonoBehaviour
             isInitialized = true;
             canvas.renderMode = RenderMode.WorldSpace;
             canvas.worldCamera = Camera.main; // TODO(follow-stick): đổi sang CameraController khi port.
-            canvas.sortingLayerName = StaticValue.SORTING_LAYER_UI;
-            canvas.sortingOrder = 4;
+            canvas.sortingLayerName = StaticValue.SORTING_LAYER_DEFAULT;
+            canvas.sortingOrder = StaticValue.SORTING_ORDER_WORLD_HUD + 10; // trên thanh máu, dưới canvas lobby
         }
     }
 

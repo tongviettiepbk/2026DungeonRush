@@ -300,7 +300,7 @@ public static class ForgePrefabBuilder
 
     // Bản rip mất SoftMask ở node Mask + RarityPatternEffect ở 3 pattern → gắn lại (Mask thường thay SoftMask).
     // Thông số lấy từ prefab gốc: Duration 5, Ease Linear; Ancient trượt xuống 128.5, Immortal xoay 360, Divine trượt chéo 128.
-    private static void AddRarityPatternFx(Transform t, string maskPath = "BackgroundImage/Mask")
+    internal static void AddRarityPatternFx(Transform t, string maskPath = "BackgroundImage/Mask")
     {
         GameObject maskGo = Find(t, maskPath).gameObject;
         Mask mask = maskGo.GetComponent<Mask>();
