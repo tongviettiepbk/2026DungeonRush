@@ -22,6 +22,9 @@ public class ClanWarMilestoneCard : MonoBehaviour
     public Color UnreachedColor = Color.gray;
     public Color ReachedColor = new Color(1f, 0.85f, 0.4f);
     public Color CollectedColor = new Color(0.298f, 0.686f, 0.314f);
+    // Reskin: có sprite thì đổi SPRITE theo trạng thái (đạt/đã nhận = xanh dương, chưa đạt = xám) thay cho tô màu.
+    public Sprite ReachedSprite;
+    public Sprite UnreachedSprite;
 
     private Action onClaim;
 
@@ -37,7 +40,15 @@ public class ClanWarMilestoneCard : MonoBehaviour
         if (ThresholdText != null) ThresholdText.text = ClanWarController.FormatNumber(row.threshold);
         if (RewardsView != null) RewardsView.SetRewards(row.ToRewards());
         if (ClaimButton != null) ClaimButton.gameObject.SetActive(state == State.ReachedClaimable);
-        if (BackgroundImage != null) BackgroundImage.color = ColorOf(state);
+        if (BackgroundImage != null)
+        {
+            if (ReachedSprite != null && UnreachedSprite != null)
+            {
+                BackgroundImage.sprite = state == State.Unreached ? UnreachedSprite : ReachedSprite;
+                BackgroundImage.color = Color.white;
+            }
+            else BackgroundImage.color = ColorOf(state);
+        }
         SetBusy(false);
     }
 

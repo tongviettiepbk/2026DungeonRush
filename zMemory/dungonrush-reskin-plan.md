@@ -30,6 +30,8 @@ Kế hoạch: `GDD/RESKIN_PLAN.md`. User chốt 2026-10-18: reskin CHỈ thay h�
 
 - BATTLE PASS (2026-10-18, đã commit): mockup `ArtIncoming/_Concept/BattlePass/` (art giao: khung gradient 914x1691, ruy băng, ô thưởng xanh dương/xanh lá/xám 278x157, nhãn mốc 3 màu 171x84, thanh mốc track/fill, khoá, chấm than). `tools/reskin/gen_battle_pass.py` → `Art/1_UIKit/BattlePass/`: panel_inner = lớp đen 30% ÉP SẴN lên gradient (né Linear), btn_orange = remap bảng màu ô xanh lá → cam (viền nâu đỏ #4E0800) đo trên mockup. ChatGPT chỉ vẽ dấu tích lớn `icon_check` (`_Concept/BattlePass/gen/`, ref = crop mockup). Nút X = Mastery/btn_close. Code đổi SPRITE theo trạng thái (đã nhận=xanh dương, tới mốc=xanh lá, chưa tới=xám; ô mốc xanh dương khi đã nhận Free) thay cho tô màu. Đã GỠ 3 VerticalLayoutGroup + ContentSizeFitter rip (đè vị trí code Place). Thanh mốc giãn cả Content, fill = padding + mốc đạt. Hàng 280 (h157 + sp123, padding 219). Test Play OK (chưa thử bấm nhận). Ảnh so: `_Concept/BattlePass/compare_mockup_vs_game.png`. Mockup ghi nhãn mốc "Normal 2-10" — game vẫn hiện số màn (20, 25…).
 
+- CLAN (2026-10-20, đã commit "Reskin Clan theo mockup BallIdle"): xem [[dungonrush-reskin-clan]].
+
 - FRIENDS (2026-10-19): BỎ QUA — game không có màn Friends (gốc cũng không); mockup BallIdle/_unRar/Friends không áp, user chốt không reskin.
 
 **Why:** user chuẩn bị reskin cả game theo mockup `ArtIncoming/_Concept/Lobby/lobby demo.png`.

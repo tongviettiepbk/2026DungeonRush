@@ -81,3 +81,4 @@
 - [Reskin Wing](dungonrush-reskin-wing.md) — 2026-10-19 đã commit: PageWing + popup Craft/Reroll kit Mastery/BattlePass, 2 mũi tên art giao, giữ icon wing (user chốt), nút đổi sprite bật/tắt
 - [Reskin Setting](dungonrush-reskin-setting.md) — 2026-10-19 đã commit: trang Settings phóng ×1.21 theo mockup, 4 ảnh art slider/núm ở 1_UIKit/Setting, núm đổi sprite (ToggleButton.OnSprite/OnFill)
 - [Rate Us](dungonrush-rate-us.md) — dựng + reskin 2026-10-19 theo gốc: trigger đồ Rare/Epic lần đầu, max 3 lần, Submit ≥4 sao mở store; doc RATE_US_MODEL.md; đã commit
+- [Reskin Clan](dungonrush-reskin-clan.md) — 2026-10-20 ClanTabPage 3 tab + 13 popup theo mockup BallIdle; banner ghép giữ hệ (khung vẽ code + 20 icon ChatGPT xám để tô); kit 1_UIKit/Clan; đã commit "Reskin Clan theo mockup BallIdle"; CẤM chạy lại Build Clan UI Prefabs

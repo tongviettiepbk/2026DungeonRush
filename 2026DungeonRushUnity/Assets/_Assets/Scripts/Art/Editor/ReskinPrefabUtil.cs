@@ -34,6 +34,37 @@ public static class ReskinPrefabUtil
         canvasRoot = null;
     }
 
+    private static GameObject pageWrapper;
+    private static Vector2 pageAmin, pageAmax, pageOmin, pageOmax, pagePivot;
+
+    // Prefab trang lobby (gốc size 0, giãn theo cha lúc chạy): bọc tạm trong khung 1080x2160, trang giãn từ y=top tới y=bottom
+    // (pixel màn hình như lúc chạy trong UIMainGame2) → Place dùng toạ độ màn hình.
+    public static GameObject OpenPage(string path, float top, float bottom)
+    {
+        GameObject root = PrefabUtility.LoadPrefabContents(path);
+        pageWrapper = new GameObject("TmpCanvas", typeof(RectTransform));
+        UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(pageWrapper, root.scene);
+        canvasRoot = (RectTransform)pageWrapper.transform;
+        canvasRoot.sizeDelta = new Vector2(1080, 2160);
+        var rt = (RectTransform)root.transform;
+        pageAmin = rt.anchorMin; pageAmax = rt.anchorMax; pageOmin = rt.offsetMin; pageOmax = rt.offsetMax; pagePivot = rt.pivot;
+        rt.SetParent(canvasRoot, false);
+        rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+        rt.offsetMin = new Vector2(0, 2160 - bottom); rt.offsetMax = new Vector2(0, -top);
+        return root;
+    }
+
+    public static void SavePage(GameObject root, string path)
+    {
+        var rt = (RectTransform)root.transform;
+        rt.SetParent(null, false);
+        rt.anchorMin = pageAmin; rt.anchorMax = pageAmax; rt.pivot = pagePivot; rt.offsetMin = pageOmin; rt.offsetMax = pageOmax;
+        UnityEngine.Object.DestroyImmediate(pageWrapper);
+        PrefabUtility.SaveAsPrefabAsset(root, path);
+        PrefabUtility.UnloadPrefabContents(root);
+        canvasRoot = null;
+    }
+
     // Đặt tâm (x, y) + cỡ w x h theo pixel mockup; neo giữa cha.
     public static void Place(Transform t, float x, float y, float w, float h)
     {
