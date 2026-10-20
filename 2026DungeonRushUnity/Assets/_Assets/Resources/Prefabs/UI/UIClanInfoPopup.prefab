@@ -640,7 +640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
-  key: UI.Clan.ClanSearchCard.Requested
+  key: Clan.Common.Requested
   sourceText: Requested
   isUpperCharacters: 0
 --- !u!1 &847426729054055402
@@ -1562,7 +1562,6 @@ GameObject:
   - component: {fileID: 5339356219768453072}
   - component: {fileID: 449597881117065788}
   - component: {fileID: 647189901164334513}
-  - component: {fileID: 2919772134036024562}
   m_Layer: 0
   m_Name: NameText
   m_TagString: Untagged
@@ -1689,21 +1688,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &2919772134036024562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2163996255694606455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
-  key: Clan.ClanSettingsPopup.ClanSettings
-  sourceText: Ottoman
-  isUpperCharacters: 0
 --- !u!1 &2276322655065564117
 GameObject:
   m_ObjectHideFlags: 0
@@ -2393,7 +2377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
-  key: Clan.ClanSettingsPopup.Save
+  key: Clan.Common.Request
   sourceText: Request
   isUpperCharacters: 0
 --- !u!1 &3406023464605898535
@@ -2546,7 +2530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
-  key: Clan.ClanSettingsPopup.Save
+  key: Clan.Common.Join
   sourceText: Join
   isUpperCharacters: 0
 --- !u!1 &3427137339594276649
@@ -3214,7 +3198,6 @@ GameObject:
   - component: {fileID: 7255020349766308276}
   - component: {fileID: 5667939366993978845}
   - component: {fileID: 2163931801661077063}
-  - component: {fileID: 2270767477077488998}
   m_Layer: 0
   m_Name: TotalPowerText
   m_TagString: Untagged
@@ -3341,21 +3324,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &2270767477077488998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4659396124988387571}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
-  key: Clan.CreateClanPopup.PublicLabel
-  sourceText: <sprite=0>300
-  isUpperCharacters: 0
 --- !u!1 &4758078844142438385
 GameObject:
   m_ObjectHideFlags: 0
@@ -4784,7 +4752,6 @@ GameObject:
   - component: {fileID: 6581157731070617469}
   - component: {fileID: 7038552671995207073}
   - component: {fileID: 9173341626075737408}
-  - component: {fileID: 7007614165249335103}
   m_Layer: 0
   m_Name: MembersText
   m_TagString: Untagged
@@ -4911,21 +4878,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &7007614165249335103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6917600503402313287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
-  key: Clan.CreateClanPopup.PublicLabel
-  sourceText: 48/50
-  isUpperCharacters: 0
 --- !u!1 &7059430542747682830
 GameObject:
   m_ObjectHideFlags: 0
@@ -4974,7 +4926,6 @@ GameObject:
   - component: {fileID: 8193670256955404253}
   - component: {fileID: 5186976687440178674}
   - component: {fileID: 2192591962317790866}
-  - component: {fileID: 5069232032233556265}
   m_Layer: 0
   m_Name: TierText
   m_TagString: Untagged
@@ -5101,21 +5052,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &5069232032233556265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7155802068312999256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a260b19c5cbec4e438edff5827449904, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizeText
-  key: Clan.CreateClanPopup.PublicLabel
-  sourceText: Tier A
-  isUpperCharacters: 0
 --- !u!1 &7177290421072710519
 GameObject:
   m_ObjectHideFlags: 0
