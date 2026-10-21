@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 // Mode CAMPAIGN (MainMap — màn thường). BaseMode đã lo dựng map/lưới/wall + vòng đời
 // (RoutineTimer, EndGame, Pause/Resume, OnUnitDie→thắng/thua, cheat Editor W/L); ở đây chỉ
@@ -30,6 +31,16 @@ public class CampaignMode : BaseMode
     private const float MIN_TRANSITION_SPEED = 0.5f;     // max(MoveSpeed, 0.5)
     // Điểm hero đi tới sau cửa: LevelLoader cổng trên (0, H/2 + 0.5) + (0, 1.5) = ô (hàng trên, cột giữa) + (−0.5, 2.5).
     private static readonly Vector3 DOOR_EXIT_OFFSET = new Vector3(-0.5f, 2.5f, 0f);
+
+    // Chuyển màn chỉ tối vùng map (tấm tối của lobby), hàng pet trở xuống vẫn sáng; thiếu lobby thì tối toàn màn.
+    private static Image MapFadeImage
+    {
+        get
+        {
+            UIMainLobby lobby = GameController.Instance != null ? GameController.Instance.uiLobby : null;
+            return lobby != null ? lobby.imgLevelProgressDark : null;
+        }
+    }
 
     public override void Init(GameController controller, ModeType typeModeInput = ModeType.DefaultLevel)
     {
@@ -183,7 +194,7 @@ public class CampaignMode : BaseMode
         }
         else
         {
-            UIManager.Instance.FadeOut(FadeColor.Black, fadeDuration, () => isFadeDone = true);
+            UIManager.Instance.FadeOut(FadeColor.Black, fadeDuration, target: MapFadeImage, doneCallback: () => isFadeDone = true);
         }
 
         while (!isFadeDone)
@@ -250,7 +261,7 @@ public class CampaignMode : BaseMode
             yield return MoveHeroTo(map.CellToWorld(path[i]), speed);
         }
 
-        UIManager.Instance.FadeOut(FadeColor.Black, fadeDuration, () => onFadeDone());
+        UIManager.Instance.FadeOut(FadeColor.Black, fadeDuration, target: MapFadeImage, doneCallback: () => onFadeDone());
         yield return MoveHeroTo(exitPoint, speed);
     }
 

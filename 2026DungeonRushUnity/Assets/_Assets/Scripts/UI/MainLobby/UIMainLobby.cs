@@ -27,6 +27,8 @@ public class UIMainLobby : BaseUI
     public TMP_SpriteAsset[] dungeonRewardSpriteAssets;
     public TMP_Text txtGem;
     public BossButtonUI bossButton;   // TopBarUI/BossButton (GameplayUI.BossGateButtonUI gốc)
+    // Tấm tối chuyển màn campaign (GameplayUI.LevelProgressDarkImage gốc): nằm dưới hàng pet/BottomUI nên chỉ phủ vùng map.
+    public Image imgLevelProgressDark;
 
     [Header("Nút chào hàng (OffersVerticalLayout — GameplayUI.khz gốc)")]
     public GameObject objOffersLayout;
@@ -865,8 +867,24 @@ public class UIMainLobby : BaseUI
 
     public void SetActiveDungeonUI(bool isOn)
     {
-        if (objDungeonUI != null)
-            objDungeonUI.SetActive(isOn);
+        SetActiveBlocker(objDungeonUI, isOn);
+    }
+
+    // Tấm phủ đáy (DungeonUI / EventBlockerUI) rip gốc để CanvasGroup alpha 0 + không chặn raycast (gốc tự fade lên
+    // lúc chạy) → chỉ SetActive thì vô hình và bấm xuyên xuống Loot/tab. Bật thì hiện hẳn + chặn bấm.
+    private void SetActiveBlocker(GameObject obj, bool isOn)
+    {
+        if (obj == null)
+            return;
+
+        obj.SetActive(isOn);
+        CanvasGroup group = obj.GetComponent<CanvasGroup>();
+        if (group != null)
+        {
+            group.alpha = isOn ? 1f : 0f;
+            group.interactable = isOn;
+            group.blocksRaycasts = isOn;
+        }
     }
 
     private void OnClickExitDungeon()
@@ -878,8 +896,7 @@ public class UIMainLobby : BaseUI
 
     public void SetActiveEventBlocker(bool isOn)
     {
-        if (objEventBlockerUI != null)
-            objEventBlockerUI.SetActive(isOn);
+        SetActiveBlocker(objEventBlockerUI, isOn);
         if (btExitEventBlocker != null)
             btExitEventBlocker.interactable = true;
     }

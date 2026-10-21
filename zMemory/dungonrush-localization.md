@@ -22,4 +22,5 @@ Nhãn tĩnh = component `LocalizedLabel` (Table+Key), 263 chỗ. ddt = mặc đ�
 - Đã thay 310 chuỗi code ở 76 file sang key gốc (script tự động, chỉ dòng hiển thị) + tên món/pet/cape/wing/dungeon/rarity/substat.
 
 **Còn sót:** chữ prefab không có LocalizedLabel gốc mà project tự thêm; "Lv."/"Lv. " (gốc không có key); tên Mastery/Event/mô tả pet (Items.Mastery.*, Items.Companion.Desc.* chưa nối); chuỗi ghép "Tier x Rewards" đang dịch từng mảnh; toast "Chưa có trang bị" (ElementEquipmentUILobby) + "... coming soon" (UITabEvent) còn cứng; UIMainLobby.SlotName tiếng Việt (dead code). Script rewrite ở scratchpad (mất) — muốn chạy lại thì viết lại theo mô tả commit e0012c0.
+**Bẫy key sai (sửa 2026-10-21, commit 8554cdb):** đợt gắn LocalizeText từng map nhầm key cho prefab Clan (nút Join/Request mang `Clan.ClanSettingsPopup.Save`, chữ động 48/50/Tier/giá/tên clan mang key rác) → key không có thì hiện NGUYÊN KEY đè chữ code gán. Chữ code tự điền KHÔNG gắn LocalizeText. Kiểm: quét mọi `key:` trong .prefab/.unity so với 10 file Languages/*.json — hiện đã sạch.
 Xem [[dungonrush-profile-popup]], [[dungonrush-follow-original-strict]].

@@ -8851,6 +8851,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ece9a6afc5a64ecc822403847a418257, type: 2}
   txtGem: {fileID: 2840134392099019576}
   bossButton: {fileID: 138083155327617910}
+  imgLevelProgressDark: {fileID: 6261427230349325808}
   objOffersLayout: {fileID: 4206164275642008808}
   btChestBundleLegendary: {fileID: 7253954052143257765}
   btChestBundleMythic: {fileID: 9212606773022577870}
@@ -24009,7 +24010,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6878273571861521612
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24022,12 +24023,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6070730981510137876}
+  m_Father: {fileID: 1097948901561287182}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 905.6051, y: 1026.9373}
+  m_AnchoredPosition: {x: 0, y: 465}
+  m_SizeDelta: {x: 200, y: -730}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3253909441596120183
 CanvasRenderer:
@@ -25217,6 +25218,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6878273571861521612}
   - {fileID: 7146876191010518878}
   - {fileID: 2644877067960140275}
   - {fileID: 202147381353834963}
@@ -96967,7 +96969,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6878273571861521612}
   - {fileID: 469045412617278724}
   m_Father: {fileID: 7146876191010518878}
   m_LocalEulerAnglesHint: {x: 0, y: -0, z: -0}

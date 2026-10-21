@@ -25,3 +25,5 @@ User yêu cầu (2026-10-17): bỏ phần map + object trong map tự dựng, l�
 Doc gốc: `DecodedData/MAP_AND_SPAWN_MODEL.md` mục 7. Thay phần đoán cũ ở [[dungonrush-map-spawn-procedural]]; quy ước toạ độ [[dungonrush-map-coord-convention]].
 
 **Dungeon (2026-10-17, compile sạch, CHƯA test Play):** PointStart Zombie/Dragon/Cultist (0.5,0.5) → (0.52,0.52) theo MapOffset gốc (0.48,0.13); rồng đứng cố định ô (rows−3, giữa) lệch −0.5 x (huu gốc); dungeon gốc KHÔNG chuyển màn qua cửa (LevelTransition bỏ qua dungeon). **Lệch gốc còn lại:** 3 prefab map dungeon trong project là bản sao MainMap (tường xám + CỬA) — gốc có tường/đồ trang trí riêng và không có cửa; sprite gốc nằm trong rip (atlas Zombie/Dragon, ảnh Cultist) chưa vào project.
+
+**Fade chuyển màn chỉ tối vùng map (2026-10-21, test Play OK):** dùng `LevelProgressDarkImage` gốc — đã dời từ GameUI (đang tắt) ra SafeArea sibling 0, đáy = 830 (đáy hàng pet), gán `UIMainLobby.imgLevelProgressDark`; `UIManager.FadeOut(..., target)` nhận tấm phủ riêng, FadeIn dùng lại tấm đó. Top bar/nút offer vẫn sáng (giống gốc).

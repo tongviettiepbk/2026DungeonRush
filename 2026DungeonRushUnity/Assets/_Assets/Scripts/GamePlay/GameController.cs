@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -64,6 +65,17 @@ public class GameController : Singleton<GameController>
         DebugCustom.Log("[ChangeMode] Begin=" + type);
         isChangingMode = true;
         modeType = type;
+        StartCoroutine(RoutineChangeMode(type));
+    }
+
+    private IEnumerator RoutineChangeMode(ModeType type)
+    {
+        // Campaign đang chuyển màn (FadeOut giữ tối → FadeIn) thì Fade() bị bỏ qua → callback không bao giờ
+        // chạy, isChangingMode kẹt true và mọi lần đổi mode sau (vào dungeon...) đều bị chặn. Chờ fade đó xong.
+        while (UIManager.Instance.IsFading)
+        {
+            yield return null;
+        }
 
         UIManager.Instance.Fade(
             toMaxCallback: () =>
