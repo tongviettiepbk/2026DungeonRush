@@ -28,6 +28,11 @@ public class UIBossRushPopup : BaseUI
     public GameObject objLoading;
 
     private readonly List<ElementBossRushPlayerUI> elements = new List<ElementBossRushPlayerUI>();
+    // Dòng của mình bị cuộn ra ngoài khung → ghim bản sao ở đỉnh (mình ở trên) hoặc đáy (mình ở dưới) viewport.
+    private RectTransform viewport;
+    private ElementBossRushPlayerUI pinnedTop;
+    private ElementBossRushPlayerUI pinnedBottom;
+    private ElementBossRushPlayerUI myElement;
     private float tick;
     private float pollTimer;
     private bool isRequesting;
@@ -40,6 +45,30 @@ public class UIBossRushPopup : BaseUI
         btFight.onClick.AddListener(OnClickFight);
         if (btRewards != null) btRewards.onClick.AddListener(OnClickRewards);
         if (btClose != null) btClose.onClick.AddListener(Close);
+
+        ScrollRect scroll = playerListContent.GetComponentInParent<ScrollRect>();
+        viewport = scroll.viewport != null ? scroll.viewport : (RectTransform)scroll.transform;
+        pinnedTop = CreatePinnedRow(true);
+        pinnedBottom = CreatePinnedRow(false);
+    }
+
+    // Bản sao dòng người chơi, con của viewport (không cuộn theo Content), lề trái/phải theo padding của list.
+    private ElementBossRushPlayerUI CreatePinnedRow(bool top)
+    {
+        ElementBossRushPlayerUI row = Instantiate(playerElementPrefab, viewport);
+        row.gameObject.SetActive(false);
+
+        LayoutGroup layout = playerListContent.GetComponent<LayoutGroup>();
+        RectOffset padding = layout != null ? layout.padding : new RectOffset();
+        float height = ((RectTransform)playerElementPrefab.transform).rect.height;
+        RectTransform rt = (RectTransform)row.transform;
+        float y = top ? 1f : 0f;
+        rt.anchorMin = new Vector2(0f, y);
+        rt.anchorMax = new Vector2(1f, y);
+        rt.pivot = new Vector2(0.5f, y);
+        rt.offsetMin = new Vector2(padding.left, top ? -height : 0f);
+        rt.offsetMax = new Vector2(-padding.right, top ? 0f : height);
+        return row;
     }
 
     protected override void OnEnable()
@@ -70,6 +99,22 @@ public class UIBossRushPopup : BaseUI
         {
             RequestPool();
         }
+    }
+
+    // Sau khi cuộn: dòng của mình không nằm trọn trong khung thì bật dòng ghim phía tương ứng.
+    private void LateUpdate()
+    {
+        bool showTop = false;
+        bool showBottom = false;
+        if (myElement != null && myElement.gameObject.activeSelf)
+        {
+            Rect view = viewport.rect;
+            Bounds row = RectTransformUtility.CalculateRelativeRectTransformBounds(viewport, myElement.transform);
+            showTop = row.max.y > view.yMax + 1f;
+            showBottom = !showTop && row.min.y < view.yMin - 1f;
+        }
+        if (pinnedTop.gameObject.activeSelf != showTop) pinnedTop.gameObject.SetActive(showTop);
+        if (pinnedBottom.gameObject.activeSelf != showBottom) pinnedBottom.gameObject.SetActive(showBottom);
     }
 
     private void OnPoolUpdated(BossRushPoolModel pool)
@@ -129,6 +174,7 @@ public class UIBossRushPopup : BaseUI
     private void DrawPlayers(List<BossRushPlayerModel> players)
     {
         string myId = FirebaseManager.Instance.Uid;
+        myElement = null;
         for (int i = 0; i < players.Count; i++)
         {
             if (i >= elements.Count)
@@ -136,8 +182,15 @@ public class UIBossRushPopup : BaseUI
                 ElementBossRushPlayerUI element = Instantiate(playerElementPrefab, playerListContent);
                 elements.Add(element);
             }
+            bool isMine = players[i].UserId == myId;
             elements[i].gameObject.SetActive(true);
-            elements[i].Show(players[i], players[i].UserId == myId, OnClickPlayer);
+            elements[i].Show(players[i], isMine, OnClickPlayer);
+            if (isMine)
+            {
+                myElement = elements[i];
+                pinnedTop.Show(players[i], true, OnClickPlayer);
+                pinnedBottom.Show(players[i], true, OnClickPlayer);
+            }
         }
         for (int i = players.Count; i < elements.Count; i++)
         {
