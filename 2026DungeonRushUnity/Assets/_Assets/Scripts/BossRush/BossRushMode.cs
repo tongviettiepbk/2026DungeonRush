@@ -22,6 +22,9 @@ public class BossRushMode : BaseMode
     [Tooltip("BossRushConfig.CameraFollowOffset gốc: camera = vị trí người được bám + offset (giữ z).")]
     public Vector3 cameraFollowOffset = new Vector3(0f, -5f, 0f);
     private const float CAMERA_LERP_SPEED = 4f;  // LateUpdate gốc: t = min(dt × 4, 1) khi đổi người bám
+    // KHÔNG có ở gốc: boss không đứng/dời tới hàng-cột sát mép lưới → luôn đủ 8 ô quanh để cả đội cận chiến vây đánh
+    // (đứng mép chỉ còn 5 ô, góc còn 3 → mấy người còn lại đứng chờ, damage 0).
+    public const int BOSS_EDGE_MARGIN = 1;
 
     private List<Vector2Int> teamCells = new List<Vector2Int>();
     private Transform cameraTransform;
@@ -161,14 +164,14 @@ public class BossRushMode : BaseMode
             return;
         }
 
-        // GridManager.ijt: ô trống ngẫu nhiên ngoài vùng 5×5 giữa đấu trường (không đè lên quân đang đứng).
+        // GridManager.ijt: ô trống ngẫu nhiên ngoài vùng 5×5 giữa đấu trường (không đè lên quân đang đứng), chừa mép lưới.
         MapController map = MapController.Instance;
         var occupied = new HashSet<Vector2Int>();
         for (int i = 0; i < teamA.Count; i++)
         {
             if (teamA[i] != null && teamA[i].isTargetable) occupied.Add(map.WorldToCell(teamA[i].Transform.position));
         }
-        Vector2Int cell = MapSpawnCells.GetArenaBossCell(map.Grid, occupied);
+        Vector2Int cell = MapSpawnCells.GetArenaBossCell(map.Grid, occupied, BOSS_EDGE_MARGIN);
         Vector3 pos = map.CellToWorld(cell);
 
         boss = SpawnUnit<BossRushBossUnit>(prefab, pos, enemiesGroup);
@@ -206,6 +209,7 @@ public class BossRushMode : BaseMode
         float minDistance = isRanged ? Mathf.Min(RANGED_MIN_DISTANCE, maxDistance) : MELEE_MIN_DISTANCE;
 
         // Ô người khác đang giữ (chưa giữ thì tính ô đang đứng); bỏ ô của quân đã chết.
+        // Quân đã đứng lại đánh giữa đường (vào tầm trước khi tới ô vây) giữ ô ĐANG ĐỨNG, nhả ô vây cũ cho người khác.
         var taken = new HashSet<Vector2Int>();
         for (int i = 0; i < teamA.Count; i++)
         {
@@ -216,7 +220,12 @@ public class BossRushMode : BaseMode
                 continue;
             }
             if (other == unit) continue;
-            taken.Add(engageCells.TryGetValue(other, out Vector2Int held) ? held : map.WorldToCell(other.Transform.position));
+            Vector2Int otherCell = map.WorldToCell(other.Transform.position);
+            if (IsStandingInRange(other, bossPosition))
+            {
+                engageCells[other] = otherCell;
+            }
+            taken.Add(engageCells.TryGetValue(other, out Vector2Int held) ? held : otherCell);
         }
 
         // Ô đang giữ còn đánh được và không bị chiếm → giữ nguyên (khỏi đổi chỗ qua lại).
@@ -287,6 +296,16 @@ public class BossRushMode : BaseMode
             return false;
         }
         return !isRanged || MapController.HasLineOfSight(position, bossPosition);
+    }
+
+    private bool IsStandingInRange(BaseUnit other, Vector2 bossPosition)
+    {
+        if (other.stateCurrent == BattleState.Move)
+        {
+            return false;
+        }
+        float range = other.stats.attackRange + boss.bodyOffset;
+        return ((Vector2)other.Transform.position - bossPosition).sqrMagnitude <= range * range;
     }
 
     private static int CountTakenAround(HashSet<Vector2Int> taken, Vector2Int cell)

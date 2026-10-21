@@ -57,6 +57,7 @@ public class BaseUnit : MonoBehaviour
     // Đang đi tới ô vây do mode chia (BaseMode.TryGetEngageCell) — đích ≠ ô mục tiêu nên nhớ ô mục tiêu lúc tìm đường.
     private bool isEngageMove;
     private Vector2Int engageTargetCell;
+    private const float ENGAGE_CENTER_REACHED_DISTANCE = 0.15f;
 
     // PatrolState gốc (Character.CanPatrol): quái không có mục tiêu đi loanh quanh ô xuất phát, tốc độ ×0.5.
     public bool canPatrol;
@@ -927,13 +928,16 @@ public class BaseUnit : MonoBehaviour
         if (isEngageMove)
         {
             engageTargetCell = map.WorldToCell(target.Transform.position);
-            if (mover.RequestMoveTo(engageCell))
+            // Đã ở trong ô vây nhưng còn lệch tâm (tới ô chỉ cần cách tâm ≤ 0.5, bị chen lệch thêm) → chỉnh vào tâm,
+            // vì tâm ô mới chắc trong tầm đánh.
+            if (mover.RequestMoveTo(engageCell)
+                || mover.RequestMoveToPoint(map.CellToWorld(engageCell), ENGAGE_CENTER_REACHED_DISTANCE))
             {
                 animationController.PlayAnimMove();
             }
             else
             {
-                // Đã đứng đúng ô chờ (hết chỗ trong tầm) → đứng yên, 0.2s xét lại.
+                // Đã đứng đúng tâm ô chờ (hết chỗ trong tầm) → đứng yên, 0.2s xét lại.
                 mover.Stop();
                 animationController.PlayAnimIdle();
             }

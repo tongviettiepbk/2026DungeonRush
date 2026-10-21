@@ -46,6 +46,10 @@ public class UnitMover
     private readonly Settings settings;
     private List<Vector2Int> path;
     private int pathIndex;
+    // Đi thẳng tới 1 điểm world (không A*) — RequestMoveToPoint; path = null khi đang ở chế độ này.
+    private bool isPointMove;
+    private Vector2 pointTarget;
+    private float pointReachedDistance;
     private float forceMultiplier = 1f;
     private float stuckTime;
     private Vector2 lastPosition;
@@ -82,7 +86,27 @@ public class UnitMover
 
         path = found;
         pathIndex = found[0] == start ? 1 : 0;
+        isPointMove = false;
         Goal = goal;
+        HasPath = true;
+        return true;
+    }
+
+    // KHÔNG có ở gốc: đã đứng trong ô đích nhưng còn lệch tâm (tới waypoint cuối chỉ cần ≤ waypointReachedDistance)
+    // → lái thẳng vào điểm cho tới khi cách ≤ reachedDistance. Dùng cho ô vây boss (BaseMode.TryGetEngageCell).
+    public bool RequestMoveToPoint(Vector2 point, float reachedDistance)
+    {
+        MapController map = MapController.Instance;
+        if (map == null || !map.IsReady || body == null || Vector2.Distance(body.position, point) <= reachedDistance)
+        {
+            return false;
+        }
+
+        path = null;
+        isPointMove = true;
+        pointTarget = point;
+        pointReachedDistance = reachedDistance;
+        Goal = map.WorldToCell(point);
         HasPath = true;
         return true;
     }
@@ -104,6 +128,7 @@ public class UnitMover
     {
         HasPath = false;
         path = null;
+        isPointMove = false;
     }
 
     // htl — dt: thời gian tick (đã nhân tốc game); speed: tốc độ mong muốn.
@@ -111,6 +136,12 @@ public class UnitMover
     {
         if (!HasPath || body == null)
         {
+            return;
+        }
+
+        if (isPointMove)
+        {
+            TickPoint(dt, speed);
             return;
         }
 
@@ -156,6 +187,27 @@ public class UnitMover
             return;
         }
 
+        Steer(position, direction, dt, speed, true);
+    }
+
+    private void TickPoint(float dt, float speed)
+    {
+        Vector2 position = body.position;
+        Vector2 toPoint = pointTarget - position;
+        float distance = toPoint.magnitude;
+        if (distance <= pointReachedDistance)
+        {
+            ClearPath();
+            body.linearVelocity = Vector2.zero;
+            return;
+        }
+
+        // Gần điểm thì giảm tốc, không cộng lực đẩy ngẫu nhiên → khỏi vọt qua điểm.
+        Steer(position, toPoint / distance, dt, Mathf.Min(speed, distance * 4f), false);
+    }
+
+    private void Steer(Vector2 position, Vector2 direction, float dt, float speed, bool randomPush)
+    {
         if (Vector2.Distance(position, lastPosition) < settings.stuckDetectionThreshold * dt)
         {
             stuckTime += dt;
@@ -167,7 +219,7 @@ public class UnitMover
         }
         lastPosition = position;
 
-        float push = Random.Range(RANDOM_PUSH_MIN, RANDOM_PUSH_MAX);
+        float push = randomPush ? Random.Range(RANDOM_PUSH_MIN, RANDOM_PUSH_MAX) : 0f;
         Vector2 steering = settings.moveForceMultiplier * (direction * speed - body.linearVelocity) + direction * push;
         body.AddForce(forceMultiplier * steering);
     }

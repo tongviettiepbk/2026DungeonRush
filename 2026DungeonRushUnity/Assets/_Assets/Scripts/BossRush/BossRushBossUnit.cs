@@ -6,6 +6,8 @@ using UnityEngine;
 // MỖI đòn trúng hẹn dời chỗ sau RepositionDelay (5s, đòn sau đặt lại hẹn) (Character.ewo); đang Idle mà tới hẹn
 // (ewp) → BossRushRepositionState: chọn ô trống ngẫu nhiên trong vuông bán kính RepositionSearchRadius (3, iju) rồi
 // ĐI tới đó bằng lực theo đường A* (UnitMover), tới nơi về Idle. Khối lượng ×MassMultiplier (5), collider ×1.5.
+// KHÔNG có ở gốc: ngoài lúc dời chỗ boss khoá vị trí (FreezeAll) — đội 8 người chen vào đẩy boss trôi ra ngoài lưới
+// 12×12 (đấu trường không tường) làm cả đội không tìm được chỗ đánh.
 // Khác nhau giữa các boss chỉ ở vũ khí: rồng/Lich/Hag bắn đạn tầm 100 tốc 12, Ogre đánh gần tầm 3.
 // Mọi đòn trúng boss được báo về BossRushMode để cộng damage đội / damage của mình (GameController.hif gốc).
 // Animation: rig dùng CharacterAnimatorController gốc (bool IsIdle / IsAttacking). Clip đánh bắn event
@@ -55,6 +57,7 @@ public class BossRushBossUnit : EnemyUnit
             bodyCollider.transform.localScale *= definition.colliderRadiusMultiplier;
         }
         rigid.mass *= definition.massMultiplier;   // SpawnController.hux
+        SetPositionLocked(true);
 
         // Máu thật = máu CHUNG còn lại của nhóm (có thể < max).
         hp = System.Math.Min(model.CurrentHP, GetMaxHp());
@@ -158,6 +161,7 @@ public class BossRushBossUnit : EnemyUnit
                 return;
             }
             isRepositioning = false;
+            SetPositionLocked(true);
         }
 
         if (pendingReposition && Time.time >= repositionAtTime && StartReposition())
@@ -187,13 +191,20 @@ public class BossRushBossUnit : EnemyUnit
             if (unit != null && unit != this && unit.isTargetable) occupied.Add(map.WorldToCell(unit.Transform.position));
         }
 
-        Vector2Int destination = MapSpawnCells.GetRandomCellAround(map.Grid, current, Mathf.Max(1, Definition.repositionSearchRadius), occupied);
+        Vector2Int destination = MapSpawnCells.GetRandomCellAround(map.Grid, current, Mathf.Max(1, Definition.repositionSearchRadius), occupied,
+                                                                       BossRushMode.BOSS_EDGE_MARGIN);
         if (destination == current || !mover.RequestMoveTo(destination))
         {
             return false;
         }
 
         isRepositioning = true;
+        SetPositionLocked(false);
         return true;
+    }
+
+    private void SetPositionLocked(bool isLocked)
+    {
+        rigid.constraints = isLocked ? RigidbodyConstraints2D.FreezeAll : RigidbodyConstraints2D.FreezeRotation;
     }
 }

@@ -98,14 +98,15 @@ public static class MapSpawnCells
 
     // GridManager.ijt (ô boss Boss Rush, SpawnController.hvm): ô trống ngẫu nhiên khắp lưới, TRỪ vùng 5×5 quanh ô giữa
     // (|cột − giữa| ≤ 2 và |hàng − rows/2| < 3). Không có ô nào → ô giữa hàng trên cùng.
-    public static Vector2Int GetArenaBossCell(int[,] grid, ICollection<Vector2Int> occupied = null)
+    // edgeMargin (KHÔNG có ở gốc, mặc định 0 = như gốc): bỏ thêm edgeMargin hàng/cột sát mép lưới.
+    public static Vector2Int GetArenaBossCell(int[,] grid, ICollection<Vector2Int> occupied = null, int edgeMargin = 0)
     {
         int rows = grid.GetLength(0);
         int cols = grid.GetLength(1);
         var candidates = new List<Vector2Int>();
-        for (int row = 0; row < rows; row++)
+        for (int row = edgeMargin; row < rows - edgeMargin; row++)
         {
-            for (int col = 0; col < cols; col++)
+            for (int col = edgeMargin; col < cols - edgeMargin; col++)
             {
                 if (Mathf.Abs(col - cols / 2) <= 2 && Mathf.Abs(row - rows / 2) < 3) continue;
                 var cell = new Vector2Int(row, col);
@@ -116,15 +117,19 @@ public static class MapSpawnCells
     }
 
     // GridManager.iju (BossRushRepositionState): ô trống ngẫu nhiên trong vuông bán kính radius quanh cell (trừ chính nó).
-    // Không có → trả lại cell.
-    public static Vector2Int GetRandomCellAround(int[,] grid, Vector2Int cell, int radius, ICollection<Vector2Int> occupied = null)
+    // Không có → trả lại cell. edgeMargin như GetArenaBossCell (0 = như gốc).
+    public static Vector2Int GetRandomCellAround(int[,] grid, Vector2Int cell, int radius, ICollection<Vector2Int> occupied = null,
+                                                 int edgeMargin = 0)
     {
+        int rows = grid.GetLength(0);
+        int cols = grid.GetLength(1);
         var candidates = new List<Vector2Int>();
         for (int col = cell.y - radius; col <= cell.y + radius; col++)
         {
             for (int row = cell.x - radius; row <= cell.x + radius; row++)
             {
                 var next = new Vector2Int(row, col);
+                if (row < edgeMargin || row >= rows - edgeMargin || col < edgeMargin || col >= cols - edgeMargin) continue;
                 if (next != cell && IsFree(grid, next, occupied)) candidates.Add(next);
             }
         }
