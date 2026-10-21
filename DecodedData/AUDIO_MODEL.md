@@ -55,4 +55,13 @@ Nguồn: reverse il2cpp v59 (ARMv7) + đọc thẳng apk bằng UnityPy. Số li
 ## Project
 
 - `Scripts/Audio/AudioManager.cs` (port AudioController), `AudioConfig.cs` + `Resources/Scriptable Objects/Audio/AudioConfig.asset` (gồm bảng âm vũ khí/pet theo assetName)
-- `ButtonClickSfx` = phần âm của PressButtonUI; danh sách nút ở `Scripts/Audio/Editor/button_click_sfx.json`, gắn bằng menu `Tools/DungeonRush/Apply Button Click Sfx`
+- `UI/Common/PressButtonUI.cs` = port PressButtonUI (lún + click); danh sách nút + PressYValue gốc ở `UI/Common/Editor/press_buttons.json`, gắn bằng menu `Tools/DungeonRush/Apply Press Buttons`
+
+## PressButtonUI (hiệu ứng lún)
+
+- Awake: lấy con ĐẦU TIÊN của nút (`GetChild(0)`, thường `Content`, nút đóng là `Image`), lưu y ban đầu — `yct/ycr`
+- Nhấn xuống (nút interactable): con đó đặt `anchoredPosition.y = PressYValue` (giá trị tuyệt đối) + kêu ButtonClick — `fhl`
+- Thả ra: về y ban đầu — `fhk`
+- Update: nút bị khoá thì về trạng thái nổi (v59 thêm `StayPressedWhenDisabled`: khoá thì giữ lún; v41 không có field này)
+- Giữ nút (`IsHoldEnabled`): sau 0.5s cứ 4 frame gọi `ButtonHoldDown` — mọi prefab gốc đều tắt
+- PressYValue gốc (291 nút): −20 ×184 (Content y 0), −8 ×72 (nút đóng, Image y 8.9), còn lại −11/−12/−18/−19/−24/−25/−2.1
