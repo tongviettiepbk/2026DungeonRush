@@ -25,23 +25,20 @@ public class HeroVisual : MonoBehaviour
     [Header("Test")]
     [Tooltip("Sprite thay thế khi data gear CHƯA gán art — để test được logic bật object.")]
     public Sprite debugSprite;
-    [Tooltip("TẠM: bật = KHÔNG mặc đồ lên hình, hero giữ nguyên như prefab.")]
-    public bool skipLoadVisual = true;
 
     // Sprite mặc định của bàn tay (bare hand) để cởi găng thì trả lại.
     private Sprite defaultHand;
     private bool defaultsCached;
 
-    // TẠM TẮT: đổi đồ (loot...) KHÔNG đổi ảnh hero ngay — chỉ số vẫn tính lại ở HeroUnit.
-    // Hình chỉ dựng từ save lúc Hero sinh ra (RefreshAll). Bật lại 2 dòng dưới khi cần.
+    // Đổi đồ (loot, wing, cape...) → mặc lại hình slot đó ngay; chỉ số tính lại ở HeroUnit.
     private void OnEnable()
     {
-        // EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnEquipmentChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.EquipmentChanged, OnEquipmentChanged);
     }
 
     private void OnDisable()
     {
-        // EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnEquipmentChanged);
+        EventDispatcher.Instance.RemoveListener(EventID.EquipmentChanged, OnEquipmentChanged);
     }
 
     // Người chơi đổi đồ (VD vừa loot ra) → mặc lại đúng slot đó từ save. param = GearSlotType.
@@ -77,11 +74,6 @@ public class HeroVisual : MonoBehaviour
 
     public void RefreshAll()
     {
-        if (skipLoadVisual)
-        {
-            return;
-        }
-
         CacheHandDefaults();
 
         UserEquipmentData data = overrideData ?? (GameData.userData != null ? GameData.userData.equipment : null);
