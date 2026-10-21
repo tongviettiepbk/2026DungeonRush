@@ -37,6 +37,13 @@ public class BossRushMode : BaseMode
     private Transform ghostsGroup;
     private UIBossRushHud hud;
 
+    // Bảng damage từng người trên tấm phủ EventBlocker (không có ở bản gốc v41 — theo bản gốc mới hơn).
+    private const float DAMAGE_BOARD_REFRESH_INTERVAL = 0.2f;
+    private UIBossRushDamageBoard damageBoard;
+    private readonly Dictionary<BaseUnit, BossRushDamageEntry> damageEntries = new Dictionary<BaseUnit, BossRushDamageEntry>();
+    private bool isDamageBoardDirty;
+    private float damageBoardTimer;
+
     public BossRushBossUnit Boss => boss;
     public long OwnDamage => ownDamage;
     public long TeamDamage => teamDamage;
@@ -61,6 +68,9 @@ public class BossRushMode : BaseMode
 
         hud = GameController.uiLobby != null && GameController.uiLobby.objBossRushUI != null
             ? GameController.uiLobby.objBossRushUI.GetComponent<UIBossRushHud>()
+            : null;
+        damageBoard = GameController.uiLobby != null && GameController.uiLobby.objEventBlockerUI != null
+            ? GameController.uiLobby.objEventBlockerUI.GetComponentInChildren<UIBossRushDamageBoard>(true)
             : null;
         SetActiveHud(true);
 
@@ -89,7 +99,9 @@ public class BossRushMode : BaseMode
         List<BossRushPlayerModel> allies = BossRushFightSession.Allies;
         teamCells = MapSpawnCells.GetArenaTeamCells(MapController.Instance.Grid, 1 + (allies != null ? allies.Count : 0));
         SpawnHeroAndPets();
+        AddDamageEntry(hero, GameData.userData.profile.userName, GameData.userData.profile.avatarId, true);
         SpawnGhosts(allies);
+        ShowDamageBoard();
         StartCameraFollow();
     }
 
@@ -124,6 +136,7 @@ public class BossRushMode : BaseMode
             ghost.SetupAsGhost(ally.PlayerName, BossRushController.ToEquipmentData(ally.Items), owned,
                                BossRushController.ToEnchantmentData(ally.EnchantmentTiers), ally.ShowCloak);
             ghost.SpawnInBattle(BuildHeroStats(), StaticValue.TAG_TEAM_A, pos);
+            AddDamageEntry(ghost, ally.PlayerName, ally.AvatarId, false);
         }
     }
 
@@ -304,7 +317,51 @@ public class BossRushMode : BaseMode
         {
             ownDamage += amount;
         }
+        if (damageEntries.TryGetValue(attacker, out BossRushDamageEntry entry))
+        {
+            entry.damage += amount;
+            isDamageBoardDirty = true;
+        }
         RefreshHud();
+    }
+
+    // ===== Bảng damage từng người =====
+
+    private void AddDamageEntry(BaseUnit unit, string playerName, int avatarId, bool isMine)
+    {
+        if (unit == null)
+        {
+            return;
+        }
+        damageEntries[unit] = new BossRushDamageEntry
+        {
+            playerName = playerName,
+            avatarId = avatarId,
+            isMine = isMine,
+            order = damageEntries.Count,
+        };
+    }
+
+    private void ShowDamageBoard()
+    {
+        if (damageBoard != null)
+        {
+            damageBoard.Show(new List<BossRushDamageEntry>(damageEntries.Values));
+        }
+    }
+
+    // Damage dồn nhiều lần mỗi giây → gom lại, sắp xếp bảng tối đa 5 lần/giây.
+    protected override void Update()
+    {
+        base.Update();
+        damageBoardTimer -= Time.deltaTime;
+        if (!isDamageBoardDirty || damageBoardTimer > 0f || damageBoard == null)
+        {
+            return;
+        }
+        isDamageBoardDirty = false;
+        damageBoardTimer = DAMAGE_BOARD_REFRESH_INTERVAL;
+        damageBoard.Refresh();
     }
 
     // ===== Boss chết → boss kế (GameController.hih gốc) =====
@@ -377,6 +434,10 @@ public class BossRushMode : BaseMode
             GameController.uiLobby.objBossRushUI.SetActive(isOn);
         }
         GameController.uiLobby.SetActiveEventBlocker(isOn);
+        if (!isOn && damageBoard != null)
+        {
+            damageBoard.Hide();
+        }
     }
 
     // ===== Kết thúc (GameController.hij gốc) =====
@@ -517,6 +578,8 @@ public class BossRushMode : BaseMode
         base.Reset();
         teamCells.Clear();
         engageCells.Clear();
+        damageEntries.Clear();
+        isDamageBoardDirty = false;
         boss = null;
         ghostsGroup = null;
         enemiesGroup = null;

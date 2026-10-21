@@ -83,3 +83,4 @@
 - [Rate Us](dungonrush-rate-us.md) — dựng + reskin 2026-10-19 theo gốc: trigger đồ Rare/Epic lần đầu, max 3 lần, Submit ≥4 sao mở store; doc RATE_US_MODEL.md; đã commit
 - [Reskin Clan](dungonrush-reskin-clan.md) — 2026-10-20 ClanTabPage 3 tab + 13 popup theo mockup BallIdle; banner ghép giữ hệ (khung vẽ code + 20 icon ChatGPT xám để tô); kit 1_UIKit/Clan; đã commit "Reskin Clan theo mockup BallIdle"; CẤM chạy lại Build Clan UI Prefabs
 - [World sorting dưới UI lobby](dungonrush-world-sorting-under-ui.md) — lobby canvas Default 100 → HP bar/FX/line world phải Default order < 100 (sửa 2026-10-20)
+- [Bảng damage trận Boss Rush](dungonrush-boss-rush-damage-board.md) — EventBlocker hiện 8 dòng damage tự sắp, thanh = phần trong tổng đội; dựng + test Play 2026-10-21, đã commit
