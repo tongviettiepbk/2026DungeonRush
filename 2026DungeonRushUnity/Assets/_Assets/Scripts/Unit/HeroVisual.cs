@@ -5,9 +5,8 @@ using UnityEngine.Serialization;
 // resolve theo tên). Sprite lấy TRỰC TIẾP từ data gear qua EquipVisualResolver.
 //   - 6 slot sprite: Weapon/Helmet/Gloves/Backpack/Wing/Cape → set SpriteRenderer.
 //
-// Quy tắc hiển thị: CHỈ bật (SetActive) object của slot khi MẶC THÀNH CÔNG (có hình). Riêng
-// bàn tay (hand) LUÔN bật vì có sprite mặc định — mặc găng thì đè sprite lên,
-// cởi găng thì trả lại sprite mặc định (đã cache lúc đầu).
+// Quy tắc hiển thị: CHỈ bật (SetActive) object của slot khi MẶC THÀNH CÔNG (có hình) — kể cả
+// tay/áo (Gloves): không mặc thì tắt. Riêng vũ khí trống thì cầm hình defaultWeapon (dao mặc định).
 public class HeroVisual : MonoBehaviour
 {
     public HeroUnit heroController;
@@ -22,13 +21,12 @@ public class HeroVisual : MonoBehaviour
     public SpriteRenderer wing;
     public SpriteRenderer cape;
 
+    [Tooltip("Hình vũ khí khi KHÔNG cầm vũ khí nào (chỉ là hình, đánh vẫn tay không).")]
+    public Sprite defaultWeapon;
+
     [Header("Test")]
     [Tooltip("Sprite thay thế khi data gear CHƯA gán art — để test được logic bật object.")]
     public Sprite debugSprite;
-
-    // Sprite mặc định của bàn tay (bare hand) để cởi găng thì trả lại.
-    private Sprite defaultHand;
-    private bool defaultsCached;
 
     // Đổi đồ (loot, wing, cape...) → mặc lại hình slot đó ngay; chỉ số tính lại ở HeroUnit.
     private void OnEnable()
@@ -74,8 +72,6 @@ public class HeroVisual : MonoBehaviour
 
     public void RefreshAll()
     {
-        CacheHandDefaults();
-
         UserEquipmentData data = overrideData ?? (GameData.userData != null ? GameData.userData.equipment : null);
         if (data == null)
         {
@@ -90,7 +86,7 @@ public class HeroVisual : MonoBehaviour
         WearEquipment(GearSlotType.CAPE, data.GetEquipped(GearSlotType.CAPE));
     }
 
-    // Mặc 1 slot. id rỗng = cởi (ẩn object, riêng găng thì trả sprite mặc định).
+    // Mặc 1 slot. id rỗng = cởi (ẩn object, riêng vũ khí thì cầm defaultWeapon).
     public void WearEquipment(GearSlotType slot, string id)
     {
         if (slot == GearSlotType.CAPE)
@@ -106,13 +102,13 @@ public class HeroVisual : MonoBehaviour
         switch (slot)
         {
             case GearSlotType.WEAPON:
-                ApplySlot(weapon, sprite);
+                ApplySlot(weapon, sprite != null ? sprite : defaultWeapon);
                 break;
             case GearSlotType.HELMET:
                 ApplySlot(helmet, sprite);
                 break;
             case GearSlotType.GLOVES:
-                ApplyGloves(sprite);
+                ApplySlot(hand, sprite);
                 break;
             case GearSlotType.BACKPACK:
                 ApplySlot(backPack, sprite);
@@ -148,31 +144,6 @@ public class HeroVisual : MonoBehaviour
             DebugCustom.LogWarning($"ApplySlot: sprite is null for {sr.gameObject.name}. Object will be deactivated.");
         }
         sr.gameObject.SetActive(sprite != null);
-    }
-
-    // Găng tay: bàn tay LUÔN bật. Mặc găng đè sprite, cởi thì trả sprite mặc định.
-    private void ApplyGloves(Sprite sprite)
-    {
-        CacheHandDefaults();
-        if (hand == null)
-        {
-            return;
-        }
-
-        hand.gameObject.SetActive(true);
-        hand.sprite = sprite != null ? sprite : defaultHand;
-    }
-
-    // Cache sprite tay mặc định 1 lần, TRƯỚC khi có thao tác đè găng đầu tiên.
-    private void CacheHandDefaults()
-    {
-        if (defaultsCached)
-        {
-            return;
-        }
-
-        if (hand != null) defaultHand = hand.sprite;
-        defaultsCached = true;
     }
 
     // Cape = sprite như slot thường, thêm điều kiện ẩn theo nút "Show Cloak".
@@ -223,7 +194,7 @@ public class HeroVisual : MonoBehaviour
 
         if (slot == GearSlotType.GLOVES)
         {
-            ApplyGloves(s);
+            ApplySlot(hand, s);
         }
         else if (slot == GearSlotType.WING)
         {
@@ -247,7 +218,7 @@ public class HeroVisual : MonoBehaviour
         }
     }
 
-    // Cởi hết (kiểm tra object tắt đúng, tay trả sprite mặc định).
+    // Cởi hết (kiểm tra object tắt đúng, vũ khí về dao mặc định).
     [ContextMenu("TEST: Cởi hết")]
     public void TestUnwearAll()
     {

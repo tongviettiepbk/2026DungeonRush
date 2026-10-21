@@ -19,6 +19,16 @@ public class EnemyUnit : BaseUnit
     [SerializeField] private WeaponData bossWeaponData;
     [Tooltip("SpriteRenderer vũ khí trên rig (weapon_slot) — hiện hình vũ khí campaign chọn theo tier.")]
     [SerializeField] private SpriteRenderer weaponRenderer;
+    [Tooltip("Hình vũ khí khi quái tay không (chỉ là hình, đánh vẫn tay không).")]
+    [SerializeField] private Sprite defaultWeaponSprite;
+
+    // Node đồ trên rig (copy từ rig hero). Quái chỉ hiện đồ có trong data — xem HideUnwornGear.
+    [Header("Node đồ trên rig")]
+    [SerializeField] private SpriteRenderer helmetRenderer;
+    [SerializeField] private SpriteRenderer handRenderer;
+    [SerializeField] private SpriteRenderer backpackRenderer;
+    [SerializeField] private SpriteRenderer glassRenderer;
+    [SerializeField] private SpriteRenderer pipeRenderer;
 
     // Boss ưu tiên vũ khí boss (đạn Dragon...); quái thường dùng weaponData.
     protected override WeaponData GetCombatWeapon()
@@ -36,6 +46,7 @@ public class EnemyUnit : BaseUnit
             weaponData = info.weapon;   // trước SpawnInBattle để ReloadStats áp tầm đánh/đạn của vũ khí
             ShowWeapon(info.weapon);
         }
+        HideUnwornGear(info.overrideWeapon);
 
         var bs = new BaseStats
         {
@@ -52,7 +63,7 @@ public class EnemyUnit : BaseUnit
         SpawnInBattle(bs, StaticValue.TAG_TEAM_B, position);
     }
 
-    // Hình vũ khí như hero (EquipVisualResolver); tay không thì tắt object.
+    // Hình vũ khí như hero (EquipVisualResolver); tay không thì cầm defaultWeaponSprite.
     private void ShowWeapon(WeaponData weapon)
     {
         if (weaponRenderer == null)
@@ -61,8 +72,28 @@ public class EnemyUnit : BaseUnit
         }
 
         Sprite sprite = weapon != null ? EquipVisualResolver.GetBodySprite(GearSlotType.WEAPON, weapon.assetName) : null;
+        if (sprite == null) sprite = defaultWeaponSprite;
         weaponRenderer.sprite = sprite;
         weaponRenderer.gameObject.SetActive(sprite != null);
+    }
+
+    // Gốc Soldier.fbb(weapon, role, helmet, gloves, animator, backpack): quái campaign chỉ có vũ khí (mũ/găng/balo = null);
+    // dungeon lấy mũ/găng theo theme (gán sẵn trên prefab variant), balo null. Kính/tẩu (Wing/Cape) quái không có.
+    private void HideUnwornGear(bool isCampaign)
+    {
+        SetGearShown(backpackRenderer, false);
+        SetGearShown(glassRenderer, false);
+        SetGearShown(pipeRenderer, false);
+        if (isCampaign)
+        {
+            SetGearShown(helmetRenderer, false);
+            SetGearShown(handRenderer, false);
+        }
+    }
+
+    private static void SetGearShown(SpriteRenderer sr, bool shown)
+    {
+        if (sr != null) sr.gameObject.SetActive(shown);
     }
 
     // GridCombatController.hos: đối thủ gần nhất trong tầm phát hiện; không có thì giữ mục tiêu cũ còn sống.

@@ -7197,7 +7197,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 8
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 2d5aa399323f443fb3da4fd3c2807652, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 42c81c831978d47bdb3cdef64f89ce7c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -14675,7 +14675,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HeroUnit
   bodyOffset: 0.3
   impactAttack: {fileID: 0}
-  sfxAttack: {fileID: 0}
   canPatrol: 0
   stateCurrent: 0
   heroVisual: {fileID: 0}
@@ -14698,8 +14697,8 @@ MonoBehaviour:
   backPack: {fileID: 3430120675300749206}
   wing: {fileID: 7688747010910977994}
   cape: {fileID: 5868238702550653898}
+  defaultWeapon: {fileID: 21300000, guid: 42c81c831978d47bdb3cdef64f89ce7c, type: 3}
   debugSprite: {fileID: 0}
-  skipLoadVisual: 1
 --- !u!114 &5370289278197969375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50845,7 +50844,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &121958083497737476
 Transform:
   m_ObjectHideFlags: 0
