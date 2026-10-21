@@ -7,7 +7,7 @@ using UnityEngine;
 //   - level đang đánh = DungeonProgress.level của dungeonType,
 //   - UI trong trận = objDungeonUI của UIMainLobby (nút Exit — thoát KHÔNG tiêu key; txtLevelMap = độ khó),
 //   - kết quả: THẮNG mới gọi DungeonService.CompleteDungeon (tiêu key + thưởng + level+1), thua giữ nguyên,
-//     rồi hiện UIDungeonEndPopup; bấm nút popup → về lại campaign.
+//     rồi hiện UIDungeonEndPopup; tấm che Loot giữ tới khi bấm nút popup → về lại campaign.
 // Mode con chỉ cần override CreateTeamB (sinh quái riêng của dungeon). Luật gốc: DecodedData/DUNGEON_MODEL.md.
 public class DungeonMode : BaseMode
 {
@@ -61,8 +61,9 @@ public class DungeonMode : BaseMode
     {
         yield return new WaitForSeconds(delayEndGame);
 
-        // Ẩn nút Exit khi hiện kết quả (chỉ còn nút của popup để về campaign).
-        GameController.Instance.uiLobby.SetActiveDungeonUI(false);
+        // GIỮ tấm che Loot tới khi người chơi bấm nút popup (thắng nhận thưởng / thua xác nhận) → đổi mode về campaign
+        // thì uiLobby.Refresh mới tắt nó. Chỉ khoá nút Exit (còn mỗi nút popup để về campaign).
+        GameController.Instance.uiLobby.SetDungeonExitInteractable(false);
         UIDungeonEndPopup popup = UIManager.Instance.LoadUI(UIKey.DungeonEndPopup, isBackable: false) as UIDungeonEndPopup;
         if (popup != null)
         {

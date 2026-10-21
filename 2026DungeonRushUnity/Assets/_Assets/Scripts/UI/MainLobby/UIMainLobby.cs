@@ -868,6 +868,14 @@ public class UIMainLobby : BaseUI
     public void SetActiveDungeonUI(bool isOn)
     {
         SetActiveBlocker(objDungeonUI, isOn);
+        SetDungeonExitInteractable(true);
+    }
+
+    // Popup kết quả dungeon đang mở → khoá nút Exit (tấm che vẫn bật tới khi về campaign).
+    public void SetDungeonExitInteractable(bool isOn)
+    {
+        if (btExitDungeon != null)
+            btExitDungeon.interactable = isOn;
     }
 
     // Tấm phủ đáy (DungeonUI / EventBlockerUI) rip gốc để CanvasGroup alpha 0 + không chặn raycast (gốc tự fade lên
