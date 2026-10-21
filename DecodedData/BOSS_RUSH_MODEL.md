@@ -196,3 +196,106 @@ Power (rm.iqm → rm.iqj) **[CHẮC]**: `Power = (Attack × (1 + Damage%)) × (H
 - **Đòn đánh**: chỉ khác vũ khí — `WeaponType` gốc chỉ có Melee/Range. Rồng/Lich/Hag: Range, tầm 100, đạn tốc **12**
   (rồng đỏ = `Projectile_Dragon_Red` cầu lửa, rồng xanh `_Green`, rồng đen `_Purple`; Lich tím/đỏ/xanh orb; Hag orb xanh);
   Ogre: Melee tầm 3 (không đuổi vì CanMove = false). Tốc đạn lấy từ `WeaponData.ProjectileSpeed` (`Character.ProjectileSpeed`).
+
+## 10. Bản v59 (`Ver59/Dungeon+Rush_59_APKPure.xapk`, reverse 2026-10-21) — skill boss + chỗ đứng quanh boss [CHẮC]
+
+Nguồn: lib chỉ có **armeabi-v7a** (ARM32, metadata v31). Dump bằng Il2CppDumper, giải chuỗi cùng thuật toán v41
+(`b ^ (i & 0xFF) ^ 0xAA`, blob metadata @9262920 dài 0x793BB). Config đọc thẳng `BossRushConfig` (sharedassets0 path 17662)
+bằng UnityPy + DLL AssetRipper `Ver59/AssetRipper/Assemblies`. `BossHPTable` / `BossDamageByTier` **không đổi** so với v41.
+
+### 10.1 Config chung (`BossRushConfig`)
+
+| Trường | Giá trị |
+|---|---|
+| ArenaGridSize | 12 × 12 |
+| CameraFollowOffset | (0, −5, 0) |
+| PlayerColliderRadiusMultiplier | 1.1 |
+| SlotStandoff | 1.25 |
+| MeleeRangeBonus | 1.6 |
+| SlotArrivalTolerance | 0.9 |
+| SlotGraceSeconds | 3 |
+| PlayerSpawnRingRadius | 2 |
+| SkillIntervalMin / Max | 4 / 6 |
+| SlamWindup / Recovery / Radius / Knockback | 0.7 / 0.4 / 4.2 / 8 |
+| SlamTelegraphWarmupSeconds | 1 |
+| EarthquakeWindup / WaveInterval | 0.5 / 0.55 |
+| EarthquakeWaveRadii | 2.6, 4.4, 6.0 |
+| EarthquakeKnockback / HopHeight | 7.5 / 1.25 |
+| TeleportWindup / Recovery | 0.35 / 0.25 |
+| TeleportMin / MaxDistanceCells | 7 / 10 |
+| TeleportMinPlayerDistanceCells | 5 |
+| FireBreathWindup / Sweep / Recovery | 0.4 / 2.5 / 0.3 |
+| FireBreathRadius / ConeAngle | 3.5 / 70 |
+| FireBreathMuzzleOffset / PointBlankMargin | 0.8 / 0.8 |
+| FireBreathHitInterval / Knockback / FXScale | 0.5 / 4.5 / 1 |
+| FireBreathShowDamageCone | false |
+| AllyHitKnockbackForce | 3 |
+| BossCritPunchScale / Cooldown | 0.08 / 0.35 |
+| FightDuration / DamageDivisor / MaxFree / MaxAd | 30 / 100 / 3 / 3 |
+
+`ArenaBoundsThickness` = 1 nhưng client v59 cũng không đọc.
+
+### 10.2 10 boss (`BossDefinitions`)
+
+| Boss | Collider × | Body scale × | Mass × | CanMove | RepositionDelay | SearchRadius | MoveSpeed × | Skill |
+|---|---|---|---|---|---|---|---|---|
+| Dark Lich | 1.6 | 1.2 | 5 | true | 1.6 | 3.5 | 1.5 | Slam |
+| Black Dragon | 1.75 | 1.5 | 5 | true | 1.75 | 3.5 | 1.0 | FireBreath |
+| Green Dragon | 1.75 | 1.5 | 5 | true | 1.6 | 3.5 | 1.0 | FireBreath |
+| Red Dragon | 1.75 | 1.5 | 5 | true | 1.6 | 3.5 | 1.0 | FireBreath |
+| Crimson Lich | 1.6 | 1.2 | 5 | true | 1.6 | 3.5 | 1.5 | Slam |
+| Elder Lich | 1.6 | 1.2 | 5 | true | 1.6 | 3.5 | 1.5 | Slam |
+| Ogre King | 1.75 | 1.5 | 5 | true | 1.6 | 3.5 | 1.0 | Earthquake |
+| Ogre Chieftain | 1.75 | 1.5 | 5 | true | 1.6 | 3.5 | 1.0 | Earthquake |
+| Green Hag | 1.5 | 1.1 | 5 | true | 1.6 | 3.5 | 1.5 | Teleport |
+| Purple Hag | 1.5 | 1.1 | 5 | true | 1.6 | 3.5 | 1.5 | Teleport |
+
+Lich có prefab FX Slam riêng (telegraph/impact), rồng có prefab FireBreath riêng; không có prefab thì gốc vẽ FX mặt đất bằng code
+(`BossRushGroundFX`). `SpawnController.jmj`: CanMove = định nghĩa (true ⇒ **không còn quay cố định 180°**), MoveSpeed × MoveSpeedMultiplier,
+hình × BodyScaleMultiplier (`Character.fyh`), collider/mass như cũ.
+
+### 10.3 Lịch skill + dời chỗ
+
+- `IdleState.gfu` (trước mọi thứ): boss có skill → `NextSkillAt ≤ 0` thì hẹn `now + Random(SkillIntervalMin, Max)` (`fzt`);
+  đã tới giờ (`fzu`) → `BossRushSkillState`. Sau đó mới xét dời chỗ (`fzs`: pending và tới giờ) → `BossRushRepositionState`.
+- `BossRushSkillState`: vào = dừng di chuyển, boss thành **Kinematic** + vận tốc 0 (`fzz(true)`, lưu bodyType cũ), Animator `IsIdle = true`,
+  tạo skill `gy.Create(type)` rồi `Begin`. Mỗi frame `Tick(dt × tốc game)` trả true là xong → Idle. Ra = `Cancel` skill, trả bodyType,
+  `IsIdle = false`, hẹn skill sau `now + Random(4, 6)`.
+- Hẹn dời chỗ (`fzr`, gọi khi đòn của boss trúng): **chỉ đặt khi chưa có hẹn** (v41 đặt lại mỗi đòn) ⇒ cứ ~1.6 s sau đòn trúng đầu tiên boss dời chỗ.
+  `BossRushRepositionState`: ô đích = `GridManager.kcq(ô hiện tại, R = max(1, SearchRadius 3.5), r = max(1, R − 1))` —
+  ô trống, đi được, khoảng cách Euclid ≤ R; ưu tiên ô có khoảng cách ≥ r, không có thì lấy bất kỳ ô ≤ R; chọn ngẫu nhiên.
+- Damage skill = 1 đòn thường của boss lên từng người (`Character.fyw` — cùng công thức chí mạng/chặn như đòn thường).
+  Mục tiêu = `SpawnController.HomeCharacters` còn sống. Đẩy lùi `gy.fng`: AddForce **Impulse** = hướng (người − tâm) chuẩn hoá × lực
+  (trùng tâm thì hướng ngẫu nhiên); bỏ qua nếu Rigidbody kinematic.
+
+### 10.4 4 skill
+
+- **Slam** (Lich, class `hb`): tâm = boss. Gồng 0.7 s: telegraph (prefab hoặc vòng tròn đỏ thu từ 2×R về cỡ thân boss); hết gồng →
+  mọi người cách tâm ≤ 4.2 bị 1 đòn + đẩy 8; FX nổ (prefab hoặc chớp tròn 1.3 trong 0.3 s màu (1, 0.9, 0.7, 0.9) + vành từ 0.4 → R
+  trong 0.3 s màu (1, 0.35, 0.2, 0.85)), rung camera (0.3, 0.3). Xong lúc 0.7 + 0.4 = 1.1 s.
+- **Earthquake** (Ogre, class `gz`): tâm cố định lúc bắt đầu. Sóng i nổ lúc `0.5 + 0.55 × i`; vành trúng = từ bán kính sóng trước
+  (sóng 0 từ 0.3) tới `Radii[i]` ⇒ [0.3–2.6], [2.6–4.4], [4.4–6.0]. Trúng: 1 đòn + đẩy 7.5 + nảy hình (`fzv`: DOPunchPosition (0, 1.25) 0.45 s
+  + punch scale). FX vành nâu (0.6, 0.38, 0.18, 0.95) 0.35 s, vành nhạt (0.85, 0.72, 0.5, 0.55) 0.5 s, 7 mảnh đất; rung camera (0.26, 0.2 + 0.1 i).
+  Xong lúc `0.5 + 0.55 × 2 + 0.4` = 2.0 s.
+- **Teleport** (Hag, class `hc`): đích = ô cách ô boss 7–10 (Euclid), đi được, trống, xa người gần nhất ≥ 5; ngẫu nhiên trong danh sách,
+  không có thì ô xa người nhất. Gồng 0.35 s (chớp tím (0.75, 0.35, 1, 0.85) tại chỗ, hình thu ×0.1 sau 30% thời gian, ease InBack);
+  tới giờ → đặt vị trí + rigidbody, chớp ở chỗ cũ + chỗ mới (0.3 s), quay mặt về người gần nhất, hình phóng lại 0.2 s ease OutBack.
+  Xong lúc 0.6 s. **Không gây damage.**
+- **FireBreath** (rồng, class `ha`): gồng 0.4 s; bỏ mục tiêu đang đánh (trả lại khi xong). Quét **360°** trong 2.5 s bắt đầu từ hướng
+  mặt boss, thân boss xoay theo. Nón 70° (± 35°), tầm = 3.5 + miệng (0.8 × BodyScale); trong vòng "sát thân" (= nửa cỡ thân + 0.8)
+  luôn trúng. Mỗi người tối đa 1 lần / 0.5 s: 1 đòn + đẩy 4.5. FX: prefab lửa (scale = Radius × FXScale) bám miệng, hoặc nón vẽ màu
+  (1, 0.45, 0.1, 0.75). Xong lúc 0.4 + 2.5 + 0.3 = 3.2 s.
+
+### 10.5 Chỗ đứng quanh boss (class `gq`, tạo ở `GameController.isk` với số chỗ = số người trong đội)
+
+- Chỉ áp cho **cận chiến** đội nhà đánh boss (`GridCombatController.jbw`: IsBossRush + attacker.IsHome + target.IsBossRushBoss;
+  `IdleState`/`MoveState` gọi ở nhánh melee). Bắn xa giữ cách cũ.
+- Chỗ i: góc `i × 360 / N`; vị trí = tâm collider boss + hướng × (bán kính collider theo hướng đó `ClosestPoint` + **SlotStandoff 1.25**).
+- Gán chỗ (`fko`): người đã có chỗ giữ nguyên; người mới lấy chỗ **còn trống** có góc gần góc (người − boss) nhất (hết chỗ trống thì xét cả chỗ có người).
+- `MoveState.ggl`: ô đích của melee = ô chứa vị trí chỗ (thay cho ô boss).
+- Tầm đánh boss (`jbv`): khoảng cách từ người tới **điểm gần nhất trên collider boss** ≤ `AttackDistance + MeleeRangeBonus 1.6`, VÀ
+  (`fkn`) đứng cách chỗ ≤ `SlotArrivalTolerance 0.9`; lệch chỗ thì bắt đầu đếm, đủ `SlotGraceSeconds 3` vẫn được đánh.
+- Đội xuất phát (`GridManager.kcm(N, PlayerSpawnRingRadius 2)`): hero ô giữa; còn lại rải đều trên vòng vuông Chebyshev bán kính 2
+  quanh ô giữa (16 ô, sắp theo góc, lệch ngẫu nhiên, lấy `round(i × 16 / k)`), thiếu thì lấp 8 ô kề.
+- Bị boss đánh trúng: người đội nhà bị đẩy `AllyHitKnockbackForce 3` (Impulse, hướng từ boss) (`Character.fzw`). Boss bị chí mạng:
+  DOPunchScale hình × 0.08 trong 0.18 s, hồi 0.35 s (`fzx`).

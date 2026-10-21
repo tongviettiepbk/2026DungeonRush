@@ -17,3 +17,4 @@ User chốt 2026-10-17: "làm theo game gốc", chỗ nào chưa đúng gốc th
 - Gặp chỗ project lệch gốc (cờ test, khoá level thiếu, luật tự đặt) → sửa về gốc, ghi rõ trong commit.
 - Chạy tuần tự theo kế hoạch ở [[dungonrush-pending-todo]] (mục 6), xong đợt nào commit đợt đó (ghi "CHƯA test Play"), không dừng hỏi giữa chừng; chỉ hỏi khi cần quyết định không suy ra được từ gốc (giá tiền thật, số liệu chỉ server có).
 - Vẫn giữ kiến trúc StickIdle [[dungonrush-follow-stickidle]].
+- Ngoại lệ 2026-10-21: **Boss Rush làm theo bản v59** (user đưa `Ver59/` = xapk + AssetRipper, nói "update phần bossrush đúng bản gốc"); phần khác vẫn v41 trừ khi user bảo.

@@ -476,11 +476,19 @@ public class BaseMode : MonoBehaviour
     // Mode có mang pet ra trận không (Boss Rush gốc KHÔNG mang — CompanionController.OnStateChanged bỏ qua khi IsBossRush).
     protected virtual bool AllowPets => true;
 
-    // Ô đích riêng cho unit khi đi tới đánh target (Boss Rush chia chỗ vây quanh boss để đội không túm tụm).
-    // false → đi theo cách gốc (MoveState.fcf: ô mục tiêu / ô bắn).
-    public virtual bool TryGetEngageCell(BaseUnit unit, BaseUnit target, bool isRanged, out Vector2Int cell)
+    // MoveState.ggl gốc: ô đích riêng khi đi tới đánh target (Boss Rush v59: cận chiến đi tới chỗ đứng quanh boss).
+    // false → đi theo cách thường (MoveState.fcf: ô mục tiêu / ô bắn).
+    public virtual bool TryGetMoveGoalCell(BaseUnit unit, BaseUnit target, bool isRanged, out Vector2Int cell)
     {
         cell = default;
+        return false;
+    }
+
+    // GridCombatController.jbv gốc: kiểm tầm đánh CẬN CHIẾN riêng của mode (Boss Rush v59: tầm + MeleeRangeBonus tới mép
+    // collider boss và phải đứng ở chỗ). false → dùng tầm thường của BaseUnit.
+    public virtual bool TryCheckMeleeRange(BaseUnit unit, BaseUnit target, out bool isInRange)
+    {
+        isInRange = false;
         return false;
     }
 

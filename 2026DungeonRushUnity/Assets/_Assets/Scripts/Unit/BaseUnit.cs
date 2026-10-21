@@ -54,10 +54,10 @@ public class BaseUnit : MonoBehaviour
     private float moveRepathTimer;
     private Vector2 moveLastPosition;
 
-    // Đang đi tới ô vây do mode chia (BaseMode.TryGetEngageCell) — đích ≠ ô mục tiêu nên nhớ ô mục tiêu lúc tìm đường.
+    // Đang đi tới ô đích do mode chọn (BaseMode.TryGetMoveGoalCell — Boss Rush: chỗ đứng quanh boss) — đích ≠ ô mục tiêu
+    // nên nhớ ô mục tiêu lúc tìm đường.
     private bool isEngageMove;
     private Vector2Int engageTargetCell;
-    private const float ENGAGE_CENTER_REACHED_DISTANCE = 0.15f;
 
     // PatrolState gốc (Character.CanPatrol): quái không có mục tiêu đi loanh quanh ô xuất phát, tốc độ ×0.5.
     public bool canPatrol;
@@ -924,20 +924,17 @@ public class BaseUnit : MonoBehaviour
         MapController map = MapController.Instance;
         BaseMode mode = GameController.Instance.mode;
         Vector2Int engageCell = default;
-        isEngageMove = mode != null && mode.TryGetEngageCell(this, target, IsRangedAttacker, out engageCell);
+        isEngageMove = mode != null && mode.TryGetMoveGoalCell(this, target, IsRangedAttacker, out engageCell);
         if (isEngageMove)
         {
             engageTargetCell = map.WorldToCell(target.Transform.position);
-            // Đã ở trong ô vây nhưng còn lệch tâm (tới ô chỉ cần cách tâm ≤ 0.5, bị chen lệch thêm) → chỉnh vào tâm,
-            // vì tâm ô mới chắc trong tầm đánh.
-            if (mover.RequestMoveTo(engageCell)
-                || mover.RequestMoveToPoint(map.CellToWorld(engageCell), ENGAGE_CENTER_REACHED_DISTANCE))
+            if (mover.RequestMoveTo(engageCell))
             {
                 animationController.PlayAnimMove();
             }
             else
             {
-                // Đã đứng đúng tâm ô chờ (hết chỗ trong tầm) → đứng yên, 0.2s xét lại.
+                // Đã ở ô đích (chưa đủ điều kiện đánh) → đứng yên, 0.2s xét lại.
                 mover.Stop();
                 animationController.PlayAnimIdle();
             }
@@ -1908,6 +1905,54 @@ public class BaseUnit : MonoBehaviour
         KnockBack(dir, range, duration);
     }
 
+    // gy.fng gốc (Boss Rush v59): đẩy bằng lực Impulse theo hướng (mình − from), trùng tâm thì hướng ngẫu nhiên; Kinematic bỏ qua.
+    public void AddKnockbackImpulse(Vector2 from, float force)
+    {
+        if (rigid == null || rigid.bodyType == RigidbodyType2D.Kinematic || force <= 0f)
+        {
+            return;
+        }
+        Vector2 direction = rigid.position - from;
+        if (direction.sqrMagnitude < 0.0001f)
+        {
+            direction = Random.insideUnitCircle;
+        }
+        if (direction.sqrMagnitude <= 0.00001f)
+        {
+            return;
+        }
+        rigid.AddForce(direction.normalized * force, ForceMode2D.Impulse);
+    }
+
+    // Character.fzv gốc: hình nảy lên height (DOPunchPosition 0.45s) + phồng nhẹ theo độ cao.
+    private const float HOP_DURATION = 0.45f;
+    private Transform hopVisual;
+    private Vector3 hopBasePosition;
+    private Vector3 hopBaseScale;
+
+    public void PlayHop(float height)
+    {
+        if (height <= 0f)
+        {
+            return;
+        }
+        if (hopVisual == null)
+        {
+            hopVisual = Transform.Find("Soldier/Body");
+            if (hopVisual == null)
+            {
+                return;
+            }
+            hopBasePosition = hopVisual.localPosition;
+            hopBaseScale = hopVisual.localScale;
+        }
+        hopVisual.DOKill();
+        hopVisual.localPosition = hopBasePosition;
+        hopVisual.localScale = hopBaseScale;
+        hopVisual.DOPunchPosition(new Vector3(0f, height, 0f), HOP_DURATION, 1, 0.5f);
+        hopVisual.DOPunchScale(hopBaseScale * (height / 0.65f * 0.18f), HOP_DURATION, 1, 0.5f);
+    }
+
     public virtual void KnockDown()
     {
         animationController.Reset();
@@ -2285,6 +2330,12 @@ public class BaseUnit : MonoBehaviour
     {
         if (IsTargetAvailable())
         {
+            BaseMode mode = GameController.Instance.mode;
+            if (!IsRangedAttacker && mode != null && mode.TryCheckMeleeRange(this, target, out bool isInRange))
+            {
+                return isInRange;
+            }
+
             float sqrDistance = (target.Transform.position - Transform.position).sqrMagnitude;
             float range = stats.attackRange + target.bodyOffset;
             return sqrDistance <= range * range;

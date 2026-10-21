@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Chọn ô đứng cho hero / pet / quái — port các hàm GridManager + CompanionController gốc (reverse libil2cpp v41).
+// Chọn ô đứng cho hero / pet / quái — port các hàm GridManager + CompanionController gốc (reverse libil2cpp v41; Boss Rush theo v59).
 // Làm việc trên lưới int[rows, cols] của project (0 = trống, 1 = chướng ngại), ô = Vector2Int(row, col).
 // Ô gốc (x, y) ↔ project (row = y, col = x + cols/2) — cột giữa gốc x = 0 là col = cols/2.
 public static class MapSpawnCells
@@ -67,46 +67,76 @@ public static class MapSpawnCells
         return result;
     }
 
-    // GridManager.ijq (Boss Rush, SpawnController.hvj): ô 0 = ô giữa đấu trường (hàng rows/2, cột giữa) nếu trống,
-    // các ô còn lại bốc ngẫu nhiên không trùng trong 8 ô bao quanh (hàng ngoài / cột trong).
-    public static List<Vector2Int> GetArenaTeamCells(int[,] grid, int count, ICollection<Vector2Int> occupied = null)
+    // GridManager.kcm (Boss Rush v59, SpawnController.jmg): ô 0 = ô giữa đấu trường (hàng rows/2, cột giữa) nếu trống → hero;
+    // còn lại rải ĐỀU trên vòng vuông Chebyshev bán kính ringRadius quanh ô giữa (ô trống, sắp theo góc), lệch ngẫu nhiên:
+    // người thứ i lấy ô thứ round(i × số ô / k) + lệch. Thiếu chỗ thì bốc ngẫu nhiên trong 8 ô kề ô giữa.
+    public static List<Vector2Int> GetArenaTeamCells(int[,] grid, int count, int ringRadius, ICollection<Vector2Int> occupied = null)
     {
         var center = new Vector2Int(grid.GetLength(0) / 2, grid.GetLength(1) / 2);
         var result = new List<Vector2Int>();
         if (IsFree(grid, center, occupied)) result.Add(center);
         if (count < 2) return result;
 
-        var around = new List<Vector2Int>();
-        for (int dRow = -1; dRow <= 1; dRow++)
+        int radius = Mathf.Max(1, ringRadius);
+        var ring = new List<Vector2Int>();
+        for (int dRow = -radius; dRow <= radius; dRow++)
         {
-            for (int dCol = -1; dCol <= 1; dCol++)
+            for (int dCol = -radius; dCol <= radius; dCol++)
             {
+                if (Mathf.Max(Mathf.Abs(dRow), Mathf.Abs(dCol)) != radius) continue;
                 var cell = new Vector2Int(center.x + dRow, center.y + dCol);
-                if ((dRow != 0 || dCol != 0) && IsFree(grid, cell, occupied)) around.Add(cell);
+                if (IsFree(grid, cell, occupied)) ring.Add(cell);
+            }
+        }
+        ring.Sort((a, b) => AngleAround(center, a).CompareTo(AngleAround(center, b)));
+
+        int take = Mathf.Min(count - 1, ring.Count);
+        if (take > 0)
+        {
+            int offset = Random.Range(0, ring.Count);
+            for (int i = 0; i < take; i++)
+            {
+                int index = ((int)System.Math.Round((double)i * ring.Count / take, System.MidpointRounding.AwayFromZero) + offset) % ring.Count;
+                if (!result.Contains(ring[index])) result.Add(ring[index]);
             }
         }
 
-        int total = Mathf.Min(count - 1, around.Count);
-        for (int i = 0; i < total; i++)
+        if (result.Count < count)
         {
-            int index = Random.Range(0, around.Count);
-            result.Add(around[index]);
-            around.RemoveAt(index);
+            var around = new List<Vector2Int>();
+            for (int dRow = -1; dRow <= 1; dRow++)
+            {
+                for (int dCol = -1; dCol <= 1; dCol++)
+                {
+                    var cell = new Vector2Int(center.x + dRow, center.y + dCol);
+                    if ((dRow != 0 || dCol != 0) && IsFree(grid, cell, occupied) && !result.Contains(cell)) around.Add(cell);
+                }
+            }
+            while (result.Count < count && around.Count > 0)
+            {
+                int index = Random.Range(0, around.Count);
+                result.Add(around[index]);
+                around.RemoveAt(index);
+            }
         }
         return result;
     }
 
-    // GridManager.ijt (ô boss Boss Rush, SpawnController.hvm): ô trống ngẫu nhiên khắp lưới, TRỪ vùng 5×5 quanh ô giữa
+    private static float AngleAround(Vector2Int center, Vector2Int cell)
+    {
+        return Mathf.Atan2(cell.x - center.x, cell.y - center.y);
+    }
+
+    // GridManager.ijt (ô boss Boss Rush, SpawnController.hvm / v59 kcp): ô trống ngẫu nhiên khắp lưới, TRỪ vùng 5×5 quanh ô giữa
     // (|cột − giữa| ≤ 2 và |hàng − rows/2| < 3). Không có ô nào → ô giữa hàng trên cùng.
-    // edgeMargin (KHÔNG có ở gốc, mặc định 0 = như gốc): bỏ thêm edgeMargin hàng/cột sát mép lưới.
-    public static Vector2Int GetArenaBossCell(int[,] grid, ICollection<Vector2Int> occupied = null, int edgeMargin = 0)
+    public static Vector2Int GetArenaBossCell(int[,] grid, ICollection<Vector2Int> occupied = null)
     {
         int rows = grid.GetLength(0);
         int cols = grid.GetLength(1);
         var candidates = new List<Vector2Int>();
-        for (int row = edgeMargin; row < rows - edgeMargin; row++)
+        for (int row = 0; row < rows; row++)
         {
-            for (int col = edgeMargin; col < cols - edgeMargin; col++)
+            for (int col = 0; col < cols; col++)
             {
                 if (Mathf.Abs(col - cols / 2) <= 2 && Mathf.Abs(row - rows / 2) < 3) continue;
                 var cell = new Vector2Int(row, col);
@@ -116,24 +146,28 @@ public static class MapSpawnCells
         return candidates.Count > 0 ? candidates[Random.Range(0, candidates.Count)] : new Vector2Int(rows - 1, cols / 2);
     }
 
-    // GridManager.iju (BossRushRepositionState): ô trống ngẫu nhiên trong vuông bán kính radius quanh cell (trừ chính nó).
-    // Không có → trả lại cell. edgeMargin như GetArenaBossCell (0 = như gốc).
-    public static Vector2Int GetRandomCellAround(int[,] grid, Vector2Int cell, int radius, ICollection<Vector2Int> occupied = null,
-                                                 int edgeMargin = 0)
+    // GridManager.kcq (BossRushRepositionState v59): ô trống, đi được, khoảng cách Euclid ≤ maxRadius (trừ chính nó);
+    // ưu tiên ô cách ≥ minRadius, không có thì bất kỳ ô ≤ maxRadius; chọn ngẫu nhiên. Không có ô nào → trả lại cell.
+    public static Vector2Int GetRepositionCell(int[,] grid, Vector2Int cell, float maxRadius, float minRadius,
+                                               ICollection<Vector2Int> occupied = null)
     {
-        int rows = grid.GetLength(0);
-        int cols = grid.GetLength(1);
-        var candidates = new List<Vector2Int>();
-        for (int col = cell.y - radius; col <= cell.y + radius; col++)
+        int radius = Mathf.CeilToInt(maxRadius);
+        var far = new List<Vector2Int>();
+        var near = new List<Vector2Int>();
+        for (int dRow = -radius; dRow <= radius; dRow++)
         {
-            for (int row = cell.x - radius; row <= cell.x + radius; row++)
+            for (int dCol = -radius; dCol <= radius; dCol++)
             {
-                var next = new Vector2Int(row, col);
-                if (row < edgeMargin || row >= rows - edgeMargin || col < edgeMargin || col >= cols - edgeMargin) continue;
-                if (next != cell && IsFree(grid, next, occupied)) candidates.Add(next);
+                if (dRow == 0 && dCol == 0) continue;
+                var next = new Vector2Int(cell.x + dRow, cell.y + dCol);
+                if (!IsFree(grid, next, occupied)) continue;
+                float distance = Mathf.Sqrt(dRow * dRow + dCol * dCol);
+                if (distance > maxRadius) continue;
+                (distance >= minRadius ? far : near).Add(next);
             }
         }
-        return candidates.Count > 0 ? candidates[Random.Range(0, candidates.Count)] : cell;
+        if (far.Count > 0) return far[Random.Range(0, far.Count)];
+        return near.Count > 0 ? near[Random.Range(0, near.Count)] : cell;
     }
 
     // GridManager.ijo: count ô trống gần center nhất (khoảng cách Euclid). Quét cột ngoài / hàng trong

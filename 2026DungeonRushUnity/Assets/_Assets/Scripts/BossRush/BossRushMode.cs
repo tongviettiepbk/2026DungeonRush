@@ -11,8 +11,9 @@ using UnityEngine;
 //   • Đồng hồ FightDuration = 30s; CHỈ hết giờ mới kết thúc (hero chết vẫn chờ) → báo server
 //     damageDealt = damage của HERO CHÍNH (IsMainCharacter), totalDamageDealt = damage CẢ ĐỘI (IsHome).
 //   • Popup "Fight Complete!" (Team Damage + Damage Dealt) → Continue về campaign + mở lại sảnh Boss Rush.
-//   • Đấu trường (BossRushConfig gốc): lưới 12×12 không tường, không chướng ngại; hero ô giữa, ghost 8 ô quanh
-//     (GridManager.ijq); boss ô ngẫu nhiên ngoài vùng 5×5 giữa (ijt); camera bám hero + CameraFollowOffset.
+//   • Đấu trường (BossRushConfig gốc): lưới 12×12 không tường, không chướng ngại; hero ô giữa, ghost rải đều vòng bán kính 2
+//     quanh hero (v59 GridManager.kcm); boss ô ngẫu nhiên ngoài vùng 5×5 giữa (ijt); camera bám hero + CameraFollowOffset.
+//   • v59: đội cận chiến đứng theo chỗ chia quanh boss (BossRushSlots), boss có skill riêng (BossRushSkills).
 public class BossRushMode : BaseMode
 {
     [Header("Boss Rush")]
@@ -22,11 +23,12 @@ public class BossRushMode : BaseMode
     [Tooltip("BossRushConfig.CameraFollowOffset gốc: camera = vị trí người được bám + offset (giữ z).")]
     public Vector3 cameraFollowOffset = new Vector3(0f, -5f, 0f);
     private const float CAMERA_LERP_SPEED = 4f;  // LateUpdate gốc: t = min(dt × 4, 1) khi đổi người bám
-    // KHÔNG có ở gốc: boss không đứng/dời tới hàng-cột sát mép lưới → luôn đủ 8 ô quanh để cả đội cận chiến vây đánh
-    // (đứng mép chỉ còn 5 ô, góc còn 3 → mấy người còn lại đứng chờ, damage 0).
-    public const int BOSS_EDGE_MARGIN = 1;
 
     private List<Vector2Int> teamCells = new List<Vector2Int>();
+    private BossRushSlots slots;
+    private float shakeDuration;
+    private float shakeTimer;
+    private float shakeStrength;
     private Transform cameraTransform;
     private Vector3 cameraHomePosition;
     private BaseUnit cameraTarget;
@@ -100,8 +102,11 @@ public class BossRushMode : BaseMode
     protected override void CreateTeamA()
     {
         List<BossRushPlayerModel> allies = BossRushFightSession.Allies;
-        teamCells = MapSpawnCells.GetArenaTeamCells(MapController.Instance.Grid, 1 + (allies != null ? allies.Count : 0));
+        int teamCount = 1 + (allies != null ? allies.Count : 0);
+        teamCells = MapSpawnCells.GetArenaTeamCells(MapController.Instance.Grid, teamCount, StaticBossRushData.PLAYER_SPAWN_RING_RADIUS);
+        slots = new BossRushSlots(teamCount);
         SpawnHeroAndPets();
+        ApplyPlayerColliderMultiplier(hero);
         AddDamageEntry(hero, GameData.userData.profile.userName, GameData.userData.profile.avatarId, true);
         SpawnGhosts(allies);
         ShowDamageBoard();
@@ -139,7 +144,18 @@ public class BossRushMode : BaseMode
             ghost.SetupAsGhost(ally.PlayerName, BossRushController.ToEquipmentData(ally.Items), owned,
                                BossRushController.ToEnchantmentData(ally.EnchantmentTiers), ally.ShowCloak);
             ghost.SpawnInBattle(BuildHeroStats(), StaticValue.TAG_TEAM_A, pos);
+            ApplyPlayerColliderMultiplier(ghost);
             AddDamageEntry(ghost, ally.PlayerName, ally.AvatarId, false);
+        }
+    }
+
+    // SpawnController.jll(PlayerColliderRadiusMultiplier): collider hero/ghost × 1.1.
+    private static void ApplyPlayerColliderMultiplier(BaseUnit unit)
+    {
+        CircleCollider2D circle = unit != null ? unit.GetComponentInChildren<CircleCollider2D>() : null;
+        if (circle != null)
+        {
+            circle.radius *= StaticBossRushData.PLAYER_COLLIDER_RADIUS_MULTIPLIER;
         }
     }
 
@@ -164,14 +180,14 @@ public class BossRushMode : BaseMode
             return;
         }
 
-        // GridManager.ijt: ô trống ngẫu nhiên ngoài vùng 5×5 giữa đấu trường (không đè lên quân đang đứng), chừa mép lưới.
+        // GridManager.ijt / kcp: ô trống ngẫu nhiên ngoài vùng 5×5 giữa đấu trường (không đè lên quân đang đứng).
         MapController map = MapController.Instance;
         var occupied = new HashSet<Vector2Int>();
         for (int i = 0; i < teamA.Count; i++)
         {
             if (teamA[i] != null && teamA[i].isTargetable) occupied.Add(map.WorldToCell(teamA[i].Transform.position));
         }
-        Vector2Int cell = MapSpawnCells.GetArenaBossCell(map.Grid, occupied, BOSS_EDGE_MARGIN);
+        Vector2Int cell = MapSpawnCells.GetArenaBossCell(map.Grid, occupied);
         Vector3 pos = map.CellToWorld(cell);
 
         boss = SpawnUnit<BossRushBossUnit>(prefab, pos, enemiesGroup);
@@ -180,145 +196,41 @@ public class BossRushMode : BaseMode
         RefreshHud();
     }
 
-    // ===== Chia chỗ vây boss (KHÔNG có ở gốc — gốc cả đội cùng đi về ô boss nên túm tụm, người đứng sau không với tới) =====
-    // Mỗi quân đội nhà giữ 1 ô riêng: đứng ở tâm ô đó là đánh được boss (cận chiến: trong tầm; bắn xa: trong tầm,
-    // cách boss ≥ RANGED_MIN_DISTANCE và thấy boss). Chọn ô gần mình nhất, phạt ô sát ô người khác để đội tản đều
-    // quanh boss; hết ô trong tầm thì đứng chờ ở ô trống gần boss nhất ngoài tầm. Boss dời chỗ → ô cũ hết tầm → chọn lại.
-    private const float ENGAGE_RANGE_MARGIN = 0.3f;     // chừa cho bị đẩy lệch khỏi tâm ô vẫn còn trong tầm
-    private const float MELEE_MIN_DISTANCE = 0.9f;      // bỏ ô boss đang đứng
-    private const float RANGED_MIN_DISTANCE = 2f;       // bắn xa đứng lùi ra, nhường vòng trong cho cận chiến
-    private const float CROWD_PENALTY = 0.6f;           // mỗi ô kề đã có người giữ
-    private const float WAIT_PENALTY = 100f;            // ô ngoài tầm chỉ chọn khi hết ô trong tầm
-    private const float WAIT_BOSS_DISTANCE_WEIGHT = 3f;
-    private const int WAIT_EXTRA_RADIUS = 2;            // vùng tìm ô chờ: rộng hơn tầm 2 ô
-    private readonly Dictionary<BaseUnit, Vector2Int> engageCells = new Dictionary<BaseUnit, Vector2Int>();
+    // ===== Chỗ đứng quanh boss cho đội cận chiến (class gq + GridCombatController.jbv/jbw + MoveState.ggl gốc v59) =====
 
-    public override bool TryGetEngageCell(BaseUnit unit, BaseUnit target, bool isRanged, out Vector2Int cell)
+    // Chỉ áp cho cận chiến đội nhà đánh boss; bắn xa đi đường thường.
+    private bool IsSlotAttacker(BaseUnit unit, BaseUnit target, bool isRanged)
+    {
+        return slots != null && boss != null && target == boss && unit != null && unit.isTeamA && !isRanged;
+    }
+
+    // ggl: ô đích = ô chứa chỗ đứng (ngoài lưới thì đi kiểu thường).
+    public override bool TryGetMoveGoalCell(BaseUnit unit, BaseUnit target, bool isRanged, out Vector2Int cell)
     {
         cell = default;
         MapController map = MapController.Instance;
-        if (boss == null || target != boss || unit == null || !unit.isTeamA || map == null || !map.IsReady)
+        if (!IsSlotAttacker(unit, target, isRanged) || map == null || !map.IsReady)
         {
             return false;
         }
+        cell = map.WorldToCell(slots.GetSlotPosition(unit, boss));
+        return map.InBounds(cell);
+    }
 
-        Vector2 bossPosition = boss.Transform.position;
-        Vector2Int bossCell = map.WorldToCell(bossPosition);
-        Vector2Int unitCell = map.ClampCell(map.WorldToCell(unit.Transform.position));
-        float maxDistance = unit.stats.attackRange + boss.bodyOffset - ENGAGE_RANGE_MARGIN;
-        float minDistance = isRanged ? Mathf.Min(RANGED_MIN_DISTANCE, maxDistance) : MELEE_MIN_DISTANCE;
-
-        // Ô người khác đang giữ (chưa giữ thì tính ô đang đứng); bỏ ô của quân đã chết.
-        // Quân đã đứng lại đánh giữa đường (vào tầm trước khi tới ô vây) giữ ô ĐANG ĐỨNG, nhả ô vây cũ cho người khác.
-        var taken = new HashSet<Vector2Int>();
-        for (int i = 0; i < teamA.Count; i++)
+    // jbv: khoảng cách tới điểm gần nhất trên collider boss ≤ tầm + MeleeRangeBonus, VÀ đứng ở chỗ (hoặc lệch chỗ đủ lâu).
+    public override bool TryCheckMeleeRange(BaseUnit unit, BaseUnit target, out bool isInRange)
+    {
+        isInRange = false;
+        if (!IsSlotAttacker(unit, target, false))
         {
-            BaseUnit other = teamA[i];
-            if (other == null || !other.isTargetable)
-            {
-                if (other != null) engageCells.Remove(other);
-                continue;
-            }
-            if (other == unit) continue;
-            Vector2Int otherCell = map.WorldToCell(other.Transform.position);
-            if (IsStandingInRange(other, bossPosition))
-            {
-                engageCells[other] = otherCell;
-            }
-            taken.Add(engageCells.TryGetValue(other, out Vector2Int held) ? held : otherCell);
-        }
-
-        // Ô đang giữ còn đánh được và không bị chiếm → giữ nguyên (khỏi đổi chỗ qua lại).
-        if (engageCells.TryGetValue(unit, out Vector2Int current) && !taken.Contains(current)
-            && IsEngageCell(map, current, bossCell, bossPosition, minDistance, maxDistance, isRanged))
-        {
-            cell = current;
-            return true;
-        }
-
-        HashSet<Vector2Int> reachable = MapSpawnCells.GetReachableCells(map.Grid, unitCell);
-        Vector2 unitPosition = unit.Transform.position;
-        int radius = Mathf.Min(Mathf.CeilToInt(maxDistance) + WAIT_EXTRA_RADIUS, Mathf.Max(map.Rows, map.Cols));
-        bool found = false;
-        float bestCost = float.MaxValue;
-        for (int dRow = -radius; dRow <= radius; dRow++)
-        {
-            for (int dCol = -radius; dCol <= radius; dCol++)
-            {
-                var candidate = new Vector2Int(bossCell.x + dRow, bossCell.y + dCol);
-                if (candidate == bossCell || taken.Contains(candidate) || !reachable.Contains(candidate))
-                {
-                    continue;
-                }
-
-                Vector2 position = map.CellToWorld(candidate);
-                float crowd = CROWD_PENALTY * CountTakenAround(taken, candidate);
-                float cost = Vector2.Distance(unitPosition, position) + crowd;
-                if (cost >= bestCost && bestCost < WAIT_PENALTY)
-                {
-                    continue;   // đã có ô trong tầm tốt hơn → khỏi raycast
-                }
-                if (!IsEngageCell(map, candidate, bossCell, bossPosition, minDistance, maxDistance, isRanged))
-                {
-                    // Ô chờ: gần boss nhất (để vào chỗ ngay khi có ô trống), không tính đường đi.
-                    cost = WAIT_PENALTY + WAIT_BOSS_DISTANCE_WEIGHT * Vector2.Distance(position, bossPosition) + crowd;
-                }
-                if (cost < bestCost)
-                {
-                    bestCost = cost;
-                    cell = candidate;
-                    found = true;
-                }
-            }
-        }
-
-        if (!found)
-        {
-            engageCells.Remove(unit);
             return false;
         }
-        engageCells[unit] = cell;
+        Vector2 from = unit.Transform.position;
+        Collider2D body = boss.BodyCollider;
+        Vector2 to = body != null ? body.ClosestPoint(from) : (Vector2)boss.Transform.position;
+        float range = unit.stats.attackRange + StaticBossRushData.MELEE_RANGE_BONUS;
+        isInRange = (from - to).sqrMagnitude <= range * range && slots.IsAtSlot(unit, boss);
         return true;
-    }
-
-    private static bool IsEngageCell(MapController map, Vector2Int cell, Vector2Int bossCell, Vector2 bossPosition,
-                                     float minDistance, float maxDistance, bool isRanged)
-    {
-        if (cell == bossCell || !map.IsWalkable(cell))
-        {
-            return false;
-        }
-
-        Vector2 position = map.CellToWorld(cell);
-        float distance = Vector2.Distance(position, bossPosition);
-        if (distance < minDistance || distance > maxDistance)
-        {
-            return false;
-        }
-        return !isRanged || MapController.HasLineOfSight(position, bossPosition);
-    }
-
-    private bool IsStandingInRange(BaseUnit other, Vector2 bossPosition)
-    {
-        if (other.stateCurrent == BattleState.Move)
-        {
-            return false;
-        }
-        float range = other.stats.attackRange + boss.bodyOffset;
-        return ((Vector2)other.Transform.position - bossPosition).sqrMagnitude <= range * range;
-    }
-
-    private static int CountTakenAround(HashSet<Vector2Int> taken, Vector2Int cell)
-    {
-        int count = 0;
-        for (int dRow = -1; dRow <= 1; dRow++)
-        {
-            for (int dCol = -1; dCol <= 1; dCol++)
-            {
-                if ((dRow != 0 || dCol != 0) && taken.Contains(new Vector2Int(cell.x + dRow, cell.y + dCol))) count++;
-            }
-        }
-        return count;
     }
 
     // ===== Damage (GameController.hif gốc) =====
@@ -580,6 +492,22 @@ public class BossRushMode : BaseMode
             float t = Mathf.Min(Time.deltaTime * CAMERA_LERP_SPEED, 1f);
             cameraTransform.position = Vector3.Lerp(cameraTransform.position, goal, t);
         }
+
+        if (shakeTimer > 0f)
+        {
+            shakeTimer -= Time.deltaTime;
+            float fade = shakeDuration > 0f ? Mathf.Clamp01(shakeTimer / shakeDuration) : 0f;
+            Vector2 offset = Random.insideUnitCircle * (shakeStrength * fade);
+            cameraTransform.position += new Vector3(offset.x, offset.y, 0f);
+        }
+    }
+
+    // CameraController.ifs gốc (skill boss gọi qua gy.fnh): rung camera duration giây, biên độ strength, nhỏ dần.
+    public void ShakeCamera(float duration, float strength)
+    {
+        shakeDuration = duration;
+        shakeTimer = duration;
+        shakeStrength = strength;
     }
 
     private BaseUnit FindAliveAlly()
@@ -596,7 +524,8 @@ public class BossRushMode : BaseMode
         StopCameraFollow();
         base.Reset();
         teamCells.Clear();
-        engageCells.Clear();
+        slots = null;
+        shakeTimer = 0f;
         damageEntries.Clear();
         isDamageBoardDirty = false;
         boss = null;

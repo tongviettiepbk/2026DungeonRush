@@ -1,33 +1,47 @@
+using DG.Tweening;
 using UnityEngine;
 
-// Boss Boss Rush (Character.IsBossRushBoss gốc). Chỉ số lấy từ BossRushBossModel của trận:
+// Boss Boss Rush (Character.IsBossRushBoss gốc v59). Chỉ số lấy từ BossRushBossModel của trận:
 //   HP hiện tại/tối đa = máu boss CHUNG của nhóm (server), sát thương = BossDamageByTier[tier] (EnemyAttackPower).
-// Hành vi BossRushBossDefinition (gốc giống nhau cả 10 boss): CanMove = false (không đuổi), RepositionAfterAttack —
-// MỖI đòn trúng hẹn dời chỗ sau RepositionDelay (5s, đòn sau đặt lại hẹn) (Character.ewo); đang Idle mà tới hẹn
-// (ewp) → BossRushRepositionState: chọn ô trống ngẫu nhiên trong vuông bán kính RepositionSearchRadius (3, iju) rồi
-// ĐI tới đó bằng lực theo đường A* (UnitMover), tới nơi về Idle. Khối lượng ×MassMultiplier (5), collider ×1.5.
-// KHÔNG có ở gốc: ngoài lúc dời chỗ boss khoá vị trí (FreezeAll) — đội 8 người chen vào đẩy boss trôi ra ngoài lưới
-// 12×12 (đấu trường không tường) làm cả đội không tìm được chỗ đánh.
-// Khác nhau giữa các boss chỉ ở vũ khí: rồng/Lich/Hag bắn đạn tầm 100 tốc 12, Ogre đánh gần tầm 3.
+// Định nghĩa từng boss (BossRushBossDefinition, SpawnController.jmj): CanMove = true (Ogre cận chiến đuổi theo),
+// tốc chạy = EnemyBaseMoveSpeed × MoveSpeedMultiplier, hình × BodyScaleMultiplier, collider × ColliderRadiusMultiplier,
+// khối lượng × MassMultiplier (5).
+// RepositionAfterAttack (Character.fzr/fzs + BossRushRepositionState): đòn trúng đầu tiên hẹn dời chỗ sau RepositionDelay
+// (đã có hẹn thì KHÔNG đặt lại); Idle mà tới hẹn → đi tới ô trống ngẫu nhiên cách RepositionSearchRadius (GridManager.kcq).
+// Skill (IdleState.gfu + BossRushSkillState): hẹn skill đầu sau Random(SkillIntervalMin, Max); tới giờ thì đứng yên
+// (Kinematic) chạy 1 skill theo loại boss (BossRushSkills.cs), xong hẹn skill sau. Skill ưu tiên hơn dời chỗ.
+// Bị chí mạng: hình nảy nhẹ (Character.fzx). Đòn của boss trúng ai trong đội nhà → người đó bị đẩy lùi (Character.fzw).
 // Mọi đòn trúng boss được báo về BossRushMode để cộng damage đội / damage của mình (GameController.hif gốc).
 // Animation: rig dùng CharacterAnimatorController gốc (bool IsIdle / IsAttacking). Clip đánh bắn event
 // OnAttackAnimationHit → ra đòn đúng khung hình vung tay, OnAttackAnimationCompleted → về tư thế đứng.
 public class BossRushBossUnit : EnemyUnit
 {
-    private const float REPOSITION_MOVE_SPEED = 1.5f;   // GameResources.EnemyBaseMoveSpeed (MoveSpeed mặc định của quái)
+    private const float ENEMY_BASE_MOVE_SPEED = 1.5f;   // GameResources.EnemyBaseMoveSpeed
+    private const float COLLIDER_MULTIPLIER_EPSILON = 0.01f;
+    private const float CRIT_PUNCH_DURATION = 0.18f;
     private static readonly int ANIM_IS_IDLE = Animator.StringToHash("IsIdle");
     private static readonly int ANIM_IS_ATTACKING = Animator.StringToHash("IsAttacking");
 
     public BossRushBossDefinition Definition { get; private set; }
     public BossRushBossModel Model { get; private set; }
     public string DisplayName => Definition != null ? Definition.bossName : "Boss";
+    public BossRushMode Mode => mode;
+    public Transform VisualTransform => visual;
+    public Vector2 Position => rigid != null ? rigid.position : (Vector2)Transform.position;
+    public Collider2D BodyCollider => bodyCollider;
 
     private BossRushMode mode;
     private bool pendingReposition;     // Character.BossRushPendingReposition
     private float repositionAtTime;     // Character.BossRushRepositionAtTime
     private bool isRepositioning;
+    private float nextSkillAtTime;      // Character.BossRushNextSkillAtTime
+    private BossRushSkill skill;        // BossRushSkillState.yud
+    private RigidbodyType2D bodyTypeBeforeSkill;
     private Animator animator;
     private bool attackReleased;
+    private Transform visual;           // Character 0x2c — node hình "Soldier/Body"
+    private Vector3 visualBaseScale;
+    private float lastCritPunchTime = float.MinValue;
 
     public override bool isMoveable
     {
@@ -48,23 +62,51 @@ public class BossRushBossUnit : EnemyUnit
             attack = model.AttackPower,
             maxHp = (float)model.MaxHP,
             attackPerSecond = 1f,
-            moveSpeed = REPOSITION_MOVE_SPEED,   // chỉ dùng khi dời chỗ (isMoveable = CanMove = false)
+            moveSpeed = definition.moveSpeedMultiplier > 0f ? ENEMY_BASE_MOVE_SPEED * definition.moveSpeedMultiplier : ENEMY_BASE_MOVE_SPEED,
         };
 
         SpawnInBattle(bs, StaticValue.TAG_TEAM_B, position);
-        if (bodyCollider != null)
-        {
-            bodyCollider.transform.localScale *= definition.colliderRadiusMultiplier;
-        }
-        rigid.mass *= definition.massMultiplier;   // SpawnController.hux
-        SetPositionLocked(true);
+        ApplyColliderMultiplier(definition.colliderRadiusMultiplier);   // SpawnController.jll
+        rigid.mass *= definition.massMultiplier;                          // SpawnController.jlm
+        ApplyBodyScale(definition.bodyScaleMultiplier);                   // Character.fyh
 
         // Máu thật = máu CHUNG còn lại của nhóm (có thể < max).
         hp = System.Math.Min(model.CurrentHP, GetMaxHp());
         UpdateHealthBar();
         pendingReposition = false;
         isRepositioning = false;
+        nextSkillAtTime = 0f;
+        skill = null;
         SetupAnimator();
+    }
+
+    // jll: |mult − 1| > 0.01 thì phóng bán kính CircleCollider2D (không đụng hình).
+    private void ApplyColliderMultiplier(float multiplier)
+    {
+        var circle = bodyCollider as CircleCollider2D;
+        if (circle != null && Mathf.Abs(multiplier - 1f) > COLLIDER_MULTIPLIER_EPSILON)
+        {
+            circle.radius *= multiplier;
+        }
+    }
+
+    // fyh/fyi: hình = scale gốc × BodyScaleMultiplier (> 0).
+    private void ApplyBodyScale(float multiplier)
+    {
+        visual = Transform.Find("Soldier/Body");
+        if (visual == null && bodyCollider != null)
+        {
+            visual = bodyCollider.transform;
+        }
+        if (visual == null)
+        {
+            return;
+        }
+        if (multiplier > 0f)
+        {
+            visual.localScale *= multiplier;
+        }
+        visualBaseScale = visual.localScale;
     }
 
     private void SetupAnimator()
@@ -126,10 +168,74 @@ public class BossRushBossUnit : EnemyUnit
         {
             mode.OnBossDamaged(data.attacker, taken);
         }
+        if (data != null && data.isCrit && !isDead)
+        {
+            PlayCritPunch();
+        }
         return taken;
     }
 
-    // ===== RepositionAfterAttack (Character.ewo/ewp + BossRushRepositionState gốc) =====
+    // fzx: hình nảy × BossCritPunchScale, cách nhau ít nhất BossCritPunchCooldown.
+    private void PlayCritPunch()
+    {
+        if (visual == null || Time.time - lastCritPunchTime < StaticBossRushData.BOSS_CRIT_PUNCH_COOLDOWN)
+        {
+            return;
+        }
+        lastCritPunchTime = Time.time;
+        visual.DOKill();
+        visual.localScale = visualBaseScale;
+        visual.DOPunchScale(visualBaseScale * StaticBossRushData.BOSS_CRIT_PUNCH_SCALE, CRIT_PUNCH_DURATION, 1, 0.5f);
+    }
+
+    // fzw: đòn của boss (thường, đạn hay skill) trúng người đội nhà → đẩy lùi AllyHitKnockbackForce.
+    public override void OnAttackDone(ProcessedAttackData processedAttackData, double damageDealt)
+    {
+        base.OnAttackDone(processedAttackData, damageDealt);
+        BaseUnit victim = processedAttackData != null ? processedAttackData.victim : null;
+        if (victim != null && victim.isTeamA && victim.isTargetable)
+        {
+            victim.AddKnockbackImpulse(Position, StaticBossRushData.ALLY_HIT_KNOCKBACK_FORCE);
+        }
+    }
+
+    // ===== Dùng cho skill (BossRushSkills.cs) =====
+
+    // Character.fyw: 1 đòn thường của boss lên mục tiêu (cùng công thức chí mạng / chặn).
+    public void SkillAttack(BaseUnit victim)
+    {
+        if (victim != null && victim.isTargetable)
+        {
+            victim.TakeAttack(GetBasicAttackData(), impactAttack);
+        }
+    }
+
+    // hb.fnx: cỡ thân boss = bề ngang collider (tối thiểu 0.2).
+    public float BodyDiameter => Mathf.Max(bodyCollider != null ? bodyCollider.bounds.extents.x * 2f : 1f, 0.2f);
+
+    public void TeleportTo(Vector2 destination)
+    {
+        mover.Stop();
+        Transform.position = new Vector3(destination.x, destination.y, Transform.position.z);
+        rigid.position = destination;
+    }
+
+    public BaseUnit ClearTargetForSkill()
+    {
+        BaseUnit saved = target;
+        target = null;
+        return saved;
+    }
+
+    public void RestoreTargetAfterSkill(BaseUnit saved)
+    {
+        if (target == null)
+        {
+            target = saved;
+        }
+    }
+
+    // ===== RepositionAfterAttack (Character.fzr/fzs + BossRushRepositionState gốc) =====
 
     protected override void OnAttackEnd()
     {
@@ -140,18 +246,18 @@ public class BossRushBossUnit : EnemyUnit
         }
     }
 
-    // Character.ewo: mỗi đòn trúng → hẹn dời chỗ sau RepositionDelay.
+    // fzr: đòn trúng → hẹn dời chỗ sau RepositionDelay, chỉ khi chưa có hẹn.
     protected override void ReleaseAttack()
     {
         base.ReleaseAttack();
-        if (Definition != null && Definition.behaviorType == BossRushEnemyBehaviorType.RepositionAfterAttack)
+        if (Definition != null && Definition.behaviorType == BossRushEnemyBehaviorType.RepositionAfterAttack && !pendingReposition)
         {
             pendingReposition = true;
             repositionAtTime = Time.time + Definition.repositionDelay;
         }
     }
 
-    // IdleState.fbq gốc xét ewp ĐẦU TIÊN: tới hẹn → vào BossRushRepositionState; đang dời chỗ thì đi cho tới nơi.
+    // IdleState.gfu gốc: skill trước (hẹn lần đầu / tới giờ thì vào skill), rồi tới dời chỗ, rồi mới chọn mục tiêu.
     protected override void UpdateIdle()
     {
         if (isRepositioning)
@@ -161,7 +267,18 @@ public class BossRushBossUnit : EnemyUnit
                 return;
             }
             isRepositioning = false;
-            SetPositionLocked(true);
+        }
+
+        if (Definition != null && Definition.skillType != BossRushBossSkillType.None)
+        {
+            if (nextSkillAtTime <= 0f)
+            {
+                ScheduleNextSkill();
+            }
+            else if (Time.time >= nextSkillAtTime && BeginSkill())
+            {
+                return;
+            }
         }
 
         if (pendingReposition && Time.time >= repositionAtTime && StartReposition())
@@ -172,7 +289,7 @@ public class BossRushBossUnit : EnemyUnit
         base.UpdateIdle();
     }
 
-    // BossRushRepositionState.ewu: bỏ hẹn, chọn ô quanh (bán kính ≥ 1), đi tới bằng PhysicsMovementController.
+    // BossRushRepositionState.gao: bỏ hẹn, ô đích = GridManager.kcq(ô hiện tại, R = max(1, SearchRadius), r = max(1, R − 1)).
     private bool StartReposition()
     {
         pendingReposition = false;
@@ -191,20 +308,116 @@ public class BossRushBossUnit : EnemyUnit
             if (unit != null && unit != this && unit.isTargetable) occupied.Add(map.WorldToCell(unit.Transform.position));
         }
 
-        Vector2Int destination = MapSpawnCells.GetRandomCellAround(map.Grid, current, Mathf.Max(1, Definition.repositionSearchRadius), occupied,
-                                                                       BossRushMode.BOSS_EDGE_MARGIN);
+        float maxRadius = Mathf.Max(1f, Definition.repositionSearchRadius);
+        float minRadius = Mathf.Max(1f, maxRadius - 1f);
+        Vector2Int destination = MapSpawnCells.GetRepositionCell(map.Grid, current, maxRadius, minRadius, occupied);
         if (destination == current || !mover.RequestMoveTo(destination))
         {
             return false;
         }
 
         isRepositioning = true;
-        SetPositionLocked(false);
         return true;
     }
 
-    private void SetPositionLocked(bool isLocked)
+    // ===== Skill (BossRushSkillState gốc) =====
+
+    // Character.fzt
+    private void ScheduleNextSkill()
     {
-        rigid.constraints = isLocked ? RigidbodyConstraints2D.FreezeAll : RigidbodyConstraints2D.FreezeRotation;
+        nextSkillAtTime = Time.time + Random.Range(StaticBossRushData.SKILL_INTERVAL_MIN, StaticBossRushData.SKILL_INTERVAL_MAX);
+    }
+
+    protected override void UpdateBattleState()
+    {
+        if (stateCurrent == BattleState.Skill)
+        {
+            UpdateSkill();
+            return;
+        }
+        base.UpdateBattleState();
+    }
+
+    // gao: dừng, Kinematic (fzz(true)), Animator IsIdle, tạo + Begin skill. Không tạo được thì về Idle.
+    private bool BeginSkill()
+    {
+        skill = BossRushSkill.Create(Definition.skillType, this);
+        if (skill == null)
+        {
+            ScheduleNextSkill();
+            return false;
+        }
+
+        StopMove();
+        stateCurrent = BattleState.Skill;
+        bodyTypeBeforeSkill = rigid.bodyType;
+        rigid.linearVelocity = Vector2.zero;
+        rigid.angularVelocity = 0f;
+        rigid.bodyType = RigidbodyType2D.Kinematic;
+        if (animator != null)
+        {
+            animator.SetBool(ANIM_IS_ATTACKING, false);
+            animator.SetBool(ANIM_IS_IDLE, true);
+        }
+        skill.Begin();
+        return true;
+    }
+
+    // gfu: Tick(dt × tốc game) trả true → về Idle.
+    private void UpdateSkill()
+    {
+        if (skill == null)
+        {
+            EndSkill();
+            return;
+        }
+        if (skill.Tick(Time.deltaTime * GameController.Instance.gameSpeed))
+        {
+            skill = null;
+            EndSkill();
+        }
+    }
+
+    // gap: Cancel skill, trả bodyType, hẹn skill sau. Gốc đặt IsIdle = false rồi IdleState bật lại — project giữ IsIdle.
+    private void EndSkill()
+    {
+        if (skill != null)
+        {
+            skill.Cancel();
+            skill = null;
+        }
+        if (rigid != null)
+        {
+            rigid.bodyType = bodyTypeBeforeSkill;
+        }
+        ScheduleNextSkill();
+        if (stateCurrent == BattleState.Skill)
+        {
+            stateCurrent = BattleState.Idle;
+            ChangeState(BattleState.Idle, true);
+        }
+    }
+
+    // Chết / bị ngắt giữa skill → dọn FX skill, trả Rigidbody.
+    protected override void InterruptAction()
+    {
+        base.InterruptAction();
+        if (stateCurrent == BattleState.Skill || skill != null)
+        {
+            EndSkill();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (skill != null)
+        {
+            skill.Cancel();
+            skill = null;
+        }
+        if (visual != null)
+        {
+            visual.DOKill();
+        }
     }
 }
