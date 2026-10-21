@@ -190,6 +190,9 @@ public class PetUnit : BaseUnit
         }
     }
 
+    // Companion ra chiêu ở CUỐI thời gian vung đòn (ABILITY_WINDUP), không theo nhịp 50% của Soldier.
+    protected override bool isHitAtMidCycle => false;
+
     // Vào state Attack nhưng chưa được ra đòn → đứng chờ cạnh mục tiêu (UpdateAttack sẽ gọi lại).
     protected override void BeginAttack()
     {

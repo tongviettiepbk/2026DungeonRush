@@ -28,7 +28,6 @@ public class BossRushBossUnit : EnemyUnit
     public BossRushMode Mode => mode;
     public Transform VisualTransform => visual;
     public Vector2 Position => rigid != null ? rigid.position : (Vector2)Transform.position;
-    public Collider2D BodyCollider => bodyCollider;
 
     private BossRushMode mode;
     private bool pendingReposition;     // Character.BossRushPendingReposition
@@ -38,7 +37,6 @@ public class BossRushBossUnit : EnemyUnit
     private BossRushSkill skill;        // BossRushSkillState.yud
     private RigidbodyType2D bodyTypeBeforeSkill;
     private Animator animator;
-    private bool attackReleased;
     private Transform visual;           // Character 0x2c — node hình "Soldier/Body"
     private Vector3 visualBaseScale;
     private float lastCritPunchTime = float.MinValue;
@@ -129,7 +127,6 @@ public class BossRushBossUnit : EnemyUnit
     protected override void PlayAnimAttack()
     {
         base.PlayAnimAttack();
-        attackReleased = false;
         if (animator != null)
         {
             animator.SetBool(ANIM_IS_IDLE, false);
@@ -137,20 +134,10 @@ public class BossRushBossUnit : EnemyUnit
         }
     }
 
+    // Dùng chung cờ ra đòn với mốc 50% nhịp (MeleeAttackState.fcd / RangeAttackState.fcn gốc) → không ra 2 lần.
     private void OnAttackAnimationHit()
     {
-        // Bắn xa: dùng chung cờ nhả với timer 50% nhịp (RangeAttackState.fcn gốc) để không nhả 2 lần.
-        if (IsRangedAttack)
-        {
-            ReleaseRangedShotFromAnimation();
-            return;
-        }
-
-        if (stateCurrent == BattleState.Attack && !attackReleased)
-        {
-            attackReleased = true;
-            ReleaseAttack();
-        }
+        ReleaseHitFromAnimation();
     }
 
     private void OnAttackAnimationCompleted()
@@ -243,15 +230,6 @@ public class BossRushBossUnit : EnemyUnit
     }
 
     // ===== RepositionAfterAttack (Character.fzr/fzs + BossRushRepositionState gốc) =====
-
-    protected override void OnAttackEnd()
-    {
-        // Đòn đã ra ở event OnAttackAnimationHit; chỉ ra bù khi rig không có Animator / clip không bắn event.
-        if (!attackReleased)
-        {
-            base.OnAttackEnd();
-        }
-    }
 
     // fzr: đòn trúng → hẹn dời chỗ sau RepositionDelay, chỉ khi chưa có hẹn.
     protected override void ReleaseAttack()

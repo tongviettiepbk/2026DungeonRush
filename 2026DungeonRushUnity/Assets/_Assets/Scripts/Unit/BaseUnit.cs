@@ -1171,9 +1171,9 @@ public class BaseUnit : MonoBehaviour
 
                 float delayNextAttack = (1f / (stats.attackSpeed * GameController.Instance.gameSpeed));
                 isDoubleAttack = RollDoubleAttack();
-                if (IsRangedAttack)
+                if (isHitAtMidCycle)
                 {
-                    ScheduleRangedShots(delayNextAttack);
+                    ScheduleAttackHits(delayNextAttack);
                 }
 
                 this.StartDelayAction(delayNextAttack, () =>
@@ -1213,27 +1213,25 @@ public class BaseUnit : MonoBehaviour
         return null;
     }
 
-    // Áp sát thương ở CUỐI mỗi nhịp đánh. Lý do: AnimationController hiện là stub → Spine
-    // anim-event không bắn → sát thương gốc (ReleaseNormalAttack) không chạy. EndAttack gọi
-    // OnAttackEnd chắc chắn mỗi nhịp → dùng làm điểm ra đòn tạm. (Thay bằng anim-event thật khi port Spine.)
+    // Đòn ra ở GIỮA nhịp (ScheduleAttackHits); chỉ unit tắt isHitAtMidCycle (pet) mới ra đòn ở cuối nhịp.
     protected virtual void OnAttackEnd()
     {
-        // Đánh xa đã nhả đạn giữa nhịp (ScheduleRangedShots) — cuối nhịp chỉ còn cận chiến ra đòn.
-        if (!IsRangedAttack)
+        if (!isHitAtMidCycle)
         {
             ReleaseAttack();
         }
     }
 
-    // ===== Nhịp bắn xa theo RangeAttackState gốc (fbq/fcl/fcn) =====
-    // Nhả đạn ở 50% nhịp (1/AttackSpeed); đánh đôi nhả 2 viên ở 25% và 50%. Event "trúng" của animation
-    // (nếu rig có) nhả viên đầu sớm hơn — mỗi viên chỉ nhả 1 lần/nhịp nhờ cờ firstShot/secondShot.
+    // ===== Nhịp ra đòn theo MeleeAttackState/RangeAttackState gốc (fbq + fcc/fcl + fcd/fcn) =====
+    // Cận chiến lẫn đánh xa: ra đòn ở 50% nhịp (1/AttackSpeed); đánh đôi ra 2 đòn ở 25% và 50%. Event "trúng"
+    // của animation (nếu rig có) ra đòn đầu sớm hơn — mỗi đòn chỉ ra 1 lần/nhịp nhờ cờ firstHit/secondHit.
 
-    protected bool IsRangedAttack => hasProjectile && bulletPrefab != null;
+    // Pet (companion) ra chiêu ở cuối thời gian vung đòn → override false.
+    protected virtual bool isHitAtMidCycle => true;
     protected bool isDoubleAttack;
-    private bool firstShotReleased;    // uwr
-    private bool secondShotReleased;   // uws
-    private int attackCycle;           // tăng mỗi nhịp → hẹn nhả của nhịp cũ tự huỷ
+    private bool firstHitReleased;     // uvj / uwr
+    private bool secondHitReleased;    // uvk / uws
+    private int attackCycle;           // tăng mỗi nhịp → hẹn ra đòn của nhịp cũ tự huỷ
 
     // Đầu nhịp đánh roll đánh đôi; mặc định không (Hero override theo DoubleChance).
     protected virtual bool RollDoubleAttack()
@@ -1241,44 +1239,44 @@ public class BaseUnit : MonoBehaviour
         return false;
     }
 
-    private void ScheduleRangedShots(float cycleDuration)
+    private void ScheduleAttackHits(float cycleDuration)
     {
         int cycle = ++attackCycle;
-        firstShotReleased = false;
-        secondShotReleased = false;
+        firstHitReleased = false;
+        secondHitReleased = false;
 
         if (isDoubleAttack)
         {
-            this.StartDelayAction(cycleDuration * 0.25f, () => TryReleaseRangedShot(cycle, false));
-            this.StartDelayAction(cycleDuration * 0.5f, () => TryReleaseRangedShot(cycle, true));
+            this.StartDelayAction(cycleDuration * 0.25f, () => TryReleaseHit(cycle, false));
+            this.StartDelayAction(cycleDuration * 0.5f, () => TryReleaseHit(cycle, true));
         }
         else
         {
-            this.StartDelayAction(cycleDuration * 0.5f, () => TryReleaseRangedShot(cycle, false));
+            this.StartDelayAction(cycleDuration * 0.5f, () => TryReleaseHit(cycle, false));
         }
     }
 
-    private void TryReleaseRangedShot(int cycle, bool isSecondShot)
+    private void TryReleaseHit(int cycle, bool isSecondHit)
     {
         if (cycle != attackCycle || isDead || !isAttacking || stateCurrent != BattleState.Attack)
         {
             return;
         }
 
-        if (isSecondShot ? secondShotReleased : firstShotReleased)
+        if (isSecondHit ? secondHitReleased : firstHitReleased)
         {
             return;
         }
 
-        if (isSecondShot) secondShotReleased = true;
-        else firstShotReleased = true;
+        if (isSecondHit) secondHitReleased = true;
+        else firstHitReleased = true;
         ReleaseAttack();
     }
 
-    // fcn gốc: event "trúng" của animation nhả viên đầu nếu timer chưa nhả.
-    protected void ReleaseRangedShotFromAnimation()
+    // fcd/fcn gốc: event "trúng" của animation ra đòn đầu nếu timer chưa ra.
+    protected void ReleaseHitFromAnimation()
     {
-        TryReleaseRangedShot(attackCycle, false);
+        TryReleaseHit(attackCycle, false);
     }
 
     // Ra đòn 1 nhịp: vũ khí có đạn thì nhả bullet (bắn xa) mang theo AttackData, không thì đánh
@@ -1292,7 +1290,7 @@ public class BaseUnit : MonoBehaviour
         }
 
         AttackData data = GetBasicAttackData();
-        if (IsRangedAttack)
+        if (IsRangedAttacker)
         {
             BaseBullet bullet = PoolingController.Instance.GetBullet(bulletPrefab);
             bullet.speed = projectileSpeed > 0f ? projectileSpeed : bulletPrefab.speed;   // đạn pool dùng chung nhiều vũ khí

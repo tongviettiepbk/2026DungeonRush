@@ -1,6 +1,6 @@
 ---
 name: dungonrush-ranged-attack-original
-description: Đánh xa GỐC (reverse v41 RangeAttackState + ProjectileArrow/Bullet); 2026-10-21 đã sửa theo gốc (bay thẳng, 50%/25%+50%, nhả từ weapon_slot), test Play pass, đã commit
+description: Nhịp đánh GỐC (reverse v41 Melee/RangeAttackState + ProjectileArrow/Bullet); 2026-10-21 đã sửa cả đánh xa (bay thẳng, nhả từ weapon_slot) + cận chiến theo nhịp chung 50% / đôi 25%+50%
 metadata:
   node_type: memory
   type: project
@@ -21,5 +21,8 @@ Kiểm 2026-10-21 (reverse libil2cpp v41 arm64):
 **ĐÃ SỬA 2026-10-21 (test Play pass, đã commit):** `BaseBullet.ActiveLinear/UpdateLinear` (bay thẳng, chạm `BaseUnit.BodyCollider` bằng ClosestPoint chia bước theo bán kính CircleCollider đạn, sống 4s, người bắn chết → tắt); `BaseUnit.ScheduleRangedShots` nhả 50% nhịp / đánh đôi 25%+50% (cờ first/secondShot + attackCycle; `RollDoubleAttack` virtual, Hero override); `GetProjectileSpawnPoint` = node `weapon_slot` (fallback FirePoint); BossRushBossUnit anim-hit → `ReleaseRangedShotFromAnimation`. CHƯA làm: anim ×2 khi đánh đôi, damage tính lúc trúng, bỏ check tầm lúc nhả, nhắm vẫn là transform.position target (đúng gốc).
 
 **Trước khi sửa project lệch:** BaseBullet prefab đang movingType=Parabol (height 0.5) + bù `endPoint.x -= t*moveSpeed` (kiểu side-scroll StickIdle) và luôn trúng khi tween xong; nhả ở CUỐI nhịp (OnAttackEnd); đánh đôi 50%+100%; firePoint = FlipPoints/FirePoint (0,0.5); nhắm centerBodyPoint; damage tính lúc bắn; bỏ nhả nếu target ra khỏi tầm.
+
+**Cận chiến (kiểm 2026-10-21):** data 33 vũ khí khớp CSV (31 tầm 1.5, Ogre1/2 tầm 3). `MeleeAttackState` gốc giống hệt RangeAttackState về nhịp: đòn ở 50% (đôi 25%+50%, anim ×2), event anim hit `fcd` ra sớm; `fcc` = Character.ewb(target) chỉ cần target sống; tiếng: hero mới có, HitAudios vũ khí hoặc tiếng tay không. Đôi chỉ roll cho IsHome || IsPvPOpponent.
+**ĐÃ SỬA cận chiến 2026-10-21 (test Play pass, đã commit):** gộp về `BaseUnit.ScheduleAttackHits`/`TryReleaseHit`/`ReleaseHitFromAnimation` cho MỌI đòn; `OnAttackEnd` chỉ ra đòn khi `isHitAtMidCycle == false` (PetUnit override false — companion ra chiêu cuối wind-up); HeroUnit bỏ đòn phụ giữa nhịp; BossRushBossUnit bỏ attackReleased/OnAttackEnd override, anim-hit → ReleaseHitFromAnimation; bỏ `IsRangedAttack` trùng (dùng `IsRangedAttacker` có sẵn) và `BodyCollider` trùng ở boss.
 
 **How to apply:** khi sửa đánh xa đọc file này; liên quan [[dungonrush-bullet-system]], [[dungonrush-hero-anim-unit-all]], [[dungonrush-substat-combat]].

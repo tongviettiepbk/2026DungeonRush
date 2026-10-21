@@ -84,4 +84,4 @@
 - [Reskin Clan](dungonrush-reskin-clan.md) — 2026-10-20 ClanTabPage 3 tab + 13 popup theo mockup BallIdle; banner ghép giữ hệ (khung vẽ code + 20 icon ChatGPT xám để tô); kit 1_UIKit/Clan; đã commit "Reskin Clan theo mockup BallIdle"; CẤM chạy lại Build Clan UI Prefabs
 - [World sorting dưới UI lobby](dungonrush-world-sorting-under-ui.md) — lobby canvas Default 100 → HP bar/FX/line world phải Default order < 100 (sửa 2026-10-20)
 - [Bảng damage trận Boss Rush](dungonrush-boss-rush-damage-board.md) — EventBlocker hiện 8 dòng damage tự sắp, thanh = phần trong tổng đội; dựng + test Play 2026-10-21, đã commit
-- [Đánh xa theo gốc](dungonrush-ranged-attack-original.md) — data vũ khí ranged khớp; ĐÃ sửa theo gốc 2026-10-21: bay THẲNG có thể trượt, nhả 50% nhịp (đôi 25%+50%), từ weapon_slot; test Play pass, đã commit
+- [Nhịp đánh xa + cận chiến theo gốc](dungonrush-ranged-attack-original.md) — data vũ khí khớp; nhịp chung ra đòn 50% (đôi 25%+50%) cho cả 2 loại; đạn bay THẲNG có thể trượt, từ weapon_slot; pet vẫn cuối wind-up (2026-10-21)
