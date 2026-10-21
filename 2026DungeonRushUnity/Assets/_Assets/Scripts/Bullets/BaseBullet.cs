@@ -243,6 +243,112 @@ public class BaseBullet : MonoBehaviour
         }
     }
 
+    // ===== Bay thẳng theo gốc (ProjectileArrow/ProjectileBullet.gvb + Update, reverse v41) =====
+    // Hướng chốt LÚC BẮN về vị trí gốc của target, tốc độ không đổi, không đuổi → target đi chỗ khác thì TRƯỢT.
+    // Chỉ trúng đúng target đã nhắm (chạm collider thân). Target chết giữa đường → bay tới điểm nhắm rồi biến
+    // (không damage); người bắn chết → đạn biến ngay; sống tối đa 4s.
+
+    private const float LINEAR_LIFETIME = 4f;          // wlt gốc
+    private const float LINEAR_ARRIVE_SQR = 0.09f;     // gốc: tới điểm nhắm (0.3) khi target đã chết
+    private const float LINEAR_MIN_RADIUS = 0.05f;
+
+    private bool isLinear;
+    private Vector3 linearVelocity;
+    private Vector3 linearAimPoint;
+    private float linearLifeTimer;
+    private float linearRadius;
+
+    public void ActiveLinear(Transform firePoint, BaseUnit attacker, BaseUnit target, AttackData attackData = null)
+    {
+        if (target == null)
+        {
+            isActive = false;
+            gameObject.SetActive(false);
+            return;
+        }
+
+        this.attacker = attacker;
+        this.target = target;
+        this.attackData = attackData;
+
+        Transform.SetParent(null);
+        Transform.position = firePoint.position;
+
+        linearAimPoint = target.Transform.position;
+        Vector3 direction = linearAimPoint - Transform.position;
+        direction.z = 0f;
+        linearVelocity = direction.sqrMagnitude > 1e-10f ? direction.normalized * speed : Vector3.zero;
+        linearLifeTimer = 0f;
+
+        CircleCollider2D circle = GetComponent<CircleCollider2D>();
+        Vector3 scale = Transform.lossyScale;
+        linearRadius = circle != null
+            ? Mathf.Max(circle.radius * Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.y)), LINEAR_MIN_RADIUS)
+            : LINEAR_MIN_RADIUS;
+
+        isLinear = true;
+        isActive = true;
+        Transform.FaceUpAxisToPoint(linearAimPoint);
+        gameObject.SetActive(true);
+    }
+
+    private void UpdateLinear()
+    {
+        if (attacker == null || attacker.isDead)
+        {
+            Deactive();
+            return;
+        }
+
+        if (attacker.isPause)
+        {
+            return;
+        }
+
+        float dt = Time.deltaTime * GameController.Instance.gameSpeed;
+        linearLifeTimer += dt;
+        if (linearLifeTimer >= LINEAR_LIFETIME)
+        {
+            Deactive();
+            return;
+        }
+
+        bool isTargetAlive = target != null && target.isTargetable;
+        Vector3 move = linearVelocity * dt;
+
+        if (!isTargetAlive)
+        {
+            Transform.position += move;
+            Vector3 toAim = linearAimPoint - Transform.position;
+            toAim.z = 0f;
+            if (toAim.sqrMagnitude < LINEAR_ARRIVE_SQR || Vector3.Dot(linearVelocity, toAim) <= 0f)
+            {
+                Deactive();
+            }
+            return;
+        }
+
+        // Chia nhỏ bước theo bán kính đạn để đạn nhanh không xuyên qua collider (gốc dùng Continuous).
+        Collider2D targetCollider = target.BodyCollider;
+        int steps = Mathf.Max(1, Mathf.CeilToInt(move.magnitude / linearRadius));
+        Vector3 subMove = move / steps;
+        for (int i = 0; i < steps; i++)
+        {
+            Transform.position += subMove;
+            if (targetCollider != null)
+            {
+                Vector2 position = Transform.position;
+                Vector2 closest = targetCollider.ClosestPoint(position);
+                if ((closest - position).sqrMagnitude <= linearRadius * linearRadius)
+                {
+                    isLinear = false;
+                    OnTargetTakeDamage();
+                    return;
+                }
+            }
+        }
+    }
+
     // ===== Homing: đuổi theo target, bay thẳng tới vị trí HIỆN TẠI của target mỗi frame =====
     // Target chết/biến mất giữa đường → bay nốt tới vị trí cuối rồi tắt (không gây damage).
 
@@ -276,6 +382,12 @@ public class BaseBullet : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (isLinear && isActive)
+        {
+            UpdateLinear();
+            return;
+        }
+
         if (!isHoming || !isActive)
         {
             return;
@@ -351,6 +463,7 @@ public class BaseBullet : MonoBehaviour
         isActive = false;
         hitAudios = null;
         isHoming = false;
+        isLinear = false;
         gameObject.SetActive(false);
 
         if (isPooling)

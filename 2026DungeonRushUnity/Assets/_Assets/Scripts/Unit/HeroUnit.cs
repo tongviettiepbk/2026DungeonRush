@@ -243,13 +243,19 @@ public class HeroUnit : BaseUnit
 
     // ===== Đánh đôi (DoubleChance) =====
     // GỐC MeleeAttackState/RangeAttackState.ewu: đầu mỗi đòn của phe người chơi roll rm.ioz(DoubleChance)
-    // (Random.Range(0,100) <= %); trúng thì animation đánh chạy x2 và ra 2 đòn trong cùng 1 nhịp. Project ra
-    // đòn ở cuối nhịp (OnAttackEnd) nên đòn thứ 2 tung ở GIỮA nhịp, đòn còn lại vẫn ở cuối nhịp.
+    // (Random.Range(0,100) <= %); trúng thì animation đánh chạy x2 và ra 2 đòn trong cùng 1 nhịp.
+    // Bắn xa: BaseUnit nhả 2 viên ở 25% và 50% nhịp. Cận chiến: project ra đòn ở cuối nhịp (OnAttackEnd)
+    // nên đòn thứ 2 tung ở GIỮA nhịp, đòn còn lại vẫn ở cuối nhịp.
+    protected override bool RollDoubleAttack()
+    {
+        return stats.doubleShot > 0f && Random.Range(0f, 100f) <= stats.doubleShot * 100f;
+    }
+
     protected override void BeginAttack()
     {
         base.BeginAttack();
 
-        if (!isAttacking || stats.doubleShot <= 0f || Random.Range(0f, 100f) > stats.doubleShot * 100f)
+        if (!isAttacking || !isDoubleAttack || IsRangedAttack)
         {
             return;
         }

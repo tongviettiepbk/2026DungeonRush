@@ -139,6 +139,13 @@ public class BossRushBossUnit : EnemyUnit
 
     private void OnAttackAnimationHit()
     {
+        // Bắn xa: dùng chung cờ nhả với timer 50% nhịp (RangeAttackState.fcn gốc) để không nhả 2 lần.
+        if (IsRangedAttack)
+        {
+            ReleaseRangedShotFromAnimation();
+            return;
+        }
+
         if (stateCurrent == BattleState.Attack && !attackReleased)
         {
             attackReleased = true;

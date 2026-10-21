@@ -36,6 +36,7 @@ public class BaseUnit : MonoBehaviour
 
     protected Transform flipPoints;
     protected Collider2D bodyCollider;
+    public Collider2D BodyCollider => bodyCollider;   // đạn bay thẳng xét chạm thân
     protected Rigidbody2D rigid;
     protected AudioSource audioSource;
     protected List<StatModifier> modifiers = new List<StatModifier>();
@@ -209,6 +210,7 @@ public class BaseUnit : MonoBehaviour
         flipPoints = ResolveRigNode("FlipPoints", Transform, Vector3.zero);
         centerBodyPoint = ResolveRigNode("CenterBody", flipPoints, new Vector3(0f, 0.5f, 0f));
         firePoint = ResolveRigNode("FirePoint", flipPoints, new Vector3(0f, 0.5f, 0f));
+        weaponPoint = FindDescendant(Transform, WEAPON_NODE_NAME);
 
         // Thanh máu: dùng node "health-bar" có sẵn trên rig nếu prefab đã dựng; nếu không (rig rip
         // hiện tại chưa có) thì instantiate prefab health-bar từ Resources rồi gắn dưới FlipPoints.
@@ -256,6 +258,28 @@ public class BaseUnit : MonoBehaviour
         circle.radius = 0.4f;
         circle.isTrigger = true;
         return circle;
+    }
+
+    // Character.WeaponImage gốc: đạn nhả từ vị trí hình vũ khí trên người (rig Soldier: main/weapon/weapon_slot).
+    // Rig không có node vũ khí thì nhả từ FirePoint.
+    private const string WEAPON_NODE_NAME = "weapon_slot";
+    private Transform weaponPoint;
+
+    protected virtual Transform GetProjectileSpawnPoint()
+    {
+        return weaponPoint != null ? weaponPoint : firePoint;
+    }
+
+    private static Transform FindDescendant(Transform root, string nodeName)
+    {
+        foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+        {
+            if (child.name == nodeName)
+            {
+                return child;
+            }
+        }
+        return null;
     }
 
     // Node rig theo tên; thiếu thì tạo mới dưới parent tại localPos (rig rip chưa có các node này).
@@ -1146,6 +1170,12 @@ public class BaseUnit : MonoBehaviour
                 isAttacking = true;
 
                 float delayNextAttack = (1f / (stats.attackSpeed * GameController.Instance.gameSpeed));
+                isDoubleAttack = RollDoubleAttack();
+                if (IsRangedAttack)
+                {
+                    ScheduleRangedShots(delayNextAttack);
+                }
+
                 this.StartDelayAction(delayNextAttack, () =>
                 {
                     EndAttack();
@@ -1188,7 +1218,67 @@ public class BaseUnit : MonoBehaviour
     // OnAttackEnd chắc chắn mỗi nhịp → dùng làm điểm ra đòn tạm. (Thay bằng anim-event thật khi port Spine.)
     protected virtual void OnAttackEnd()
     {
+        // Đánh xa đã nhả đạn giữa nhịp (ScheduleRangedShots) — cuối nhịp chỉ còn cận chiến ra đòn.
+        if (!IsRangedAttack)
+        {
+            ReleaseAttack();
+        }
+    }
+
+    // ===== Nhịp bắn xa theo RangeAttackState gốc (fbq/fcl/fcn) =====
+    // Nhả đạn ở 50% nhịp (1/AttackSpeed); đánh đôi nhả 2 viên ở 25% và 50%. Event "trúng" của animation
+    // (nếu rig có) nhả viên đầu sớm hơn — mỗi viên chỉ nhả 1 lần/nhịp nhờ cờ firstShot/secondShot.
+
+    protected bool IsRangedAttack => hasProjectile && bulletPrefab != null;
+    protected bool isDoubleAttack;
+    private bool firstShotReleased;    // uwr
+    private bool secondShotReleased;   // uws
+    private int attackCycle;           // tăng mỗi nhịp → hẹn nhả của nhịp cũ tự huỷ
+
+    // Đầu nhịp đánh roll đánh đôi; mặc định không (Hero override theo DoubleChance).
+    protected virtual bool RollDoubleAttack()
+    {
+        return false;
+    }
+
+    private void ScheduleRangedShots(float cycleDuration)
+    {
+        int cycle = ++attackCycle;
+        firstShotReleased = false;
+        secondShotReleased = false;
+
+        if (isDoubleAttack)
+        {
+            this.StartDelayAction(cycleDuration * 0.25f, () => TryReleaseRangedShot(cycle, false));
+            this.StartDelayAction(cycleDuration * 0.5f, () => TryReleaseRangedShot(cycle, true));
+        }
+        else
+        {
+            this.StartDelayAction(cycleDuration * 0.5f, () => TryReleaseRangedShot(cycle, false));
+        }
+    }
+
+    private void TryReleaseRangedShot(int cycle, bool isSecondShot)
+    {
+        if (cycle != attackCycle || isDead || !isAttacking || stateCurrent != BattleState.Attack)
+        {
+            return;
+        }
+
+        if (isSecondShot ? secondShotReleased : firstShotReleased)
+        {
+            return;
+        }
+
+        if (isSecondShot) secondShotReleased = true;
+        else firstShotReleased = true;
         ReleaseAttack();
+    }
+
+    // fcn gốc: event "trúng" của animation nhả viên đầu nếu timer chưa nhả.
+    protected void ReleaseRangedShotFromAnimation()
+    {
+        TryReleaseRangedShot(attackCycle, false);
     }
 
     // Ra đòn 1 nhịp: vũ khí có đạn thì nhả bullet (bắn xa) mang theo AttackData, không thì đánh
@@ -1202,12 +1292,12 @@ public class BaseUnit : MonoBehaviour
         }
 
         AttackData data = GetBasicAttackData();
-        if (hasProjectile && bulletPrefab != null)
+        if (IsRangedAttack)
         {
             BaseBullet bullet = PoolingController.Instance.GetBullet(bulletPrefab);
             bullet.speed = projectileSpeed > 0f ? projectileSpeed : bulletPrefab.speed;   // đạn pool dùng chung nhiều vũ khí
             PlayRangedSfx(bullet);
-            bullet.Active(firePoint, this, target, data);
+            bullet.ActiveLinear(GetProjectileSpawnPoint(), this, target, data);
         }
         else
         {
