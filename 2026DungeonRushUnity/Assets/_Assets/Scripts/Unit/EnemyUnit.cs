@@ -46,6 +46,10 @@ public class EnemyUnit : BaseUnit
             weaponData = info.weapon;   // trước SpawnInBattle để ReloadStats áp tầm đánh/đạn của vũ khí
             ShowWeapon(info.weapon);
         }
+        else
+        {
+            ShowDefaultWeaponIfEmpty();
+        }
         HideUnwornGear(info.overrideWeapon);
 
         var bs = new BaseStats
@@ -75,6 +79,18 @@ public class EnemyUnit : BaseUnit
         if (sprite == null) sprite = defaultWeaponSprite;
         weaponRenderer.sprite = sprite;
         weaponRenderer.gameObject.SetActive(sprite != null);
+    }
+
+    // Quái dungeon: vũ khí theme gán sẵn trên prefab (Cultist). Ô vũ khí trống (Zombie tay không) thì cầm dao mặc định như hero.
+    private void ShowDefaultWeaponIfEmpty()
+    {
+        if (weaponRenderer == null || weaponRenderer.sprite != null)
+        {
+            return;
+        }
+
+        weaponRenderer.sprite = defaultWeaponSprite;
+        weaponRenderer.gameObject.SetActive(defaultWeaponSprite != null);
     }
 
     // Gốc Soldier.fbb(weapon, role, helmet, gloves, animator, backpack): quái campaign chỉ có vũ khí (mũ/găng/balo = null);
