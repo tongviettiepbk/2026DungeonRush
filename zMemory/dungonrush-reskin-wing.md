@@ -18,3 +18,5 @@ Reskin Wing 2026-10-19 (đã commit, chưa test Play — chỉ chụp preview). 
 - Nút Boss đỏ (TopBarUI/BossButton) đè góc nút X trong ảnh chụp preview — lúc chạy luôn ẩn (Boss Gate tắt), không phải lỗi Wing.
 
 Xem [[dungonrush-reskin-plan]], [[dungonrush-reskin-mining]], [[dungonrush-wing-cape-todo]].
+
+**2026-10-21:** icon wing ĐÃ THAY bằng kính (slot Wing = kính trên mặt hero), xem [[dungonrush-hero-equipment-reskin]] — "giữ icon wing" ở trên chỉ đúng cho đợt reskin UI 2026-10-19.

@@ -58,7 +58,7 @@
 - [Profile popup (hồ sơ + Settings)](dungonrush-profile-popup.md) — UIProfilePopup mở từ ô avatar lobby, dựng 2026-10-12; slider âm lượng/rung/User ID/đổi tên/Account chạy, 5 nút còn "coming soon" (redeem, ngôn ngữ...)
 - [Thưởng offline (Combat Summary)](dungonrush-offline-earning.md) — dựng 2026-10-13 theo gốc: trần 4h × Mastery, exp/phút = exp 1 màn, 1 rương/phút, X = nhận ×1, ads ×2; nút lobby + QuickEarnings chưa làm
 - [Tài khoản + cloud save](dungonrush-account-system.md) — khách mặc định, Sign Up gắn email, Sign In/Forgot/Sign Out, Choose Save; dựng + test Play 2026-10-13, chưa commit; cách test không làm mất save Editor
-- [Reskin đồ hero (art)](dungonrush-hero-equipment-reskin.md) — ảnh gốc 8 slot ở Art/3_Equipment/; Necklace (fe2ed55) + Ring (đã commit) + Melee (đã commit) + Ranged (đã commit) reskin XONG 2026-10-21 theo màu rarity; brief GDD/ART_HERO_EQUIPMENT.md
+- [Reskin đồ hero (art)](dungonrush-hero-equipment-reskin.md) — ảnh gốc 8 slot ở Art/3_Equipment/; Necklace (fe2ed55) + Ring (đã commit) + Melee (đã commit) + Ranged (đã commit) + Wing→kính (đã commit) reskin XONG 2026-10-21 theo màu rarity; brief GDD/ART_HERO_EQUIPMENT.md
 - [Anim hero = unit_all](dungonrush-hero-anim-unit-all.md) — 00Hero dùng unit_all.controller; UnitAnimatorController: show→idle, run, đánh gần strike_atk / xa gun_atk; lật hướng theo đối thủ khi đánh; chưa test Play
 - [UI lobby = UIMainGame2](dungonrush-main-ui-uimaingame2.md) — 2026-10-15 đã xoá UiMainGame tự dựng; UIMainGame2 gốc gắn UIMainLobby + 7 page ở Pages; XP/máu boss dùng Slider; LevelText = Tier campaign + icon dungeon theo gốc (2026-10-16)
 - [Loot + Auto Loot theo gốc](dungonrush-forge-auto-loot.md) — người mới +240 búa (gốc); 2026-10-15: ForgeUIController + popup gốc, bán đồ = EXP, UserForgeData; builder Tools/DungeonRush/Build Forge UI; chữ popup tiếng Anh (font thiếu dấu)
@@ -78,7 +78,7 @@
 - [Reskin gameplay](dungonrush-reskin-gameplay.md) — map tường/sàn vẽ code, quái vịt đen ChatGPT trên rig hero, 3 popup đồ/offer kit Mastery; 2026-10-18 CHƯA commit
 - [Reskin Shop](dungonrush-reskin-shop.md) — StoreTabPage + 5 popup Shop (kit Mastery, ribbon_tint tô rarity) 2026-10-18: khung art + 19 icon ChatGPT ghi đè giữ size cũ + 6 gói gem; bẫy tách nền tím; đã commit
 - [Reskin Mining](dungonrush-reskin-mining.md) — 2026-10-19 đã commit: kit Mastery + art 1_UIKit/Mining, ChatGPT 7 icon quặng (diamond=thạch anh tím), nút dụng cụ đổi sprite; CẤM chạy lại Build Mining
-- [Reskin Wing](dungonrush-reskin-wing.md) — 2026-10-19 đã commit: PageWing + popup Craft/Reroll kit Mastery/BattlePass, 2 mũi tên art giao, giữ icon wing (user chốt), nút đổi sprite bật/tắt
+- [Reskin Wing](dungonrush-reskin-wing.md) — 2026-10-19 đã commit: PageWing + popup Craft/Reroll kit Mastery/BattlePass, 2 mũi tên art giao, icon wing lúc đó giữ, 2026-10-21 đã thay bằng kính, nút đổi sprite bật/tắt
 - [Reskin Setting](dungonrush-reskin-setting.md) — 2026-10-19 đã commit: trang Settings phóng ×1.21 theo mockup, 4 ảnh art slider/núm ở 1_UIKit/Setting, núm đổi sprite (ToggleButton.OnSprite/OnFill)
 - [Rate Us](dungonrush-rate-us.md) — dựng + reskin 2026-10-19 theo gốc: trigger đồ Rare/Epic lần đầu, max 3 lần, Submit ≥4 sao mở store; doc RATE_US_MODEL.md; đã commit
 - [Reskin Clan](dungonrush-reskin-clan.md) — 2026-10-20 ClanTabPage 3 tab + 13 popup theo mockup BallIdle; banner ghép giữ hệ (khung vẽ code + 20 icon ChatGPT xám để tô); kit 1_UIKit/Clan; đã commit "Reskin Clan theo mockup BallIdle"; CẤM chạy lại Build Clan UI Prefabs
