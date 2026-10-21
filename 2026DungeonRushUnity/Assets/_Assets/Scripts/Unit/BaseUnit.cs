@@ -54,6 +54,10 @@ public class BaseUnit : MonoBehaviour
     private float moveRepathTimer;
     private Vector2 moveLastPosition;
 
+    // Đang đi tới ô vây do mode chia (BaseMode.TryGetEngageCell) — đích ≠ ô mục tiêu nên nhớ ô mục tiêu lúc tìm đường.
+    private bool isEngageMove;
+    private Vector2Int engageTargetCell;
+
     // PatrolState gốc (Character.CanPatrol): quái không có mục tiêu đi loanh quanh ô xuất phát, tốc độ ×0.5.
     public bool canPatrol;
     private const float PATROL_SPEED_FACTOR = 0.5f;
@@ -842,8 +846,9 @@ public class BaseUnit : MonoBehaviour
 
         moveRepathTimer = 0f;
 
-        // Mục tiêu đã sang ô khác ô đích → tìm đường lại ngay.
-        if (MapController.Instance.WorldToCell(target.Transform.position) != mover.Goal)
+        // Mục tiêu đã sang ô khác ô đích (đi tới ô vây: khác ô lúc tìm đường) → tìm đường lại ngay.
+        Vector2Int targetCell = MapController.Instance.WorldToCell(target.Transform.position);
+        if (targetCell != (isEngageMove ? engageTargetCell : mover.Goal))
         {
             ResetMoveTimers();
             RepathToTarget();
@@ -916,6 +921,25 @@ public class BaseUnit : MonoBehaviour
         target = next;
 
         MapController map = MapController.Instance;
+        BaseMode mode = GameController.Instance.mode;
+        Vector2Int engageCell = default;
+        isEngageMove = mode != null && mode.TryGetEngageCell(this, target, IsRangedAttacker, out engageCell);
+        if (isEngageMove)
+        {
+            engageTargetCell = map.WorldToCell(target.Transform.position);
+            if (mover.RequestMoveTo(engageCell))
+            {
+                animationController.PlayAnimMove();
+            }
+            else
+            {
+                // Đã đứng đúng ô chờ (hết chỗ trong tầm) → đứng yên, 0.2s xét lại.
+                mover.Stop();
+                animationController.PlayAnimIdle();
+            }
+            return;
+        }
+
         Vector2Int goal = map.ClampCell(map.WorldToCell(target.Transform.position));
         if (IsRangedAttacker)
         {

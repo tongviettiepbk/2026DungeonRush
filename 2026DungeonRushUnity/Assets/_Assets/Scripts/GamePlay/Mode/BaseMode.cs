@@ -476,6 +476,14 @@ public class BaseMode : MonoBehaviour
     // Mode có mang pet ra trận không (Boss Rush gốc KHÔNG mang — CompanionController.OnStateChanged bỏ qua khi IsBossRush).
     protected virtual bool AllowPets => true;
 
+    // Ô đích riêng cho unit khi đi tới đánh target (Boss Rush chia chỗ vây quanh boss để đội không túm tụm).
+    // false → đi theo cách gốc (MoveState.fcf: ô mục tiêu / ô bắn).
+    public virtual bool TryGetEngageCell(BaseUnit unit, BaseUnit target, bool isRanged, out Vector2Int cell)
+    {
+        cell = default;
+        return false;
+    }
+
     // Đồng bộ pet trong trận với danh sách equip (save UserCompanionData, tối đa 3), đi theo hero.
     // Gọi lúc dựng màn VÀ ngay khi đổi equip ở CompanionUI (không phải chờ màn sau):
     //   • Pet đang trong trận mà đã bỏ equip → gỡ khỏi trận.
