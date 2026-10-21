@@ -102,9 +102,10 @@ public class CombatText : MonoBehaviour
             anim.Play(animHitNormal);
         }
 
-        CombatTextType typeText = isTeamA ? CombatTextType.DamageA : CombatTextType.DamageB;
-        Color32 colorText = isCrit ? colorHit_A : isTeamA ? colorHit_A : colorHit_B;
-        Color32 colorOutline = isCrit ? colorHitOutline_A : isTeamA ? colorHitOutline_A : colorHitOutline_B;
+        // Chỉ chí mạng mới đỏ (_A); damage thường luôn trắng viền đen (_B), không phân phe.
+        CombatTextType typeText = isCrit ? CombatTextType.DamageA : CombatTextType.DamageB;
+        Color32 colorText = isCrit ? colorHit_A : colorHit_B;
+        Color32 colorOutline = isCrit ? colorHitOutline_A : colorHitOutline_B;
         SetColor(typeText, colorText, colorOutline);
 
         Show(content, position);
