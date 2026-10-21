@@ -480,7 +480,12 @@ public class BaseMode : MonoBehaviour
     public virtual bool TryGetMoveGoalCell(BaseUnit unit, BaseUnit target, bool isRanged, out Vector2Int cell)
     {
         cell = default;
-        return false;
+        if (!IsSameRowMeleeUnit(unit, isRanged))
+        {
+            return false;
+        }
+        MapController map = MapController.Instance;
+        return TryGetSideCell(map, unit, map.WorldToCell(target.Transform.position), out cell);
     }
 
     // GridCombatController.jbv gốc: kiểm tầm đánh CẬN CHIẾN riêng của mode (Boss Rush v59: tầm + MeleeRangeBonus tới mép
@@ -488,7 +493,59 @@ public class BaseMode : MonoBehaviour
     public virtual bool TryCheckMeleeRange(BaseUnit unit, BaseUnit target, out bool isInRange)
     {
         isInRange = false;
-        return false;
+        if (!IsSameRowMeleeUnit(unit, false))
+        {
+            return false;
+        }
+        MapController map = MapController.Instance;
+        Vector2Int targetCell = map.WorldToCell(target.Transform.position);
+        if (!TryGetSideCell(map, unit, targetCell, out _))
+        {
+            return false;
+        }
+        Vector2Int unitCell = map.WorldToCell(unit.Transform.position);
+        float range = unit.stats.attackRange + target.bodyOffset;
+        isInRange = unitCell.x == targetCell.x && Mathf.Abs(target.Transform.position.x - unit.Transform.position.x) <= range;
+        return true;
+    }
+
+    // Yêu cầu user 2026-10-22 (KHÔNG có trong gốc): hero/quái cận chiến phải đứng CÙNG HÀNG, sát trái/phải mục tiêu
+    // mới được đánh (không đánh chéo/trên/dưới). Mode bật: Campaign, Zombie, Cultist. Pet không áp.
+    protected virtual bool MeleeSameRowOnly => false;
+
+    private bool IsSameRowMeleeUnit(BaseUnit unit, bool isRanged)
+    {
+        MapController map = MapController.Instance;
+        return MeleeSameRowOnly && !isRanged && (unit is HeroUnit || unit is EnemyUnit) && map != null && map.IsReady;
+    }
+
+    // Ô trái/phải mục tiêu (cùng hàng) đi được; ưu tiên ô trống, rồi ô gần unit hơn.
+    // Cả 2 bên là tường → false (đánh theo tầm thường để không bị kẹt không đánh được).
+    private static bool TryGetSideCell(MapController map, BaseUnit unit, Vector2Int targetCell, out Vector2Int cell)
+    {
+        cell = default;
+        bool found = false;
+        bool foundFree = false;
+        float bestDistance = float.MaxValue;
+        Vector2 unitPosition = unit.Transform.position;
+        for (int side = -1; side <= 1; side += 2)
+        {
+            var candidate = new Vector2Int(targetCell.x, targetCell.y + side);
+            if (!map.IsWalkable(candidate))
+            {
+                continue;
+            }
+            bool isFree = !map.IsOccupiedByOther(candidate, unit);
+            float distance = Vector2.Distance(unitPosition, map.CellToWorld(candidate));
+            if (!found || (isFree && !foundFree) || (isFree == foundFree && distance < bestDistance))
+            {
+                cell = candidate;
+                found = true;
+                foundFree = isFree;
+                bestDistance = distance;
+            }
+        }
+        return found;
     }
 
     // Đồng bộ pet trong trận với danh sách equip (save UserCompanionData, tối đa 3), đi theo hero.

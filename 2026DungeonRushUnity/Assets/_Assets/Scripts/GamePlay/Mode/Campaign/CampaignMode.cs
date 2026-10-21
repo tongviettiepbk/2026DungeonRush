@@ -30,6 +30,9 @@ public class CampaignMode : BaseMode
     // Điểm hero đi tới sau cửa: LevelLoader cổng trên (0, H/2 + 0.5) + (0, 1.5) = ô (hàng trên, cột giữa) + (−0.5, 2.5).
     private static readonly Vector3 DOOR_EXIT_OFFSET = new Vector3(-0.5f, 2.5f, 0f);
 
+    // Cận chiến chỉ đánh ngang hàng (yêu cầu user, xem BaseMode.MeleeSameRowOnly).
+    protected override bool MeleeSameRowOnly => true;
+
     // Chuyển màn chỉ tối vùng map (tấm tối của lobby), hàng pet trở xuống vẫn sáng; thiếu lobby thì tối toàn màn.
     private static Image MapFadeImage
     {

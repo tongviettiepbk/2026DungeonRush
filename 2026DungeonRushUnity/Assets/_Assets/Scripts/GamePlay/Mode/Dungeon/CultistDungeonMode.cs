@@ -10,6 +10,9 @@ public class CultistDungeonMode : DungeonMode
     [Tooltip("Prefab cultist bắn xa (role Range).")]
     public GameObject rangedEnemyPrefab;
 
+    // Cận chiến chỉ đánh ngang hàng (yêu cầu user, xem BaseMode.MeleeSameRowOnly).
+    protected override bool MeleeSameRowOnly => true;
+
     protected override void CreateTeamB()
     {
         if (enemyPrefab == null || rangedEnemyPrefab == null)

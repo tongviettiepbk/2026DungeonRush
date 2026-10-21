@@ -7,6 +7,9 @@ using UnityEngine;
 // Zombie tay không, đi được, collider ×1.0 — hình/animator gán sẵn trên prefab ZombieEnemy.
 public class ZombieDungeonMode : DungeonMode
 {
+    // Cận chiến chỉ đánh ngang hàng (yêu cầu user, xem BaseMode.MeleeSameRowOnly).
+    protected override bool MeleeSameRowOnly => true;
+
     protected override void CreateTeamB()
     {
         if (enemyPrefab == null)
