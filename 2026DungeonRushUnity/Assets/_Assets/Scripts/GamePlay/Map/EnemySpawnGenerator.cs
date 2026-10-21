@@ -87,6 +87,8 @@ public static class EnemySpawnGenerator
         public float attackRange;
         public bool isRanged;
         public bool isBoss;            // campaign không dùng (để tương thích code cũ)
+        public bool overrideWeapon;    // true = cầm `weapon` dưới đây thay vũ khí gán sẵn trên prefab (campaign)
+        public WeaponData weapon;      // vũ khí chọn theo seed + tier (EnemyGearPicker); null = tay không
     }
 
     // Số quái của màn campaign (preset.melee + preset.ranged) — để chọn trước bấy nhiêu ô (GridManager.ijx).
@@ -132,6 +134,7 @@ public static class EnemySpawnGenerator
                 attackSpeed = 1f, moveSpeed = ENEMY_MOVE_SPEED,
                 attackRange = ranged ? RANGED_ATTACK_RANGE : MELEE_ATTACK_RANGE,
                 isRanged = ranged, isBoss = false,
+                overrideWeapon = true, weapon = EnemyGearPicker.PickWeapon(level, ranged),   // SpawnController.huy → jha
             });
         }
         return result;

@@ -86,6 +86,20 @@ dạng + kiểu đánh cận/xa). Damage/HP thật hoàn toàn do `hcm` (Lancast
 - Seed: `System.Random(combatLevel×997 + roleConst + EnemyGearSeed×31)`, EnemyGearSeed=12345.
 - Tier gear `jgz`: `EnemyGearTierWeights=[5,15,25,25,25,25,30,30,40,40,40]` (cộng dồn: 5,20,45,70,95,120,150,180,220,260,300), `EnemyGearMaxCombatLevel=300`. Tier = mốc cộng dồn đầu tiên vượt combatLevel.
 
+Chi tiết thân hàm (reverse 2026-10-21, đã port vào `EnemyGearPicker.cs`):
+- Chỉ dùng cho quái **CAMPAIGN**: `SpawnController.huy(Character, combatLevel, role)` — dungeon có theme thì lấy
+  bộ đồ theme (`jgp`), không thì gọi `jha` rồi `Soldier.fbb(weapon, role, null, null, null, null)` → chỉ cầm vũ khí,
+  KHÔNG mũ/găng/balo/animator.
+- `jgz(L)`: L > 300 → trả 11 (= số phần tử); còn lại `t = clamp01(L/300) × 300` (float), tier = i đầu tiên có `t < cộngdồn[i]`.
+- `jha(L, role)`: `rnd = new System.Random(L×997 + (role==Ranged ? 7 : 3) + 12345×31)`, gọi `jhd<WeaponData>(rnd, jgz(L), Weapon, role, role==Ranged)`.
+- `jhd`: `rarity = min(tier, 11) − 1`; nếu < 0 (L 1–4): **melee → null (tay không)**, ranged → Common.
+  Pool = `ybd[Weapon][rarity]` (vũ khí NGƯỜI CHƠI trong `GameResources.WeaponDatas`, giữ thứ tự list) lọc
+  `WeaponType == (Ranged ? Range : Melee)`; rỗng thì lùi rarity 1 bậc (Ultimate không có vũ khí → Divine).
+  Kết quả = `pool[rnd.Next(0, count)]` (1 lần gọi rnd duy nhất).
+- Thứ tự `WeaponDatas` gốc (59 món) KHÔNG theo itemId/tên — đọc từ GameResources trong apk bằng UnityPy (đã chép vào `EnemyGearPicker.WEAPON_ORDER`).
+- Có vũ khí thì tầm đánh/tốc đánh theo vũ khí (`Soldier.eyr` = `Weapon.AttackDistance`, `eys` = `Weapon.AttackSpeed` nếu > 0),
+  nên quái xa cầm vũ khí đánh tầm 3.5 (không phải `EnemyBaseRangeAttackDistance` 3.0).
+
 ## 5. Preset theo dungeon (ArmyPreset: MeleeCount, RangedCount, LancasterCoefficient)
 
 - **ZombiePresets** (toàn melee): 6M / 8M / 10M / 12M  (Lancaster 1.0) — chọn `jgn(level)` = `[(level-1) % 4]`

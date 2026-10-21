@@ -86,3 +86,4 @@
 - [Bảng damage trận Boss Rush](dungonrush-boss-rush-damage-board.md) — EventBlocker hiện 8 dòng damage tự sắp, thanh = phần trong tổng đội; dựng + test Play 2026-10-21, đã commit
 - [Hệ âm thanh theo gốc](dungonrush-audio-system.md) — AudioManager 2 source + AudioConfig.asset (UI/vũ khí/pet), PressButtonUI click + lún nút theo gốc (266 nút); dựng + test Play 2026-10-21; doc AUDIO_MODEL.md
 - [Nhịp đánh xa + cận chiến theo gốc](dungonrush-ranged-attack-original.md) — data vũ khí khớp; nhịp chung ra đòn 50% (đôi 25%+50%) cho cả 2 loại; đạn bay THẲNG có thể trượt, từ weapon_slot; pet vẫn cuối wind-up (2026-10-21)
+- [Vũ khí quái campaign](dungonrush-campaign-enemy-weapon.md) — quái campaign cầm vũ khí NGƯỜI CHƠI theo seed+tier (jha gốc), L1-4 melee tay không; EnemyGearPicker 2026-10-21, chưa test Play

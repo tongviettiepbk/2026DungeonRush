@@ -17,6 +17,8 @@ public class EnemyUnit : BaseUnit
     [SerializeField] private WeaponData weaponData;
     [Tooltip("Vũ khí khi là boss (VD boss dragon bắn đạn). Trống → dùng weaponData.")]
     [SerializeField] private WeaponData bossWeaponData;
+    [Tooltip("SpriteRenderer vũ khí trên rig (weapon_slot) — hiện hình vũ khí campaign chọn theo tier.")]
+    [SerializeField] private SpriteRenderer weaponRenderer;
 
     // Boss ưu tiên vũ khí boss (đạn Dragon...); quái thường dùng weaponData.
     protected override WeaponData GetCombatWeapon()
@@ -29,6 +31,11 @@ public class EnemyUnit : BaseUnit
     {
         isBoss = info.isBoss;
         level = info.level;
+        if (info.overrideWeapon)
+        {
+            weaponData = info.weapon;   // trước SpawnInBattle để ReloadStats áp tầm đánh/đạn của vũ khí
+            ShowWeapon(info.weapon);
+        }
 
         var bs = new BaseStats
         {
@@ -43,6 +50,19 @@ public class EnemyUnit : BaseUnit
         canPatrol = isMoveable;
 
         SpawnInBattle(bs, StaticValue.TAG_TEAM_B, position);
+    }
+
+    // Hình vũ khí như hero (EquipVisualResolver); tay không thì tắt object.
+    private void ShowWeapon(WeaponData weapon)
+    {
+        if (weaponRenderer == null)
+        {
+            return;
+        }
+
+        Sprite sprite = weapon != null ? EquipVisualResolver.GetBodySprite(GearSlotType.WEAPON, weapon.assetName) : null;
+        weaponRenderer.sprite = sprite;
+        weaponRenderer.gameObject.SetActive(sprite != null);
     }
 
     // GridCombatController.hos: đối thủ gần nhất trong tầm phát hiện; không có thì giữ mục tiêu cũ còn sống.
