@@ -16,6 +16,8 @@ using UnityEngine.UI;
 //    rảnh 3s thì vệt sáng chạy qua nút Loot. Nút giữ trạng thái lún suốt lượt loot / khi auto (ForgeUI.iep).
 //  - Chạm nền popup khi chưa chọn (CloseOnClickDark gốc) = bỏ qua: món quay lại đầu bục, dừng xử lý (cả auto)
 //    tới khi người chơi bấm món đó để mở lại popup (ForgeController.het / hen gốc).
+//  - Rời màn chính (mở tab / Enchantment / Wing) khi đang auto → tự tắt auto; lượt đang dở vẫn tự bán theo lọc,
+//    món cần chọn thì chờ, về màn chính mới hiện popup (user yêu cầu 2026-10-22, gốc không có).
 //  - Tay chỉ tutorial (FTUE): nút Loot tới khi loot lần đầu (step 1); nút Auto khi đã loot mà chưa Start auto
 //    (step 12) hoặc đã nâng Mastery mà chưa chọn số búa (step 20). Xem DecodedData/TUTORIAL_MODEL.md.
 public class ForgeUIController : MonoBehaviour
@@ -81,6 +83,9 @@ public class ForgeUIController : MonoBehaviour
     private readonly List<PendingItem> queue = new List<PendingItem>();
     private State state = State.Idle;
     private bool isAuto;
+    private bool isAutoBatch;      // lượt đang chạy bắt đầu lúc auto → vẫn lọc bán dù auto đã tắt giữa chừng
+    private bool isHome = true;
+    private bool isWaitingHome;    // món cần chọn đang chờ người chơi về màn chính
 
     private Sequence boxSequence;
     private Sequence shineSequence;
@@ -133,6 +138,7 @@ public class ForgeUIController : MonoBehaviour
     {
         if (isAuto && objAutoRunning != null)
             objAutoRunning.transform.Rotate(0f, 0f, -autoRotateSpeed * Time.deltaTime);
+        RefreshHomeScreen();
 
 #if UNITY_EDITOR
         // chỉnh nhanh debugForgeLevel khi đang chơi: mũi tên lên/xuống
@@ -141,6 +147,28 @@ public class ForgeUIController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.DownArrow))
             DebugCustom.Log($"[Forge] debugForgeLevel = {--debugForgeLevel}");
 #endif
+    }
+
+    // Rời màn chính → tắt auto; quay về → hiện popup món đang chờ.
+    private void RefreshHomeScreen()
+    {
+        bool home = owner == null || owner.IsHomeScreen();
+        if (home == isHome)
+            return;
+
+        isHome = home;
+        if (home == false)
+        {
+            if (isAuto)
+                SetAuto(false);
+            return;
+        }
+
+        if (isWaitingHome)
+        {
+            isWaitingHome = false;
+            ProcessNext();
+        }
     }
 
     // ----- Nút -----
@@ -326,6 +354,7 @@ public class ForgeUIController : MonoBehaviour
 #endif
 
         // Trừ hộp trước, mỗi hộp 1 món.
+        isAutoBatch = isAuto;
         GameData.userData.items.Consume(ItemType.LOOT_TICKET, count);
         owner.UpdateLootTicketText();
 
@@ -444,10 +473,17 @@ public class ForgeUIController : MonoBehaviour
             PendingItem pending = queue[0];
             queue.RemoveAt(0);
 
-            if (isAuto && ForgeService.ShouldDiscard(pending.item))
+            if (isAutoBatch && ForgeService.ShouldDiscard(pending.item))
             {
                 Sell(pending);
                 continue;
+            }
+
+            if (isHome == false)
+            {
+                queue.Insert(0, pending);
+                isWaitingHome = true;
+                return;
             }
 
             ShowPopup(pending);

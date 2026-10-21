@@ -87,3 +87,4 @@
 - [Hệ âm thanh theo gốc](dungonrush-audio-system.md) — AudioManager 2 source + AudioConfig.asset (UI/vũ khí/pet), PressButtonUI click + lún nút theo gốc (266 nút); dựng + test Play 2026-10-21; doc AUDIO_MODEL.md
 - [Nhịp đánh xa + cận chiến theo gốc](dungonrush-ranged-attack-original.md) — data vũ khí khớp; nhịp chung ra đòn 50% (đôi 25%+50%) cho cả 2 loại; đạn bay THẲNG có thể trượt, từ weapon_slot; pet vẫn cuối wind-up (2026-10-21)
 - [Vũ khí quái campaign](dungonrush-campaign-enemy-weapon.md) — quái campaign cầm vũ khí NGƯỜI CHƠI theo seed+tier (jha gốc), L1-4 melee tay không; EnemyGearPicker 2026-10-21, chưa test Play
+- [Cận chiến chỉ đánh ngang hàng](dungonrush-melee-same-row.md) — Campaign/Zombie/Cultist: melee hero/quái phải đứng cùng hàng sát trái/phải mới đánh; LỆCH GỐC có chủ ý (user yêu cầu 2026-10-22), đừng gỡ

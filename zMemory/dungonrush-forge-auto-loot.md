@@ -27,5 +27,7 @@ Dựng 2026-10-15 theo reverse libil2cpp (doc: `DecodedData/FORGE_MODEL.md`). Us
 
 - Quà người mới (2026-10-17): +240 búa (LOOT_TICKET) trong `UserData.LoadDone` khi isNewUser = `GameResources.StartingLootBoxCount` gốc (remote config `starting_loot_box_count`=240, StartingGem=0); hằng `ForgeService.STARTING_LOOT_BOX_COUNT`. Save cũ không được cộng lại (Editor: phím L +100). Nguồn búa gốc: quà đầu, offline 1/phút, Dragon dungeon 50+1×(lv-1), rương ads, shop/deal, BattlePass, BossRush/PvP. Quái chết KHÔNG rơi búa (LootDropController.hsl chỉ chạy ở chế độ Creative quay quảng cáo).
 
+- Rời màn chính (mở tab/Enchantment/Wing) khi đang auto → tự TẮT auto; lượt dở vẫn tự bán theo lọc (isAutoBatch), món cần chọn chờ (isWaitingHome), về màn chính mới hiện popup. LỆCH GỐC có chủ ý (user yêu cầu 2026-10-22), test Play pass.
+
 **Why:** user muốn bỏ 2 prefab tự dựng, dùng prefab gốc và hoàn thiện auto loot.
 **How to apply:** sửa loot thì sửa ForgeUIController/ForgeService; đổi layout popup bằng tay thì đừng chạy lại builder. Xem [[dungonrush-loot-forge-design]], [[dungonrush-main-ui-uimaingame2]], [[dungonrush-mastery-feature]].
