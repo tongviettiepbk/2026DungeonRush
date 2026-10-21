@@ -24,7 +24,6 @@ public class ExperienceUI : MonoBehaviour
     public TextMeshProUGUI LevelText;
     public GameObject NotificationUI;
     public TextMeshProUGUI BoostIndicatorText;
-    public AudioClip ButtonClickSound;
 
     // Giá trị serialized của prefab gốc.
     public Color ButtonCompletedColor = new Color(0.0784f, 0.6235f, 0.9922f, 1f);
@@ -162,7 +161,7 @@ public class ExperienceUI : MonoBehaviour
     // OnLevelButtonClicked gốc → ExperienceController.hds (mở LevelPopup).
     public void OnLevelButtonClicked()
     {
-        AudioManager.Instance.PlaySfx(ButtonClickSound);
+        AudioManager.Instance.PlayButtonClick();
         if (LevelTutorialUI != null) LevelTutorialUI.Hide();
         PlayerExpService.OpenLevelPopup();
     }

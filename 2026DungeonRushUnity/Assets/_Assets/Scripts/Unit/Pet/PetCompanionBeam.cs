@@ -26,8 +26,10 @@ public class PetCompanionBeam : PetUnit
         link.Play(firePoint, chain, companionData.beamSpeed, companionData.beamDuration, companionData.beamTickInterval,
             _ => DealDamage(victim, damage),
             () => DealDamage(victim, damage),
-            () => isPause);
+            () => isPause,
+            StopEffectActiveSfx);
         PlayShootSfx();
+        PlayEffectActiveSfx();
     }
 
     protected override void OnDisable()

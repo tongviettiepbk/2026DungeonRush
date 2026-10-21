@@ -12,7 +12,6 @@ public static class LevelPopupPrefabBuilder
     private const string RIP = "Assets/_Assets/Resources/Prefabs/UI/LevelPopup.prefab";
     private const string OUT = "Assets/_Assets/Resources/Prefabs/UI/UILevelPopup.prefab";
     private const string CUR = "Assets/_Assets/Art/2_Icons/Currency/";
-    private const string SOUND = "Assets/_Assets/_Sound/UI/";
     private const string CONTENT = "ContentTransform/Background/";
     private const string TABLE = CONTENT + "RarityTable/VerticalLayout/";
 
@@ -50,7 +49,6 @@ public static class LevelPopupPrefabBuilder
         ui.CloseButton = Find(popup, CONTENT + "CloseButton").GetComponent<Button>();
         ui.GemCountText = Text(popup, CONTENT + "Rewards/RewardText_2");
         ui.GemCountText.spriteAsset = AssetDatabase.LoadAssetAtPath<TMP_SpriteAsset>(CUR + "IsGem.asset");
-        ui.LevelUpSound = AssetDatabase.LoadAssetAtPath<AudioClip>(SOUND + "levelup.ogg");
 
         // Bản rip mất RarityPatternEffect ở hoa văn 3 hàng cuối → gắn lại theo thông số gốc (5s, Linear).
         SetPatternFx(Find(popup, TABLE + "Ancient/Image/Pattern"), RarityPatternEffect.PatternAnimation.MoveDown, 128.5f, 0f);

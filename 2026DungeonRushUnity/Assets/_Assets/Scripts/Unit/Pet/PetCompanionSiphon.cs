@@ -25,6 +25,7 @@ public class PetCompanionSiphon : PetUnit
             hit =>
             {
                 UnityEngine.Vector3 from = hit.centerBodyPoint.position;
+                PlayProjectileHitSfx();
                 DealDamage(hit, damage);
                 FireHomingFrom(projectilePrefab, from, owner, speed, _ => HealOwner(heal));
             });

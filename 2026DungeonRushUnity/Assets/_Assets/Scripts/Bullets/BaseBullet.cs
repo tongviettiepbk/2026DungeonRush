@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -27,6 +28,16 @@ public class BaseBullet : MonoBehaviour
     protected BaseUnit attacker;
     protected BaseUnit target;
     protected AttackData attackData;
+
+    // ProjectileContext.HitAudios gốc: tiếng kêu khi đạn trúng (đạn hero = WeaponData.ProjectileHitAudios).
+    protected List<AudioClip> hitAudios;
+    protected float hitAudioVolume = 1f;
+
+    public void SetHitAudios(List<AudioClip> clips, float volume)
+    {
+        hitAudios = clips;
+        hitAudioVolume = volume;
+    }
 
     protected virtual void Awake()
     {
@@ -316,6 +327,8 @@ public class BaseBullet : MonoBehaviour
                         DebugCustom.ShowLog("SHOW FX OnTargetTakeDamage");
                     }
 
+                    AudioManager.Instance.PlayRandomSfx(hitAudios, hitAudioVolume);
+
                     if (attackData != null)
                     {
                         target.TakeAttack(attackData);
@@ -336,6 +349,7 @@ public class BaseBullet : MonoBehaviour
     public virtual void Deactive()
     {
         isActive = false;
+        hitAudios = null;
         isHoming = false;
         gameObject.SetActive(false);
 

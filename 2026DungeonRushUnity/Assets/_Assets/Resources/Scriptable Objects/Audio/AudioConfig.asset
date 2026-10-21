@@ -1,0 +1,784 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40ec7765844e48d1830d2b3dd03eb738, type: 3}
+  m_Name: AudioConfig
+  m_EditorClassIdentifier: 
+  ButtonClickSound: {fileID: 8300000, guid: b10caee2b1a06fb4ba555f7514304611, type: 3}
+  ButtonClickVolume: 1
+  ItemEquipSound: {fileID: 0}
+  ItemEquipVolume: 1
+  ItemSellSound: {fileID: 8300000, guid: eca9b580f3d0edf4b93fd7c1a4ed88e0, type: 3}
+  ItemSellVolume: 1
+  BoxPunchSound: {fileID: 8300000, guid: 65bb5cd479d1080498ddb26e566ad579, type: 3}
+  BoxPunchVolume: 1
+  BoxOpenSound: {fileID: 8300000, guid: b7b587d0c51349f45b1aec00d0492e6e, type: 3}
+  BoxOpenVolume: 1
+  LevelUpSound: {fileID: 8300000, guid: a27f633e3dfcb3745bcddba61b57234b, type: 3}
+  LevelUpVolume: 2
+  DoorOpenSound: {fileID: 8300000, guid: 9fcab8cc725d54d448ba784b0d43a224, type: 3}
+  DoorOpenVolume: 0.151
+  LootCollectSound: {fileID: 8300000, guid: eca9b580f3d0edf4b93fd7c1a4ed88e0, type: 3}
+  LootCollectVolume: 1
+  UnarmedHitAudios:
+  - {fileID: 8300000, guid: cd290360cdfaba243afad0c613b5bf6c, type: 3}
+  - {fileID: 8300000, guid: 395e48415a2e4ca45a859471eeedfef5, type: 3}
+  - {fileID: 8300000, guid: ade3a733f9195a44ca956daf6b345cc3, type: 3}
+  UnarmedHitAudioVolume: 0.239
+  Music: {fileID: 8300000, guid: a0c4d328eb74acc4f8047d0c349fa753, type: 3}
+  MusicVolume: 0.5
+  Weapons:
+  - AssetName: Weapon_m_10_1
+    HitAudios:
+    - {fileID: 8300000, guid: d616a24c70cc21b49a522e306133b380, type: 3}
+    - {fileID: 8300000, guid: c2598e5437a9ad74db364ed8d8a0e485, type: 3}
+    - {fileID: 8300000, guid: 5073b0c0c20a84342bbd2d926fbd3304, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_10_2
+    HitAudios:
+    - {fileID: 8300000, guid: d616a24c70cc21b49a522e306133b380, type: 3}
+    - {fileID: 8300000, guid: c2598e5437a9ad74db364ed8d8a0e485, type: 3}
+    - {fileID: 8300000, guid: 5073b0c0c20a84342bbd2d926fbd3304, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_10_3
+    HitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_1_1
+    HitAudios:
+    - {fileID: 8300000, guid: d616a24c70cc21b49a522e306133b380, type: 3}
+    - {fileID: 8300000, guid: c2598e5437a9ad74db364ed8d8a0e485, type: 3}
+    - {fileID: 8300000, guid: 5073b0c0c20a84342bbd2d926fbd3304, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_1_2
+    HitAudios:
+    - {fileID: 8300000, guid: cb5559a3bd35bf744a8d50447e73e935, type: 3}
+    - {fileID: 8300000, guid: c9fdf72511ecd74419983c64944140c8, type: 3}
+    - {fileID: 8300000, guid: d5d93c044416c3946b2c23bccf7276f0, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_1_3
+    HitAudios:
+    - {fileID: 8300000, guid: 08ca92239fc35a44d97f1c87c2ecba38, type: 3}
+    - {fileID: 8300000, guid: 906d72ae73937a34ebcd0407759bdf27, type: 3}
+    - {fileID: 8300000, guid: 3ed09ff5c0fa90a49ac17ab58db5770f, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_2_1
+    HitAudios:
+    - {fileID: 8300000, guid: 9e2b9553fd899974688c845dae1fb4aa, type: 3}
+    - {fileID: 8300000, guid: 08ca92239fc35a44d97f1c87c2ecba38, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_2_2
+    HitAudios:
+    - {fileID: 8300000, guid: d616a24c70cc21b49a522e306133b380, type: 3}
+    - {fileID: 8300000, guid: 5073b0c0c20a84342bbd2d926fbd3304, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_2_3
+    HitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_3_1
+    HitAudios:
+    - {fileID: 8300000, guid: d5d93c044416c3946b2c23bccf7276f0, type: 3}
+    - {fileID: 8300000, guid: 6fbbfbdca8246984da186a53a1d9801d, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_3_2
+    HitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_3_3
+    HitAudios:
+    - {fileID: 8300000, guid: ee7808ca213132d4790245581fbe9449, type: 3}
+    - {fileID: 8300000, guid: d221f5f49bdfa5b4188d35334950308a, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_4_1
+    HitAudios:
+    - {fileID: 8300000, guid: 5073b0c0c20a84342bbd2d926fbd3304, type: 3}
+    - {fileID: 8300000, guid: c2598e5437a9ad74db364ed8d8a0e485, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_4_2
+    HitAudios:
+    - {fileID: 8300000, guid: 9e2b9553fd899974688c845dae1fb4aa, type: 3}
+    - {fileID: 8300000, guid: 08ca92239fc35a44d97f1c87c2ecba38, type: 3}
+    - {fileID: 8300000, guid: 906d72ae73937a34ebcd0407759bdf27, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_4_3
+    HitAudios:
+    - {fileID: 8300000, guid: 5073b0c0c20a84342bbd2d926fbd3304, type: 3}
+    - {fileID: 8300000, guid: c2598e5437a9ad74db364ed8d8a0e485, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_5_1
+    HitAudios:
+    - {fileID: 8300000, guid: 9e2b9553fd899974688c845dae1fb4aa, type: 3}
+    - {fileID: 8300000, guid: 08ca92239fc35a44d97f1c87c2ecba38, type: 3}
+    - {fileID: 8300000, guid: 906d72ae73937a34ebcd0407759bdf27, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_5_2
+    HitAudios:
+    - {fileID: 8300000, guid: ee7808ca213132d4790245581fbe9449, type: 3}
+    - {fileID: 8300000, guid: d221f5f49bdfa5b4188d35334950308a, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_5_3
+    HitAudios:
+    - {fileID: 8300000, guid: d616a24c70cc21b49a522e306133b380, type: 3}
+    - {fileID: 8300000, guid: c2598e5437a9ad74db364ed8d8a0e485, type: 3}
+    - {fileID: 8300000, guid: 5073b0c0c20a84342bbd2d926fbd3304, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_6_1
+    HitAudios:
+    - {fileID: 8300000, guid: 9e2b9553fd899974688c845dae1fb4aa, type: 3}
+    - {fileID: 8300000, guid: 08ca92239fc35a44d97f1c87c2ecba38, type: 3}
+    - {fileID: 8300000, guid: 906d72ae73937a34ebcd0407759bdf27, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_6_2
+    HitAudios:
+    - {fileID: 8300000, guid: 9e2b9553fd899974688c845dae1fb4aa, type: 3}
+    - {fileID: 8300000, guid: 08ca92239fc35a44d97f1c87c2ecba38, type: 3}
+    - {fileID: 8300000, guid: 906d72ae73937a34ebcd0407759bdf27, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_6_3
+    HitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_7_1
+    HitAudios:
+    - {fileID: 8300000, guid: d616a24c70cc21b49a522e306133b380, type: 3}
+    - {fileID: 8300000, guid: c2598e5437a9ad74db364ed8d8a0e485, type: 3}
+    - {fileID: 8300000, guid: 5073b0c0c20a84342bbd2d926fbd3304, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_7_2
+    HitAudios:
+    - {fileID: 8300000, guid: 9e2b9553fd899974688c845dae1fb4aa, type: 3}
+    - {fileID: 8300000, guid: 08ca92239fc35a44d97f1c87c2ecba38, type: 3}
+    - {fileID: 8300000, guid: 3ed09ff5c0fa90a49ac17ab58db5770f, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_7_3
+    HitAudios:
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_8_1
+    HitAudios:
+    - {fileID: 8300000, guid: 9e2b9553fd899974688c845dae1fb4aa, type: 3}
+    - {fileID: 8300000, guid: 08ca92239fc35a44d97f1c87c2ecba38, type: 3}
+    - {fileID: 8300000, guid: 3ed09ff5c0fa90a49ac17ab58db5770f, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_8_2
+    HitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_8_3
+    HitAudios:
+    - {fileID: 8300000, guid: d616a24c70cc21b49a522e306133b380, type: 3}
+    - {fileID: 8300000, guid: c2598e5437a9ad74db364ed8d8a0e485, type: 3}
+    - {fileID: 8300000, guid: 5073b0c0c20a84342bbd2d926fbd3304, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_9_1
+    HitAudios:
+    - {fileID: 8300000, guid: 9e2b9553fd899974688c845dae1fb4aa, type: 3}
+    - {fileID: 8300000, guid: 08ca92239fc35a44d97f1c87c2ecba38, type: 3}
+    - {fileID: 8300000, guid: 3ed09ff5c0fa90a49ac17ab58db5770f, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_9_2
+    HitAudios:
+    - {fileID: 8300000, guid: d616a24c70cc21b49a522e306133b380, type: 3}
+    - {fileID: 8300000, guid: c2598e5437a9ad74db364ed8d8a0e485, type: 3}
+    - {fileID: 8300000, guid: 5073b0c0c20a84342bbd2d926fbd3304, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_m_9_3
+    HitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    HitAudioVolume: 1
+    ShootAudios: []
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_10_1
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 0f7b361598574c346817499d149c69fe, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_10_2
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 5ac98fd908f42be478b8ab07a1560a66, type: 3}
+    - {fileID: 8300000, guid: 5803f5bbb2e4c09448e236c10de712b5, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    - {fileID: 8300000, guid: 6b6aa2538ace9334795da1e153c12f1e, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_10_3
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: bfe1d1382762d6c47a1881035060bbfb, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios: []
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_1_1
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 7fd38acdaf133634e897a765fdec8365, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: d616a24c70cc21b49a522e306133b380, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_1_2
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 091c115e1551ae24e8fdbe1334921169, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: 5905ad93f648a474480f17a3721eb718, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_1_3
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9415826d36ecde344ab09f94c7ce5e0b, type: 3}
+    - {fileID: 8300000, guid: 5ac98fd908f42be478b8ab07a1560a66, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_2_1
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 091c115e1551ae24e8fdbe1334921169, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: 5905ad93f648a474480f17a3721eb718, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_2_2
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9415826d36ecde344ab09f94c7ce5e0b, type: 3}
+    - {fileID: 8300000, guid: 5ac98fd908f42be478b8ab07a1560a66, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_3_1
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 091c115e1551ae24e8fdbe1334921169, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    - {fileID: 8300000, guid: 6b6aa2538ace9334795da1e153c12f1e, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_3_2
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: a803811007c0a9747a6e527f0c8cdc39, type: 3}
+    - {fileID: 8300000, guid: 5803f5bbb2e4c09448e236c10de712b5, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_3_3
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: a803811007c0a9747a6e527f0c8cdc39, type: 3}
+    - {fileID: 8300000, guid: 5803f5bbb2e4c09448e236c10de712b5, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_4_1
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 091c115e1551ae24e8fdbe1334921169, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    - {fileID: 8300000, guid: 6b6aa2538ace9334795da1e153c12f1e, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_4_2
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: a803811007c0a9747a6e527f0c8cdc39, type: 3}
+    - {fileID: 8300000, guid: 5803f5bbb2e4c09448e236c10de712b5, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_4_3
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9415826d36ecde344ab09f94c7ce5e0b, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_5_1
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 091c115e1551ae24e8fdbe1334921169, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: 5905ad93f648a474480f17a3721eb718, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_5_2
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9415826d36ecde344ab09f94c7ce5e0b, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_5_3
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9618eb4c5d9ebf04ba7b447726050e1d, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: 06f43affff91bdd4eb50b0b84a1170db, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_6_1
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9415826d36ecde344ab09f94c7ce5e0b, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_6_2
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: a803811007c0a9747a6e527f0c8cdc39, type: 3}
+    - {fileID: 8300000, guid: 5803f5bbb2e4c09448e236c10de712b5, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_6_3
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9618eb4c5d9ebf04ba7b447726050e1d, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: 06f43affff91bdd4eb50b0b84a1170db, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_7_1
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 091c115e1551ae24e8fdbe1334921169, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    - {fileID: 8300000, guid: 6b6aa2538ace9334795da1e153c12f1e, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_7_2
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9415826d36ecde344ab09f94c7ce5e0b, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_7_3
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9618eb4c5d9ebf04ba7b447726050e1d, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: 06f43affff91bdd4eb50b0b84a1170db, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_8_1
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 091c115e1551ae24e8fdbe1334921169, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    - {fileID: 8300000, guid: 6b6aa2538ace9334795da1e153c12f1e, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_8_2
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: a803811007c0a9747a6e527f0c8cdc39, type: 3}
+    - {fileID: 8300000, guid: 5803f5bbb2e4c09448e236c10de712b5, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_8_3
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9618eb4c5d9ebf04ba7b447726050e1d, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: 06f43affff91bdd4eb50b0b84a1170db, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_9_1
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: a803811007c0a9747a6e527f0c8cdc39, type: 3}
+    - {fileID: 8300000, guid: 5803f5bbb2e4c09448e236c10de712b5, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: b4b6b62214d3f974a99dbecfa042d32d, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_9_2
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 091c115e1551ae24e8fdbe1334921169, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: f901ecd60724e044aab8acc903899eae, type: 3}
+    - {fileID: 8300000, guid: 1f46da6cfd680df4a89fdd7fc454b2af, type: 3}
+    - {fileID: 8300000, guid: 6b6aa2538ace9334795da1e153c12f1e, type: 3}
+    ProjectileHitAudioVolume: 1
+  - AssetName: Weapon_r_9_3
+    HitAudios: []
+    HitAudioVolume: 1
+    ShootAudios:
+    - {fileID: 8300000, guid: 9618eb4c5d9ebf04ba7b447726050e1d, type: 3}
+    ShootAudioVolume: 1
+    ProjectileHitAudios:
+    - {fileID: 8300000, guid: 06f43affff91bdd4eb50b0b84a1170db, type: 3}
+    ProjectileHitAudioVolume: 1
+  Companions:
+  - AssetName: Companion_1_Common_DPS_Single
+    ShootSound: {fileID: 8300000, guid: 06f43affff91bdd4eb50b0b84a1170db, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 1
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_1_Common_Heal_Single
+    ShootSound: {fileID: 8300000, guid: 307ad401bea13474498ecfb0af5bdc88, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 1
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_1_Common_Lightning_Single
+    ShootSound: {fileID: 0}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 1
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 8300000, guid: 3a2e8125c111fa247a9792f426e3b0d3, type: 3}
+    EffectActiveSoundVolume: 0.2
+    LoopEffectActiveSound: 1
+  - AssetName: Companion_2_Uncommon_Bomber_AOE_Bomb
+    ShootSound: {fileID: 8300000, guid: 9618eb4c5d9ebf04ba7b447726050e1d, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 1
+    ProjectileImpactSound: {fileID: 8300000, guid: 75bfe5f0886c1474896000dfec3d94c4, type: 3}
+    ProjectileImpactVolume: 0.4
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 0.4
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_2_Uncommon_Heal_Chain
+    ShootSound: {fileID: 0}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 1
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 8300000, guid: ddf0d59cf7375ab44ac13806a90596b0, type: 3}
+    EffectActiveSoundVolume: 0.2
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_2_Uncommon_Slow_Single
+    ShootSound: {fileID: 8300000, guid: 75abfc6f42e53a34db3b8c6b222a6ba9, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 1
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_3_Rare_Bomber_AOE_Burn
+    ShootSound: {fileID: 8300000, guid: 9618eb4c5d9ebf04ba7b447726050e1d, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 1
+    ProjectileImpactSound: {fileID: 8300000, guid: 75bfe5f0886c1474896000dfec3d94c4, type: 3}
+    ProjectileImpactVolume: 0.4
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 0.4
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_3_Rare_Lightning_Multi
+    ShootSound: {fileID: 0}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 1
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 8300000, guid: 3a2e8125c111fa247a9792f426e3b0d3, type: 3}
+    EffectActiveSoundVolume: 0.2
+    LoopEffectActiveSound: 1
+  - AssetName: Companion_3_Rare_Slow_Multi
+    ShootSound: {fileID: 8300000, guid: 75abfc6f42e53a34db3b8c6b222a6ba9, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 8300000, guid: 43e83f8d0e0f9014ea9df9729a8195ba, type: 3}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 1
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_4_Epic_Beam_Single
+    ShootSound: {fileID: 0}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 1
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 8300000, guid: 443d4f4f86264e9468fba9526f077d0e, type: 3}
+    EffectActiveSoundVolume: 0.2
+    LoopEffectActiveSound: 1
+  - AssetName: Companion_4_Epic_Guardian_Single
+    ShootSound: {fileID: 0}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 1
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 8300000, guid: 3a2e8125c111fa247a9792f426e3b0d3, type: 3}
+    EffectActiveSoundVolume: 0.2
+    LoopEffectActiveSound: 1
+  - AssetName: Companion_4_Epic_Slow_AOE
+    ShootSound: {fileID: 8300000, guid: 75abfc6f42e53a34db3b8c6b222a6ba9, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 8300000, guid: 43e83f8d0e0f9014ea9df9729a8195ba, type: 3}
+    ProjectileImpactVolume: 0.4
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 1
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_5_Legendary_Blaster
+    ShootSound: {fileID: 8300000, guid: bfe1d1382762d6c47a1881035060bbfb, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 1
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_5_Legendary_HealDamage
+    ShootSound: {fileID: 8300000, guid: 50c5e965852016b4da7aa6f75ca745eb, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 8300000, guid: 45efa0371989bb3489ca95ffd0223549, type: 3}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 1
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_5_Legendary_Meteor
+    ShootSound: {fileID: 8300000, guid: 9618eb4c5d9ebf04ba7b447726050e1d, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 8300000, guid: 75bfe5f0886c1474896000dfec3d94c4, type: 3}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 1
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_6_Divine_Clone
+    ShootSound: {fileID: 8300000, guid: 43a98a96fcd228548bb212cc66ca11d9, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 8300000, guid: 45efa0371989bb3489ca95ffd0223549, type: 3}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 1
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_6_Divine_HealNova
+    ShootSound: {fileID: 8300000, guid: 18b46e5e1dc9cee4eb46791d4f190001, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 0}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 8300000, guid: 77a15279515eb1d429ac94d1a96fc46b, type: 3}
+    EffectActiveSoundVolume: 0.4
+    LoopEffectActiveSound: 0
+  - AssetName: Companion_6_Divine_Immortal
+    ShootSound: {fileID: 8300000, guid: c8d96b3a3d2583b41a3f9ce4b27f7288, type: 3}
+    ShootVolume: 0.4
+    ProjectileHitSound: {fileID: 0}
+    ProjectileHitVolume: 0.4
+    ProjectileImpactSound: {fileID: 8300000, guid: 75bfe5f0886c1474896000dfec3d94c4, type: 3}
+    ProjectileImpactVolume: 1
+    EffectActiveSound: {fileID: 0}
+    EffectActiveSoundVolume: 1
+    LoopEffectActiveSound: 0

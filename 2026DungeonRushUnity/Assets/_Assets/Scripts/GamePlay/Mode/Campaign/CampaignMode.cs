@@ -20,8 +20,6 @@ public class CampaignMode : BaseMode
     [Header("Chuyển màn qua cửa (LevelTransitionController gốc, giá trị GameplayScene)")]
     public float doorOpenDuration = 0.8f;
     public float fadeDuration = 0.5f;
-    public AudioClip doorOpenSound;      // AudioConfig.DoorOpenSound gốc
-    public float doorOpenVolume = 0.151f;
 
     private bool isOfferJustUnlocked;   // yda gốc: vừa bật Weapon Offer lần đầu → chào khi màn kế bắt đầu (jix)
     private bool isTransitionHoldingFade;   // màn hình đang giữ tối giữa chuyển màn
@@ -226,7 +224,7 @@ public class CampaignMode : BaseMode
             yield break;
         }
 
-        AudioManager.Instance.PlaySfx(doorOpenSound, doorOpenVolume);
+        AudioManager.Instance.PlayDoorOpen();
         float duration = doorOpenDuration / GameController.Instance.gameSpeed;
         map.topDoor1.DOLocalMoveX(map.topDoor1.localPosition.x - DOOR_SLIDE, duration).SetEase(Ease.InSine);
         map.topDoor2.DOLocalMoveX(map.topDoor2.localPosition.x + DOOR_SLIDE, duration).SetEase(Ease.InSine);

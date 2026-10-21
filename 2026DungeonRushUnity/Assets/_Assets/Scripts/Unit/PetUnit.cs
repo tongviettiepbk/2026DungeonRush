@@ -39,9 +39,6 @@ public class PetUnit : BaseUnit
     [Tooltip("Prefab đạn mặc định (gắn BaseBullet) — đuổi theo target. Trống → đánh cận chiến.")]
     [SerializeField] protected BaseBullet projectilePrefab;
 
-    [Tooltip("Âm thanh khi bắn (ShootSound của companion gốc). Có thể để trống.")]
-    [SerializeField] protected AudioClip sfxShoot;
-
     public CompanionData Data => companionData;
 
     // Companion là quân đồng hành: KHÔNG bị enemy nhắm và KHÔNG chết (giống StickIdle BaseCompanion).
@@ -420,7 +417,11 @@ public class PetUnit : BaseUnit
             return null;
         }
 
-        bullet.ActiveHoming(start, this, victim, onArrive);
+        bullet.ActiveHoming(start, this, victim, hit =>
+        {
+            PlayProjectileHitSfx();
+            onArrive?.Invoke(hit);
+        });
         return bullet;
     }
 
@@ -439,11 +440,100 @@ public class PetUnit : BaseUnit
         return bullet;
     }
 
+    // ===== Âm thanh (CompanionData.*Sound gốc, số liệu ở AudioConfig.Companions) =====
+
+    private int effectSfxToken;
+
+    private CompanionAudio CompanionSfx
+    {
+        get
+        {
+            AudioConfig config = AudioManager.Instance.Config;
+            return config != null && companionData != null ? config.GetCompanion(companionData.assetName) : null;
+        }
+    }
+
+    // Companion.hqd gốc: tung chiêu kêu ShootSound.
     protected void PlayShootSfx()
     {
-        if (sfxShoot != null)
+        CompanionAudio audio = CompanionSfx;
+        if (audio != null)
         {
-            PlaySfx(sfxShoot);
+            AudioManager.Instance.PlaySfx(audio.ShootSound, audio.ShootVolume);
+        }
+    }
+
+    // CompanionProjectile gốc: đạn pet tới nơi kêu ProjectileHitSound.
+    protected void PlayProjectileHitSfx()
+    {
+        CompanionAudio audio = CompanionSfx;
+        if (audio != null)
+        {
+            AudioManager.Instance.PlaySfx(audio.ProjectileHitSound, audio.ProjectileHitVolume);
+        }
+    }
+
+    // Companion.hrj gốc: bom/thiên thạch nổ kêu ProjectileImpactSound.
+    protected void PlayImpactSfx()
+    {
+        CompanionAudio audio = CompanionSfx;
+        if (audio != null)
+        {
+            AudioManager.Instance.PlaySfx(audio.ProjectileImpactSound, audio.ProjectileImpactVolume);
+        }
+    }
+
+    // Companion.hri gốc: hiệu ứng bắt đầu → AudioSource riêng của pet phát EffectActiveSound
+    // (lặp nếu LoopEffectActiveSound), volume = EffectActiveSoundVolume × Sound FX.
+    // stopAfter > 0: tự tắt sau ngần ấy giây trận (hiệu ứng có thời hạn: Guardian/Immortal).
+    protected void PlayEffectActiveSfx(float stopAfter = 0f)
+    {
+        CompanionAudio audio = CompanionSfx;
+        if (audio == null || audio.EffectActiveSound == null || audioSource == null)
+        {
+            return;
+        }
+
+        audioSource.clip = audio.EffectActiveSound;
+        audioSource.volume = audio.EffectActiveSoundVolume * AudioManager.Instance.SfxVolume;
+        audioSource.loop = audio.LoopEffectActiveSound;
+        audioSource.Play();
+
+        int token = ++effectSfxToken;
+        if (stopAfter > 0f)
+        {
+            StartCoroutine(RoutineStopEffectSfx(stopAfter, token));
+        }
+    }
+
+    // Companion.hrk gốc.
+    protected void StopEffectActiveSfx()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+    }
+
+    private IEnumerator RoutineStopEffectSfx(float seconds, int token)
+    {
+        yield return WaitBattleTime(seconds);
+        if (token == effectSfxToken)
+        {
+            StopEffectActiveSfx();
+        }
+    }
+
+    // Companion.hrl gốc: kéo slider Sound FX → cập nhật volume tiếng hiệu ứng đang chạy của mọi pet.
+    public static void RefreshEffectSfxVolume(float sfxVolume)
+    {
+        for (int i = 0; i < activePets.Count; i++)
+        {
+            CompanionAudio audio = activePets[i].CompanionSfx;
+            if (audio != null && activePets[i].audioSource != null)
+            {
+                activePets[i].audioSource.volume = audio.EffectActiveSoundVolume * sfxVolume;
+            }
         }
     }
 
@@ -512,10 +602,7 @@ public class PetUnit : BaseUnit
             bullet.ActiveHoming(firePoint, this, target, GetAbilityAttackData());
         }
 
-        if (sfxShoot != null)
-        {
-            PlaySfx(sfxShoot);
-        }
+        PlayShootSfx();
     }
 
     // ===== Targeting / di chuyển theo hero (giữ nguyên spec) =====
@@ -572,6 +659,7 @@ public class PetUnit : BaseUnit
     {
         base.OnDisable();
         activePets.Remove(this);
+        StopEffectActiveSfx();   // Companion.OnDespawn gốc
     }
 
     private void TickFollow(float dt)

@@ -12,5 +12,6 @@ public class PetCompanionGuardian : PetUnit
         HealOwner(GetAbilityHeal());
         CompanionBlockEffect.Apply(owner, companionData.guardianActiveDuration, companionData.guardianBlockChance);
         PlayShootSfx();
+        PlayEffectActiveSfx(companionData.guardianActiveDuration);
     }
 }

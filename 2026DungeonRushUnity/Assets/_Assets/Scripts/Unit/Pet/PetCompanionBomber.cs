@@ -42,6 +42,7 @@ public class PetCompanionBomber : PetUnit
     protected void Explode(Vector3 point)
     {
         CompanionFx.Spawn(explosionFx, point, Radius, ExplosionDuration);
+        PlayImpactSfx();
 
         double damage = GetAbilityDamage();
         List<BaseUnit> hits = GetEnemiesInRadius(point, Radius);

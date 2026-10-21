@@ -35,8 +35,10 @@ public class PetCompanionLightning : PetUnit
                     DealDamage(chain[i], damage);
                 }
             },
-            () => isPause);
+            () => isPause,
+            StopEffectActiveSfx);
         PlayShootSfx();
+        PlayEffectActiveSfx();
     }
 
     private List<BaseUnit> BuildChain(BaseUnit first, int extraCount)

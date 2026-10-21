@@ -26,13 +26,13 @@ public class BaseUnit : MonoBehaviour
 {
     public float bodyOffset = 0.3f;
     public BaseFx impactAttack;
-    public AudioClip sfxAttack;
 
     // Vũ khí đang cầm quyết định CÁCH ra đòn: có đạn (bắn xa) hay đánh thẳng (cận chiến).
     // Mặc định không đạn → enemy/pet giữ nguyên hành vi cũ. Hero nạp từ đồ đang mặc (OnBeginBattle).
     protected bool hasProjectile;
     protected BaseBullet bulletPrefab;
     protected float projectileSpeed;   // Character.ProjectileSpeed gốc = WeaponData.ProjectileSpeed (0 = giữ tốc prefab đạn)
+    protected WeaponData combatWeapon;  // vũ khí đang cầm (null = tay không) — tra âm thanh đánh/bắn
 
     protected Transform flipPoints;
     protected Collider2D bodyCollider;
@@ -454,6 +454,7 @@ public class BaseUnit : MonoBehaviour
     // Nạp cấu hình chiến đấu từ vũ khí: có đạn hay không, prefab đạn, và tầm đánh.
     protected void ApplyWeapon(WeaponData weapon)
     {
+        combatWeapon = weapon;
         if (weapon == null)
         {
             return;
@@ -1205,11 +1206,13 @@ public class BaseUnit : MonoBehaviour
         {
             BaseBullet bullet = PoolingController.Instance.GetBullet(bulletPrefab);
             bullet.speed = projectileSpeed > 0f ? projectileSpeed : bulletPrefab.speed;   // đạn pool dùng chung nhiều vũ khí
+            PlayRangedSfx(bullet);
             bullet.Active(firePoint, this, target, data);
         }
         else
         {
             target.TakeAttack(data, impactAttack);
+            PlaySfxAttack();
         }
     }
 
@@ -2346,10 +2349,57 @@ public class BaseUnit : MonoBehaviour
     #endregion
 
     #region Audio
+    // Soldier.IsMainCharacter gốc: chỉ hero của chính người chơi mới kêu tiếng đánh/bắn.
+    protected virtual bool IsMainCharacter => false;
+
+    // MeleeAttackState/RangeAttackState gốc: tắt tiếng đánh của hero khi đang Boss Rush (GameController.bavy).
+    private bool CanPlayCombatSfx => IsMainCharacter && !(GameController.Instance.mode is BossRushMode);
+
+    private WeaponAudio CombatWeaponAudio
+    {
+        get
+        {
+            AudioConfig config = AudioManager.Instance.Config;
+            return config != null && combatWeapon != null ? config.GetWeapon(combatWeapon.assetName) : null;
+        }
+    }
+
+    // MeleeAttackState.ggh gốc (đòn cận chiến trúng): WeaponData.HitAudios nếu có, không thì AudioConfig.UnarmedHitAudios.
     protected virtual void PlaySfxAttack()
     {
-        // TODO(follow-stick): bỏ check UIGamePlay/UIManager (chưa port). Thêm lại khi có hệ UI gameplay.
-        AudioManager.Instance.PlaySfx(sfxAttack);
+        if (!CanPlayCombatSfx)
+        {
+            return;
+        }
+
+        WeaponAudio audio = CombatWeaponAudio;
+        if (audio != null && audio.HitAudios.Count > 0)
+        {
+            AudioManager.Instance.PlayRandomSfx(audio.HitAudios, audio.HitAudioVolume);
+        }
+        else
+        {
+            AudioManager.Instance.PlayUnarmedHit();
+        }
+    }
+
+    // RangeAttackState.ggt gốc: nhả đạn kêu ShootAudios; đạn mang ProjectileHitAudios để kêu lúc trúng.
+    protected virtual void PlayRangedSfx(BaseBullet bullet)
+    {
+        bullet.SetHitAudios(null, 1f);
+        if (!CanPlayCombatSfx)
+        {
+            return;
+        }
+
+        WeaponAudio audio = CombatWeaponAudio;
+        if (audio == null)
+        {
+            return;
+        }
+
+        bullet.SetHitAudios(audio.ProjectileHitAudios, audio.ProjectileHitAudioVolume);
+        AudioManager.Instance.PlayRandomSfx(audio.ShootAudios, audio.ShootAudioVolume);
     }
 
     public virtual void PlaySfx(AudioClip clip, bool isLoop = false)

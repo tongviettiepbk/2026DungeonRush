@@ -515,11 +515,8 @@ public class MiningController : MonoBehaviour
     // jcc
     private void PlayHitSound(MineOreType ore)
     {
-        AudioClip clip = config.GetHitSound(ore, out _);
-        if (clip != null)
-        {
-            AudioManager.Instance.PlaySfx(clip);
-        }
+        AudioClip clip = config.GetHitSound(ore, out float volume);
+        AudioManager.Instance.PlaySfx(clip, volume);
     }
 
     // jcd/jcf: hạt vỡ tại ô, tự huỷ sau khi chạy xong.

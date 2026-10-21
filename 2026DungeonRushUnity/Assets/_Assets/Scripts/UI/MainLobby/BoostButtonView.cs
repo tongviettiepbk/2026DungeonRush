@@ -55,6 +55,7 @@ public class BoostButtonView : MonoBehaviour
 
     private void OnClickBoost()
     {
+        AudioManager.Instance.PlayButtonClick();   // BoostButton.OnPointerUp gốc
         if (pressView != null)
             pressView.Release();
         if (isWaitingAd)

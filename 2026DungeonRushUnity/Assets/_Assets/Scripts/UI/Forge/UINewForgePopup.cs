@@ -55,7 +55,7 @@ public class UINewForgePopup : BaseUI
         base.Awake();
         btEquip.onClick.AddListener(OnClickEquip);
         btSell.onClick.AddListener(OnClickSell);
-        btConfirmYes.onClick.AddListener(Close);
+        btConfirmYes.onClick.AddListener(SellAndClose);
         btConfirmNo.onClick.AddListener(() => SetConfirmVisible(false));
         if (btBackground != null)
             btBackground.onClick.AddListener(OnClickBackground);
@@ -112,6 +112,7 @@ public class UINewForgePopup : BaseUI
     // ihn gốc: mặc món thẻ phải rồi đổi chỗ 2 thẻ.
     private void OnClickEquip()
     {
+        AudioManager.Instance.PlayItemEquip();   // kaf gốc (AudioConfig.ItemEquipSound gốc để trống)
         onEquip?.Invoke(other);
         hasEquipped = true;
         LootResult temp = equipped;
@@ -129,6 +130,13 @@ public class UINewForgePopup : BaseUI
             return;
         }
 
+        SellAndClose();
+    }
+
+    // kai gốc: bán (Sell trực tiếp hoặc xác nhận Yes) kêu ItemSellSound rồi đóng.
+    private void SellAndClose()
+    {
+        AudioManager.Instance.PlayItemSell();
         Close();
     }
 

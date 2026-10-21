@@ -27,8 +27,10 @@ public class PetCompanionChainHeal : PetUnit
         link.Play(firePoint, chain, companionData.chainHealSpeed, companionData.chainHealDuration, companionData.healTickInterval,
             null,
             () => HealOwner(heal),
-            () => isPause);
+            () => isPause,
+            StopEffectActiveSfx);
         PlayShootSfx();
+        PlayEffectActiveSfx();
     }
 
     protected override void OnDisable()

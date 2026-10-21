@@ -31,7 +31,6 @@ public class UILevelPopup : BaseUI
     public Button CloseButton;
     public Button DarkButton;
     public TMP_Text GemCountText;
-    public AudioClip LevelUpSound;
     public TutorialUI LevelUpTutorialUI;
 
     // Giá trị serialized của prefab gốc / GameResources.
@@ -183,7 +182,7 @@ public class UILevelPopup : BaseUI
         isAnimating = true;
         CompleteButton.gameObject.SetActive(false);
         isCloseOnClickDark = false;
-        AudioManager.Instance.PlaySfx(LevelUpSound);
+        AudioManager.Instance.PlayLevelUp();
 
         // kmz: cộng gem trước khi lên level (bay về lobby lúc hiệu ứng xong).
         int gem = GameData.staticData.experience.GetLevelUpGemReward(GameData.userData.player.playerLevel + 1);

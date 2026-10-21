@@ -29,6 +29,7 @@ public class PetCompanionBlaster : PetUnit
     {
         StartCoroutine(RoutineWaves(target, GetAbilityDamage()));
         PlayShootSfx();
+        PlayEffectActiveSfx();
     }
 
     private IEnumerator RoutineWaves(BaseUnit aim, double damage)

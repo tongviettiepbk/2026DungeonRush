@@ -7338,6 +7338,7 @@ GameObject:
   - component: {fileID: 2808378113281671617}
   - component: {fileID: 4092760938688764768}
   - component: {fileID: 4710231407716853665}
+  - component: {fileID: 4114749692027893824}
   m_Layer: 0
   m_Name: CloseButton
   m_TagString: Untagged
@@ -7459,6 +7460,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4114749692027893824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6009205129071485013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfabc0671e9f43d19ae550392044bb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonClickSfx
 --- !u!1 &6051824511489321579
 GameObject:
   m_ObjectHideFlags: 0
@@ -8694,7 +8707,6 @@ MonoBehaviour:
   CloseButton: {fileID: 4710231407716853665}
   DarkButton: {fileID: 9173223663210618973}
   GemCountText: {fileID: 5405165432931060181}
-  LevelUpSound: {fileID: 8300000, guid: a27f633e3dfcb3745bcddba61b57234b, type: 3}
   LevelUpTutorialUI: {fileID: 779651576308435590}
   DisabledButtonColor: {r: 0.6706, g: 0.6706, b: 0.6706, a: 1}
   DefaultButtonColor: {r: 1, g: 1, b: 1, a: 1}
@@ -10655,6 +10667,7 @@ GameObject:
   - component: {fileID: 4121173837061317856}
   - component: {fileID: 6432598796378006906}
   - component: {fileID: 1403979421584720435}
+  - component: {fileID: 4644582395378053955}
   m_Layer: 5
   m_Name: CompleteButton
   m_TagString: Untagged
@@ -10776,6 +10789,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4644582395378053955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9074900469632715034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfabc0671e9f43d19ae550392044bb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonClickSfx
 --- !u!1 &9155788284929824518
 GameObject:
   m_ObjectHideFlags: 0

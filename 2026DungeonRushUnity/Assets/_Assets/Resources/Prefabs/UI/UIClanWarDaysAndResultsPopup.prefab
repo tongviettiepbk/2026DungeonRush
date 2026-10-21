@@ -3023,6 +3023,7 @@ GameObject:
   - component: {fileID: 2436538782485225566}
   - component: {fileID: 1457213936477840728}
   - component: {fileID: 7379515563768508045}
+  - component: {fileID: 6128034566279428772}
   m_Layer: 0
   m_Name: CloseButton
   m_TagString: Untagged
@@ -3132,6 +3133,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6128034566279428772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6288428612875217666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfabc0671e9f43d19ae550392044bb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonClickSfx
 --- !u!1 &6541159952594935819
 GameObject:
   m_ObjectHideFlags: 0
@@ -4253,6 +4266,7 @@ GameObject:
   - component: {fileID: 2388137991888850691}
   - component: {fileID: 3246136073648557593}
   - component: {fileID: 7617283630445036408}
+  - component: {fileID: 6228262532699035556}
   m_Layer: 5
   m_Name: RetryButton
   m_TagString: Untagged
@@ -4374,3 +4388,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6228262532699035556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8704616856663815937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfabc0671e9f43d19ae550392044bb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonClickSfx

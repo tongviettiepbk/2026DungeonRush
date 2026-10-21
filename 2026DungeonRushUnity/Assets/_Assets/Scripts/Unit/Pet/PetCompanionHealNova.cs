@@ -20,6 +20,7 @@ public class PetCompanionHealNova : PetUnit
         FireHoming(projectilePrefab, owner, companionData.projectileSpeed, hero =>
         {
             HealOwner(heal);
+            PlayEffectActiveSfx();
             CompanionNova.Spawn(hero, companionData.healNovaStartRadius, companionData.healNovaEndRadius,
                 companionData.healNovaDuration, companionData.healNovaTickInterval, novaColor,
                 GetEnemiesInRadius, enemy => DealDamage(enemy, novaDamage));

@@ -54,8 +54,6 @@ public class ForgeUIController : MonoBehaviour
     public Image movingImage;            // vệt sáng chạy qua nút Loot
     public ParticleSystem lootBoxParticle;
     public ParticleSystem coinParticle;  // mảnh exp bay ra khi bán
-    public AudioClip boxPunchSound;
-    public AudioClip boxOpenSound;
     public float movementDistance = 500f;
     public float movementDuration = 0.4f;
     public float waitDuration = 2f;
@@ -147,8 +145,10 @@ public class ForgeUIController : MonoBehaviour
 
     // ----- Nút -----
 
+    // ForgeUI.jwj gốc: bấm là kêu click trước mọi kiểm tra.
     private void OnClickLoot()
     {
+        AudioManager.Instance.PlayButtonClick();
         if (state != State.Idle || isAuto)
             return;
 
@@ -176,6 +176,7 @@ public class ForgeUIController : MonoBehaviour
 
     private void OnClickAuto()
     {
+        AudioManager.Instance.PlayButtonClick();   // AutoForgeButton.OnPointerUp gốc
         if (GameData.userData.player.playerLevel < ForgeService.AUTO_USABLE_LEVEL)
         {
             UIManager.Instance.ShowToastMessage("Mở ở level " + ForgeService.AUTO_USABLE_LEVEL, isLocalize: false);
@@ -380,12 +381,12 @@ public class ForgeUIController : MonoBehaviour
         });
         boxSequence.Append(box.DOScale(Vector3.one, forgeScaleDuration).SetEase(Ease.OutBack));
         boxSequence.AppendInterval(forgePrePunchInterval);
-        boxSequence.AppendCallback(() => PlaySfx(boxPunchSound));
+        boxSequence.AppendCallback(() => AudioManager.Instance.PlayBoxPunch());
         boxSequence.Append(box.DOPunchRotation(forgePunchRotation, forgePunchDuration, forgePunchVibrato, forgePunchElasticity));
         boxSequence.AppendInterval(forgePostPunchInterval);
         boxSequence.AppendCallback(() =>
         {
-            PlaySfx(boxOpenSound);
+            AudioManager.Instance.PlayBoxOpen();
             boxSprite.gameObject.SetActive(false);
             PlayParticle(lootBoxParticle);
             onComplete();
@@ -613,12 +614,6 @@ public class ForgeUIController : MonoBehaviour
             }
         }
         particle.Play(true);
-    }
-
-    private static void PlaySfx(AudioClip clip)
-    {
-        if (clip != null)
-            AudioManager.Instance.PlaySfx(clip);
     }
 
     // ForgeUI.ien/ieo/iem gốc: rảnh idleTimeBeforeAnimation giây thì vệt sáng chạy ngang nút Loot

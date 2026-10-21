@@ -430,6 +430,7 @@ GameObject:
   - component: {fileID: 2327081987823656941}
   - component: {fileID: 2918250385720962148}
   - component: {fileID: 6745840926118951421}
+  - component: {fileID: 3722286436939145220}
   m_Layer: 5
   m_Name: ClanRequestsPopupRetryButton
   m_TagString: Untagged
@@ -551,6 +552,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3722286436939145220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2952690625998961650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfabc0671e9f43d19ae550392044bb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonClickSfx
 --- !u!1 &3240075254020476703
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,6 +576,7 @@ GameObject:
   - component: {fileID: 2520385181885088719}
   - component: {fileID: 4137800346878043622}
   - component: {fileID: 6920289412198796411}
+  - component: {fileID: 6222438926577720879}
   m_Layer: 0
   m_Name: ClanRequestsPopupCloseButton
   m_TagString: Untagged
@@ -672,6 +686,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6222438926577720879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3240075254020476703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfabc0671e9f43d19ae550392044bb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonClickSfx
 --- !u!1 &3379799360833333283
 GameObject:
   m_ObjectHideFlags: 0

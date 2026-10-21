@@ -25,11 +25,12 @@ public class CompanionLink
         line = CompanionFx.CreateLine(parent, "CompanionLink", color, width);
     }
 
+    // onFinish: gọi khi tia tự tắt (hết thời gian / hết mục tiêu), không gọi khi Stop().
     public void Play(Transform source, List<BaseUnit> targets, float travelSpeed, float activeDuration, float tickInterval,
-        Action<int> onReach, Action onTick, Func<bool> isPaused)
+        Action<int> onReach, Action onTick, Func<bool> isPaused, Action onFinish = null)
     {
         Stop();
-        routine = runner.StartCoroutine(Run(source, targets, travelSpeed, activeDuration, tickInterval, onReach, onTick, isPaused));
+        routine = runner.StartCoroutine(Run(source, targets, travelSpeed, activeDuration, tickInterval, onReach, onTick, isPaused, onFinish));
     }
 
     public void Stop()
@@ -43,7 +44,7 @@ public class CompanionLink
     }
 
     private IEnumerator Run(Transform source, List<BaseUnit> targets, float travelSpeed, float activeDuration, float tickInterval,
-        Action<int> onReach, Action onTick, Func<bool> isPaused)
+        Action<int> onReach, Action onTick, Func<bool> isPaused, Action onFinish)
     {
         line.enabled = true;
 
@@ -96,6 +97,7 @@ public class CompanionLink
 
         line.enabled = false;
         routine = null;
+        onFinish?.Invoke();
     }
 
     // Vẽ: source → các mục tiêu đã chạm (index < reached) → đầu tia (nếu đang travel).

@@ -29,6 +29,9 @@ public class HeroUnit : BaseUnit
     private UserEnchantmentData ghostEnchantments;
     private bool ghostShowCloak = true;
     public bool IsGhost => ghostEquipment != null;
+
+    // Soldier.IsMainCharacter gốc: hero của người chơi (không phải ghost Boss Rush / đối thủ PvP / bản sao).
+    protected override bool IsMainCharacter => !IsGhost && !IsMirrorClone && CompareTag(StaticValue.TAG_TEAM_A);
     public string GhostName { get; private set; }
 
     public void SetupAsGhost(string playerName, UserEquipmentData equipment, List<CompanionModel> ownedCompanions,

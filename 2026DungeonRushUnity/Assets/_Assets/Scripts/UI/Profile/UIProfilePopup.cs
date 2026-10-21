@@ -188,15 +188,17 @@ public class UIProfilePopup : BaseUI
         UserSettingData settings = GameData.userData.settings;
         settings.soundVolume = value;
         settings.isDataChanged = true;
+        AudioManager.Instance.SetSfxVolume(value);
         DrawVolumeStatus(txtSoundStatus, imgSoundHandle, value);
     }
 
-    // kqq gốc. Project chưa có nhạc nền — mới lưu giá trị.
+    // kqq gốc.
     private void OnMusicChanged(float value)
     {
         UserSettingData settings = GameData.userData.settings;
         settings.musicVolume = value;
         settings.isDataChanged = true;
+        AudioManager.Instance.SetMusicVolume(value);
         DrawVolumeStatus(txtMusicStatus, imgMusicHandle, value);
     }
 

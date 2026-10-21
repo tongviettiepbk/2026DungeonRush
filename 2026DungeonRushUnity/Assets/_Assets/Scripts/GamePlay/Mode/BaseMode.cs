@@ -18,7 +18,6 @@ public class BaseMode : MonoBehaviour
 {
     [Header("Định danh mode")]
     public ModeType type;
-    public AudioClip bgm;
 
     [Header("Thời gian trận (0 = không giới hạn)")]
     public int defaultBattleTime;
@@ -648,7 +647,9 @@ public class BaseMode : MonoBehaviour
 
     // ===== ÂM THANH =====
 
-    // TODO(follow-stick): AudioManager DungeonRush hiện chỉ có PlaySfx (bản slim). Khi port hệ audio
-    // đầy đủ (nhạc nền/mixer) thì phát bgm ở đây.
-    public virtual void PlayMusic() { }
+    // GameplayUI.ntm gốc (GameController.ire): 1 bài AudioConfig.Music lặp cho mọi mode; đang phát thì giữ nguyên.
+    public virtual void PlayMusic()
+    {
+        AudioManager.Instance.PlayMusic();
+    }
 }

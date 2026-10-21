@@ -10,9 +10,8 @@ using UnityEngine;
 // Giá trị mặc định = GameResources + LootDropController trong scene gốc.
 public class LootDropController : MonoBehaviour
 {
-    [Header("Prefab + âm thanh (AudioConfig.LootCollectSound gốc)")]
+    [Header("Prefab (âm thanh = AudioConfig.LootCollectSound)")]
     public GameObject expShardPrefab;
-    public AudioClip collectSound;
 
     [Header("Số mảnh mỗi quái (ExperienceShardDropCountMin/Max)")]
     public int dropCountMin = 1;
@@ -164,7 +163,7 @@ public class LootDropController : MonoBehaviour
 
             if (t >= 1f)
             {
-                AudioManager.Instance.PlaySfx(collectSound);
+                AudioManager.Instance.PlayLootCollect();
                 DestroyShard(c.shard);
                 collecting.RemoveAt(i);
             }

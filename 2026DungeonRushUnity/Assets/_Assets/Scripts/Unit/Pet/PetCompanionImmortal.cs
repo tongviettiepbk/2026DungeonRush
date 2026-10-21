@@ -17,7 +17,11 @@ public class PetCompanionImmortal : PetUnit
     protected override void ReleaseAbility()
     {
         float duration = ImmortalDuration;
-        FireHoming(projectilePrefab, owner, companionData.projectileSpeed, hero => CompanionImmortalEffect.Apply(hero, duration));
+        FireHoming(projectilePrefab, owner, companionData.projectileSpeed, hero =>
+        {
+            CompanionImmortalEffect.Apply(hero, duration);
+            PlayEffectActiveSfx(duration);
+        });
         PlayShootSfx();
     }
 }
