@@ -250,7 +250,7 @@ bằng UnityPy + DLL AssetRipper `Ver59/AssetRipper/Assemblies`. `BossHPTable` /
 | Green Hag | 1.5 | 1.1 | 5 | true | 1.6 | 3.5 | 1.5 | Teleport |
 | Purple Hag | 1.5 | 1.1 | 5 | true | 1.6 | 3.5 | 1.5 | Teleport |
 
-Lich có prefab FX Slam riêng (telegraph/impact), rồng có prefab FireBreath riêng; không có prefab thì gốc vẽ FX mặt đất bằng code
+FX skill = prefab particle (bảng 10.6); không có prefab (chỉ Ogre) thì gốc vẽ FX mặt đất bằng code
 (`BossRushGroundFX`). `SpawnController.jmj`: CanMove = định nghĩa (true ⇒ **không còn quay cố định 180°**), MoveSpeed × MoveSpeedMultiplier,
 hình × BodyScaleMultiplier (`Character.fyh`), collider/mass như cũ.
 
@@ -299,3 +299,27 @@ hình × BodyScaleMultiplier (`Character.fyh`), collider/mass như cũ.
   quanh ô giữa (16 ô, sắp theo góc, lệch ngẫu nhiên, lấy `round(i × 16 / k)`), thiếu thì lấp 8 ô kề.
 - Bị boss đánh trúng: người đội nhà bị đẩy `AllyHitKnockbackForce 3` (Impulse, hướng từ boss) (`Character.fzw`). Boss bị chí mạng:
   DOPunchScale hình × 0.08 trong 0.18 s, hồi 0.35 s (`fzx`).
+
+### 10.6 Prefab FX skill (resolve PPtr BossRushConfig/BossDefinitions trong sharedassets0, 2026-10-22) [CHẮC]
+
+| Boss / config | FireBreathFX | SlamTelegraphFX | SlamImpactFX |
+|---|---|---|---|
+| Dark Lich | — | MagicZoneGreen | ExplosionFireballGreen |
+| Black Dragon | FlameThrowerParentGreen | — | — |
+| Green Dragon | FlameThrowerParentYellow | — | — |
+| Red Dragon | FlameThrowerParent | — | — |
+| Crimson Lich | — | MagicZoneRed | ExplosionFireballRed |
+| Elder Lich | — | MagicZonePurple | ExplosionFireballPurple |
+| Ogre ×2, Hag ×2 | — | — | — |
+| Config (dự phòng) | FlameThrowerParent | MagicZoneRed | ExplosionFireballRed |
+
+Config còn `TeleportFlashFXPrefab` = **FlashExplosionRadial** (Hag dùng prefab này, KHÔNG phải chớp tím vẽ code), `EarthquakeWaveFXPrefab` = trống.
+Cách gốc dùng (disasm hb/ha/hc + BossRushGroundFX.fks/fkt):
+- `fks(prefab, pos, scale)`: Instantiate tại pos với góc xoay của prefab, localScale = one × scale, `fkt` (AudioSource con: âm lượng × SFX, tắt tiếng thì Stop).
+  Không huỷ (particle stopAction None, không script).
+- Slam: telegraph Instantiate tại boss, scale 2 × SlamRadius, `Simulate(SlamTelegraphWarmupSeconds 1, children, restart)` + Play; lúc nổ
+  Destroy telegraph rồi `fks(impact, tâm, SlamRadius)`. Không có prefab nổ → telegraph code `fkz` (màu (1, 0.85, 0.6, 0.85) mờ 0.3s) + chớp + vành.
+- FireBreath: Instantiate tại miệng, scale Radius × FXScale (3.5); mỗi frame vị trí = miệng, rotation = Euler(0,0,góc−90) × rotation prefab; hết quét Destroy.
+- Teleport `fod`: `fks(TeleportFlash, pos, 1)` ở chỗ cũ lúc gồng + chỗ cũ & chỗ mới lúc dịch chuyển.
+- ExplosionFireball* có AudioSource `etfx_explosion_fireball` (pitch 1.5, playOnAwake). Sorting gốc: nổ/lửa order 800, MagicZone/Flash 0.
+

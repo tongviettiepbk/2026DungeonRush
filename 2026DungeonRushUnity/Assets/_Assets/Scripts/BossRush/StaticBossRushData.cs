@@ -17,6 +17,16 @@ public class BossRushBossDefinition
     public BossRushBossSkillType skillType = BossRushBossSkillType.None;
 }
 
+// FX skill riêng của 1 boss (FireBreathFXPrefab / SlamTelegraphFXPrefab / SlamImpactFXPrefab của BossRushBossDefinition gốc v59).
+// Gán trên prefab BossRushMode vì định nghĩa boss ở project nằm trong code.
+[System.Serializable]
+public class BossRushBossFX
+{
+    public GameObject fireBreathFXPrefab;
+    public GameObject slamTelegraphFXPrefab;
+    public GameObject slamImpactFXPrefab;
+}
+
 public enum BossRushBossSkillType
 {
     None = 0,
@@ -59,6 +69,7 @@ public class StaticBossRushData
     public const float SLAM_RECOVERY_SECONDS = 0.4f;
     public const float SLAM_RADIUS = 4.2f;
     public const float SLAM_KNOCKBACK_FORCE = 8f;
+    public const float SLAM_TELEGRAPH_WARMUP_SECONDS = 1f;   // chạy trước particle telegraph cho hiện đầy ngay
     public const float EARTHQUAKE_WINDUP_SECONDS = 0.5f;
     public const float EARTHQUAKE_WAVE_INTERVAL = 0.55f;
     public static readonly float[] EARTHQUAKE_WAVE_RADII = { 2.6f, 4.4f, 6f };
@@ -78,6 +89,7 @@ public class StaticBossRushData
     public const float FIRE_BREATH_POINT_BLANK_MARGIN = 0.8f;
     public const float FIRE_BREATH_HIT_INTERVAL = 0.5f;
     public const float FIRE_BREATH_KNOCKBACK_FORCE = 4.5f;
+    public const float FIRE_BREATH_FX_SCALE = 1f;   // prefab lửa × (Radius × FXScale)
     public const float ALLY_HIT_KNOCKBACK_FORCE = 3f;
     public const float BOSS_CRIT_PUNCH_SCALE = 0.08f;
     public const float BOSS_CRIT_PUNCH_COOLDOWN = 0.35f;

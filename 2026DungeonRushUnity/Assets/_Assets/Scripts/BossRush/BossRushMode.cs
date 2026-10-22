@@ -19,6 +19,13 @@ public class BossRushMode : BaseMode
     [Header("Boss Rush")]
     [Tooltip("Prefab boss theo BossDefinitions (index 0..9: Dark Lich, Black Dragon, ...). Trống → enemyPrefab.")]
     public GameObject[] bossPrefabs;
+    [Tooltip("FX skill riêng từng boss (BossDefinitions gốc v59), cùng index với bossPrefabs. Trống → FX chung bên dưới.")]
+    public BossRushBossFX[] bossFX;
+    [Header("FX skill chung (BossRushConfig gốc v59)")]
+    public GameObject slamTelegraphFXPrefab;
+    public GameObject slamImpactFXPrefab;
+    public GameObject teleportFlashFXPrefab;
+    public GameObject fireBreathFXPrefab;
     public float delayShowResult = 1.5f;     // gốc hik(1.5f)
     [Tooltip("BossRushConfig.CameraFollowOffset gốc: camera = vị trí người được bám + offset (giữ z).")]
     public Vector3 cameraFollowOffset = new Vector3(0f, -5f, 0f);
@@ -194,6 +201,32 @@ public class BossRushMode : BaseMode
         boss.gameObject.name = "Boss_" + definition.bossName;
         boss.SpawnBoss(this, bossModel, definition, pos);
         RefreshHud();
+    }
+
+    // ===== FX skill boss (hb.fnu / hb.fnv / ha.fno gốc: prefab riêng của boss, không có thì prefab chung của config) =====
+
+    public GameObject GetSlamTelegraphFX(BossRushBossDefinition definition)
+    {
+        BossRushBossFX fx = GetBossFX(definition);
+        return fx != null && fx.slamTelegraphFXPrefab != null ? fx.slamTelegraphFXPrefab : slamTelegraphFXPrefab;
+    }
+
+    public GameObject GetSlamImpactFX(BossRushBossDefinition definition)
+    {
+        BossRushBossFX fx = GetBossFX(definition);
+        return fx != null && fx.slamImpactFXPrefab != null ? fx.slamImpactFXPrefab : slamImpactFXPrefab;
+    }
+
+    public GameObject GetFireBreathFX(BossRushBossDefinition definition)
+    {
+        BossRushBossFX fx = GetBossFX(definition);
+        return fx != null && fx.fireBreathFXPrefab != null ? fx.fireBreathFXPrefab : fireBreathFXPrefab;
+    }
+
+    private BossRushBossFX GetBossFX(BossRushBossDefinition definition)
+    {
+        int index = definition != null ? GameData.staticData.bossRush.bosses.IndexOf(definition) : -1;
+        return bossFX != null && index >= 0 && index < bossFX.Length ? bossFX[index] : null;
     }
 
     // ===== Chỗ đứng quanh boss cho đội cận chiến (class gq + GridCombatController.jbv/jbw + MoveState.ggl gốc v59) =====

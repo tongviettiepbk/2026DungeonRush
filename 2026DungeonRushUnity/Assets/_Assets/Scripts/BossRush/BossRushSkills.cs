@@ -69,15 +69,49 @@ public class BossRushSlamSkill : BossRushSkill
     private float timer;            // yhf
     private bool hasImpacted;       // yhg
     private BossRushGroundFX telegraph;   // yhh
+    private GameObject telegraphObject;   // yhi
 
     public BossRushSlamSkill(BossRushBossUnit boss) : base(boss) { }
 
-    // fnb: không có prefab telegraph → vòng đỏ thu từ 2R về cỡ thân boss trong thời gian gồng.
+    // fnb: prefab telegraph (MagicZone*) tại boss, scale 2R, chạy trước WarmupSeconds; không có prefab → vòng đỏ
+    // thu từ 2R về cỡ thân boss trong thời gian gồng.
     public override void Begin()
     {
         timer = 0f;
         hasImpacted = false;
-        telegraph = BossRushGroundFX.Telegraph(BossPosition, SR.SLAM_RADIUS, boss.BodyDiameter * 0.5f, SR.SLAM_WINDUP_SECONDS);
+        Vector2 center = BossPosition;
+        GameObject prefab = boss.Mode.GetSlamTelegraphFX(boss.Definition);
+        if (prefab != null)
+        {
+            telegraphObject = Object.Instantiate(prefab, new Vector3(center.x, center.y, 0f), prefab.transform.rotation);
+            telegraphObject.transform.localScale = Vector3.one * (SR.SLAM_RADIUS * 2f);
+            BossRushGroundFX.ApplySfxVolume(telegraphObject);
+            WarmupTelegraph();
+            return;
+        }
+        telegraph = BossRushGroundFX.Telegraph(center, SR.SLAM_RADIUS, boss.BodyDiameter * 0.5f, SR.SLAM_WINDUP_SECONDS);
+    }
+
+    // fnw
+    private void WarmupTelegraph()
+    {
+        ParticleSystem system = telegraphObject.GetComponent<ParticleSystem>();
+        if (SR.SLAM_TELEGRAPH_WARMUP_SECONDS <= 0f || system == null)
+        {
+            return;
+        }
+        system.Simulate(SR.SLAM_TELEGRAPH_WARMUP_SECONDS, true, true, false);
+        system.Play(true);
+    }
+
+    // fny
+    private void DestroyTelegraphObject()
+    {
+        if (telegraphObject != null)
+        {
+            Object.Destroy(telegraphObject);
+            telegraphObject = null;
+        }
     }
 
     public override bool Tick(float dt)
@@ -111,18 +145,32 @@ public class BossRushSlamSkill : BossRushSkill
             }
         }
 
-        if (telegraph != null)
+        // Prefab nổ (ExplosionFireball*) scale R; không có prefab → chớp + vành vẽ bằng code.
+        DestroyTelegraphObject();
+        if (BossRushGroundFX.SpawnPrefab(boss.Mode.GetSlamImpactFX(boss.Definition), center, SR.SLAM_RADIUS))
         {
-            telegraph.Dismiss();
-            telegraph = null;
+            if (telegraph != null)
+            {
+                telegraph.Dismiss();
+                telegraph = null;
+            }
         }
-        BossRushGroundFX.Flash(center, 1.3f, 0.3f, FLASH_COLOR);
-        BossRushGroundFX.Ring(center, 0.4f, SR.SLAM_RADIUS, 0.3f, RING_COLOR);
+        else
+        {
+            if (telegraph != null)
+            {
+                telegraph.FlashOut();
+                telegraph = null;
+            }
+            BossRushGroundFX.Flash(center, 1.3f, 0.3f, FLASH_COLOR);
+            BossRushGroundFX.Ring(center, 0.4f, SR.SLAM_RADIUS, 0.3f, RING_COLOR);
+        }
         ShakeCamera(0.3f, 0.3f);
     }
 
     public override void Cancel()
     {
+        DestroyTelegraphObject();
         if (telegraph != null)
         {
             telegraph.Dismiss();
@@ -289,10 +337,13 @@ public class BossRushTeleportSkill : BossRushSkill
         }
     }
 
-    // fod: không có prefab chớp → chớp tròn 1.1.
-    private static void Flash(Vector2 position, float duration)
+    // fod: prefab chớp (FlashExplosionRadial) scale 1; không có prefab → chớp tròn 1.1.
+    private void Flash(Vector2 position, float duration)
     {
-        BossRushGroundFX.Flash(position, 1.1f, duration, FLASH_COLOR);
+        if (!BossRushGroundFX.SpawnPrefab(boss.Mode.teleportFlashFXPrefab, position, 1f))
+        {
+            BossRushGroundFX.Flash(position, 1.1f, duration, FLASH_COLOR);
+        }
     }
 
     // foe: ô cách ô boss MinDistance..MaxDistance (Euclid), đi được, trống, xa người gần nhất ≥ MinPlayerDistance;
@@ -400,6 +451,8 @@ public class BossRushFireBreathSkill : BossRushSkill
     private BaseUnit savedTarget;   // ygv
     private readonly Dictionary<BaseUnit, float> nextHitTime = new Dictionary<BaseUnit, float>();   // ygw
     private BossRushGroundFX cone;  // ygy
+    private GameObject flameObject; // yha
+    private Quaternion flameRotation;   // yhb: góc xoay gốc của prefab lửa
     private float muzzleOffset;     // yhc
     private Quaternion visualRotation;
     private bool hasVisualRotation;
@@ -445,11 +498,7 @@ public class BossRushFireBreathSkill : BossRushSkill
             float progress = Mathf.Clamp01((timer - SR.FIRE_BREATH_WINDUP_SECONDS) / SR.FIRE_BREATH_SWEEP_SECONDS);
             float angle = startAngle + progress * 360f;
             RotateVisual(angle);
-            if (cone != null)
-            {
-                cone.transform.position = MuzzlePosition(angle);
-                cone.SetAngle(angle);
-            }
+            UpdateFlame(angle);
             DamageCone(angle);
         }
         else if (timer >= sweepEnd)
@@ -465,11 +514,38 @@ public class BossRushFireBreathSkill : BossRushSkill
         return isDone;
     }
 
-    // fnq: không có prefab lửa → nón vẽ bằng code bám miệng.
+    // fnq: prefab lửa (FlameThrowerParent*) tại miệng, scale Radius × FXScale; không có prefab → nón vẽ bằng code bám miệng.
+    // (FireBreathShowDamageCone gốc = false → không vẽ thêm nón damage.)
     private void StartFlame()
     {
+        GameObject prefab = boss.Mode.GetFireBreathFX(boss.Definition);
+        if (prefab != null)
+        {
+            flameRotation = prefab.transform.rotation;
+            Vector2 muzzle = MuzzlePosition(startAngle);
+            flameObject = Object.Instantiate(prefab, new Vector3(muzzle.x, muzzle.y, 0f), flameRotation);
+            flameObject.transform.localScale = Vector3.one * (SR.FIRE_BREATH_RADIUS * SR.FIRE_BREATH_FX_SCALE);
+            BossRushGroundFX.ApplySfxVolume(flameObject);
+            return;
+        }
         cone = BossRushGroundFX.Cone(MuzzlePosition(startAngle), SR.FIRE_BREATH_RADIUS, SR.FIRE_BREATH_CONE_ANGLE, CONE_COLOR);
         cone.SetAngle(startAngle);
+    }
+
+    // fnr: lửa bám miệng, xoay theo hướng phun (hướng +Y của prefab = hướng phun).
+    private void UpdateFlame(float angle)
+    {
+        if (flameObject != null)
+        {
+            Vector2 muzzle = MuzzlePosition(angle);
+            flameObject.transform.position = new Vector3(muzzle.x, muzzle.y, 0f);
+            flameObject.transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f) * flameRotation;
+        }
+        else if (cone != null)
+        {
+            cone.transform.position = MuzzlePosition(angle);
+            cone.SetAngle(angle);
+        }
     }
 
     // fnp
@@ -534,6 +610,11 @@ public class BossRushFireBreathSkill : BossRushSkill
     // fns
     private void StopFlame()
     {
+        if (flameObject != null)
+        {
+            Object.Destroy(flameObject);
+            flameObject = null;
+        }
         if (cone != null)
         {
             cone.Dismiss();

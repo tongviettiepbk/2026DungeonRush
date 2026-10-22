@@ -1,9 +1,10 @@
 using DG.Tweening;
 using UnityEngine;
 
-// FX vẽ dưới chân cho skill boss Boss Rush — port BossRushGroundFX gốc v59: sprite tự vẽ bằng code (128px) tròn / vành / nón,
-// sortingOrder −10 (dưới nhân vật), tween DOTween. Skill dùng khi định nghĩa boss không có prefab FX riêng
-// (gốc: Lich có prefab Slam, rồng có prefab FireBreath — project chưa có nên luôn vẽ bằng code).
+// FX skill boss Boss Rush — port BossRushGroundFX gốc v59.
+// Có prefab (Lich: MagicZone*/ExplosionFireball*, rồng: FlameThrowerParent*, Hag: FlashExplosionRadial — Prefabs/Fx/BossRush,
+// gán trên BossRushMode) → SpawnPrefab. Không có (Ogre) → sprite tự vẽ bằng code (128px) tròn / vành / nón,
+// sortingOrder −10 (dưới nhân vật), tween DOTween.
 public class BossRushGroundFX : MonoBehaviour
 {
     private const int TEXTURE_SIZE = 128;      // yfh
@@ -17,6 +18,61 @@ public class BossRushGroundFX : MonoBehaviour
     private static float coneSpriteAngle;
 
     private SpriteRenderer spriteRenderer;
+
+    // fks: prefab FX tại position (giữ góc xoay của prefab), scale đều; trả false nếu không có prefab.
+    public static bool SpawnPrefab(GameObject prefab, Vector2 position, float scale)
+    {
+        if (prefab == null)
+        {
+            return false;
+        }
+        GameObject instance = Instantiate(prefab, new Vector3(position.x, position.y, 0f), prefab.transform.rotation);
+        instance.transform.localScale = Vector3.one * scale;
+        ApplySfxVolume(instance);
+        DestroyWhenFinished(instance);
+        return true;
+    }
+
+    // fkt: AudioSource trong FX theo âm lượng SFX của người chơi; tắt tiếng thì dừng hẳn.
+    public static void ApplySfxVolume(GameObject instance)
+    {
+        AudioSource[] sources = instance.GetComponentsInChildren<AudioSource>(true);
+        if (sources.Length == 0)
+        {
+            return;
+        }
+        AudioManager audio = AudioManager.Instance;
+        float volume = audio.SfxVolume;
+        foreach (AudioSource source in sources)
+        {
+            if (audio.isMuteSfx)
+            {
+                source.Stop();
+                source.playOnAwake = false;
+                source.volume = 0f;
+            }
+            else
+            {
+                source.volume *= volume;
+            }
+        }
+    }
+
+    // Gốc không huỷ FX 1 lần (particle stopAction None, không script) → để lại GameObject rỗng; project huỷ khi hết hạt.
+    private static void DestroyWhenFinished(GameObject instance)
+    {
+        float lifetime = 0f;
+        foreach (ParticleSystem system in instance.GetComponentsInChildren<ParticleSystem>(true))
+        {
+            ParticleSystem.MainModule main = system.main;
+            if (main.loop)
+            {
+                return;
+            }
+            lifetime = Mathf.Max(lifetime, main.startDelay.constantMax + main.duration + main.startLifetime.constantMax);
+        }
+        Destroy(instance, lifetime);
+    }
 
     // fku: vòng báo trước (đỏ) cỡ đường kính 2R thu dần về 2 × innerRadius (≥ 0.2) trong duration, ease InQuad.
     public static BossRushGroundFX Telegraph(Vector2 position, float radius, float innerRadius, float duration)
@@ -57,6 +113,15 @@ public class BossRushGroundFX : MonoBehaviour
     public void SetAngle(float angle)
     {
         transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
+    }
+
+    // fkz: telegraph lúc nổ (không có prefab nổ) — đổi màu sáng (1, 0.85, 0.6, 0.85) rồi mờ 0.3s, huỷ.
+    public void FlashOut()
+    {
+        transform.DOKill();
+        spriteRenderer.DOKill();
+        spriteRenderer.color = new Color(1f, 0.85f, 0.6f, 0.85f);
+        spriteRenderer.DOFade(0f, 0.3f).OnComplete(DestroySelf);
     }
 
     // fla: mờ nhanh rồi huỷ.
