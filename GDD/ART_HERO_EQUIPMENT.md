@@ -87,7 +87,7 @@ Art mới đã vẽ nằm ở `ArtIncoming/_Concept/Items/` (mục 5); 6 món L0
 - Tỉ lệ trong Unity: 100 pixel = 1 đơn vị.
 - Ảnh gắn người vẽ cùng tỉ lệ với `Hero.png` (76 × 89 px), hướng nhìn sang trái giống hero.
 - Cắt sát viền nét vẽ, không chừa khoảng trống thừa.
-- Màu chủ đạo của món theo màu tier (mục 4.4), như bộ art mới đang làm.
+- Phối nhiều màu theo concept từng tier; màu nền rarity ở mục 4.4 không bắt buộc là màu chiếm phần lớn món đồ. Xem [Quy tắc phối màu trang bị](HERO_EQUIPMENT_COLOR_GUIDE.md) (user chốt 2026-10-22).
 
 ### 4.3. Kích thước tham khảo
 
@@ -131,6 +131,8 @@ Kích thước ảnh art mới đã vẽ (ảnh gắn người):
 | 8 | Ancient | Xanh navy |
 | 9 | Immortal | Đỏ |
 | 10 | Divine | Cam |
+
+Màu trong bảng trên là **màu nền ô UI**. Món đồ có bảng màu riêng theo chất liệu, thân/cán, viền, đá và điểm sáng. Ví dụ Immortal nền đỏ phối tím đậm/gần đen với đá đỏ; Divine nền cam phối vàng kim, trắng ngà và xanh ngọc nhạt. Không phủ toàn bộ món đồ bằng các sắc độ của màu nền. Xem [phân tích ảnh tham chiếu và cách áp dụng cho 10 rarity](HERO_EQUIPMENT_COLOR_GUIDE.md).
 
 ## 5. Art mới đã có
 
