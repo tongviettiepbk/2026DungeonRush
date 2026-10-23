@@ -14,7 +14,12 @@ public class HeroVisual : MonoBehaviour
     [Space(20)]
     [FormerlySerializedAs("handLeft")]
     public SpriteRenderer hand;
+    [Tooltip("weapon_slot — hình vũ khí CẬN CHIẾN (và dao mặc định khi không cầm gì).")]
     public SpriteRenderer weapon;
+    [Tooltip("weapon_slot_2 — hình vũ khí BẮN XA.")]
+    public SpriteRenderer weaponRanged;
+    [Tooltip("Đầu nòng (con của weapon_slot_2) — đạn bay ra từ đây.")]
+    public Transform rangedMuzzle;
     public SpriteRenderer helmet;
     public SpriteRenderer backPack;
     [FormerlySerializedAs("wing1")]
@@ -102,7 +107,7 @@ public class HeroVisual : MonoBehaviour
         switch (slot)
         {
             case GearSlotType.WEAPON:
-                ApplySlot(weapon, sprite != null ? sprite : defaultWeapon);
+                ApplyWeapon(id, sprite != null ? sprite : defaultWeapon);
                 break;
             case GearSlotType.HELMET:
                 ApplySlot(helmet, sprite);
@@ -144,6 +149,39 @@ public class HeroVisual : MonoBehaviour
             DebugCustom.LogWarning($"ApplySlot: sprite is null for {sr.gameObject.name}. Object will be deactivated.");
         }
         sr.gameObject.SetActive(sprite != null);
+    }
+
+    // Vũ khí: cận chiến → weapon_slot, bắn xa → weapon_slot_2; slot còn lại tắt.
+    // Không cầm gì thì dao mặc định ở weapon_slot.
+    private void ApplyWeapon(string id, Sprite sprite)
+    {
+        bool isRanged = IsRangedWeapon(id);
+        ApplySlot(weapon, isRanged ? null : sprite);
+        ApplySlot(weaponRanged, isRanged ? sprite : null);
+    }
+
+    private static bool IsRangedWeapon(string id)
+    {
+        if (string.IsNullOrEmpty(id) || GameData.staticData == null || GameData.staticData.weapons == null)
+        {
+            return false;
+        }
+
+        WeaponData w = GameData.staticData.weapons.GetData(id);
+        return w != null && w.weaponType == WeaponType.Range;
+    }
+
+    // Đang cầm vũ khí bắn xa (weapon_slot_2 bật) → đạn nhả từ muzzle (thiếu muzzle thì từ tâm súng).
+    public Transform RangedWeaponPoint
+    {
+        get
+        {
+            if (weaponRanged == null || weaponRanged.gameObject.activeSelf == false)
+            {
+                return null;
+            }
+            return rangedMuzzle != null ? rangedMuzzle : weaponRanged.transform;
+        }
     }
 
     // Cape = sprite như slot thường, thêm điều kiện ẩn theo nút "Show Cloak".
@@ -206,7 +244,7 @@ public class HeroVisual : MonoBehaviour
         }
         else if (slot == GearSlotType.WEAPON)
         {
-            ApplySlot(weapon, s);
+            ApplyWeapon(id, s);
         }
         else if (slot == GearSlotType.HELMET)
         {

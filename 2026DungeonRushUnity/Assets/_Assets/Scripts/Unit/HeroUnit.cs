@@ -255,6 +255,13 @@ public class HeroUnit : BaseUnit
         target = FindNearestEnemyAmong(GetAliveEnemies());
     }
 
+    // Vũ khí bắn xa nằm ở weapon_slot_2 → đạn nhả từ đó thay cho weapon_slot.
+    protected override Transform GetProjectileSpawnPoint()
+    {
+        Transform ranged = heroVisual != null ? heroVisual.RangedWeaponPoint : null;
+        return ranged != null ? ranged : base.GetProjectileSpawnPoint();
+    }
+
     // Combat theo vũ khí ĐANG MẶC (từ save). Vũ khí quyết định tầm đánh & có đạn hay không —
     // Hero không tự quyết tầm đánh. Damage vẫn tính chung từ stats (server-driven).
     protected override WeaponData GetCombatWeapon()
