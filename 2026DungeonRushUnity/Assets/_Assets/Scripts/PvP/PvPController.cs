@@ -128,7 +128,7 @@ public class PvPController : Singleton<PvPController>
         }
 
         FirebaseManager.Instance.Call<PvPFindOpponentsResponseDTO>(FN_FIND_OPPONENTS,
-            new PvPFindOpponentsRequestDTO { server = FirebaseSettings.PROJECT_ID }, (ok, res, raw) =>
+            new PvPFindOpponentsRequestDTO { server = FirebaseSettings.ServerId }, (ok, res, raw) =>
             {
                 if (!ok || res == null || !res.success)
                 {
@@ -174,7 +174,7 @@ public class PvPController : Singleton<PvPController>
         IsBusy = true;
         PvPStartBattleRequestDTO request = new PvPStartBattleRequestDTO
         {
-            server = FirebaseSettings.PROJECT_ID,
+            server = FirebaseSettings.ServerId,
             rosterToken = roster.RosterToken,
             opponentUserId = opponent.UserId,
         };
@@ -417,7 +417,7 @@ public class PvPController : Singleton<PvPController>
     {
         PvPOpenRequestDTO request = new PvPOpenRequestDTO
         {
-            server = FirebaseSettings.PROJECT_ID,
+            server = FirebaseSettings.ServerId,
             playerName = GameData.userData.profile.userName,
             countryCode = GetCountryCode(),
             avatarId = GameData.userData.profile.avatarId,

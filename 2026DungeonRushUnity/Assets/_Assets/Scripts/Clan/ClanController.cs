@@ -60,7 +60,7 @@ public class ClanController : Singleton<ClanController>
             bannerBackgroundColorId = banner.BackgroundColorId,
             bannerImageTypeId = banner.ImageTypeId,
             bannerImageColorId = banner.ImageColorId,
-            server = FirebaseSettings.PROJECT_ID,
+            server = FirebaseSettings.ServerId,
             playerName = PlayerName(),
             power = Power(),
             avatarId = GameData.userData.profile.avatarId,
@@ -126,7 +126,7 @@ public class ClanController : Singleton<ClanController>
         filter = filter ?? new ClanSearchFilter();
         ClanSearchRequestDTO request = new ClanSearchRequestDTO
         {
-            server = FirebaseSettings.PROJECT_ID,
+            server = FirebaseSettings.ServerId,
             clanName = string.IsNullOrEmpty(filter.ClanName) ? null : filter.ClanName.Trim(),
             minMemberCount = filter.MinMemberCount,
             maxMemberCount = filter.MaxMemberCount,
@@ -294,7 +294,7 @@ public class ClanController : Singleton<ClanController>
         return new ClanJoinActionRequestDTO
         {
             clanId = clanId,
-            server = FirebaseSettings.PROJECT_ID,
+            server = FirebaseSettings.ServerId,
             playerName = PlayerName(),
             power = Power(),
             avatarId = GameData.userData.profile.avatarId,

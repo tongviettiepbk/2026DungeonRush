@@ -422,7 +422,7 @@ public class BossRushController : Singleton<BossRushController>
 
     private static void FillSnapshot(BossRushJoinRequestDTO request)
     {
-        request.server = FirebaseSettings.PROJECT_ID;
+        request.server = FirebaseSettings.ServerId;
         request.playerName = GameData.userData.profile.userName;
         request.avatarId = GameData.userData.profile.avatarId;
         request.power = BossRushPower.GetPlayerPower();

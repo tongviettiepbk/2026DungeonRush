@@ -23,7 +23,7 @@ Firestore: `bossRushPlayers/{uid}` (tier, nhóm hiện tại, vé theo ngày, tr
 cd server/functions && npm install && npm test && npm run test:emulator
 ```
 ```bash
-cd server && firebase emulators:start
+cd server && firebase emulators:start --project demo-dungeonrush
 ```
 
 Unity Editor mặc định gọi emulator (`Scripts/Network/FirebaseSettings.cs`: `USE_EMULATOR = true` trong Editor,
