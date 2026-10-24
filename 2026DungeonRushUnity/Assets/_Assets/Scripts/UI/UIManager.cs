@@ -34,6 +34,7 @@ public class UIManager : Singleton<UIManager>
     // Đang có fade chạy (Fade hoặc FadeOut/FadeIn chuyển màn campaign) → Fade() mới sẽ bị bỏ qua.
     public bool IsFading => isFading;
     private Image imgFadeHalf;   // tấm đang dùng cho FadeOut/FadeIn
+    private Coroutine fadeOutRoutine;
     private Dictionary<string, BaseUI> cachedUIs = new Dictionary<string, BaseUI>();
     private Stack<BaseUI> activeUIs = new Stack<BaseUI>();
 
@@ -401,7 +402,26 @@ public class UIManager : Singleton<UIManager>
         ActiveShield(true);
         imgFadeHalf = target != null ? target : imgFade;
         imgFadeHalf.color = color == FadeColor.White ? Color.white : Color.black;
-        StartCoroutine(CoroutineFadeAlpha(imgFadeHalf, 0f, 1f, duration, false, doneCallback));
+        fadeOutRoutine = StartCoroutine(CoroutineFadeAlpha(imgFadeHalf, 0f, 1f, duration, false, doneCallback));
+    }
+
+    // Huỷ FadeOut đang chạy dở + ẩn tấm phủ riêng (VD đổi mode giữa lúc campaign đang tối dần qua cửa:
+    // không huỷ thì tấm vẫn tối lên alpha 1 và phủ đen luôn mode mới). Không đụng isFading/shield của Fade() đang chạy.
+    public void CancelFadeOut()
+    {
+        if (fadeOutRoutine != null)
+        {
+            StopCoroutine(fadeOutRoutine);
+            fadeOutRoutine = null;
+        }
+
+        if (imgFadeHalf != null && imgFadeHalf != imgFade)
+        {
+            Color c = imgFadeHalf.color;
+            c.a = 0f;
+            imgFadeHalf.color = c;
+            imgFadeHalf.gameObject.SetActive(false);
+        }
     }
 
     public void FadeIn(float duration, UnityAction doneCallback = null)

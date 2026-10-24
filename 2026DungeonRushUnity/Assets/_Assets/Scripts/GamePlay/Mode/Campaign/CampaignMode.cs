@@ -83,6 +83,11 @@ public class CampaignMode : BaseMode
             isTransitionHoldingFade = false;
             UIManager.Instance.FadeIn(0f);
         }
+        else
+        {
+            // Bị dọn giữa lúc đang TỐI DẦN (đổi mode ngay khi vừa thắng màn) → huỷ để tấm map không kẹt đen.
+            UIManager.Instance.CancelFadeOut();
+        }
         if (lootDrop != null)
         {
             lootDrop.Clear();

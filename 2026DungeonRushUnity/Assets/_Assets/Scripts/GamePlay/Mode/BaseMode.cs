@@ -505,7 +505,10 @@ public class BaseMode : MonoBehaviour
         }
         Vector2Int unitCell = map.WorldToCell(unit.Transform.position);
         float range = unit.stats.attackRange + target.bodyOffset;
-        isInRange = unitCell.x == targetCell.x && Mathf.Abs(target.Transform.position.x - unit.Transform.position.x) <= range;
+        // Đã đứng ô kề cùng hàng là đánh được: 2 unit bị đẩy lệch về 2 mép ô thì khoảng cách thật có thể > tầm,
+        // mà RequestMoveTo coi "đã ở ô đích" → không đi tiếp → kẹt đứng yên mãi.
+        isInRange = unitCell.x == targetCell.x
+            && (Mathf.Abs(unitCell.y - targetCell.y) <= 1 || Mathf.Abs(target.Transform.position.x - unit.Transform.position.x) <= range);
         return true;
     }
 
