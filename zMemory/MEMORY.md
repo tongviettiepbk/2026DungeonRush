@@ -91,3 +91,4 @@
 - [Công cụ test chọn đồ hero](dungonrush-equipment-tester.md) — EquipmentTester ở scene Root, nút "Đồ" ở MainGame, < > lướt từng món 8 slot; dựng 2026-10-22
 - [Firebase server THẬT](dungonrush-firebase-prod-deploy.md) — đã deploy dungeon-duck-quack-slash (us-central1, Node 22) 2026-10-24; emulator giữ demo-dungeonrush; ServerId/EMULATOR_PROJECT_ID ở FirebaseSettings
 - [Tool test boss Boss Rush](dungonrush-boss-rush-tester.md) — BossRushTester nút "Boss" ở MainGame: chọn boss/tier/đồng đội bot, đánh offline không cần server
+- [Reskin Clan Search](dungonrush-reskin-clan-search.md) — 2026-10-27 popup Clan Search + Enter Clan Name theo mockup, kit 1_UIKit/ClanSearch (nút −/+ art, ô nhập tan, tick xanh ChatGPT); chưa commit
