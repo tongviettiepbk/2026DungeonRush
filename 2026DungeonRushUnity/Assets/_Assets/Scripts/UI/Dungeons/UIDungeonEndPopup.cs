@@ -11,6 +11,7 @@ public class UIDungeonEndPopup : BaseUI
     public TMP_Text txtTitle;
     public TMP_Text txtInfo;
     public Button btOk;
+    public GameObject objRewardLabel;   // chữ "Reward" trên ô thưởng (reskin): ẩn khi thua
 
     [Space(20)]
     // Sprite asset icon thưởng theo DungeonType (index 0 DragonBoss, 1 ZombieHorde, 2 Cultist). Trống → chỉ hiện số.
@@ -27,6 +28,8 @@ public class UIDungeonEndPopup : BaseUI
     public void Show(bool isWin, DungeonType type, int reward, Action onClose)
     {
         this.onClose = onClose;
+        if (objRewardLabel != null)
+            objRewardLabel.SetActive(isWin);
 
         if (isWin)
         {
@@ -35,7 +38,7 @@ public class UIDungeonEndPopup : BaseUI
             if (spriteAsset != null)
             {
                 txtInfo.spriteAsset = spriteAsset;
-                txtInfo.text = "<sprite=0>" + reward;
+                txtInfo.text = "<sprite=0><space=40>" + reward;
             }
             else
             {

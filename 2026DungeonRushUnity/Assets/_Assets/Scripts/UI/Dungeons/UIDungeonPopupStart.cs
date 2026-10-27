@@ -12,6 +12,7 @@ public class UIDungeonPopupStart : BaseUI
     public TMP_Text txtLvl;
     public TMP_Text txtQuantityReward;
     public Image imgIconReward;
+    public Image imgIconRibbon;   // icon trên ruy băng tiêu đề (reskin): cùng icon thưởng của dungeon
 
     public TMP_Text txtQuantityKeyProcess;
     public Image imgIconKey;
@@ -59,6 +60,8 @@ public class UIDungeonPopupStart : BaseUI
         txtQuantityReward.text = GameData.staticData.dungeons.GetReward(type, progress.level).ToString();
         txtQuantityKeyProcess.text = progress.TotalKeys + "/" + StaticDungeonData.DAILY_KEYS;
         SetIcon(imgIconReward, rewardIcons);
+        if (imgIconRibbon != null)
+            SetIcon(imgIconRibbon, rewardIcons);
         SetIcon(imgIconKey, keyIcons);
 
         btSweepLast.interactable = DungeonService.CanSweep(type);
