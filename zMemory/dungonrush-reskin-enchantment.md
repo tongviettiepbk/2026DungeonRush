@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-enchantment
-description: "Reskin Enchantment 2026-10-27 (CHƯA commit, chưa test Play) — trang PageEnchantment trong UIMainGame2 + 4 popup theo mockup _Concept/Enchantment; kit 1_UIKit/Enchantment; ChatGPT vẽ 3 hình ô trống kính/tẩu/áo"
+description: "Reskin Enchantment 2026-10-27 (đã commit 5d155b4, chưa test Play) — trang PageEnchantment trong UIMainGame2 + 4 popup theo mockup _Concept/Enchantment; kit 1_UIKit/Enchantment; ChatGPT vẽ 3 hình ô trống kính/tẩu/áo"
 metadata:
   node_type: memory
   type: project
@@ -8,7 +8,7 @@ metadata:
   originSessionId: dd7b7f89-1bb8-4299-8785-6239b5faa85b
 ---
 
-Reskin 2026-10-27 theo mockup `ArtIncoming/_Concept/Enchantment/` (3 demo + summon; `_art/ribbon_red.png`). Ảnh so: `compare_page.png`, `compare_popups.png`, `popups_game.png`; chụp ở `cap/`. CHƯA commit, chỉ chụp preview (UICaptureTool), CHƯA test Play.
+Reskin 2026-10-27 theo mockup `ArtIncoming/_Concept/Enchantment/` (3 demo + summon; `_art/ribbon_red.png`). Ảnh so: `compare_page.png`, `compare_popups.png`, `popups_game.png`; chụp ở `cap/`. Đã commit 5d155b4, chỉ chụp preview (UICaptureTool), CHƯA test Play.
 
 - Trang = `SafeArea/Pages/PageEnchantment` NẰM TRONG `Prefabs/UI/UIMainGame2.prefab` (không phải prefab riêng). Mockup top bar cao hơn game 63px, nav thấp hơn 35px → phần trên neo ĐỈNH (y mockup −63), khu dưới `Bottom` neo đáy cao 386 (y +35), kho `Inventory` giãn giữa. Nền #403F51 / khu dưới #302C3D / vạch #18161F; panel = Mastery/mastery_panel; nút = Lobby/btn_green; thanh = Companion/bar_track + Lobby/xp_fill; X = Mastery/btn_close.
 - Ô vuông VÀNG cạnh Summon trong mockup = nút multiplier (`EnchantmentTabPageMultiplierButton`, chỉ hiện khi Vial ≥ 2000) → dời sang TRÁI Summon, sprite `1_UIKit/Enchantment/btn_yellow` (fit màu từ btn_green, `tools/reskin/gen_enchantment.py`). Ô Vial: thêm node `VialIcon` (vial_icon) — mockup để trống.
