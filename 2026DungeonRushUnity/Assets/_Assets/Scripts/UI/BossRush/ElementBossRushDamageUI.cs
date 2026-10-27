@@ -13,6 +13,9 @@ public class ElementBossRushDamageUI : MonoBehaviour
     public Image imgBackground;
     public Color highlightedBackgroundColor = new Color(0.231f, 0.592f, 0.871f, 1f);
     public Color defaultBackgroundColor = new Color(0.094f, 0.094f, 0.094f, 1f);
+    // Reskin: có sprite thì đổi sprite (xám / xanh của mình) thay cho tô màu
+    public Sprite highlightedSprite;
+    public Sprite defaultSprite;
 
     public RectTransform RectTransform => (RectTransform)transform;
 
@@ -20,7 +23,16 @@ public class ElementBossRushDamageUI : MonoBehaviour
     {
         txtPlayerName.text = entry.playerName;
         if (imgAvatar != null) imgAvatar.sprite = AvatarConfig.Get(entry.avatarId);
-        if (imgBackground != null) imgBackground.color = entry.isMine ? highlightedBackgroundColor : defaultBackgroundColor;
+        if (imgBackground != null)
+        {
+            Sprite sprite = entry.isMine ? highlightedSprite : defaultSprite;
+            if (sprite != null)
+            {
+                imgBackground.sprite = sprite;
+                imgBackground.color = Color.white;
+            }
+            else imgBackground.color = entry.isMine ? highlightedBackgroundColor : defaultBackgroundColor;
+        }
     }
 
     public void SetDamage(int rank, long damage, float share)

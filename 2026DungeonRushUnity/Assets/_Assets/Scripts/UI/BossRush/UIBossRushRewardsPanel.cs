@@ -12,6 +12,12 @@ public class UIBossRushRewardsPanel : MonoBehaviour
     public TMP_Text txtGuaranteed;       // PrizePoolInfoText
     public TMP_Text txtPlacement;        // PlacementText
     public TMP_Text txtPlacementRewards; // PlacementRewardsText
+    // Reskin: thưởng nhóm nằm trong ô riêng (txtGuaranteed giữ làm nhãn) + mỗi mốc hạng 1 dòng
+    // (con TMP thứ 0 = hạng, thứ 1 = thưởng); bỏ trống thì gộp chữ như cũ.
+    public TMP_Text txtGuaranteedRewards;
+    public GameObject placementRowTemplate;
+
+    private readonly List<GameObject> placementRows = new List<GameObject>();
 
     private void Awake()
     {
@@ -29,7 +35,14 @@ public class UIBossRushRewardsPanel : MonoBehaviour
             int index = Mathf.Clamp(bossesKilled, 0, table.guaranteedRewardsByBossesKilled.Count - 1);
             guaranteed = FormatRewards(table.guaranteedRewardsByBossesKilled[index]);
         }
-        if (txtGuaranteed != null) txtGuaranteed.text = "Guaranteed Rewards\nBosses killed: " + bossesKilled + "\n" + guaranteed;
+        if (txtGuaranteedRewards != null) txtGuaranteedRewards.text = "Bosses killed: " + bossesKilled + "\n" + guaranteed;
+        else if (txtGuaranteed != null) txtGuaranteed.text = "Guaranteed Rewards\nBosses killed: " + bossesKilled + "\n" + guaranteed;
+
+        if (placementRowTemplate != null)
+        {
+            ShowPlacementRows(table);
+            return;
+        }
 
         List<string> lines = new List<string>();
         if (table != null && table.placementBrackets != null)
@@ -42,6 +55,24 @@ public class UIBossRushRewardsPanel : MonoBehaviour
             }
         }
         if (txtPlacementRewards != null) txtPlacementRewards.text = lines.Count > 0 ? string.Join("\n", lines) : "-";
+    }
+
+    private void ShowPlacementRows(BossRushRewardTableDTO table)
+    {
+        placementRowTemplate.SetActive(false);
+        for (int i = 0; i < placementRows.Count; i++) Destroy(placementRows[i]);
+        placementRows.Clear();
+        if (table == null || table.placementBrackets == null) return;
+        for (int i = 0; i < table.placementBrackets.Count; i++)
+        {
+            BossRushPlacementBracketDTO b = table.placementBrackets[i];
+            GameObject row = Instantiate(placementRowTemplate, placementRowTemplate.transform.parent);
+            row.SetActive(true);
+            TMP_Text[] texts = row.GetComponentsInChildren<TMP_Text>(true);
+            texts[0].text = b.minRank == b.maxRank ? b.minRank.ToString() : b.minRank + "-" + b.maxRank;
+            if (texts.Length > 1) texts[1].text = FormatRewards(b.rewards);
+            placementRows.Add(row);
+        }
     }
 
     public void Hide()

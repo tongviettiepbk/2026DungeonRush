@@ -14,6 +14,9 @@ public class ElementBossRushPlayerUI : MonoBehaviour
     public Button btRow;
     public Color highlightedBackgroundColor = new Color(1f, 0.85f, 0.4f, 1f);
     public Color defaultBackgroundColor = Color.white;
+    // Reskin: có sprite thì đổi sprite (xám / xanh của mình) thay cho tô màu
+    public Sprite highlightedSprite;
+    public Sprite defaultSprite;
 
     public Image imgPlayer;
 
@@ -34,6 +37,15 @@ public class ElementBossRushPlayerUI : MonoBehaviour
         txtDamagePoints.text = player.TotalDamagePoints.ToLetter();
         if (txtPower != null) txtPower.text = player.Power.ToLetter();
         if (imgPlayer != null) imgPlayer.sprite = AvatarConfig.Get(player.AvatarId);
-        if (imgBackground != null) imgBackground.color = isMine ? highlightedBackgroundColor : defaultBackgroundColor;
+        if (imgBackground != null)
+        {
+            Sprite sprite = isMine ? highlightedSprite : defaultSprite;
+            if (sprite != null)
+            {
+                imgBackground.sprite = sprite;
+                imgBackground.color = Color.white;
+            }
+            else imgBackground.color = isMine ? highlightedBackgroundColor : defaultBackgroundColor;
+        }
     }
 }
