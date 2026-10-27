@@ -13,7 +13,7 @@ metadata:
 - `.firebaserc` default = dungeon-duck-quack-slash → `firebase deploy` đẩy lên thật. Deploy: `cd server && firebase deploy --only functions,firestore` (CLI ở ~/.local/bin/firebase, đã login tongviettiepbk@gmail.com).
 - Emulator vẫn tên `demo-dungeonrush`: script npm `serve`/`test:emulator*` có `--project demo-dungeonrush`; tự bật thì `firebase emulators:start --project demo-dungeonrush`.
 - Unity `FirebaseSettings.cs`: PROJECT_ID thật + WEB_API_KEY (key của Web app, KHÔNG dùng key Android trong google-services.json); `EMULATOR_PROJECT_ID` cho URL emulator; `ServerId` (emulator→demo) là trường `server` gửi lên — clan lọc theo nó, data seed mang demo-dungeonrush.
-- Editor vẫn USE_EMULATOR=true; build thì gọi server thật. Chưa bật define FIREBASE_SDK (nhánh SDK thiếu 4 hàm tài khoản email) dù SDK 13.17.0 đã import.
+- Editor để USE_EMULATOR=true (chơi/test local); build gọi server thật. 2026-10-24 đã thử false → Play qua MCP gọi server thật OK (khách, loaduserdoc, getbossrushpool), rồi user bảo quay về emulator. getpvpleaderboard trả "Failed to load leaderboard." khi user chưa có hồ sơ PvP — đúng code. Bật emulator: tab terminal export JAVA_HOME=~/.local/tools/jdk-21.0.12.1+1/Contents/Home + PATH, `cd server && npm --prefix functions run build && firebase emulators:start --project demo-dungeonrush --only auth,functions,firestore`, rồi `npm run seed` (emulator không --import nên mỗi lần bật data trống). Chưa bật define FIREBASE_SDK (nhánh SDK thiếu 4 hàm tài khoản email) dù SDK 13.17.0 đã import.
 - Còn: tạo `config/admins` trên Firestore thật; Console mới không hiện Web API Key → lấy qua Add app → Web.
 
 **Why:** chuyển từ emulator sang server thật, giữ luồng test local cũ.

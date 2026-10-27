@@ -90,3 +90,4 @@
 - [Cận chiến chỉ đánh ngang hàng](dungonrush-melee-same-row.md) — Campaign/Zombie/Cultist: melee hero/quái phải đứng cùng hàng sát trái/phải mới đánh; LỆCH GỐC có chủ ý (user yêu cầu 2026-10-22), đừng gỡ
 - [Công cụ test chọn đồ hero](dungonrush-equipment-tester.md) — EquipmentTester ở scene Root, nút "Đồ" ở MainGame, < > lướt từng món 8 slot; dựng 2026-10-22
 - [Firebase server THẬT](dungonrush-firebase-prod-deploy.md) — đã deploy dungeon-duck-quack-slash (us-central1, Node 22) 2026-10-24; emulator giữ demo-dungeonrush; ServerId/EMULATOR_PROJECT_ID ở FirebaseSettings
+- [Tool test boss Boss Rush](dungonrush-boss-rush-tester.md) — BossRushTester nút "Boss" ở MainGame: chọn boss/tier/đồng đội bot, đánh offline không cần server
