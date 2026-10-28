@@ -98,4 +98,4 @@
 - [Reskin Dungeon](dungonrush-reskin-dungeon.md) — 2026-10-28 trang + 2 popup + tấm trong trận theo mockup, kit 1_UIKit/Dungeon, tên EN Boss Raid/Street Rush/Mafia Crew; test Play OK, đã commit daaf59f
 - [Reskin popup art cũ còn sót](dungonrush-reskin-old-popups.md) — 2026-10-28 Combat Summary + 16 popup (Cape/PvP/Account/ItemInfo/AutoLoot/Language) sang kit Mastery bằng PopupKitReskin; đã commit, chưa test Play
 - [Pet nhún idle như hero](dungonrush-pet-idle-bob.md) — PetAnimationController nhún node Icon theo UnitIdle hero, PetUnit tự gắn; 3 prefab tách sprite ra Icon; commit ce03204 (2026-10-28)
-- [FX impact cận chiến](dungonrush-melee-impact-fx.md) — hero_impact_101 của StickIdle cho mọi đòn đánh gần, FxController.fxImpactMelee (Resources), hiện ở centerBodyPoint nạn nhân; 2026-10-28
+- [FX impact cận chiến](dungonrush-melee-impact-fx.md) — hero_impact_101 của StickIdle cho mọi đòn đánh gần, FxController.fxImpactMelee (Resources), hiện ở pivot (giữa thân) nạn nhân; 2026-10-28
