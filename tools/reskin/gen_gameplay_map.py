@@ -1,14 +1,16 @@
 # Vẽ tường/góc/cửa/chướng ngại map campaign theo mockup ArtIncoming/_Concept/Gameplay (gameplay 1 demo.png).
 # Đo trên mockup 1080: khối nền #848798, viền đen 4px, vát 5px (trên-trái sáng B7B8C2→888B9B, dưới-phải tối 828596→565763),
-# đoạn tường dày 48px bo ~8, khối góc 66px bo ~10 + bulông tròn ~19px. Ảnh xuất giữ ĐÚNG cỡ pixel sprite cũ
-# (wall_piece 186x480, corner 271x271, door 297x189, obstacle 242x242) → hệ số K = 186/48 px sprite / px mockup.
+# đoạn tường dày 48px bo ~8, khối góc 66px bo ~10 + bulông tròn ~19px. Ảnh xuất BÁM Ô MAP: 1 ô = CELL px
+# (import PPU = CELL, scale 1 → 1 ô = 1 world unit): tường dày 1 ô dài 2 ô, góc/bulông 1 ô, nửa cửa 1.5x1 ô,
+# chướng ngại 1x1 ô. K = px sprite / px mockup, giữ đúng độ dày viền/vát world như bản cũ (186/48 px ở PPU 100 scale 0.44).
 # Dùng: tools/.venv/bin/python -I tools/reskin/gen_gameplay_map.py <thư_mục_ra>
 import sys, os
 import numpy as np
 from PIL import Image
 
 SS = 4
-K = 186 / 48.0
+CELL = 256
+K = 186 / 48.0 * 0.44 * CELL / 100.0
 out = sys.argv[1]
 os.makedirs(out, exist_ok=True)
 
@@ -84,23 +86,23 @@ def save(img, w, h, name):
     print(name, w, h)
 
 
-# Đoạn tường dọc (cỡ sprite cũ wall_piece) + bản ngang cho tường trên/dưới (vát phải sáng TRÊN, không xoay được).
-W, H = 186, 480
+# Đoạn tường dọc 1x2 ô + bản ngang cho tường trên/dưới (vát phải sáng TRÊN, không xoay được).
+W, H = CELL, CELL * 2
 save(block(W, H, 8 * K), W, H, 'map_wall_v.png')
 save(block(H, W, 8 * K), H, W, 'map_wall_h.png')
 
 # Khối góc + bulông giữa.
-C = 271
+C = CELL
 img = block(C, C, 10 * K)
 bolt(img, C, C, C / 2.0, C / 2.0, 19 * K)
 save(img, C, C, 'map_wall_corner.png')
 
 # Cửa: 1 đoạn ngang ngắn (mockup 2 đoạn gặp nhau giữa cửa).
-DW, DH = 297, 189
+DW, DH = CELL * 3 // 2, CELL
 save(block(DW, DH, 8 * K), DW, DH, 'map_door.png')
 
 # Chướng ngại: khối vuông cùng chất liệu + 4 bulông nhỏ ở góc (mockup không có, suy từ khối góc).
-O = 242
+O = CELL
 img = block(O, O, 10 * K)
 for cx in (O * 0.27, O * 0.73):
     for cy in (O * 0.27, O * 0.73):

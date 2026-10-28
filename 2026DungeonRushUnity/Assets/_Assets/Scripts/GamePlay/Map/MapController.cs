@@ -59,6 +59,26 @@ public class MapController : Singleton<MapController>
             Vector3 bottomRight = CellToWorld(Rows - 1, Cols - 1);
             minWorld = Vector3.Min(topLeft, bottomRight);
             maxWorld = Vector3.Max(topLeft, bottomRight);
+            AlignGridBackground();
+        }
+    }
+
+    // Nền lưới (Custom/GridShader) vẽ theo toạ độ world → dời _Offset để mỗi ô nền trùng đúng 1 ô map
+    // (đường kẻ nằm ở mép ô, tâm ô = CellToWorld). Chỉ áp cho nền có cỡ ô = CELL_SIZE.
+    private void AlignGridBackground()
+    {
+        Vector3 edge = CellToWorld(0, 0) - new Vector3(CELL_SIZE, CELL_SIZE, 0f) * 0.5f;
+        Vector4 offset = new Vector4(-edge.x, -edge.y, 0f, 0f);
+        MaterialPropertyBlock block = new MaterialPropertyBlock();
+        foreach (Renderer r in GetComponentsInChildren<Renderer>(true))
+        {
+            Material mat = r.sharedMaterial;
+            if (mat == null || mat.shader.name != "Custom/GridShader") continue;
+            Vector4 size = mat.GetVector("_GridSize");
+            if (!Mathf.Approximately(size.x, CELL_SIZE) || !Mathf.Approximately(size.y, CELL_SIZE)) continue;
+            r.GetPropertyBlock(block);
+            block.SetVector("_Offset", offset);
+            r.SetPropertyBlock(block);
         }
     }
 
