@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-pvp
-description: "Reskin PvP 2026-10-28 theo mockup _Concept/PvP: sảnh (danh sách world trong sảnh), chọn đối thủ (ô vé + avatar), Victory/Defeat, top bar \"PvP\"; kit 1_UIKit/PvP + TMP IsFist; CHƯA test Play, CHƯA commit"
+description: "Reskin PvP 2026-10-28 theo mockup _Concept/PvP: sảnh (danh sách world trong sảnh), chọn đối thủ (ô vé + avatar), Victory/Defeat, top bar \"PvP\"; kit 1_UIKit/PvP + TMP IsFist; CHƯA test Play, đã commit eb26bba"
 metadata:
   node_type: memory
   type: project
@@ -19,6 +19,6 @@ Mockup + art giao (Telegram "pvp"): `ArtIncoming/_Concept/PvP/` (League demo, Pv
 - `ElementPvPLeaderboardUI`: thêm defaultSprite/highlightedSprite, imgAvatar, txtPower (popup Leaderboard đầy đủ chưa reskin dòng — vẫn tô màu cũ).
 - Giữ chữ gốc ("#rank", "(You)", "Victory!", "Defeated", "Choose Opponent", "Battle") thay vì chữ mockup.
 
-**CHƯA:** test Play với emulator (sảnh gọi thêm getPvPLeaderboard), popup Leaderboard + Rewards chưa theo kit dòng mới, commit.
+**CHƯA:** test Play với emulator (sảnh gọi thêm getPvPLeaderboard), popup Leaderboard + Rewards chưa theo kit dòng mới. Đã commit eb26bba.
 
 Xem [[dungonrush-pvp-mode]], [[dungonrush-reskin-ui-howto]], [[dungonrush-reskin-boss-rush]], [[dungonrush-reskin-events]].
