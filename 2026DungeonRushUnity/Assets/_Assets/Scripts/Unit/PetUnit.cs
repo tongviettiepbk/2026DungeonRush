@@ -55,6 +55,12 @@ public class PetUnit : BaseUnit
 
     protected override void Awake()
     {
+        // Gắn trước base.Awake để BaseUnit lấy được controller nhún idle (thay vì stub no-op).
+        if (GetComponent<AnimationController>() == null)
+        {
+            gameObject.AddComponent<PetAnimationController>();
+        }
+
         base.Awake();
         SetupPetCollision();
     }
