@@ -8,4 +8,4 @@ metadata:
 - Prefab: `Resources/Prefabs/Fx/hero_impact_101.prefab` (guid giữ nguyên StickIdle); mat+texture ở `Prefabs/Fx/Combat/HeroImpact101/`. Renderer đã chuyển layer Fx → Default order 41–46 (theo [[dungonrush-world-sorting-under-ui]]). Shader built-in legacy chạy được trên URP.
 - `FxController.fxImpactMelee` tự Resources.Load trong Awake (FxController tạo runtime, không có trong scene).
 - `BaseUnit.ReleaseAttack` nhánh cận chiến: `impactAttack ?? fxImpactMelee` → `TakeAttack` → `ShowImpactHit` tại `centerBodyPoint` của target. KHÔNG gán vào `impactAttack` prefab vì BaseBullet cũng dùng field đó (đòn xa sẽ hiện theo).
-- Pet ability / skill boss Boss Rush không đổi. Test Play OK (hiển thị đúng).
+- Pet ability / skill boss Boss Rush không đổi. Test Play OK (hiển thị đúng), đã commit 50c0c78.
