@@ -100,3 +100,4 @@
 - [Pet nhún idle như hero](dungonrush-pet-idle-bob.md) — PetAnimationController nhún node Icon theo UnitIdle hero, PetUnit tự gắn; 3 prefab tách sprite ra Icon; commit ce03204 (2026-10-28)
 - [FX impact cận chiến](dungonrush-melee-impact-fx.md) — hero_impact_101 của StickIdle cho mọi đòn đánh gần, FxController.fxImpactMelee (Resources), hiện ở pivot (giữa thân) nạn nhân; 2026-10-28
 - [MainMap bám ô](dungonrush-map-cell-snap.md) — lưới nền căn theo PointStart (MapController.AlignGridBackground), tường = vòng ô dày 1 ô, chướng ngại 1x1; sprite PPU 256 scale 1 (2026-10-28)
+- [Reskin Events](dungonrush-reskin-events.md) — 2026-10-28 EventPage theo mockup, 2 thẻ PvP/Boss Rush (Co-op giữ tắt — user chốt), kit 1_UIKit/Events; chưa test Play, đã commit
