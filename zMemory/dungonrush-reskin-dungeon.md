@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-dungeon
-description: "Reskin Dungeon 2026-10-28 theo mockup _Concept/Dungeon (8 demo): trang DungeonPage trong UIMainGame2 + UIDungeonPopup + UIDungeonEndPopup + tấm DungeonUI trong trận; kit 1_UIKit/Dungeon; đổi tên EN Boss Raid/Street Rush/Mafia Crew; test Play OK, CHƯA commit"
+description: "Reskin Dungeon 2026-10-28 theo mockup _Concept/Dungeon (8 demo): trang DungeonPage trong UIMainGame2 + UIDungeonPopup + UIDungeonEndPopup + tấm DungeonUI trong trận; kit 1_UIKit/Dungeon; đổi tên EN Boss Raid/Street Rush/Mafia Crew; test Play OK, đã commit daaf59f"
 metadata:
   node_type: memory
   type: project
@@ -8,7 +8,7 @@ metadata:
   originSessionId: e139c75d-12a0-4072-8ff9-963226ba8bdd
 ---
 
-Mockup + art giao: `ArtIncoming/_Concept/Dungeon/` (nguồn Telegram "Dungeon (2)"), `_art/` = 3 thẻ 990x486 + 3 ruy băng 152x106. Ảnh sinh bằng `tools/reskin/gen_dungeon.py` → `Art/1_UIKit/Dungeon/` (card_boss_raid/street_rush/mafia_crew, ribbon_red/purple/blue, tag_* = ruy băng lật ngang). So sánh: `_Concept/Dungeon/compare_page.png`, `compare_popups.png`. Test Play OK (tên, icon, số key), console 0 lỗi. CHƯA commit.
+Mockup + art giao: `ArtIncoming/_Concept/Dungeon/` (nguồn Telegram "Dungeon (2)"), `_art/` = 3 thẻ 990x486 + 3 ruy băng 152x106. Ảnh sinh bằng `tools/reskin/gen_dungeon.py` → `Art/1_UIKit/Dungeon/` (card_boss_raid/street_rush/mafia_crew, ribbon_red/purple/blue, tag_* = ruy băng lật ngang). So sánh: `_Concept/Dungeon/compare_page.png`, `compare_popups.png`. Test Play OK (tên, icon, số key), console 0 lỗi. Đã commit daaf59f (2026-10-28).
 
 **User chốt:** đổi tên tiếng Anh theo mockup (Dragon's Hoard→Boss Raid, Zombie Outbreak→Street Rush, Cultist Ritual→Mafia Crew; 9 ngôn ngữ khác giữ tên cũ); GIỮ icon chìa trên thẻ (đặt bên trái tag 2/2, mockup bỏ).
 

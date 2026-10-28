@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-lobby2
-description: "Lobby đợt 3 theo mockup \"lobby demo 4\" (2026-10-28) — giữ map, nén phần dưới; 10 khung rarity mới; thanh rương, tab có chữ + ô vàng; hộp avatar/gem CẮT TỪ MOCKUP chờ art thật; CHƯA commit"
+description: "Lobby đợt 3 theo mockup \"lobby demo 4\" (2026-10-28) — giữ map, nén phần dưới; 10 khung rarity mới; thanh rương, tab có chữ + ô vàng; hộp avatar/gem CẮT TỪ MOCKUP chờ art thật; đã commit 3b12c24"
 metadata:
   node_type: memory
   type: project
@@ -8,7 +8,7 @@ metadata:
   modified: 2026-10-27T17:27:57.812Z
 ---
 
-Mockup + art giao: `ArtIncoming/_Concept/Lobby2/` (nguồn `/Volumes/Work/_AssetReskin/DungeonRush/lobby (2)/`). Ảnh sinh bằng `tools/reskin/gen_lobby2.py`. Ảnh so: `_Concept/Lobby2/compare_mockup_vs_game.png`. Test Play OK, console 0 lỗi; CHƯA commit (2026-10-28).
+Mockup + art giao: `ArtIncoming/_Concept/Lobby2/` (nguồn `/Volumes/Work/_AssetReskin/DungeonRush/lobby (2)/`). Ảnh sinh bằng `tools/reskin/gen_lobby2.py`. Ảnh so: `_Concept/Lobby2/compare_mockup_vs_game.png`. Test Play OK, console 0 lỗi; ĐÃ commit 3b12c24 (2026-10-28).
 
 **User chốt:**
 - Mockup đặt hàng pet cao hơn game ~190px → GIỮ map (camera không đổi), nén phần dưới: tab 168, chat 62, BottomUI 600 (đặt tay, KHÔNG theo y mockup).

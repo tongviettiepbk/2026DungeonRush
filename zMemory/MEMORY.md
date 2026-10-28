@@ -94,4 +94,6 @@
 - [Reskin Boss Rush](dungonrush-reskin-boss-rush.md) — 2026-10-27 5 popup + HUD trận (UIMainGame2) theo mockup, kit 1_UIKit/BossRush, icon nắm đấm ChatGPT; đã commit 45f3816, chưa test Play
 - [Reskin Clan Search](dungonrush-reskin-clan-search.md) — 2026-10-27 popup Clan Search + Enter Clan Name theo mockup, kit 1_UIKit/ClanSearch (nút −/+ art, ô nhập tan, tick xanh ChatGPT); đã commit 90d7c08
 - [Reskin Enchantment](dungonrush-reskin-enchantment.md) — 2026-10-27 trang (trong UIMainGame2) + 4 popup theo mockup, kit 1_UIKit/Enchantment, 3 hình ô trống kính/tẩu/áo ChatGPT; đã commit 5d155b4; KHÔNG Apply Reskin toàn bộ (ArtIncoming lệch)
-- [Reskin lobby đợt 3](dungonrush-reskin-lobby2.md) — 2026-10-28 mockup "lobby demo 4": giữ map nén phần dưới, rarity mới, thanh rương, tab chữ + ô vàng; hộp avatar/gem cắt từ mockup chờ art; CHƯA commit
+- [Reskin lobby đợt 3](dungonrush-reskin-lobby2.md) — 2026-10-28 mockup "lobby demo 4": giữ map nén phần dưới, rarity mới, thanh rương, tab chữ + ô vàng; hộp avatar/gem cắt từ mockup chờ art; đã commit 3b12c24
+- [Reskin Dungeon](dungonrush-reskin-dungeon.md) — 2026-10-28 trang + 2 popup + tấm trong trận theo mockup, kit 1_UIKit/Dungeon, tên EN Boss Raid/Street Rush/Mafia Crew; test Play OK, đã commit daaf59f
+- [Reskin popup art cũ còn sót](dungonrush-reskin-old-popups.md) — 2026-10-28 Combat Summary + 16 popup (Cape/PvP/Account/ItemInfo/AutoLoot/Language) sang kit Mastery bằng PopupKitReskin; đã commit, chưa test Play
