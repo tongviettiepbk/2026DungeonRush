@@ -19,6 +19,9 @@ public class UICapeSalvagePopup : BaseUI
     public GameObject objPrefabElement;
     public Button btUpgrade;
     public Image imgUpgrade;
+    // Reskin: có chọn = sprite xanh, chưa chọn = sprite xám.
+    public Sprite sprButtonOn;
+    public Sprite sprButtonOff;
     public Button btClose;
 
     private readonly List<CapeElementUI> listElement = new List<CapeElementUI>();
@@ -130,7 +133,7 @@ public class UICapeSalvagePopup : BaseUI
             rectXPFill.localScale = new Vector3(need > 0 ? Mathf.Clamp01((float)xp / need) : 0f, 1f, 1f);
         }
 
-        imgUpgrade.color = selected.Count > 0 ? UITabWing.DEFAULT_BUTTON_COLOR : UITabWing.DISABLED_BUTTON_COLOR;
+        UITabWing.SetButtonState(imgUpgrade, selected.Count > 0, sprButtonOn, sprButtonOff);
     }
 
     private static string GetGainText(float gain)

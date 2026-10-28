@@ -16,6 +16,9 @@ public class UICapeDetailPopup : BaseUI
     public Button btUpgrade;
     public Button btEquip;
     public Image imgEquip;
+    // Reskin: chưa mặc = sprite xanh (Equip), đang mặc = sprite đỏ (Unequip).
+    public Sprite sprEquip;
+    public Sprite sprUnequip;
     public TMP_Text txtEquip;
 
     private CapeModel model;
@@ -52,7 +55,9 @@ public class UICapeDetailPopup : BaseUI
         txtSubStats.text = UITabWing.GetSubStatsText(model.subStats);
 
         txtEquip.text = isEquipped ? Loc.L("Common.Unequip") : Loc.L("Common.Equip");
-        imgEquip.color = isEquipped ? UITabWing.DANGER_BUTTON_COLOR : UITabWing.DEFAULT_BUTTON_COLOR;
+        UITabWing.SetButtonState(imgEquip, !isEquipped, sprEquip, sprUnequip);
+        if (sprEquip == null || sprUnequip == null)
+            imgEquip.color = isEquipped ? UITabWing.DANGER_BUTTON_COLOR : UITabWing.DEFAULT_BUTTON_COLOR;
     }
 
     // erx: đang mặc → cởi, không thì mặc. Hero mặc lại slot CAPE + toast Power rồi đóng popup.

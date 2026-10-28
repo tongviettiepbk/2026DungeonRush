@@ -17,6 +17,9 @@ public class UICapePopup : BaseUI
     [Header("Summon")]
     public Button btSummon;
     public Image imgSummon;
+    // Reskin: nút đủ tiền = sprite xanh, thiếu = sprite xám (thay cho tô DEFAULT/DISABLED_BUTTON_COLOR).
+    public Sprite sprButtonOn;
+    public Sprite sprButtonOff;
     public TMP_Text txtSummon;
     public TMP_Text txtSummonLevel;
     public TMP_Text txtSummonProgress;
@@ -149,7 +152,7 @@ public class UICapePopup : BaseUI
         bool isEnough = cloak >= cost;
         string costText = isEnough ? cost.ToString() : "<color=red>" + cost + "</color>";
         txtSummon.text = costText + "\nSummon x" + multiplier;
-        imgSummon.color = isEnough ? UITabWing.DEFAULT_BUTTON_COLOR : UITabWing.DISABLED_BUTTON_COLOR;
+        UITabWing.SetButtonState(imgSummon, isEnough, sprButtonOn, sprButtonOff);
     }
 
     // ete: mỗi cape sở hữu 1 ô. Sắp xếp: đang mặc trước, rồi rarity cao → thấp, level cao → thấp.
