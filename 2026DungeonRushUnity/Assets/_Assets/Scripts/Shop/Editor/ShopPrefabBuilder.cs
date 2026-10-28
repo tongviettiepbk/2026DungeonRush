@@ -201,9 +201,10 @@ public static class ShopPrefabBuilder
             .Replace("m_Name: IsGem", "m_Name: " + assetName)
             .Replace("m_Name: gem Material", "m_Name: " + spriteName + " Material")
             .Replace("m_Name: gem", "m_Name: " + spriteName)
-            .Replace("m_HorizontalBearingX: " + (-gw / 2f).ToString(inv), "m_HorizontalBearingX: " + (-w / 2f).ToString(inv))
-            .Replace("m_HorizontalBearingY: " + (gh / 2f).ToString(inv), "m_HorizontalBearingY: " + (h / 2f).ToString(inv))
-            .Replace("m_HorizontalAdvance: " + gw, "m_HorizontalAdvance: " + w)
+            // Căn icon giữa chữ (scale 1.3): lề trái/phải 10% rộng, tâm icon cao 0.38 ascent so với baseline.
+            .Replace("m_HorizontalBearingX: " + (gw / 10f).ToString(inv), "m_HorizontalBearingX: " + (w / 10f).ToString(inv))
+            .Replace("m_HorizontalBearingY: 69.7", "m_HorizontalBearingY: " + Math.Round(h * 0.792f, 1).ToString(inv))
+            .Replace("m_HorizontalAdvance: " + (gw + gw / 5f).ToString(inv), "m_HorizontalAdvance: " + (w + w / 5f).ToString(inv))
             .Replace("m_Width: " + gw, "m_Width: " + w)
             .Replace("m_Height: " + gh, "m_Height: " + h);
         File.WriteAllText(path, text);
