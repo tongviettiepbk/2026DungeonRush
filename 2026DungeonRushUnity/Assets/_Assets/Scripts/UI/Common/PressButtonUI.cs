@@ -1,36 +1,31 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Port PressButtonUI gốc (reverse il2cpp v59, v41 cùng field trừ StayPressedWhenDisabled):
-//  • Nhấn xuống nút đang bấm được: con ĐẦU TIÊN của nút (thường là "Content", nút đóng là "Image") nhảy tới
-//    anchoredPosition.y = PressYValue và kêu AudioConfig.ButtonClickSound — OnPointerDown/fhl.
-//  • Thả ra: con đó về y ban đầu (lưu ở Awake) — OnPointerUp/fhk.
-//  • Nút bị khoá (không interactable) thì luôn về trạng thái nổi — Update.
+// Gốc PressButtonUI (reverse il2cpp v59) lún con đầu tiên xuống PressYValue; đã đổi theo yêu cầu (2026-10-28):
+//  • Nhấn xuống nút đang bấm được: CẢ nút thu nhỏ về PressScale × scale ban đầu và kêu AudioConfig.ButtonClickSound.
+//  • Thả ra: nút phóng to lại scale ban đầu (lưu ở Awake).
+//  • Nút bị khoá (không interactable) thì luôn về scale ban đầu — Update.
 // Gốc chỉ gắn trên một phần nút (nút hành động/đóng); ô danh sách, checkbox, mũi tên, tab, nền tối thì không.
-// Danh sách nút + PressYValue gốc: UI/Common/Editor/press_buttons.json (menu Tools/DungeonRush/Apply Press Buttons).
+// Danh sách nút gốc: UI/Common/Editor/press_buttons.json (menu Tools/DungeonRush/Apply Press Buttons).
 // Bỏ phần giữ nút (IsHoldEnabled/ButtonHoldDown): prefab gốc đều tắt.
 [RequireComponent(typeof(Button))]
 public class PressButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    public float PressYValue = -20f;   // y của con đầu tiên khi đang nhấn (gốc phần lớn -20, nút đóng -8)
+    public float PressScale = 0.9f;        // tỉ lệ scale khi đang nhấn
+    public float PressDuration = 0.08f;    // thời gian thu nhỏ
+    public float ReleaseDuration = 0.1f;   // thời gian phóng to lại
 
     private Button button;
-    private RectTransform content;     // yct gốc
-    private float startY;              // ycr gốc
+    private Vector3 startScale;
     private bool isPressed;
+    private Tween tween;
 
     private void Awake()
     {
         button = GetComponent<Button>();
-        if (transform.childCount > 0)
-        {
-            content = transform.GetChild(0) as RectTransform;
-        }
-        if (content != null)
-        {
-            startY = content.anchoredPosition.y;
-        }
+        startScale = transform.localScale;
     }
 
     private void Update()
@@ -41,13 +36,17 @@ public class PressButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         }
     }
 
-    // Gốc không có: nút bị tắt giữa lúc đang nhấn thì lần hiện sau vẫn lún → trả về nổi.
+    // Nút bị tắt giữa lúc đang nhấn thì lần hiện sau vẫn nhỏ → trả về scale ban đầu ngay.
     private void OnDisable()
     {
-        if (isPressed)
-        {
-            Release();
-        }
+        isPressed = false;
+        tween?.Kill();
+        transform.localScale = startScale;
+    }
+
+    private void OnDestroy()
+    {
+        tween?.Kill();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -69,18 +68,14 @@ public class PressButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     private void Press()
     {
         isPressed = true;
-        if (content != null)
-        {
-            content.anchoredPosition = new Vector2(content.anchoredPosition.x, PressYValue);
-        }
+        tween?.Kill();
+        tween = transform.DOScale(startScale * PressScale, PressDuration).SetEase(Ease.OutQuad).SetUpdate(true);
     }
 
     private void Release()
     {
         isPressed = false;
-        if (content != null)
-        {
-            content.anchoredPosition = new Vector2(content.anchoredPosition.x, startY);
-        }
+        tween?.Kill();
+        tween = transform.DOScale(startScale, ReleaseDuration).SetEase(Ease.OutQuad).SetUpdate(true);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ using UnityEngine.UI;
 public class ElementTabMenuUILobby : MonoBehaviour
 {
     private static readonly Color LOCKED_ICON_COLOR = new Color(0.1019608f, 0.1019608f, 0.1019608f, 1f);   // zcj gốc
+    private static readonly Vector3 SELECT_BOUNCE_FROM = new Vector3(1.1f, 0.75f, 1f);
+    private const float SELECT_BOUNCE_DURATION = 0.35f;
 
     public Button btTab;
     public GameObject objNotice;
@@ -39,10 +42,24 @@ public class ElementTabMenuUILobby : MonoBehaviour
     // Trạng thái mở/đóng: mở -> bật objSelect, đóng -> tắt.
     public void SetOpen(bool open)
     {
+        bool justOpened = open && isOpen == false;
         isOpen = open;
         if (objSelect != null)
+        {
             objSelect.SetActive(open);
+            if (justOpened)
+                PlaySelectBounce();
+        }
         RefreshTutorial();
+    }
+
+    // Ô vàng hiện ra thì nhún: bẹp ngang rồi bật về 1 (OutBack vọt quá chút cho dẻo).
+    private void PlaySelectBounce()
+    {
+        Transform tf = objSelect.transform;
+        tf.DOKill();
+        tf.localScale = SELECT_BOUNCE_FROM;
+        tf.DOScale(Vector3.one, SELECT_BOUNCE_DURATION).SetEase(Ease.OutBack, 3f);
     }
 
     // TabBarElementUI.kup gốc: tab đang mở thì không chỉ tay.

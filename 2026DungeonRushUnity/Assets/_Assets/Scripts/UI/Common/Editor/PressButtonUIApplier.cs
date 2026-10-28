@@ -5,13 +5,11 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Gắn PressButtonUI lên đúng các nút mà prefab gốc có PressButtonUI, kèm PressYValue gốc.
+// Gắn PressButtonUI lên đúng các nút mà prefab gốc có PressButtonUI.
 // press_buttons.json = danh sách (prefab, đường dẫn nút trong prefab; "" = chính root) sinh bằng cách khớp
-// đường dẫn nút project với prefab rip gốc (AssetRipper v41) + cảnh GameplayScene gốc:
-//   pressY = PressYValue gốc, ripChildY = y gốc của con đầu tiên, ripChild = tên con đầu tiên gốc.
-// PressYValue gán = y hiện tại của con đầu tiên trong project + (pressY - ripChildY): bố cục giữ như gốc thì
-// ra đúng số gốc, reskin đổi y con thì vẫn lún cùng một khoảng.
-// Chạy lại được sau khi builder dựng lại prefab (ghi đè PressYValue theo bảng).
+// đường dẫn nút project với prefab rip gốc (AssetRipper v41) + cảnh GameplayScene gốc.
+// (Các cột pressY/ripChildY/ripChild là số lún gốc — giờ nút co/giãn cả nút nên không dùng.)
+// Chạy lại được sau khi builder dựng lại prefab.
 public static class PressButtonUIApplier
 {
     private const string LIST = "Assets/_Assets/Scripts/UI/Common/Editor/press_buttons.json";
@@ -47,7 +45,7 @@ public static class PressButtonUIApplier
             entries.Add(e);
         }
 
-        int applied = 0, missing = 0, noChild = 0, otherChild = 0;
+        int applied = 0, missing = 0;
         foreach (KeyValuePair<string, List<Entry>> pair in byPrefab)
         {
             GameObject root = PrefabUtility.LoadPrefabContents(pair.Key);
@@ -68,27 +66,9 @@ public static class PressButtonUIApplier
                     continue;
                 }
 
-                PressButtonUI press = t.GetComponent<PressButtonUI>();
-                if (press == null)
+                if (t.GetComponent<PressButtonUI>() == null)
                 {
-                    press = t.gameObject.AddComponent<PressButtonUI>();
-                }
-
-                RectTransform child = t.childCount > 0 ? t.GetChild(0) as RectTransform : null;
-                if (child == null)
-                {
-                    noChild++;
-                    press.PressYValue = e.pressY;
-                    Debug.LogWarning("[PressButtonUI] nút không có con để lún: " + pair.Key + " :: " + e.path);
-                }
-                else
-                {
-                    press.PressYValue = child.anchoredPosition.y + (e.pressY - e.ripChildY);
-                    if (!string.IsNullOrEmpty(e.ripChild) && child.name != e.ripChild)
-                    {
-                        otherChild++;
-                        Debug.LogWarning("[PressButtonUI] con đầu tiên khác gốc (" + child.name + " ≠ " + e.ripChild + "): " + pair.Key + " :: " + e.path);
-                    }
+                    t.gameObject.AddComponent<PressButtonUI>();
                 }
                 applied++;
             }
@@ -97,8 +77,7 @@ public static class PressButtonUIApplier
             PrefabUtility.UnloadPrefabContents(root);
         }
 
-        string result = string.Format("[PressButtonUI] gắn {0} nút, không thấy {1}, không có con {2}, con khác gốc {3}",
-            applied, missing, noChild, otherChild);
+        string result = string.Format("[PressButtonUI] gắn {0} nút, không thấy {1}", applied, missing);
         Debug.Log(result);
         return result;
     }
