@@ -14,7 +14,7 @@ Reskin Mining 2026-10-19 (đã commit 075395e, test Play OK: lưới/khối/đ�
 - ChatGPT (Codex, `_Concept/Mining/gen/`, ref = crop mockup): 7 icon quặng + `mining (1).png` (nút Rarity). Diamond = THẠCH ANH TÍM theo mockup, vẽ nền xanh lá rồi đảo màu → tách (`tools/reskin/key_mining_icons.py`). `*_character.png` = bản icon dụng cụ mới đợt Shop. Ghi đè qua ArtIncoming + Apply Reskin (18 ảnh).
 - Prefab: UIMiningPopup khung 953x1686 theo mockup (lưới quặng 4 cột 178x52 cách 41x24, thứ tự Stone Coal Iron Emerald / Gold Diamond Ruby; mỏ 860; hàng dưới tối đen α0.78 (bù Linear); vạch độ sâu xanh #2AFF00); UIMiningOfferPopup (popup_frame, Gameplay/ribbon_offer, box_tan, Shop/reward_slot, btn_blue, badge_discount); UIMiningRarityPopup (kit Mastery, không có mockup).
 - Code: UIMiningPopup.sprToolSelected/sprToolPassive — nút dụng cụ đang chọn = Mastery/btn_blue, còn lại Mining/btn_gray (thay tô màu DEFAULT/PASSIVE).
-- Config: MiningConfig.BlockScale = 100/95 (khối 100px trên ô 95 như mockup), OreConfigs[7] Stone → stone_block; `_MiningGridMaterial` nền #EEA063, kẻ #E18F52.
+- Config: MiningConfig.BlockScale = 100/95 (khối 100px trên ô 95 như mockup), OreConfigs[7] Stone → stone_block; `_MiningGridMaterial` nền #EEA063, kẻ #E18F52; 2026-10-28 ô lưới = 1 ô gạch (_GridSize 1, _LineWidth 0.03, _Padding 0.006; _Offset 0.5 vì World ở toạ độ nguyên → kẻ nằm mép ô).
 - KHÔNG chạy lại `Tools/DungeonRush/Build Mining` (MiningPrefabBuilder ghi đè prefab UI + config → mất reskin). Riêng mục Fix Ore Particles thì được.
 
 Xem [[dungonrush-reskin-plan]], [[dungonrush-mining-system]], [[dungonrush-reskin-shop]].
