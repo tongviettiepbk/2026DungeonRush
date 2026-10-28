@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,7 +26,13 @@ public class UIPvPPopup : BaseUI
     public GameObject objTrophySliderRoot;
     public Slider sliderTrophy;
     public TMP_Text txtTrophySlider;
+    // Reskin: bảng xếp hạng world nằm ngay trong sảnh (mockup), cùng dữ liệu với UIPvPLeaderboardPopup.
+    public ElementPvPLeaderboardUI leaderboardElement;
+    public GameObject leaderboardSeparator;
+    public Transform leaderboardContent;
+    public ScrollRect leaderboardScroll;
 
+    private readonly List<GameObject> leaderboardRows = new List<GameObject>();
     private float tick;
     private bool isLoaded;
     private bool isRequesting;
@@ -40,6 +47,8 @@ public class UIPvPPopup : BaseUI
         if (btReward != null) btReward.onClick.AddListener(OnClickRewards);
         if (btAdTicket != null) btAdTicket.onClick.AddListener(OnClickAdTicket);
         if (btClose != null) btClose.onClick.AddListener(Close);
+        if (leaderboardElement != null) leaderboardElement.gameObject.SetActive(false);
+        if (leaderboardSeparator != null) leaderboardSeparator.SetActive(false);
     }
 
     protected override void OnEnable()
@@ -90,6 +99,22 @@ public class UIPvPPopup : BaseUI
             isLoaded = true;
             SetLoading(false);
             Draw();
+            LoadLeaderboard();
+        });
+    }
+
+    private void LoadLeaderboard()
+    {
+        if (leaderboardElement == null || leaderboardContent == null) return;
+        for (int i = 0; i < leaderboardRows.Count; i++)
+        {
+            if (leaderboardRows[i] != null) Destroy(leaderboardRows[i]);
+        }
+        leaderboardRows.Clear();
+        Controller.GetLeaderboard(StaticPvPData.LEADERBOARD_SCOPES[0], res =>
+        {
+            if (this == null || !gameObject.activeInHierarchy || res == null) return;
+            UIPvPLeaderboardPopup.FillRows(res, leaderboardElement, leaderboardSeparator, leaderboardContent, leaderboardScroll, leaderboardRows);
         });
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -14,9 +15,13 @@ public class UIPvPFindOpponentPopup : BaseUI
     public Button btClose;
     public GameObject objLoaded;
     public GameObject objLoading;
+    // Reskin (mockup): giờ hồi vé + ô vé "{còn}/{free mỗi ngày}".
+    public TMP_Text txtResetTime;
+    public TMP_Text txtTickets;
 
     private readonly List<ElementPvPPlayerUI> elements = new List<ElementPvPPlayerUI>();
     private bool isStarting;
+    private float tick;
 
     protected override void Awake()
     {
@@ -34,6 +39,31 @@ public class UIPvPFindOpponentPopup : BaseUI
         if (txtError != null) txtError.gameObject.SetActive(false);
 
         PvPController.Instance.FindOpponents(OnRoster, OnError);
+        tick = 0f;
+        DrawTickets();
+    }
+
+    private void Update()
+    {
+        tick -= Time.unscaledDeltaTime;
+        if (tick > 0f) return;
+        tick = 1f;
+        DrawTickets();
+    }
+
+    private void DrawTickets()
+    {
+        if (txtResetTime != null)
+        {
+            DateTime now = DateTime.UtcNow;
+            txtResetTime.text = string.Format(Loc.L("Popup.PvP.TicketsResetIn"), UIPvPPopup.FormatTime(now.Date.AddDays(1) - now));
+        }
+        if (txtTickets != null)
+        {
+            PvPTicketsDTO t = GameData.userData.pvp.tickets;
+            int daily = t.dailyFreeTickets > 0 ? t.dailyFreeTickets : StaticPvPData.DAILY_FREE_TICKETS;
+            txtTickets.text = "<sprite=0>" + (t.freeRemaining + t.adRemaining) + "/" + daily;
+        }
     }
 
     private void SetLoading(bool isOn, string title)

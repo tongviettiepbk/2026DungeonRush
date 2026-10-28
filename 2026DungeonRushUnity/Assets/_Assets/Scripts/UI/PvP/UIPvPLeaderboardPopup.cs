@@ -79,8 +79,15 @@ public class UIPvPLeaderboardPopup : BaseUI
     // jpz/jqc.
     private void Draw(PvPLeaderboardResponseDTO res)
     {
+        FillRows(res, elementPrefab, separatorPrefab, listContent, scrollRect, rows);
+    }
+
+    // Dùng chung với danh sách xếp hạng trong sảnh PvP (UIPvPPopup reskin).
+    public static void FillRows(PvPLeaderboardResponseDTO res, ElementPvPLeaderboardUI elementPrefab, GameObject separatorPrefab,
+        Transform listContent, ScrollRect scrollRect, List<GameObject> rows)
+    {
         RectTransform me = null;
-        AddRows(res.topPlayers, ref me);
+        AddRows(res.topPlayers, elementPrefab, listContent, rows, ref me);
         if (res.nearbyPlayers != null && res.nearbyPlayers.Count > 0)
         {
             if (separatorPrefab != null)
@@ -89,7 +96,7 @@ public class UIPvPLeaderboardPopup : BaseUI
                 sep.SetActive(true);
                 rows.Add(sep);
             }
-            AddRows(res.nearbyPlayers, ref me);
+            AddRows(res.nearbyPlayers, elementPrefab, listContent, rows, ref me);
         }
 
         if (scrollRect != null)
@@ -109,7 +116,8 @@ public class UIPvPLeaderboardPopup : BaseUI
         }
     }
 
-    private void AddRows(List<PvPLeaderboardEntryModel> list, ref RectTransform me)
+    private static void AddRows(List<PvPLeaderboardEntryModel> list, ElementPvPLeaderboardUI elementPrefab, Transform listContent,
+        List<GameObject> rows, ref RectTransform me)
     {
         if (list == null) return;
         for (int i = 0; i < list.Count; i++)

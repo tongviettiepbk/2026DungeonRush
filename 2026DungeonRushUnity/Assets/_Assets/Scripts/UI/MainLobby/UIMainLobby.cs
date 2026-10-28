@@ -840,6 +840,13 @@ public class UIMainLobby : BaseUI
             return;
         }
 
+        // Reskin (mockup PvP demo4): đang đánh PvP → top bar ghi "PvP".
+        if (GameController.Instance.mode is PvPMode)
+        {
+            txtLevelMap.text = Loc.L("UI.Events.PvP");
+            return;
+        }
+
         // Campaign (GameplayUI.kii gốc): "<color>Tier</color> chương-màn", VD "Hard 6-5".
         int stageId = GameData.userData.campaign.stageIdCurrent;
         txtLevelMap.text = StaticCampaignData.GetLevelText(GameData.staticData.campaign.GetLevel(stageId));

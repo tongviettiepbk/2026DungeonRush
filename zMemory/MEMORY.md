@@ -101,3 +101,4 @@
 - [FX impact cận chiến](dungonrush-melee-impact-fx.md) — hero_impact_101 của StickIdle cho mọi đòn đánh gần, FxController.fxImpactMelee (Resources), hiện ở pivot (giữa thân) nạn nhân; 2026-10-28
 - [MainMap bám ô](dungonrush-map-cell-snap.md) — lưới nền căn theo PointStart (MapController.AlignGridBackground), tường = vòng ô dày 1 ô, chướng ngại 1x1; sprite PPU 256 scale 1 (2026-10-28)
 - [Reskin Events](dungonrush-reskin-events.md) — 2026-10-28 EventPage theo mockup, 2 thẻ PvP/Boss Rush (Co-op giữ tắt — user chốt), kit 1_UIKit/Events; chưa test Play, đã commit
+- [Reskin PvP](dungonrush-reskin-pvp.md) — 2026-10-28 sảnh (danh sách world trong sảnh, bỏ Season/Promotion — bám gốc), chọn đối thủ (ô vé + avatar), Victory/Defeat, top bar "PvP"; kit 1_UIKit/PvP + IsFist; CHƯA test Play, CHƯA commit

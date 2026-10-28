@@ -13,6 +13,9 @@ public class ElementPvPPlayerUI : MonoBehaviour
     public Image imgBackground;
     public Color highlightedColor = new Color(1f, 0.93f, 0.6f, 1f);
     public Color defaultColor = Color.white;
+    // Reskin: avatar + trophy-nếu-thắng tách khỏi nút (nút ghi "Battle <vé> 1").
+    public Image imgAvatar;
+    public TMP_Text txtWinTrophy;
 
     private PvPPlayerModel model;
     private Action<PvPPlayerModel> onBattle;
@@ -35,7 +38,17 @@ public class ElementPvPPlayerUI : MonoBehaviour
             btBattle.gameObject.SetActive(!isMe);
             btBattle.interactable = true;
         }
-        if (txtBattle != null) txtBattle.text = "<sprite=0>+" + winDelta;
+        if (imgAvatar != null) imgAvatar.sprite = AvatarConfig.Get(model.AvatarId);
+        if (txtWinTrophy != null)
+        {
+            // startPvPBattle tiêu 1 vé.
+            txtWinTrophy.text = "<sprite=0>+" + winDelta;
+            if (txtBattle != null) txtBattle.text = Loc.L("Common.Battle") + "\n<sprite=0>1";
+        }
+        else if (txtBattle != null)
+        {
+            txtBattle.text = "<sprite=0>+" + winDelta;
+        }
     }
 
     public void SetInteractable(bool isOn)

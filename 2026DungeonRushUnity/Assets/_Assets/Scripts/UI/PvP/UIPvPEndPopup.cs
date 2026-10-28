@@ -21,6 +21,9 @@ public class UIPvPEndPopup : BaseUI
     public GameObject objResult;
     public TMP_Text txtError;
     public RewardIconSet rewardIcons;
+    // Reskin (mockup): tiêu đề Defeat màu đỏ.
+    public Color victoryTitleColor = Color.white;
+    public Color defeatTitleColor = new Color(1f, 0.29f, 0.25f, 1f);
 
     private readonly List<GameObject> rewardRows = new List<GameObject>();
     private Action onClose;
@@ -54,7 +57,7 @@ public class UIPvPEndPopup : BaseUI
     // jpf/jpg.
     private void ShowResult(PendingPvPRewardSettlement s)
     {
-        if (txtTitle != null) txtTitle.text = s.Won ? Loc.L("Popup.PvP.Victory") : Loc.L("Popup.PvP.Defeat");
+        SetTitle(s.Won);
         if (txtError != null) txtError.gameObject.SetActive(false);
         if (objResult != null) objResult.SetActive(true);
 
@@ -77,7 +80,7 @@ public class UIPvPEndPopup : BaseUI
     // jpc: lỗi báo kết quả.
     private void ShowError(string message)
     {
-        if (txtTitle != null) txtTitle.text = won ? Loc.L("Popup.PvP.Victory") : Loc.L("Popup.PvP.Defeat");
+        SetTitle(won);
         if (objResult != null) objResult.SetActive(false);
         if (txtError != null)
         {
@@ -87,6 +90,13 @@ public class UIPvPEndPopup : BaseUI
         btClaim.gameObject.SetActive(false);
         if (btRetry != null) btRetry.gameObject.SetActive(PvPController.Instance.HasPendingReport);
         if (btClose != null) btClose.gameObject.SetActive(true);
+    }
+
+    private void SetTitle(bool isWon)
+    {
+        if (txtTitle == null) return;
+        txtTitle.text = isWon ? Loc.L("Popup.PvP.Victory") : Loc.L("Popup.PvP.Defeat");
+        txtTitle.color = isWon ? victoryTitleColor : defeatTitleColor;
     }
 
     private void OnClickRetry()
