@@ -97,3 +97,4 @@
 - [Reskin lobby đợt 3](dungonrush-reskin-lobby2.md) — 2026-10-28 mockup "lobby demo 4": giữ map nén phần dưới, rarity mới, thanh rương, tab chữ + ô vàng; hộp avatar/gem cắt từ mockup chờ art; đã commit 3b12c24
 - [Reskin Dungeon](dungonrush-reskin-dungeon.md) — 2026-10-28 trang + 2 popup + tấm trong trận theo mockup, kit 1_UIKit/Dungeon, tên EN Boss Raid/Street Rush/Mafia Crew; test Play OK, đã commit daaf59f
 - [Reskin popup art cũ còn sót](dungonrush-reskin-old-popups.md) — 2026-10-28 Combat Summary + 16 popup (Cape/PvP/Account/ItemInfo/AutoLoot/Language) sang kit Mastery bằng PopupKitReskin; đã commit, chưa test Play
+- [FX impact cận chiến](dungonrush-melee-impact-fx.md) — hero_impact_101 của StickIdle cho mọi đòn đánh gần, FxController.fxImpactMelee (Resources), hiện ở centerBodyPoint nạn nhân; 2026-10-28

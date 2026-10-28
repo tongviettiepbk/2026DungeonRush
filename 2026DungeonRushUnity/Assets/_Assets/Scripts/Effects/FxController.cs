@@ -12,6 +12,10 @@ public class FxController : Singleton<FxController>
     public BaseFx fxExplodeBig;
     public BaseFx fxExplodeSmall;
 
+    [Header("Impact")]
+    // FX trúng đòn đánh gần (hero default Pom của StickIdle: hero_impact_101).
+    public BaseFx fxImpactMelee;
+
     [Header("Buffs")]
     public BaseFx fxHeal;
 
@@ -47,6 +51,11 @@ public class FxController : Singleton<FxController>
         if (prefabTextDamage == null)
         {
             prefabTextDamage = Resources.Load<CombatText>("Prefabs/combat-text");
+        }
+
+        if (fxImpactMelee == null)
+        {
+            fxImpactMelee = Resources.Load<BaseFx>("Prefabs/Fx/hero_impact_101");
         }
     }
 

@@ -1299,7 +1299,8 @@ public class BaseUnit : MonoBehaviour
         }
         else
         {
-            target.TakeAttack(data, impactAttack);
+            // FX trúng hiện ở centerBodyPoint của target; unit chưa gán impactAttack dùng FX cận chiến chung.
+            target.TakeAttack(data, impactAttack != null ? impactAttack : FxController.Instance.fxImpactMelee);
             PlaySfxAttack();
         }
     }
