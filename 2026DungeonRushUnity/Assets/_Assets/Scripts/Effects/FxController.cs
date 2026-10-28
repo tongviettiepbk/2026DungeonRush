@@ -15,6 +15,8 @@ public class FxController : Singleton<FxController>
     [Header("Impact")]
     // FX trúng đòn đánh gần (hero default Pom của StickIdle: hero_impact_101).
     public BaseFx fxImpactMelee;
+    // FX trúng đạn đánh xa: bản nhẹ của hero_impact_101 (nhỏ, nhạt, ít tia lửa).
+    public BaseFx fxImpactRanged;
 
     [Header("Buffs")]
     public BaseFx fxHeal;
@@ -56,6 +58,11 @@ public class FxController : Singleton<FxController>
         if (fxImpactMelee == null)
         {
             fxImpactMelee = Resources.Load<BaseFx>("Prefabs/Fx/hero_impact_101");
+        }
+
+        if (fxImpactRanged == null)
+        {
+            fxImpactRanged = Resources.Load<BaseFx>("Prefabs/Fx/hero_impact_ranged");
         }
     }
 

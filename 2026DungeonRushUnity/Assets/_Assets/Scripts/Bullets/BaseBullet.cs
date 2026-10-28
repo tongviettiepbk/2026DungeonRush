@@ -435,7 +435,9 @@ public class BaseBullet : MonoBehaviour
                 {
                     if (target.gameObject.activeInHierarchy)
                     {
-                        FxController.Instance.SpawnFx(attacker.impactAttack, target.centerBodyPoint.position);
+                        // Giữa thân target (pivot), giống FX cận chiến; attacker chưa gán impactAttack dùng FX đánh xa chung.
+                        BaseFx impact = attacker.impactAttack != null ? attacker.impactAttack : FxController.Instance.fxImpactRanged;
+                        target.ShowImpactHit(impact, UnitBodyPoint.Pivot);
                         DebugCustom.ShowLog("SHOW FX OnTargetTakeDamage");
                     }
 
