@@ -102,3 +102,4 @@
 - [MainMap bám ô](dungonrush-map-cell-snap.md) — lưới nền căn theo PointStart (MapController.AlignGridBackground), tường = vòng ô dày 1 ô, chướng ngại 1x1; sprite PPU 256 scale 1 (2026-10-28)
 - [Reskin Events](dungonrush-reskin-events.md) — 2026-10-28 EventPage theo mockup, 2 thẻ PvP/Boss Rush (Co-op giữ tắt — user chốt), kit 1_UIKit/Events; chưa test Play, đã commit
 - [Reskin PvP](dungonrush-reskin-pvp.md) — 2026-10-28 sảnh (danh sách world trong sảnh, bỏ Season/Promotion — bám gốc), chọn đối thủ (ô vé + avatar), Victory/Defeat, top bar "PvP"; kit 1_UIKit/PvP + IsFist; CHƯA test Play, đã commit eb26bba
+- [Giờ server cho reset Dungeon/Events](dungonrush-server-time.md) — getservertime + ServerTime.cs, sync ở Login, offline dùng giờ máy; 2026-10-29 chưa deploy prod

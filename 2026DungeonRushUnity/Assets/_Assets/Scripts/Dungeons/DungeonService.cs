@@ -36,9 +36,10 @@ public static class DungeonService
         return now.Date.AddDays(1) - now;
     }
 
+    // Giờ server (chỉnh giờ máy không hồi key sớm được); offline thì tạm giờ máy.
     private static DateTime GetUtcNow()
     {
-        return GameUtils.GetTimeNow().ToUniversalTime();
+        return ServerTime.UtcNow;
     }
 
     #endregion

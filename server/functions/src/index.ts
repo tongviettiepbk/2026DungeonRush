@@ -24,3 +24,4 @@ export {
   getclanwarleadershipranking, matchclanwarsweekly, matchclanwarsnow, seedclanwarpoints,
 } from "./clanWar";
 export { saveuserdoc, loaduserdoc, deleteuserdoc } from "./account";
+export { getservertime } from "./time";

@@ -10,6 +10,9 @@ using UnityEngine.UI;
 // Khi có phần UI/GameConfig sẽ thay text/version bằng UIManager + GameConfig.Instance.
 public class Login : MonoBehaviour
 {
+    // Chờ giờ server tối đa ngần này giây rồi vào game (quá thì dùng giờ máy).
+    private const float SERVER_TIME_TIMEOUT = 3f;
+
     public Button btTapToPlay;
     public Text txLoading;
     public Text txVersion;
@@ -58,6 +61,9 @@ public class Login : MonoBehaviour
 
         // Đăng nhập (lần đầu: tự tạo tài khoản khách) + tài khoản email thì đối chiếu save cloud.
         yield return AccountController.Instance.BootRoutine();
+
+        // Giờ server cho mốc reset key Dungeon / vé Events.
+        yield return ServerTime.SyncRoutine(SERVER_TIME_TIMEOUT);
 
         OnLoadDone();
     }

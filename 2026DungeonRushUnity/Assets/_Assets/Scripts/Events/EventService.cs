@@ -35,9 +35,10 @@ public static class EventService
         return now.Date.AddDays(1) - now;
     }
 
+    // Giờ server (chỉnh giờ máy không hồi vé sớm được); offline thì tạm giờ máy.
     private static DateTime GetUtcNow()
     {
-        return GameUtils.GetTimeNow().ToUniversalTime();
+        return ServerTime.UtcNow;
     }
 
     public static bool IsUnlocked(EventModeType type)
