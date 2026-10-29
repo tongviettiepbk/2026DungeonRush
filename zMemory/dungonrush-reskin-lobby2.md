@@ -13,7 +13,8 @@ Mockup + art giao: `ArtIncoming/_Concept/Lobby2/` (nguồn `/Volumes/Work/_Asset
 **User chốt:**
 - Mockup đặt hàng pet cao hơn game ~190px → GIỮ map (camera không đổi), nén phần dưới: tab 168, chat 62, BottomUI 600 (đặt tay, KHÔNG theo y mockup).
 - Loot thường = btn_red, khoá = btn_gray (ForgeButtonView.lockedTopSprite).
-- Thanh tab: thêm chữ (LocalizeText key gốc `UI.TabBar.Store/Companion/Dungeon/Events/Clan`), tab mở = ô vàng `tab_selected` (node CloseButton = objSelect, icon X ẩn).
+- Thanh tab: thêm chữ (LocalizeText key gốc `UI.TabBar.Store/Companion/Dungeon/Events/Clan`), tab mở = ô vàng `tab_selected` (node CloseButton = objSelect). 2026-10-29 theo demo mới: tab mở hiện nút X đỏ (`Mastery/btn_close` 120x120 ngang tầm icon) — CloseButton dời xuống cuối để che icon + chữ; bấm lại tab = đóng menu.
+- 2026-10-29: chữ Auto/Boost đẩy lên trong mặt nút (y −21, icon Boost y 23 ngang Auto) — không đè gờ nút nữa.
 
 **Đã làm:** 10 khung rarity ghi đè (bậc 7/8 có art mới copy 15/16; bậc 11 pha từ khung tím mới → #6E4BC4), auto-forge + icon_boost = art 09_auto/10_boost, panel_companion đổi xám #706F7D, ô đồ cột 218/414/608/853 (ẩn vạch chia cột 3|4), 3 nút 272x136, ChestBar (con ForgeUI ngay sau Platform — để trong BottomUI bị Platform che) chứa số vé loot + giờ Boost, chat = chat_off, ô gem GemBg, nắm đấm cạnh power (BossRush/icon_fist), vé Battle Pass 96px.
 
