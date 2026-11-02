@@ -13,7 +13,7 @@ metadata:
 - Client: `Scripts/Network/ServerTime.cs` — `SyncRoutine` gọi 1 lần ở `Login.LoadRoutine` (chờ tối đa 3s), sau đó `UtcNow` = giờ server + `realtimeSinceStartupAsDouble` trôi. Chưa sync (offline / vào thẳng MainGame trong Editor) → `DateTime.UtcNow` giờ máy.
 - Chỉ `DungeonService.GetUtcNow` + `EventService.GetUtcNow` dùng; `GameUtils.GetTimeNow` (Mining, Shop, Companion, BossRushSchedule, Profile...) VẪN giờ máy.
 - Vé PvP/BossRush thật vẫn do server quyết (dayKey UTC), client chỉ hiển thị.
-- **Chưa deploy** lên prod (dungeon-duck-quack-slash) — thiếu hàm thì client tự lùi về giờ máy, không lỗi.
+- Đã commit 04d2f30. **Chưa deploy** lên prod (user: deploy gộp sau khi làm thêm tính năng server) (dungeon-duck-quack-slash) — thiếu hàm thì client tự lùi về giờ máy, không lỗi.
 
 **Why:** user muốn chống chỉnh giờ máy để hồi key/vé.
 **How to apply:** muốn hệ khác chống chỉnh giờ → đổi sang `ServerTime.UtcNow`, đừng dựng hàm mới. Xem [[dungonrush-dungeon-system]], [[dungonrush-events-tab]], [[dungonrush-firebase-prod-deploy]].
