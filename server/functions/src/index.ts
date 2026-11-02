@@ -25,3 +25,6 @@ export {
 } from "./clanWar";
 export { saveuserdoc, loaduserdoc, deleteuserdoc } from "./account";
 export { getservertime } from "./time";
+export {
+  sendchatmessage, sendclanchatmessage, getchatplayerprofile, updatechatplayerprofile, reportchatuser, clearchatban,
+} from "./chat";

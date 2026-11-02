@@ -1,0 +1,12 @@
+---
+name: dungonrush-chat-system
+description: Chat Thế giới + Clan dựng theo gốc 2026-11-02 — RTDB chat/ww + chat/clans/{id} đọc qua REST SSE (không SDK), 5 endpoint gốc, lọc từ tục rp, chặn/báo cáo/cấm; test emulator + Play Editor đạt, đã commit, CHƯA deploy
+metadata:
+  type: project
+---
+**Gốc (reverse v41):** ChatController + ClanChatController nghe Firebase RTDB `chat/ww` / `chat/clans/{clanId}` (orderByChild t, limitToLast 40), gửi qua Cloud Function sendChatMessage/sendClanChatMessage/getChatPlayerProfile/updateChatPlayerProfile/reportChatUser. Luật client: cắt 200 ký tự, lọc từ tục class `rp` (112 từ + leet, thay ***), 3 tin đầu tự do rồi cách 3s (đếm riêng mỗi kênh), tin mình hiện mờ 0.5, chặn = list ở máy, ChatButtonUI mở ở PlayerLevel 6 + 2 dòng xem trước, cấm vĩnh viễn = 32503680000. Tin "rơi đồ" Mythic/Artifact (ffk) KHÔNG ai gọi → không làm. Discord gốc → ẩn.
+**User chốt 2026-11-02:** RTDB qua REST (không thêm SDK); luật cấm số đề xuất (3 người báo cáo/24h → 1h→24h→7 ngày→vĩnh viễn, 10 tin/phút, giữ tin 3 ngày).
+**Server:** `server/functions/src/chat.ts` (+ clearchatban admin), `database.rules.json` (đọc khi đã đăng nhập, `.indexOn t`), index Firestore chatReports, firebase.json thêm database + emulator 9000. Emulator: instance `demo-dungeonrush-default-rtdb` (FIREBASE_CONFIG emulator trỏ namespace khác KHÔNG có rules → code ép default-rtdb). Test `npm run test:emulator:chat` PASS. Bật emulator nhớ thêm `database` vào `--only`.
+**Client:** Scripts/Chat (ChatController gộp 2 kênh, RealtimeDbStream SSE qua DownloadHandlerScript, ProfanityFilter, UserChatData key_user_chat), Scripts/UI/Chat (UIChatTabPage, ChatMessageItem, ChatButtonUI, ChatButtonMessageItemUI, UIReportPopup), UIPlayerPopup thêm btBlock/btReport + ShowChatActions (đặt 2 nút ngang đáy bằng code, không sửa layout user). Hồ sơ chat = khuôn BossRushPlayerModel (FillSnapshot đã public). FirebaseSettings.DatabaseUrl/DatabaseNamespaceQuery.
+**Builder:** `Tools/DungeonRush/Build Chat UI` (ChatPrefabBuilder) — dựng từ rip Prefabs/UI/Chat + Settings/ReportPopup, gán field UIPlayerPopup + UIMainGame2 ChatButton. Chạy lại được.
+**Còn:** reskin chat/report (art rip), test điện thoại (đẩy khung theo bàn phím), deploy (bật RTDB trên console trước). GD: `GDD/CHAT_DESIGN.md`. Liên quan [[dungonrush-clan-clanwar]], [[dungonrush-firebase-prod-deploy]], [[dungonrush-online-test-data]].

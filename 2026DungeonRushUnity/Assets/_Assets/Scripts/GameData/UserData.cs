@@ -32,6 +32,7 @@ public class UserData
     public const string DATA_KEY_OFFLINE_EARNING = "key_user_offline_earning";
     public const string DATA_KEY_FORGE = "key_user_forge";
     public const string DATA_KEY_MINING = "key_user_mining";
+    public const string DATA_KEY_CHAT = "key_user_chat";
 
     public UserProfileData profile { get; set; } = new UserProfileData();
     public UserPlayerData player { get; set; } = new UserPlayerData();
@@ -53,6 +54,7 @@ public class UserData
     public UserOfflineEarningData offlineEarning { get; set; } = new UserOfflineEarningData();
     public UserForgeData forge { get; set; } = new UserForgeData();
     public UserMiningData mining { get; set; } = new UserMiningData();
+    public UserChatData chat { get; set; } = new UserChatData();
 
     private List<BaseUserData> listData;
     private float lastTimeSaveData;
@@ -98,6 +100,7 @@ public class UserData
         offlineEarning = LoadModule<UserOfflineEarningData>(DATA_KEY_OFFLINE_EARNING, out _);
         forge = LoadModule<UserForgeData>(DATA_KEY_FORGE, out _);
         mining = LoadModule<UserMiningData>(DATA_KEY_MINING, out _);
+        chat = LoadModule<UserChatData>(DATA_KEY_CHAT, out _);
 
         LoadDone();
     }
@@ -174,6 +177,7 @@ public class UserData
             listData.Add(offlineEarning);
             listData.Add(forge);
             listData.Add(mining);
+            listData.Add(chat);
         }
 
         for (int i = 0; i < listData.Count; i++)

@@ -5592,6 +5592,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4103109172679340132}
   - component: {fileID: 4711359726579443374}
+  - component: {fileID: 4428524875118022470}
   m_Layer: 5
   m_Name: ChatButtonMessageItemUI
   m_TagString: Untagged
@@ -5631,6 +5632,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &4428524875118022470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467803264794760992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed5e23a524f045f1b69a7f62ccbc0c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChatButtonMessageItemUI
+  _text: {fileID: 1710452733129407510}
 --- !u!1 &493664706551666175
 GameObject:
   m_ObjectHideFlags: 0
@@ -8923,6 +8937,7 @@ MonoBehaviour:
   btMiningOffer: {fileID: 7156557755405923079}
   offerButton: {fileID: 2991519805911030125}
   battlePassButton: {fileID: 5206592458395328532}
+  chatButton: {fileID: 11569447713606777}
   btAutoPet: {fileID: 7629369254338011105}
   txtAutoPet: {fileID: 3561525125692426135}
   autoPetOnColor: {r: 0.388, g: 0.682, b: 0.259, a: 1}
@@ -31863,6 +31878,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5750950354713008515}
   - component: {fileID: 7318550792887032536}
+  - component: {fileID: 6077367185901760502}
   m_Layer: 5
   m_Name: ChatButtonMessageItemUI_1
   m_TagString: Untagged
@@ -31902,6 +31918,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &6077367185901760502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2399894897730257874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed5e23a524f045f1b69a7f62ccbc0c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChatButtonMessageItemUI
+  _text: {fileID: 4224304482724068619}
 --- !u!1 &2403649120478510473
 GameObject:
   m_ObjectHideFlags: 0
@@ -32312,6 +32341,7 @@ GameObject:
   - component: {fileID: 2123781384636916273}
   - component: {fileID: 6355807963285338591}
   - component: {fileID: 6695376336389767051}
+  - component: {fileID: 11569447713606777}
   m_Layer: 5
   m_Name: ChatButton
   m_TagString: Untagged
@@ -32437,6 +32467,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &11569447713606777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2448620731102638019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcaead922b3494a21976ae58dd8f2284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChatButtonUI
+  ChatButton: {fileID: 6695376336389767051}
+  MessageItems:
+  - {fileID: 4428524875118022470}
+  - {fileID: 6077367185901760502}
 --- !u!1 &2463445047344807691
 GameObject:
   m_ObjectHideFlags: 0

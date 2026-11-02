@@ -61,6 +61,7 @@ public class UINicknamePopup : BaseUI
         GameData.Save();
         this.PostEvent(EventID.NicknameChanged);
         BossRushController.Instance.UpdatePlayer();
+        ChatController.Instance.UpdateProfile();
         Close();
     }
 

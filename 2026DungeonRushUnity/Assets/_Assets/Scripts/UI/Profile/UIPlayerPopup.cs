@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 // Popup xem thông tin 1 người chơi khác (PlayerPopup gốc): tên, avatar, hình hero + pet, Power, 8 ô đồ (độ hiếm,
 // level, huy hiệu relic +N), pet đang dùng, tổng chỉ số phụ. Bấm 1 ô đồ / ô pet → popup chi tiết món / pet đó.
-// Nơi mở tự tải dữ liệu: ShowLoading(userId) trước, có hồ sơ thì Show(player). Hiện mở từ dòng người chơi ở sảnh Boss Rush.
+// Nơi mở tự tải dữ liệu: ShowLoading(userId) trước, có hồ sơ thì Show(player). Mở từ dòng người chơi ở sảnh Boss Rush và
+// từ avatar trong chat — chat gọi thêm ShowChatActions để hiện nút Chặn/Bỏ chặn + Báo cáo (BlockButton/ReportButton gốc).
 public class UIPlayerPopup : BaseUI
 {
     private const float LOADING_SPIN_SPEED = 360f;
@@ -22,11 +23,15 @@ public class UIPlayerPopup : BaseUI
     public TMP_Text txtSubStats;
     public RectTransform rectContent;   // khung nền, cao theo nội dung
     public RectTransform rectLayout;    // cột nội dung (tự co giãn theo số pet / số dòng chỉ số phụ)
+    public Button btBlock;
+    public TMP_Text txtBlock;
+    public Button btReport;
 
     private string userId;
     private float loadingHeight;
     private BossRushPlayerModel player;
     private UserEquipmentData equipment;
+    private ChatReportContext chatContext;
     // Pet đang hiện ở listCompanion, cùng thứ tự.
     private readonly List<BossRushCompanionModel> shownCompanions = new List<BossRushCompanionModel>();
 
@@ -37,6 +42,8 @@ public class UIPlayerPopup : BaseUI
         for (int i = 0; i < listItem.Count; i++) listItem[i].Init(OnClickItem);
         for (int i = 0; i < listCompanion.Count; i++) listCompanion[i].Init(OnClickCompanion);
         loadingHeight = rectContent.rect.height;
+        if (btBlock != null) btBlock.onClick.AddListener(OnClickBlock);
+        if (btReport != null) btReport.onClick.AddListener(OnClickReport);
     }
 
     private void Update()
@@ -56,6 +63,7 @@ public class UIPlayerPopup : BaseUI
     public void ShowLoading(string userId)
     {
         this.userId = userId;
+        ShowChatActions(null);
         txtName.text = string.Empty; // tên nằm trên thanh tiêu đề (ngoài objLoaded) → xoá tên người trước
         objLoaded.SetActive(false);
         objLoading.SetActive(true);
@@ -79,6 +87,58 @@ public class UIPlayerPopup : BaseUI
         txtSubStats.text = GetSubStatsText(player.Items);
         preview.Show(equipment, player.ShowCloak, pets);
         FitContentHeight();
+    }
+
+    // Mở từ chat (context = tin được bấm); null → ẩn 2 nút (Boss Rush, hoặc xem chính mình).
+    public void ShowChatActions(ChatReportContext context)
+    {
+        chatContext = context;
+        bool visible = context != null;
+        if (btBlock != null) btBlock.gameObject.SetActive(visible);
+        if (btReport != null) btReport.gameObject.SetActive(visible);
+        RefreshBlockText();
+        if (visible && btBlock != null && btReport != null)
+        {
+            // Gọi sau Show(): 2 nút xếp ngang dưới đáy khung, khung cao thêm 1 hàng nút.
+            float height = PlaceChatButton(btReport, -CHAT_BUTTON_SPACING);
+            PlaceChatButton(btBlock, CHAT_BUTTON_SPACING);
+            rectContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, rectContent.rect.height + height + CHAT_BUTTON_BOTTOM);
+        }
+    }
+
+    private const float CHAT_BUTTON_SPACING = 110f;   // tâm nút cách giữa khung
+    private const float CHAT_BUTTON_BOTTOM = 40f;     // nút cách đáy khung
+
+    private static float PlaceChatButton(Button button, float x)
+    {
+        RectTransform rt = (RectTransform)button.transform;
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.anchoredPosition = new Vector2(x, CHAT_BUTTON_BOTTOM);
+        return rt.rect.height;
+    }
+
+    private void RefreshBlockText()
+    {
+        if (txtBlock == null || chatContext == null) return;
+        txtBlock.text = Loc.L(ChatController.Instance.IsBlocked(chatContext.UserId) ? "Common.Unblock" : "Common.Block");
+    }
+
+    // fkr gốc: đảo chặn / bỏ chặn.
+    private void OnClickBlock()
+    {
+        if (chatContext == null) return;
+        ChatController chat = ChatController.Instance;
+        if (chat.IsBlocked(chatContext.UserId)) chat.Unblock(chatContext.UserId);
+        else chat.Block(chatContext.UserId);
+        RefreshBlockText();
+    }
+
+    private void OnClickReport()
+    {
+        if (chatContext == null) return;
+        UIReportPopup popup = UIManager.Instance.LoadUI(UIKey.ReportPopup) as UIReportPopup;
+        if (popup != null) popup.Setup(chatContext);
     }
 
     // Khung nền bản gốc cao cố định, còn cột nội dung dài ngắn theo từng người → kéo khung theo cột, lề dưới = lề trên.

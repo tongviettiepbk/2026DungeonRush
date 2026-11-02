@@ -48,6 +48,7 @@ public class UIAvatarSelectPopup : BaseUI
             GameData.Save();
             this.PostEvent(EventID.AvatarChanged);
             BossRushController.Instance.UpdatePlayer();
+            ChatController.Instance.UpdateProfile();
         }
         Close();
     }

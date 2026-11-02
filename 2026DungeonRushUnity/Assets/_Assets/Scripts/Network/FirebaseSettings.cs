@@ -17,6 +17,11 @@ public static class FirebaseSettings
     public const string EMULATOR_HOST = "127.0.0.1";
     public const int EMULATOR_AUTH_PORT = 9099;
     public const int EMULATOR_FUNCTIONS_PORT = 5001;
+    public const int EMULATOR_DATABASE_PORT = 9000;
+
+    // Realtime Database (chat): instance mặc định của project. Bật ở Firebase console → Realtime Database → Create Database
+    // (chọn us-central1 thì URL đúng như dưới; vùng khác URL dạng https://<project>-default-rtdb.<vùng>.firebasedatabase.app).
+    public const string DATABASE_URL = "https://" + PROJECT_ID + "-default-rtdb.firebaseio.com";
 
     public const int REQUEST_TIMEOUT_SECONDS = 20;
 
@@ -26,6 +31,13 @@ public static class FirebaseSettings
     public static string FunctionsBaseUrl => USE_EMULATOR
         ? "http://" + EMULATOR_HOST + ":" + EMULATOR_FUNCTIONS_PORT + "/" + EMULATOR_PROJECT_ID + "/" + REGION
         : "https://" + REGION + "-" + PROJECT_ID + ".cloudfunctions.net";
+
+    public static string DatabaseUrl => USE_EMULATOR
+        ? "http://" + EMULATOR_HOST + ":" + EMULATOR_DATABASE_PORT
+        : DATABASE_URL;
+
+    // Emulator chọn instance qua ?ns= (database.rules.json nạp vào <project>-default-rtdb).
+    public static string DatabaseNamespaceQuery => USE_EMULATOR ? "ns=" + EMULATOR_PROJECT_ID + "-default-rtdb" : string.Empty;
 
     // Auth REST (Identity Toolkit). Emulator nhận mọi key.
     public static string AuthSignUpUrl => AuthHost + "identitytoolkit.googleapis.com/v1/accounts:signUp?key=" + ApiKey;

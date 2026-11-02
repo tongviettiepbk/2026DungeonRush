@@ -420,7 +420,7 @@ public class BossRushController : Singleton<BossRushController>
 
     // ===== Snapshot đồ (elh/eli/elj/elk/ell) =====
 
-    private static void FillSnapshot(BossRushJoinRequestDTO request)
+    public static void FillSnapshot(BossRushJoinRequestDTO request)
     {
         request.server = FirebaseSettings.ServerId;
         request.playerName = GameData.userData.profile.userName;

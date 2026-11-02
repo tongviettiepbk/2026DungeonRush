@@ -37,6 +37,7 @@ public class UIMainLobby : BaseUI
     public Button btMiningOffer;            // MiningOfferButton gốc
     public OfferButtonView offerButton;     // OfferButton gốc (Weapon Offer)
     public BattlePassButtonView battlePassButton;   // BattlePassButton gốc
+    public ChatButtonUI chatButton;                 // VerticalBottomLayout/ChatButton (ChatButtonUI gốc)
 
     [Space(20)]
     [Header("MID")]
@@ -586,6 +587,8 @@ public class UIMainLobby : BaseUI
         RefreshTabTutorials();
         RefreshBossButton();
         RefreshOfferButtons();
+        if (chatButton != null)
+            chatButton.Refresh();
     }
 
     #region Nút chào hàng

@@ -6,7 +6,7 @@ import { finalizeEndedPools, prepareSeason } from "./season";
 // Hàm admin/test (gốc có seedBossRushDummyPlayers / removeBossRushDummyPlayers / finalizeBossRushEndedEvents).
 // Quyền: chạy trên emulator, hoặc uid nằm trong document `config/admins` { uids: ["..."] }.
 
-async function requireAdmin(uid: string | undefined): Promise<string> {
+export async function requireAdmin(uid: string | undefined): Promise<string> {
   if (!uid) throw new HttpsError("unauthenticated", "Login required");
   if (process.env.FUNCTIONS_EMULATOR === "true") return uid;
   const snap = await getFirestore().collection("config").doc("admins").get();

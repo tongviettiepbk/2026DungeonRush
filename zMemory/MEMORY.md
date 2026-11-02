@@ -103,3 +103,4 @@
 - [Reskin Events](dungonrush-reskin-events.md) — 2026-10-28 EventPage theo mockup, 2 thẻ PvP/Boss Rush (Co-op giữ tắt — user chốt), kit 1_UIKit/Events; chưa test Play, đã commit
 - [Reskin PvP](dungonrush-reskin-pvp.md) — 2026-10-28 sảnh (danh sách world trong sảnh, bỏ Season/Promotion — bám gốc), chọn đối thủ (ô vé + avatar), Victory/Defeat, top bar "PvP"; kit 1_UIKit/PvP + IsFist; CHƯA test Play, đã commit eb26bba
 - [Giờ server cho reset Dungeon/Events](dungonrush-server-time.md) — getservertime + ServerTime.cs, sync ở Login, offline dùng giờ máy; 2026-10-29 chưa deploy prod
+- [Chat Thế giới + Clan](dungonrush-chat-system.md) — RTDB chat/ww qua REST SSE, 5 endpoint gốc, lọc tục/chặn/báo cáo/cấm; test emulator+Play đạt 2026-11-02, đã commit, CHƯA deploy; GD ở GDD/CHAT_DESIGN.md
