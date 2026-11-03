@@ -244,7 +244,7 @@ public class PvPMode : BaseMode
         }
         else
         {
-            PvPController.Instance.ClaimSettlement();
+            PvPController.Instance.ClearSettlement();
             Exit();
         }
     }

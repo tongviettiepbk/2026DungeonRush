@@ -18,7 +18,8 @@ const { generateBots, hashString, loadBank, makeRng } = require("../lib/bots.js"
 const { matchClanWars } = require("../lib/clanWar.js");
 const cw = require("../lib/clanWarConfig.js");
 const pvp = require("../lib/pvpConfig.js");
-const { getDayKey } = require("../lib/schedule.js");
+const { createGroup } = require("../lib/pvpGroup.js");
+const { getDayKey, getEventKey } = require("../lib/schedule.js");
 
 const PROJECT = process.env.GCLOUD_PROJECT;
 initializeApp({ projectId: PROJECT });
@@ -34,10 +35,9 @@ const DAY_SECONDS = 86400;
 
 // % người chơi mỗi league, Iron → Legend.
 const LEAGUE_SHARE = [30, 20, 14, 10, 8, 6, 5, 3.5, 2.5, 1];
-const TROPHY_FLOOR = 700;
-const TROPHY_CEIL = 3200;
-// Người chưa đánh PvP: trophy quanh mốc khởi điểm bất kể power → quanh 1000 có cả đối thủ yếu lẫn mạnh.
-const NEWCOMER_RATE = 0.15;
+const GROUP_SEED_SIZE = 80;           // chừa chỗ cho người chơi thật vào cùng nhóm seed
+const TROPHY_MAX = 40;
+const IDLE_RATE = 0.15;               // người chưa đánh trận nào trong mùa: 0 cúp
 // Client gửi mã vùng của máy (máy dev đang là US) → US chiếm nhiều để tab "country" có người.
 const COUNTRIES = ["US", "US", "US", "US", "US", "VN", "VN", "VN", "BR", "ID", "RU", "DE", "FR", "GB", "JP", "KR", "TH", "PH", "TR", "MX"];
 
@@ -61,26 +61,22 @@ function buildPlayers(rng) {
     name: bot.name,
     avatarId: bot.avatarId,
     loadout: steps[Math.floor(i * steps.length / PLAYER_COUNT)],
-    newcomer: rng() < NEWCOMER_RATE,
-    // Hạng sức mạnh có nhiễu → trophy đi theo power nhưng không khớp tuyệt đối.
+    idle: rng() < IDLE_RATE,
+    // Hạng sức mạnh có nhiễu → league đi theo power nhưng không khớp tuyệt đối.
     rank: i + (rng() - 0.5) * PLAYER_COUNT * 0.3,
   }));
 
-  const ranked = players.filter((p) => !p.newcomer).sort((a, b) => a.rank - b.rank);
+  const ranked = [...players].sort((a, b) => a.rank - b.rank);
   let league = 0;
   let quota = LEAGUE_SHARE[0] / 100 * ranked.length;
   ranked.forEach((p, i) => {
-    while (i >= quota && league < pvp.LEAGUES.length - 1) quota += LEAGUE_SHARE[++league] / 100 * ranked.length;
-    const l = pvp.LEAGUES[league];
-    p.trophy = between(rng, Math.max(l.MinTrophy, TROPHY_FLOOR), Math.min(l.MaxTrophy, TROPHY_CEIL));
-    p.attacksUsed = between(rng, 10, 300);
+    while (i >= quota && league < pvp.LEAGUE_NAMES.length - 1) quota += LEAGUE_SHARE[++league] / 100 * ranked.length;
+    p.league = league + 1;
+    p.trophy = p.idle ? 0 : between(rng, 1, TROPHY_MAX);
+    p.fights = p.idle ? 0 : between(rng, 1, 20);
+    p.attacksUsed = p.fights + between(rng, 0, 300);
     p.wins = Math.round(p.attacksUsed * (0.35 + 0.03 * league + rng() * 0.1));
   });
-  for (const p of players.filter((x) => x.newcomer)) {
-    p.trophy = between(rng, pvp.START_TROPHY - 50, pvp.START_TROPHY + 50);
-    p.attacksUsed = between(rng, 0, 3);
-    p.wins = Math.round(p.attacksUsed * rng());
-  }
 
   const dayKey = getDayKey(new Date());
   return players.map((p) => ({
@@ -95,14 +91,16 @@ function buildPlayers(rng) {
     showCloak: p.loadout.showCloak,
     snapshotHash: "",
     contentVersion: "1.0.0",
+    league: p.league,
+    seasonKey: "",
+    groupId: "",
     trophy: p.trophy,
+    fights: p.fights,
+    pendingSeason: null,
     attacksUsed: p.attacksUsed,
     wins: p.wins,
     losses: p.attacksUsed - p.wins,
-    tickets: {
-      freeRemaining: pvp.DAILY_FREE_TICKETS, adRemaining: 0, adClaimedToday: 0, maxAdPerDay: pvp.MAX_AD_TICKETS_PER_DAY,
-      dailyFreeTickets: pvp.DAILY_FREE_TICKETS, dayKey,
-    },
+    tickets: { remaining: pvp.DAILY_TICKETS, dailyTickets: pvp.DAILY_TICKETS, dayKey },
     roster: null,
     activeBattle: null,
     isBot: false,
@@ -131,6 +129,28 @@ const DESCRIPTIONS = [
   "Casual and chill. No pressure.", "We loot, we fight, we win.",
 ];
 const ANNOUNCEMENTS = ["", "Clan War starts Tuesday. Save your keys!", "Welcome new members. Use all 5 PvP tickets on Sunday.", "Donate points daily please."];
+
+// Chia người chơi seed vào nhóm league của mùa hiện tại (Thứ Hai nghỉ thì không có nhóm).
+function buildGroups(players) {
+  const eventKey = getEventKey(new Date());
+  if (!eventKey) return [];
+  const groups = [];
+  for (let league = 1; league <= pvp.LEAGUE_NAMES.length; league++) {
+    const members = players.filter((p) => p.league === league);
+    for (let i = 0, n = 1; i < members.length; i += GROUP_SEED_SIZE, n++) {
+      const chunk = members.slice(i, i + GROUP_SEED_SIZE);
+      const groupId = eventKey + "_L" + league + "_" + n;
+      for (const p of chunk) {
+        p.seasonKey = eventKey;
+        p.groupId = groupId;
+      }
+      groups.push(createGroup(groupId, eventKey, league, chunk.map((p) => ({
+        UserId: p.uid, PlayerName: p.playerName, AvatarId: p.avatarId, Power: p.power, Trophy: p.trophy, Fights: p.fights, JoinedAt: 0,
+      })), 0, Date.now(), loadBank()));
+    }
+  }
+  return groups;
+}
 
 function buildClans(rng, players) {
   const nowSec = Math.floor(Date.now() / 1000);
@@ -187,9 +207,11 @@ async function seedPlayersAndClans() {
   const rng = makeRng(SEED);
   const players = buildPlayers(rng);
   const { clans, clanPlayers } = buildClans(rng, players);
+  const groups = buildGroups(players);
 
   const writer = db.bulkWriter();
-  for (const p of players) writer.set(db.collection("pvpPlayers").doc(p.uid), p);
+  for (const g of groups) writer.set(db.collection("pvpGroups").doc(g.groupId), g);
+  for (const { fights, ...p } of players) writer.set(db.collection("pvpPlayers").doc(p.uid), p);
   for (const p of clanPlayers) writer.set(db.collection("clanPlayers").doc(p.uid), p);
   for (const c of clans) {
     writer.set(db.collection("clans").doc(c.clanId), c);
@@ -200,10 +222,11 @@ async function seedPlayersAndClans() {
   await writer.close();
 
   console.log(`Người chơi: ${players.length}`);
-  for (const l of pvp.LEAGUES) {
-    const inLeague = players.filter((p) => pvp.getLeagueIndex(p.trophy) === l.LeagueIndex);
-    console.log(`  ${l.LeagueName.padEnd(16)} ${String(inLeague.length).padStart(4)} người`);
-  }
+  pvp.LEAGUE_NAMES.forEach((name, i) => {
+    const inLeague = players.filter((p) => p.league === i + 1);
+    console.log(`  ${name.padEnd(16)} ${String(inLeague.length).padStart(4)} người`);
+  });
+  console.log(`Nhóm PvP: ${groups.length}`);
   console.log(`Clan: ${clans.length} (${clanPlayers.filter((p) => p.clanId).length} người có clan)`);
   for (const c of clans) {
     console.log(`  ${c.clanId}  ${c.clanName.padEnd(15)} tier ${c.clanTier}  ${String(c.memberCount).padStart(2)}/50  ${c.joinSetting.padEnd(8)}  đơn chờ ${Object.keys(c.requests).length}`);
@@ -318,6 +341,9 @@ async function clear() {
   const champion = await db.collection("clanWarMeta").doc("champion").get();
   if (String(champion.data()?.clanId ?? "").startsWith(CLAN_PREFIX)) await champion.ref.delete();
 
+  // Nhóm PvP chứa cả người seed nên xoá hết; người thật đang ở nhóm bị xoá sẽ được xếp lại khi mở PvP.
+  const groupDocs = await db.collection("pvpGroups").get();
+  for (const d of groupDocs.docs) await d.ref.delete();
   const clanCount = await deleteByIdPrefix("clans", CLAN_PREFIX);
   const playerCount = await deleteByIdPrefix("pvpPlayers", PLAYER_PREFIX);
   await deleteByIdPrefix("clanPlayers", PLAYER_PREFIX);

@@ -15,6 +15,8 @@ const handlers = { ...require("../lib/pvp.js"), ...require("../lib/clan.js"), ..
 const { matchClanWars } = require("../lib/clanWar.js");
 const cw = require("../lib/clanWarConfig.js");
 const pvp = require("../lib/pvpConfig.js");
+const schedule = require("../lib/schedule.js");
+const { FieldValue } = require("firebase-admin/firestore");
 
 const TEST_PREFIX = "test_";
 const HOUR = 3600 * 1000;
@@ -127,20 +129,20 @@ try {
       assert.equal(new Set(p.items.map((it) => it.Slot)).size, p.items.length, p.uid + " trùng slot đồ");
       assert.ok(p.companions.some((c) => c.Equipped), p.uid + " không có pet ra trận");
       assert.equal(p.wins + p.losses, p.attacksUsed, p.uid + " thắng + thua ≠ số trận");
-      assert.ok(p.trophy >= pvp.MINIMUM_TROPHY, p.uid + " trophy");
-      assert.equal(p.tickets.freeRemaining, pvp.DAILY_FREE_TICKETS);
+      assert.ok(p.trophy >= 0, p.uid + " trophy");
+      assert.equal(p.tickets.remaining, pvp.DAILY_TICKETS);
       assert.equal(p.roster, null);
       assert.equal(p.activeBattle, null);
     }
   });
 
-  await test("A2", "Cả 10 league đều có người; người mạnh nhìn chung trophy cao hơn", () => {
-    for (const l of pvp.LEAGUES) {
-      assert.ok(seedPlayers.some((p) => pvp.getLeagueIndex(p.trophy) === l.LeagueIndex), "league trống: " + l.LeagueName);
+  await test("A2", "Cả 10 league đều có người; người mạnh nhìn chung ở league cao hơn", () => {
+    for (let league = 1; league <= pvp.LEAGUE_NAMES.length; league++) {
+      assert.ok(seedPlayers.some((p) => p.league === league), "league trống: " + pvp.LEAGUE_NAMES[league - 1]);
     }
     const sorted = [...seedPlayers].sort((a, b) => a.power - b.power);
-    const avg = (list) => sum(list.map((p) => p.trophy)) / list.length;
-    assert.ok(avg(sorted.slice(900)) > avg(sorted.slice(0, 100)) + 500);
+    const avg = (list) => sum(list.map((p) => p.league)) / list.length;
+    assert.ok(avg(sorted.slice(900)) > avg(sorted.slice(0, 100)) + 2);
   });
 
   await test("A3", "10 clan đúng bảng: số người, tổng power, 1 leader, số captain, tier, cách vào, đơn chờ, tên đã giữ chỗ", async () => {
@@ -199,199 +201,232 @@ try {
     server: PROJECT, playerName: name, countryCode: country, avatarId: p.avatarId, power: p.power, contentVersion: "1.0.0",
     items: p.items, companions: p.companions, enchantmentTiers: p.enchantmentTiers, showCloak: p.showCloak,
   });
-  const allPlayers = async () => (await db.collection("pvpPlayers").select("trophy", "countryCode").get()).docs.map((d) => ({ uid: d.id, ...d.data() }));
-  // Chỉ đánh đối thủ seed để không đổi trophy của tài khoản thật trong emulator.
-  const seedOpponent = (found) => {
-    const o = found.opponents.find((x) => x.UserId.startsWith(PLAYER_PREFIX));
-    assert.ok(o, "roster không có đối thủ seed");
-    return o;
-  };
-  // Server chọn 5 trong 10 người gần trophy nhất → mọi đối thủ phải nằm trong khoảng cách của người gần thứ 10.
-  const assertRoster = async (uid, found) => {
-    const me = await read("pvpPlayers", uid);
-    assert.equal(found.success, true);
-    assert.equal(found.opponents.length, pvp.ROSTER_SIZE);
-    assert.equal(new Set(found.opponents.map((o) => o.UserId)).size, pvp.ROSTER_SIZE, "đối thủ trùng nhau");
-    assert.ok(found.opponents.every((o) => o.UserId !== uid), "roster có chính mình");
-    const distances = (await allPlayers()).filter((p) => p.uid !== uid).map((p) => Math.abs(p.trophy - me.trophy)).sort((a, b) => a - b);
-    for (const o of found.opponents) {
-      assert.ok(Math.abs(o.Trophy - me.trophy) <= distances[pvp.ROSTER_SIZE * 2 - 1], `${o.PlayerName} trophy ${o.Trophy} quá xa ${me.trophy}`);
-      assert.ok(o.Items.length > 0 && o.Companions.length > 0 && o.Power > 0, o.PlayerName + " thiếu đồ/pet/power");
-      assert.equal(o.ProjectedWinTrophy, pvp.projectedWin(me.trophy, o.Trophy));
-      assert.equal(o.ProjectedLossTrophy, pvp.projectedLoss(me.trophy, o.Trophy));
-    }
-  };
-  let rewardTable = [];
-
-  await test("B1", "Người mới mở PvP: 1000 trophy, Iron, 5 vé free, 0 vé ads; đồ seed qua bộ lọc server không bị đổi", async () => {
-    const r = await call(A, "openpvp", snapshotOf(source, "PvpTesterA", "US"));
-    assert.equal(r.success, true);
-    assert.equal(r.trophy, pvp.START_TROPHY);
-    assert.equal(r.leagueIndex, 1);
-    assert.deepEqual([r.tickets.freeRemaining, r.tickets.adRemaining, r.tickets.adClaimedToday, r.tickets.maxAdPerDay], [5, 0, 0, 4]);
-    assert.equal(r.rewardTable.length, 10);
-    rewardTable = r.rewardTable;
-    const saved = await read("pvpPlayers", A);
-    assert.deepEqual(saved.items, source.items);
-    assert.deepEqual(saved.companions, source.companions);
-    assert.deepEqual(saved.enchantmentTiers, source.enchantmentTiers);
-    await call(B, "openpvp", snapshotOf(source, "PvpTesterB", "VN"));
-  });
-
-  await test("B2", "Tìm đối thủ ở 1000 trophy: 5 người khác nhau, gần trophy nhất, đủ đồ + pet, trophy dự kiến đúng Elo", async () => {
-    const f = await call(A, "findpvpopponents", { server: PROJECT });
-    await assertRoster(A, f);
-    assert.ok(f.rosterToken);
-    assert.equal(f.rosterExpiresAt, Math.floor(Date.now() / 1000) + pvp.ROSTER_TTL_SECONDS);
-  });
-
-  await test("B3", "Tìm đối thủ ở mọi mức trophy (0 / 1500 / 2500 / 5000 cao hơn tất cả): luôn đủ 5 người gần nhất", async () => {
-    for (const trophy of [0, 1500, 2500, 5000]) {
-      await patch("pvpPlayers", B, { trophy });
-      await assertRoster(B, await call(B, "findpvpopponents", { server: PROJECT }));
-    }
-    await patch("pvpPlayers", B, { trophy: pvp.START_TROPHY });
-  });
-
-  await test("B4", "Vào trận: sai roster token / đối thủ ngoài roster bị từ chối; hợp lệ thì trừ 1 vé; không đánh lại cùng người", async () => {
-    const f = await call(A, "findpvpopponents", { server: PROJECT });
-    const o = seedOpponent(f);
-    assert.equal((await call(A, "startpvpbattle", { rosterToken: "bad", opponentUserId: o.UserId })).message, "Opponent roster expired.");
-    assert.equal((await call(A, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: "nobody" })).message, "Opponent not found.");
-    const s = await call(A, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: o.UserId });
-    assert.equal(s.success, true);
-    assert.equal(s.tickets.freeRemaining, 4);
-    assert.equal(s.opponent.UserId, o.UserId);
-    assert.deepEqual(s.opponent.Items, playerById.get(o.UserId).items);
-    assert.equal(s.battleTokenExpiresAt, s.startedAt + pvp.BATTLE_TOKEN_TTL_SECONDS);
-    assert.equal((await call(A, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: o.UserId })).message, "Opponent not found.");
-    await call(A, "reportpvpbattle", { battleToken: s.battleToken, won: false });
-  });
-
-  // Đánh 1 trận với đối thủ seed, trả về mọi thứ cần đối chiếu.
-  const fight = async (uid, won) => {
+  // Đồng hồ giả: Thứ Tư tuần này (mùa đang mở) và Thứ Ba tuần sau (mùa mới, nhóm cũ phải chốt).
+  const SEASON_START = schedule.getEventStart(new Date(REAL_NOW)).getTime();
+  const inSeason = SEASON_START + DAY + 12 * HOUR;
+  const nextSeason = SEASON_START + 7 * DAY + HOUR;
+  const seasonKey = new Date(SEASON_START).toISOString().substring(0, 10);
+  const open = (uid, name = "PvpTester") => call(uid, "openpvp", snapshotOf(source, name, "US"));
+  const group = async (uid) => read("pvpGroups", (await read("pvpPlayers", uid)).groupId);
+  const fight = async (uid, won, pick = (list) => list[0]) => {
     const f = await call(uid, "findpvpopponents", { server: PROJECT });
-    const o = seedOpponent(f);
-    const me = await read("pvpPlayers", uid);
-    const before = await read("pvpPlayers", o.UserId);
+    const o = pick(f.opponents);
     const s = await call(uid, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: o.UserId });
-    assert.equal(s.success, true, JSON.stringify(s));
+    assert.equal(s.success, true, s.message);
     const r = await call(uid, "reportpvpbattle", { battleToken: s.battleToken, won });
-    return { me, before, after: await read("pvpPlayers", o.UserId), s, r };
+    return { f, o, s, r };
   };
 
-  await test("B5", "Thắng: mình cộng đúng công thức Elo, đối thủ (phòng thủ) bị trừ theo K league của họ, thưởng win đúng league", async () => {
-    const { me, before, after, s, r } = await fight(A, true);
-    assert.equal(r.won, true);
-    assert.equal(r.forfeit, false);
-    assert.equal(r.trophyDelta, pvp.winDelta(me.trophy, before.trophy));
-    assert.equal(r.newTrophy, me.trophy + r.trophyDelta);
-    assert.equal(after.trophy, Math.max(0, before.trophy + pvp.lossDelta(before.trophy, me.trophy)));
-    assert.equal(r.opponentNewTrophy, after.trophy);
-    assert.deepEqual(r.rewards, rewardTable.find((x) => x.leagueIndex === s.startLeagueIndex).winRewards);
+  setClock(inSeason);
+
+  await test("B1", "Người mới mở PvP: Iron, 0 cúp, 5 vé, thưởng 10 league, vào đúng nhóm của mùa", async () => {
+    const r = await open(A, "PvpTesterA");
+    assert.equal(r.success, true);
+    assert.equal(r.trophy, 0);
+    assert.equal(r.leagueIndex, 1);
+    assert.deepEqual(r.tickets, { remaining: 5, dailyTickets: 5, dayKey: r.tickets.dayKey });
+    assert.equal(r.rewardTable.length, 10);
+    assert.deepEqual(r.rewardTable[0].Bands[0].Rewards.map((x) => x.Amount), [179, 716, 1074, 537]);
+    assert.equal(r.season.key, seasonKey);
+    assert.equal(r.season.isActive, true);
     const saved = await read("pvpPlayers", A);
-    assert.equal(saved.wins, me.wins + 1);
-    assert.equal(saved.activeBattle, null);
+    assert.equal(saved.groupId, seasonKey + "_L1_1");
+    assert.equal(saved.seasonKey, seasonKey);
+    assert.ok(saved.items.length > 0, "snapshot đồ phải lưu lại");
+    await open(B, "PvpTesterB");
+  });
+
+  await test("B2", "Bảng xếp hạng: cúp giảm dần, cùng cúp thì sức mạnh giảm dần, có đúng dòng của mình và vạch lên", async () => {
+    const r = await open(A, "PvpTesterA");
+    assert.ok(r.leaderboard.length >= 80 && r.leaderboard.length <= 100);
+    r.leaderboard.forEach((e, i) => {
+      assert.equal(e.Rank, i + 1);
+      if (i === 0) return;
+      const p = r.leaderboard[i - 1];
+      assert.ok(p.Trophy > e.Trophy || (p.Trophy === e.Trophy && p.Power >= e.Power), `hạng ${e.Rank} sai thứ tự`);
+    });
+    const me = r.leaderboard.filter((e) => e.IsCurrentPlayer);
+    assert.equal(me.length, 1);
+    assert.equal(me[0].UserId, A);
+    assert.equal(r.playerRank, me[0].Rank);
+    assert.equal(r.promotion.promoteCount, Math.ceil(r.leaderboard.length * 0.4));
+    assert.equal(r.promotion.demoteCount, 0);
+  });
+
+  await test("B3", "Chọn đối thủ: tối đa 5 người trong nhóm, không có mình, theo cúp gần mình, phát +5 đến +1 theo cúp giảm dần", async () => {
+    await patch("pvpPlayers", B, { trophy: 12 });
+    await patch("pvpGroups", (await read("pvpPlayers", B)).groupId, { [`players.${B}.Trophy`]: 12 });
+    const f = await call(B, "findpvpopponents", { server: PROJECT });
+    assert.equal(f.success, true);
+    assert.equal(f.opponents.length, 5);
+    assert.ok(!f.opponents.some((o) => o.UserId === B));
+    const g = await group(B);
+    for (const o of f.opponents) assert.ok(g.players[o.UserId] || g.bots.some((b) => b.id === o.UserId), o.PlayerName + " ngoài nhóm");
+    assert.deepEqual(f.opponents.map((o) => o.StarsOnWin), [5, 4, 3, 2, 1]);
+    f.opponents.forEach((o, i) => {
+      assert.equal(o.ProjectedWinTrophy, 12 + o.StarsOnWin);
+      assert.equal(o.ProjectedLossTrophy, 12);
+      assert.ok(o.Items.length > 0, o.PlayerName + " thiếu đồ để đánh");
+      if (i > 0) assert.ok(f.opponents[i - 1].Trophy >= o.Trophy);
+    });
+    assert.ok(f.opponents.some((o) => o.Trophy > 12) && f.opponents.some((o) => o.Trophy < 12), "phải có cả trên lẫn dưới cúp mình");
+  });
+
+  await test("B4", "Thắng: nhận đúng số cúp đã hiện, nhóm cập nhật, người bị đánh không đổi cúp", async () => {
+    const before = await read("pvpPlayers", A);
+    const { o, s, r } = await fight(A, true, (list) => list.find((x) => x.UserId.startsWith(PLAYER_PREFIX)) ?? list[0]);
+    assert.equal(s.starsOnWin, o.StarsOnWin);
+    assert.equal(r.trophyDelta, o.StarsOnWin);
+    assert.equal(r.newTrophy, before.trophy + o.StarsOnWin);
+    assert.equal(r.seasonEnded, false);
+    assert.equal((await read("pvpPlayers", A)).trophy, r.newTrophy);
+    const entry = (await group(A)).players[A];
+    assert.equal(entry.Trophy, r.newTrophy);
+    assert.equal(entry.Fights, 1);
+    if (o.UserId.startsWith(PLAYER_PREFIX)) assert.equal((await read("pvpPlayers", o.UserId)).trophy, o.Trophy);
+  });
+
+  await test("B5", "Thua: không mất cúp, vẫn tính 1 trận, vẫn tốn vé; nộp token cũ bị từ chối", async () => {
+    const before = await read("pvpPlayers", A);
+    const { s, r } = await fight(A, false);
+    assert.equal(r.won, false);
+    assert.equal(r.trophyDelta, 0);
+    assert.equal(r.newTrophy, before.trophy);
+    assert.equal(r.tickets.remaining, before.tickets.remaining - 1);
+    assert.equal((await group(A)).players[A].Fights, 2);
     assert.equal((await call(A, "reportpvpbattle", { battleToken: s.battleToken, won: true })).message, "Missing battle token.");
   });
 
-  await test("B6", "Thua: mình bị trừ đúng Elo (ít nhất 1), đối thủ được cộng, thưởng lose", async () => {
-    const { me, before, after, s, r } = await fight(A, false);
-    assert.equal(r.won, false);
-    assert.equal(r.trophyDelta, pvp.lossDelta(me.trophy, before.trophy));
-    assert.ok(r.trophyDelta <= -1);
-    assert.equal(after.trophy, before.trophy + pvp.winDelta(before.trophy, me.trophy));
-    assert.deepEqual(r.rewards, rewardTable.find((x) => x.leagueIndex === s.startLeagueIndex).loseRewards);
-  });
-
-  await test("B7", "Lên league: 1195 trophy thắng → sang Bronze, thưởng vẫn tính theo league lúc vào trận", async () => {
-    await patch("pvpPlayers", A, { trophy: 1195 });
-    const { r } = await fight(A, true);
-    assert.equal(r.oldLeagueIndex, 1);
-    assert.equal(r.newLeagueIndex, 2);
-    assert.equal(r.startLeagueIndex, 1);
-    assert.deepEqual(r.rewards, rewardTable[0].winRewards);
-  });
-
-  await test("B8", "Hết giờ nộp kết quả (token quá hạn) → xử thua dù client báo thắng", async () => {
-    const f = await call(A, "findpvpopponents", { server: PROJECT });
-    const s = await call(A, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: seedOpponent(f).UserId });
+  await test("B6", "Nộp quá hạn: xử thua, không được cúp", async () => {
+    const f = await call(A, "findpvpopponents", {});
+    const s = await call(A, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: f.opponents[0].UserId });
     await patch("pvpPlayers", A, { "activeBattle.expiresAt": 1 });
+    const before = (await read("pvpPlayers", A)).trophy;
     const r = await call(A, "reportpvpbattle", { battleToken: s.battleToken, won: true });
-    assert.equal(r.forfeit, true);
-    assert.equal(r.won, false);
-    assert.ok(r.trophyDelta <= -1);
+    assert.deepEqual([r.won, r.forfeit, r.trophyDelta, r.newTrophy], [false, true, 0, before]);
   });
 
-  await test("B9", "Hết 5 vé free → không vào trận được; xem ads tối đa 4 vé/ngày; vé ads dùng được", async () => {
-    let f = await call(A, "findpvpopponents", { server: PROJECT });
-    assert.equal(f.tickets.freeRemaining, 0);
-    let s = await call(A, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: seedOpponent(f).UserId });
-    assert.equal(s.message, "No PvP tickets remaining.");
-    for (let i = 1; i <= pvp.MAX_AD_TICKETS_PER_DAY; i++) {
-      const g = await call(A, "grantpvpadticket");
-      assert.deepEqual([g.success, g.tickets.adClaimedToday, g.tickets.adRemaining], [true, i, i]);
-    }
-    assert.equal((await call(A, "grantpvpadticket")).message, "No more PvP ad tickets today.");
-    f = await call(A, "findpvpopponents", { server: PROJECT });
-    s = await call(A, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: seedOpponent(f).UserId });
+  await test("B7", "Roster: token sai, người ngoài danh sách, đánh lại cùng người, roster hết hạn đều bị từ chối", async () => {
+    const f = await call(B, "findpvpopponents", {});
+    const o = f.opponents[0];
+    assert.equal((await call(B, "startpvpbattle", { rosterToken: "bad", opponentUserId: o.UserId })).message, "Opponent roster expired.");
+    assert.equal((await call(B, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: "nobody" })).message, "Opponent not found.");
+    const s = await call(B, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: o.UserId });
     assert.equal(s.success, true);
-    assert.equal(s.tickets.adRemaining, 3);
-    await call(A, "reportpvpbattle", { battleToken: s.battleToken, won: true });
+    await call(B, "reportpvpbattle", { battleToken: s.battleToken, won: false });
+    assert.equal((await call(B, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: o.UserId })).message, "Opponent not found.");
+    await patch("pvpPlayers", B, { "roster.expiresAt": 1 });
+    assert.equal((await call(B, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: f.opponents[1].UserId })).message, "Opponent roster expired.");
   });
 
-  await test("B10", "Trophy không xuống dưới 0", async () => {
-    await patch("pvpPlayers", A, { trophy: 0 });
-    const { r } = await fight(A, false);
-    assert.equal(r.newTrophy, 0);
+  await test("B8", "Hết 5 vé không đánh được nữa; sang ngày UTC mới hồi đủ 5 vé; không còn endpoint vé quảng cáo", async () => {
+    await patch("pvpPlayers", A, { "tickets.remaining": 0 });
+    const f = await call(A, "findpvpopponents", {});
+    const s = await call(A, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: f.opponents[0].UserId });
+    assert.equal(s.message, "No PvP tickets remaining.");
+    setClock(inSeason + DAY);
+    assert.equal((await open(A, "PvpTesterA")).tickets.remaining, 5);
+    setClock(inSeason);
+    assert.equal(handlers.grantpvpadticket, undefined);
+    assert.equal(handlers.getpvpleaderboard, undefined);
   });
 
-  await test("B11", "Sang ngày mới (UTC): hồi 5 vé free, xoá vé ads chưa dùng và lượt xem ads", async () => {
-    setClock(REAL_NOW + DAY);
-    const r = await call(A, "openpvp", {});
-    setClock(0);
-    assert.deepEqual([r.tickets.freeRemaining, r.tickets.adRemaining, r.tickets.adClaimedToday], [5, 0, 0]);
+  await test("B9", "Đổi tên/sức mạnh: nhóm cập nhật, cúp và số trận giữ nguyên", async () => {
+    const before = (await group(B)).players[B];
+    await call(B, "openpvp", { ...snapshotOf(source, "PvpRenamed", "US"), power: 123456 });
+    const after = (await group(B)).players[B];
+    assert.deepEqual([after.PlayerName, after.Power, after.Trophy, after.Fights], ["PvpRenamed", 123456, before.Trophy, before.Fights]);
   });
 
-  await test("B12", "Bảng xếp hạng world: top 100 đúng thứ tự trophy, hạng của mình đúng, 5 người trên + mình + 5 người dưới", async () => {
-    await patch("pvpPlayers", B, { trophy: 1500 });
-    const everyone = (await allPlayers()).sort((a, b) => b.trophy - a.trophy);
-    const lb = await call(B, "getpvpleaderboard", { scope: "world" });
-    assert.equal(lb.success, true);
-    assert.equal(lb.topPlayers.length, pvp.LEADERBOARD_TOP);
-    lb.topPlayers.forEach((e, i) => {
-      assert.equal(e.Rank, i + 1);
-      assert.equal(e.Trophy, everyone[i].trophy);
-      assert.ok(e.PlayerName && e.Items.length > 0, "dòng top thiếu tên/đồ (popup xem hồ sơ cần)");
+  await test("B10", "Nhóm đầy 100 người: người mới sang nhóm tiếp theo", async () => {
+    const id = seasonKey + "_L1_1";
+    const g = await read("pvpGroups", id);
+    const players = { ...g.players };
+    const entry = players[A];
+    for (let i = 0; Object.keys(players).length + g.bots.length < 100; i++) players["fill_" + i] = { ...entry, UserId: "fill_" + i };
+    await db.collection("pvpGroups").doc(id).update({ players });
+    const NEW = TEST_PREFIX + "pvp_full";
+    await open(NEW, "PvpTesterFull");
+    assert.notEqual((await read("pvpPlayers", NEW)).groupId, id);
+    await db.collection("pvpGroups").doc(id).set(g);
+  });
+
+  await test("B11", "Nhóm mới của league trống: bù bot đủ 30 người, không ai trùng tên, bot đánh được", async () => {
+    const C = TEST_PREFIX + "pvp_gold";
+    await open(C, "PvpTesterGold");
+    const old = await read("pvpPlayers", C);
+    await db.collection("pvpGroups").doc(old.groupId).update({ [`players.${C}`]: FieldValue.delete() });
+    await patch("pvpPlayers", C, { league: 10, seasonKey: "", groupId: "" });
+    await db.collection("pvpGroups").doc(seasonKey + "_L10_1").delete();
+    const r = await open(C, "PvpTesterGold");
+    assert.equal(r.leaderboard.length, 30);
+    assert.equal(new Set(r.leaderboard.map((e) => e.PlayerName.toLowerCase())).size, 30);
+    assert.equal(r.promotion.promoteCount, 0);
+    assert.equal(r.promotion.demoteCount, 7);
+    const { o, r: fought } = await fight(C, true);
+    assert.equal(o.IsBot, true);
+    assert.ok(o.Items.length > 0);
+    assert.equal(fought.trophyDelta, o.StarsOnWin);
+  });
+
+  await test("B12", "Hết mùa: Thứ Hai không đánh được, có kết quả + thưởng theo league cũ, Claim một lần rồi hết", async () => {
+    const before = await read("pvpPlayers", A);
+    const beforeGroup = await group(A);
+    setClock(SEASON_START + 6 * DAY + HOUR);
+    const mon = await open(A, "PvpTesterA");
+    assert.equal(mon.season.isActive, false);
+    assert.equal(mon.season.key, "");
+    assert.equal(mon.leaderboard.length, 0);
+    assert.equal(mon.trophy, 0);
+    const p = mon.pendingSeasonResult;
+    assert.ok(p, "phải có kết quả mùa");
+    assert.equal(p.seasonKey, seasonKey);
+    assert.equal(p.leagueIndex, 1);
+    assert.equal(p.trophy, before.trophy);
+    assert.ok(p.finalRank >= 1 && p.finalRank <= p.memberCount);
+    assert.deepEqual(p.rewards, pvp.seasonRewards(1, p.finalRank));
+    assert.equal((await read("pvpGroups", beforeGroup.groupId)).isFinalized, true);
+    assert.equal((await call(A, "findpvpopponents", {})).message, "Season ended.");
+
+    const c = await call(A, "claimpvpseason", {});
+    assert.deepEqual(c.rewards, p.rewards);
+    assert.equal((await call(A, "claimpvpseason", {})).success, false);
+    assert.equal((await open(A, "PvpTesterA")).pendingSeasonResult, null);
+  });
+
+  await test("B13", "Mùa mới: vào nhóm mới theo league mới, 0 cúp; trận bắt đầu mùa cũ nộp sang mùa mới không tính cúp", async () => {
+    setClock(inSeason);
+    const f = await call(B, "findpvpopponents", {});
+    const s = await call(B, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: f.opponents[0].UserId });
+    assert.equal(s.success, true, s.message);
+    const trophy = (await read("pvpPlayers", B)).trophy;
+
+    setClock(nextSeason);
+    await patch("pvpPlayers", B, { "activeBattle.expiresAt": Math.floor(nextSeason / 1000) + 100 });
+    const late = await call(B, "reportpvpbattle", { battleToken: s.battleToken, won: true });
+    assert.deepEqual([late.seasonEnded, late.trophyDelta, late.newTrophy], [true, 0, trophy]);
+
+    const r = await open(B, "PvpRenamed");
+    const nextKey = new Date(SEASON_START + 7 * DAY).toISOString().substring(0, 10);
+    assert.equal(r.season.key, nextKey);
+    assert.equal(r.trophy, 0);
+    assert.ok(r.pendingSeasonResult, "kết quả mùa cũ");
+    assert.equal(r.leagueIndex, r.pendingSeasonResult.newLeagueIndex);
+    assert.ok((await read("pvpPlayers", B)).groupId.startsWith(nextKey + "_L" + r.leagueIndex + "_"));
+    setClock(inSeason);
+  });
+
+  await test("B14", "Dữ liệu hệ Elo cũ (1000 trophy, chưa có league): mở PvP về Iron, 0 cúp, vé kiểu mới", async () => {
+    const OLD = TEST_PREFIX + "pvp_old";
+    await db.collection("pvpPlayers").doc(OLD).set({
+      uid: OLD, playerName: "OldElo", trophy: 2500, items: [], companions: [], enchantmentTiers: [], isBot: false,
+      tickets: { freeRemaining: 3, adRemaining: 1, adClaimedToday: 1, maxAdPerDay: 4, dailyFreeTickets: 5, dayKey: "2020-01-01" },
     });
-    assert.equal(lb.playerRank, everyone.filter((p) => p.trophy > 1500).length + 1);
-    assert.equal(lb.playerTrophy, 1500);
-    assert.equal(lb.nearbyPlayers.length, pvp.LEADERBOARD_NEARBY * 2 + 1);
-    assert.equal(lb.nearbyPlayers[pvp.LEADERBOARD_NEARBY].UserId, B);
-    assert.equal(lb.nearbyPlayers[pvp.LEADERBOARD_NEARBY].IsCurrentPlayer, true);
-    lb.nearbyPlayers.forEach((e, i) => {
-      assert.equal(e.Rank, lb.playerRank - pvp.LEADERBOARD_NEARBY + i);
-      if (i > 0) assert.ok(lb.nearbyPlayers[i - 1].Trophy >= e.Trophy, "nearby không giảm dần");
-    });
+    const r = await open(OLD, "OldElo");
+    assert.deepEqual([r.success, r.leagueIndex, r.trophy, r.tickets.remaining], [true, 1, 0, 5]);
   });
 
-  await test("B13", "Bảng xếp hạng country: chỉ người cùng nước, hạng tính trong nước", async () => {
-    const lb = await call(B, "getpvpleaderboard", { scope: "country" });
-    const sameCountry = (await allPlayers()).filter((p) => p.countryCode === "VN");
-    assert.equal(lb.scope, "country");
-    assert.ok(lb.topPlayers.length > 0 && lb.topPlayers.every((e) => e.CountryCode === "VN"));
-    assert.equal(lb.topPlayers.length, Math.min(pvp.LEADERBOARD_TOP, sameCountry.length));
-    assert.equal(lb.playerRank, sameCountry.filter((p) => p.trophy > 1500).length + 1);
-  });
-
-  await test("B14", "Mình vào top 100: có dòng của mình trong top, không còn danh sách quanh mình", async () => {
-    await patch("pvpPlayers", B, { trophy: 5000 });
-    const lb = await call(B, "getpvpleaderboard", { scope: "world" });
-    assert.equal(lb.playerRank, 1);
-    assert.equal(lb.topPlayers[0].UserId, B);
-    assert.equal(lb.topPlayers[0].IsCurrentPlayer, true);
-    assert.equal(lb.nearbyPlayers.length, 0);
-  });
+  setClock(null);
 
   // =====================================================================================================================
   section("C. Clan");

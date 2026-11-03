@@ -10,6 +10,8 @@ metadata:
 
 Mockup + art giao (Telegram "pvp"): `ArtIncoming/_Concept/PvP/` (League demo, PvP demo2-6; `_art/` 6 mảnh). Kit sinh bằng `tools/reskin/gen_pvp.py` → `Art/1_UIKit/PvP/` (row_gray/row_blue 746x122 9-slice L24 B26 R24 T20, slot_dark = đen alpha 0.3 đã bù Linear, icon_shield, line_left/right). TMP sprite asset mới `Art/2_Icons/Currency/IsFist.asset` (icon_fist của Boss Rush, glyph 128 scale 1.5) cho dòng Power. Ảnh so: `_Concept/PvP/compare_{lobby,find,end}.png`.
 
+**ĐÃ ĐỔI 2026-11-04: nay có Season + nhóm + PROMOTION/DEMOTION AREA theo game thật, xem [[dungonrush-pvp-update-requests]]; prefab sảnh đã sửa theo đó.**
+
 **User chốt 2026-10-28 (bám gốc):** mockup có Season + bảng nhóm league + PROMOTION AREA → KHÔNG làm cơ chế đó; danh sách trong sảnh = leaderboard world gốc (top + dải "TOP 100" vạch xanh lá + quanh mình), dòng mình xanh. Nút Share (camera) → bỏ. Map trận nghĩa địa → giữ MainMap, chỉ đổi top bar thành "PvP" (UIMainLobby.LoadInfoMap, key UI.Events.PvP).
 
 **Đã làm (sửa prefab qua MCP bằng ReskinPrefabUtil):**

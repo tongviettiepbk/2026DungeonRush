@@ -1,9 +1,9 @@
-// Save PvP phía client (UserData gốc: PvPTrophy / PvPDailyTicketsRemaining / PvPAdTicketsRemaining /
-// PvPAdTicketsClaimedToday / PvPLastSnapshotHash / PvPLastSnapshotUploadTime / PvPCachedRoster / PvPPendingReport /
-// PvPPendingRewardSettlement). Server là nguồn sự thật — đây là cache để vẽ UI + giữ báo cáo/thưởng chưa xử lý xong.
+// Save PvP phía client. Server là nguồn sự thật — đây là cache để vẽ UI + giữ báo cáo trận chưa gửi được.
 public class UserPvPData : BaseUserData
 {
-    public int trophy { get; set; } = StaticPvPData.START_TROPHY;
+    public int trophy { get; set; }
+    public int leagueIndex { get; set; } = 1;
+    public string seasonKey { get; set; } = string.Empty;
     public PvPTicketsDTO tickets { get; set; } = new PvPTicketsDTO();
     public string lastSnapshotHash { get; set; } = string.Empty;
     public long lastSnapshotUploadTime { get; set; } = -1;
@@ -19,7 +19,9 @@ public class UserPvPData : BaseUserData
     public override void InitData()
     {
         base.InitData();
-        trophy = StaticPvPData.START_TROPHY;
+        trophy = 0;
+        leagueIndex = 1;
+        seasonKey = string.Empty;
         tickets = NewTickets();
         lastSnapshotHash = string.Empty;
         lastSnapshotUploadTime = -1;
@@ -31,20 +33,26 @@ public class UserPvPData : BaseUserData
 
     public override void ValidateData()
     {
-        if (tickets == null)
+        // Save hệ vé cũ (free + ads) không có dailyTickets.
+        if (tickets == null || tickets.dailyTickets <= 0)
         {
             tickets = NewTickets();
             isDataChanged = true;
         }
-        if (trophy < StaticPvPData.MINIMUM_TROPHY)
+        if (trophy < 0)
         {
-            trophy = StaticPvPData.MINIMUM_TROPHY;
+            trophy = 0;
+            isDataChanged = true;
+        }
+        if (leagueIndex < 1)
+        {
+            leagueIndex = 1;
             isDataChanged = true;
         }
         lastSnapshotHash = lastSnapshotHash ?? string.Empty;
+        seasonKey = seasonKey ?? string.Empty;
     }
 
-    // Đồng bộ vé từ server (UserController.eah gốc).
     public void SetTickets(PvPTicketsDTO dto)
     {
         if (dto == null)
@@ -55,15 +63,10 @@ public class UserPvPData : BaseUserData
         isDataChanged = true;
     }
 
-    public int TotalTickets => tickets != null ? tickets.freeRemaining + tickets.adRemaining : 0;
+    public int TotalTickets => tickets != null ? tickets.remaining : 0;
 
     private static PvPTicketsDTO NewTickets()
     {
-        return new PvPTicketsDTO
-        {
-            freeRemaining = StaticPvPData.DAILY_FREE_TICKETS,
-            maxAdPerDay = StaticPvPData.MAX_AD_TICKETS_PER_DAY,
-            dailyFreeTickets = StaticPvPData.DAILY_FREE_TICKETS,
-        };
+        return new PvPTicketsDTO { remaining = StaticPvPData.DAILY_TICKETS, dailyTickets = StaticPvPData.DAILY_TICKETS };
     }
 }

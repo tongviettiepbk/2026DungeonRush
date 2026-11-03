@@ -4,15 +4,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Popup cuối trận PvP (PvPEndPopup gốc): "Victory!" / "Defeated", "<sprite=0>{trophy mới} <color=#E3EC42|#FF4444>(+delta)</color>",
-// danh sách thưởng "<sprite=0>{số}" (icon theo loại), nút Claim (cộng thưởng). Báo kết quả lỗi → "Failed to report battle."
-// + Retry (gửi lại PendingPvPReport) / Close.
+// Popup cuối trận PvP: "Victory!" / "Defeated", "<sprite=0>{cúp mới} <color=#E3EC42>(+delta)</color>", nút Continue.
+// PvP không có thưởng theo trận, thưởng trả cuối mùa. Báo kết quả lỗi → "Failed to report battle." + Retry / Close.
 public class UIPvPEndPopup : BaseUI
 {
     public TMP_Text txtTitle;
     public TMP_Text txtTrophy;
-    public Transform rewardContent;
-    public TMP_Text rewardTextPrefab;
     public Button btClaim;
     public TMP_Text txtClaim;
     public Button btRetry;
@@ -20,12 +17,10 @@ public class UIPvPEndPopup : BaseUI
     public GameObject objLoading;
     public GameObject objResult;
     public TMP_Text txtError;
-    public RewardIconSet rewardIcons;
     // Reskin (mockup): tiêu đề Defeat màu đỏ.
     public Color victoryTitleColor = Color.white;
     public Color defeatTitleColor = new Color(1f, 0.29f, 0.25f, 1f);
 
-    private readonly List<GameObject> rewardRows = new List<GameObject>();
     private Action onClose;
     private bool won;
 
@@ -35,7 +30,6 @@ public class UIPvPEndPopup : BaseUI
         btClaim.onClick.AddListener(OnClickClaim);
         if (btRetry != null) btRetry.onClick.AddListener(OnClickRetry);
         if (btClose != null) btClose.onClick.AddListener(OnClickClose);
-        if (rewardTextPrefab != null) rewardTextPrefab.gameObject.SetActive(false);
     }
 
     // settlement null + error → hiện lỗi (báo server thất bại).
@@ -63,16 +57,13 @@ public class UIPvPEndPopup : BaseUI
 
         if (txtTrophy != null)
         {
-            string color = s.TrophyDelta >= 0 ? "#E3EC42" : "#FF4444";
             string sign = s.TrophyDelta > 0 ? "+" : string.Empty;
-            txtTrophy.text = "<sprite=0>" + s.NewTrophy + " <color=" + color + ">(" + sign + s.TrophyDelta + ")</color>";
+            txtTrophy.text = "<sprite=0>" + s.NewTrophy + " <color=#E3EC42>(" + sign + s.TrophyDelta + ")</color>";
         }
-
-        UIPvPRewardsPopup.FillRewards(s.Rewards, rewardContent, rewardTextPrefab, rewardIcons, rewardRows);
 
         btClaim.gameObject.SetActive(true);
         btClaim.interactable = true;
-        if (txtClaim != null) txtClaim.text = Loc.L("Common.Claim");
+        if (txtClaim != null) txtClaim.text = Loc.L("Common.Continue");
         if (btRetry != null) btRetry.gameObject.SetActive(false);
         if (btClose != null) btClose.gameObject.SetActive(false);
     }
@@ -122,7 +113,7 @@ public class UIPvPEndPopup : BaseUI
     private void OnClickClaim()
     {
         btClaim.interactable = false;
-        PvPController.Instance.ClaimSettlement();
+        PvPController.Instance.ClearSettlement();
         Finish();
     }
 

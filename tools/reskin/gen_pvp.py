@@ -31,3 +31,16 @@ a = np.asarray(art('Rounded Rectangle 574 copy 4.png')).astype(np.float32)
 alpha = a[..., 3] / 255.0
 a[..., 3] = (1 - (1 - alpha) ** 2.2) * 255
 save(Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)), 'slot_dark.png')
+
+
+# Vạch PROMOTION/DEMOTION AREA: bản trắng giữ độ đậm nhạt của vạch xanh, code tô xanh lá hoặc đỏ.
+def white_line(name, out):
+    a = np.asarray(art(name)).astype(np.float32)
+    gray = a[..., :3].max(axis=2)
+    gray = gray / max(gray[a[..., 3] > 0].max(), 1) * 255
+    a[..., 0] = a[..., 1] = a[..., 2] = gray
+    save(Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)), out)
+
+
+white_line('Layer 684 copy 2.png', 'line_left_white.png')
+white_line('Layer 684 copy.png', 'line_right_white.png')

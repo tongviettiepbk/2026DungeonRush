@@ -5,34 +5,29 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Sảnh PvP (PvPPopup gốc, "PvP Arena"): openPvP → tên league (màu league), trophy, thanh trophy trong league,
-// "Tickets refreshed in: {0}" (tới 0h UTC), nút Battle "<sprite=0>{vé}/{vé free/ngày}\nBattle", nút vé ads khi hết vé,
-// Leaderboard, bấm khung trophy → bảng thưởng theo league.
+// Popup đầu PvP (SpecialPvPPopup gốc): openPvP → tên league, đồng hồ mùa, bảng xếp hạng nhóm với vạch lên/xuống league,
+// dòng của mình ghim ở đáy khi đang ngoài vùng nhìn thấy, nút Season Rewards, nút Challenge. Thứ Hai nghỉ: hiện giờ tới
+// mùa sau và khoá Challenge. Còn kết quả mùa cũ thì mở Season Complete trước.
 public class UIPvPPopup : BaseUI
 {
     public GameObject objLoaded;
-    public TMP_Text txtTitle;
-    public TMP_Text txtRankName;
-    public TMP_Text txtTrophy;
-    public TMP_Text txtResetTime;
+    public TMP_Text txtLeagueName;
+    public TMP_Text txtSeasonTimer;
     public GameObject objLoading;
     public Button btBattle;
-    public Button btLeaderboard;
     public Button btReward;
-    public Button btAdTicket;
     public Button btClose;
     public TMP_Text txtBattle;
-    public TMP_Text txtAdTicket;
-    public GameObject objTrophySliderRoot;
-    public Slider sliderTrophy;
-    public TMP_Text txtTrophySlider;
-    // Reskin: bảng xếp hạng world nằm ngay trong sảnh (mockup), cùng dữ liệu với UIPvPLeaderboardPopup.
     public ElementPvPLeaderboardUI leaderboardElement;
     public GameObject leaderboardSeparator;
     public Transform leaderboardContent;
     public ScrollRect leaderboardScroll;
+    public ElementPvPLeaderboardUI stickyRow;
+    public Color promotionColor = new Color(0.27f, 0.85f, 0.45f, 1f);
+    public Color demotionColor = new Color(0.9f, 0.27f, 0.25f, 1f);
 
     private readonly List<GameObject> leaderboardRows = new List<GameObject>();
+    private RectTransform myRow;
     private float tick;
     private bool isLoaded;
     private bool isRequesting;
@@ -43,27 +38,19 @@ public class UIPvPPopup : BaseUI
     {
         base.Awake();
         btBattle.onClick.AddListener(OnClickBattle);
-        if (btLeaderboard != null) btLeaderboard.onClick.AddListener(OnClickLeaderboard);
         if (btReward != null) btReward.onClick.AddListener(OnClickRewards);
-        if (btAdTicket != null) btAdTicket.onClick.AddListener(OnClickAdTicket);
         if (btClose != null) btClose.onClick.AddListener(Close);
         if (leaderboardElement != null) leaderboardElement.gameObject.SetActive(false);
         if (leaderboardSeparator != null) leaderboardSeparator.SetActive(false);
+        if (stickyRow != null) stickyRow.gameObject.SetActive(false);
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        PvPController.TicketsUpdated += OnTicketsUpdated;
-        if (txtTitle != null) txtTitle.text = Loc.L("Popup.PvP.Title");
         isLoaded = false;
         SetLoading(true);
         Open();
-    }
-
-    private void OnDisable()
-    {
-        PvPController.TicketsUpdated -= OnTicketsUpdated;
     }
 
     private void Update()
@@ -71,12 +58,12 @@ public class UIPvPPopup : BaseUI
         tick -= Time.unscaledDeltaTime;
         if (tick > 0f) return;
         tick = 1f;
-        DrawResetTime();
+        DrawSeasonTimer();
     }
 
-    private void OnTicketsUpdated(PvPTicketsDTO tickets)
+    private void LateUpdate()
     {
-        if (isLoaded) Draw();
+        UpdateStickyRow();
     }
 
     private void Open()
@@ -94,27 +81,14 @@ public class UIPvPPopup : BaseUI
                 return;
             }
 
-            // jne(true): còn thưởng trận trước chưa nhận (tắt app trước khi Claim) → tự cộng + báo.
-            Controller.ApplyPendingSettlement(true);
+            Controller.ClearSettlement();
             isLoaded = true;
             SetLoading(false);
             Draw();
-            LoadLeaderboard();
-        });
-    }
-
-    private void LoadLeaderboard()
-    {
-        if (leaderboardElement == null || leaderboardContent == null) return;
-        for (int i = 0; i < leaderboardRows.Count; i++)
-        {
-            if (leaderboardRows[i] != null) Destroy(leaderboardRows[i]);
-        }
-        leaderboardRows.Clear();
-        Controller.GetLeaderboard(StaticPvPData.LEADERBOARD_SCOPES[0], res =>
-        {
-            if (this == null || !gameObject.activeInHierarchy || res == null) return;
-            UIPvPLeaderboardPopup.FillRows(res, leaderboardElement, leaderboardSeparator, leaderboardContent, leaderboardScroll, leaderboardRows);
+            if (Controller.State.pendingSeasonResult != null)
+            {
+                UIPvPSeasonClaimPopup.Open(Controller.State.pendingSeasonResult, null);
+            }
         });
     }
 
@@ -123,69 +97,109 @@ public class UIPvPPopup : BaseUI
         if (objLoading != null) objLoading.SetActive(isOn);
         if (objLoaded != null) objLoaded.SetActive(!isOn);
         btBattle.gameObject.SetActive(!isOn);
-        if (btAdTicket != null && isOn) btAdTicket.gameObject.SetActive(false);
     }
 
-    // ===== Vẽ (jqs/jqx/jqz) =====
+    // ===== Vẽ =====
 
     private void Draw()
     {
         StaticPvPData data = GameData.staticData.pvp;
-        int trophy = Controller.Trophy;
-        PvPLeagueDefinition league = data.GetLeague(trophy);
-
-        if (txtRankName != null)
+        PvPLeagueDefinition league = data.GetLeagueByIndex(Controller.LeagueIndex);
+        if (txtLeagueName != null)
         {
-            txtRankName.text = league.leagueName;
-            txtRankName.color = league.leagueColor;
+            txtLeagueName.text = data.GetLeagueName(league.leagueIndex);
+            txtLeagueName.color = league.leagueColor;
         }
-        if (txtTrophy != null) txtTrophy.text = "<sprite=0>" + trophy;
-        DrawTrophySlider(trophy, league);
-        DrawResetTime();
-        DrawButtons();
-    }
-
-    // jqx gốc: max = MaxTrophy của league (league cuối không trần → max = trophy); value = (trophy−min)/(max−min)
-    // kẹp ≤ 1 (khoảng < 1 → đầy); chữ "{trophy}/{max}".
-    private void DrawTrophySlider(int trophy, PvPLeagueDefinition league)
-    {
-        if (sliderTrophy == null) return;
-        int max = league.maxTrophy == int.MaxValue ? trophy : league.maxTrophy;
-        int range = max - league.minTrophy;
-        sliderTrophy.minValue = 0f;
-        sliderTrophy.maxValue = 1f;
-        sliderTrophy.value = range < 1 ? 1f : Mathf.Clamp01((float)(trophy - league.minTrophy) / range);
-        if (txtTrophySlider != null) txtTrophySlider.text = trophy + "/" + max;
-    }
-
-    // Gốc chỉ gán chữ, KHÔNG bật ResetText (prefab gốc để tắt) — giữ nguyên như vậy.
-    private void DrawResetTime()
-    {
-        if (txtResetTime == null || !isLoaded) return;
-        DateTime now = DateTime.UtcNow;
-        TimeSpan remain = now.Date.AddDays(1) - now;
-        txtResetTime.text = "Tickets refreshed in: <color=#E3EC42>" + FormatTime(remain) + "</color>";
-    }
-
-    // jqz: còn vé → nút Battle; hết vé → khoá Battle, hiện nút xem ads lấy vé nếu còn lượt.
-    private void DrawButtons()
-    {
-        PvPTicketsDTO t = GameData.userData.pvp.tickets;
-        int total = t.freeRemaining + t.adRemaining;
-        int daily = t.dailyFreeTickets > 0 ? t.dailyFreeTickets : StaticPvPData.DAILY_FREE_TICKETS;
-        int maxAd = t.maxAdPerDay > 0 ? t.maxAdPerDay : StaticPvPData.MAX_AD_TICKETS_PER_DAY;
+        DrawSeasonTimer();
 
         btBattle.gameObject.SetActive(true);
-        btBattle.interactable = total > 0;
-        if (txtBattle != null) txtBattle.text = "<sprite=0>" + total + "/" + daily + ("\n" + Loc.L("Common.Battle"));
+        btBattle.interactable = IsSeasonActive;
+        if (txtBattle != null) txtBattle.text = Loc.L("Popup.PvP.Challenge");
+        DrawLeaderboard();
+    }
 
-        if (btAdTicket != null)
+    private static bool IsSeasonActive => Controller.State != null && Controller.State.season != null && Controller.State.season.isActive;
+
+    private void DrawSeasonTimer()
+    {
+        if (txtSeasonTimer == null || !isLoaded || Controller.State == null || Controller.State.season == null) return;
+        PvPSeasonDTO season = Controller.State.season;
+        long now = new DateTimeOffset(ServerTime.UtcNow).ToUnixTimeSeconds();
+        long target = season.isActive ? season.endsAt : season.nextStartsAt;
+        string key = season.isActive ? "Popup.PvP.Season.EndsIn" : "Popup.PvP.Season.NextIn";
+        txtSeasonTimer.text = string.Format(Loc.L(key), FormatTime(TimeSpan.FromSeconds(target - now)));
+    }
+
+    // Bảng xếp hạng + vạch lên (dưới người cuối được lên) + vạch xuống (trên người đầu tiên bị xuống).
+    private void DrawLeaderboard()
+    {
+        for (int i = 0; i < leaderboardRows.Count; i++)
         {
-            bool showAd = total <= 0 && t.adClaimedToday < maxAd;
-            btAdTicket.gameObject.SetActive(showAd);
-            btAdTicket.interactable = showAd;
-            if (txtAdTicket != null) txtAdTicket.text = (maxAd - t.adClaimedToday) + "/" + maxAd + "\n<sprite=0>Enter";
+            if (leaderboardRows[i] != null) Destroy(leaderboardRows[i]);
         }
+        leaderboardRows.Clear();
+        myRow = null;
+        if (stickyRow != null) stickyRow.gameObject.SetActive(false);
+        if (leaderboardElement == null || leaderboardContent == null) return;
+
+        PvPOpenResponseDTO state = Controller.State;
+        List<PvPLeaderboardEntryModel> list = state.leaderboard;
+        if (list == null) return;
+
+        int promote = state.promotion != null ? state.promotion.promoteCount : 0;
+        int demote = state.promotion != null ? state.promotion.demoteCount : 0;
+        int demoteFrom = list.Count - demote;
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (demote > 0 && i == demoteFrom) AddSeparator(Loc.L("Popup.PvP.Season.DemotionArea"), demotionColor);
+
+            ElementPvPLeaderboardUI row = Instantiate(leaderboardElement, leaderboardContent);
+            row.gameObject.SetActive(true);
+            row.Setup(list[i]);
+            leaderboardRows.Add(row.gameObject);
+            if (list[i].IsCurrentPlayer)
+            {
+                myRow = row.transform as RectTransform;
+                if (stickyRow != null) stickyRow.Setup(list[i]);
+            }
+
+            if (promote > 0 && i == promote - 1 && i < list.Count - 1) AddSeparator(Loc.L("Popup.PvP.Season.PromotionArea"), promotionColor);
+        }
+
+        if (leaderboardScroll != null)
+        {
+            Canvas.ForceUpdateCanvases();
+            leaderboardScroll.verticalNormalizedPosition = 1f;
+        }
+    }
+
+    private void AddSeparator(string label, Color color)
+    {
+        if (leaderboardSeparator == null) return;
+        GameObject separator = Instantiate(leaderboardSeparator, leaderboardContent);
+        separator.SetActive(true);
+        foreach (Graphic graphic in separator.GetComponentsInChildren<Graphic>(true))
+        {
+            graphic.color = color;
+        }
+        TMP_Text text = separator.GetComponentInChildren<TMP_Text>(true);
+        if (text != null) text.text = label;
+        leaderboardRows.Add(separator);
+    }
+
+    // Dòng của mình nằm trọn trong vùng nhìn thấy (chừa phần dòng ghim che ở đáy) thì không cần ghim.
+    private void UpdateStickyRow()
+    {
+        if (stickyRow == null || myRow == null || leaderboardScroll == null) return;
+        RectTransform viewport = leaderboardScroll.viewport != null ? leaderboardScroll.viewport : (RectTransform)leaderboardScroll.transform;
+        Vector3[] viewCorners = new Vector3[4];
+        Vector3[] rowCorners = new Vector3[4];
+        Vector3[] stickyCorners = new Vector3[4];
+        viewport.GetWorldCorners(viewCorners);
+        myRow.GetWorldCorners(rowCorners);
+        ((RectTransform)stickyRow.transform).GetWorldCorners(stickyCorners);
+        bool isVisible = rowCorners[1].y <= viewCorners[1].y && rowCorners[0].y >= stickyCorners[1].y;
+        if (stickyRow.gameObject.activeSelf == isVisible) stickyRow.gameObject.SetActive(!isVisible);
     }
 
     // ev.ehx gốc: 2 đơn vị lớn nhất "1d 2h" / "5h 30m" / "3m 20s".
@@ -210,37 +224,12 @@ public class UIPvPPopup : BaseUI
         UIManager.Instance.LoadUI(UIKey.PvPFindOpponentPopup);
     }
 
-    private void OnClickLeaderboard()
-    {
-        UIManager.Instance.LoadUI(UIKey.PvPLeaderboardPopup);
-    }
-
     private void OnClickRewards()
     {
         UIManager.Instance.LoadUI(UIKey.PvPRewardsPopup);
     }
 
-    // jra/jrb: xem ads (RewardedType.PvPTicket = 13) → grantPvPAdTicket.
-    private void OnClickAdTicket()
-    {
-        btAdTicket.interactable = false;
-        MediationAds.Instance.ShowRewardedVideoAd(PvPController.AD_PLACEMENT, result =>
-        {
-            if (result != ShowResultADS.Finished)
-            {
-                if (this != null) DrawButtons();
-                return;
-            }
-
-            Controller.GrantAdTicket((ok, message) =>
-            {
-                UIManager.Instance.ShowToastMessage(ok ? Loc.L("Popup.PvP.TicketAdded") : message, isLocalize: false);
-                if (this != null && gameObject.activeInHierarchy) DrawButtons();
-            });
-        });
-    }
-
-    // Sau trận: chờ đổi mode xong rồi mở lại sảnh.
+    // Sau trận: chờ đổi mode xong rồi mở lại popup.
     public static void OpenAfterModeChange()
     {
         PvPController.Instance.StartCoroutine(RoutineOpenAfterModeChange());

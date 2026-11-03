@@ -1,31 +1,55 @@
 using System.Collections.Generic;
 
-// DTO PvP — tên field GIỐNG DTO game gốc (PvP*DTO / PvPPlayerModel / PvPTicketsDTO, il2cpp v41) và khớp JSON
-// server (server/functions/src/pvp.ts). Khác gốc như Boss Rush: món đồ là assetName + slot + rarity, wing/cape
-// nằm chung Items (dùng lại BossRushItemModel/BossRushCompanionModel). Chi tiết: DecodedData/PVP_MODEL.md.
+// DTO PvP mùa + nhóm league, khớp JSON server (server/functions/src/pvp.ts). Khác gốc như Boss Rush: món đồ là
+// assetName + slot + rarity, wing/cape nằm chung Items (dùng lại BossRushItemModel/BossRushCompanionModel).
+// Chi tiết: GDD/PVP_DESIGN.md.
 
 public class PvPTicketsDTO
 {
-    public int freeRemaining;
-    public int adRemaining;
-    public int adClaimedToday;
-    public int maxAdPerDay;
-    public int dailyFreeTickets;
+    public int remaining;
+    public int dailyTickets;
     public string dayKey;
 }
 
-// PvPRewardEntryDTO gốc: Type là TÊN enum RewardType (client gốc Enum.TryParse).
-public class PvPRewardEntryDTO
+// 1 khung hạng của bảng thưởng mùa.
+public class PvPRewardBandDTO
 {
-    public string Type;
-    public int Amount;
+    public int MinRank;
+    public int MaxRank;
+    public List<RewardEntry> Rewards = new List<RewardEntry>();
 }
 
 public class PvPLeagueRewardsDTO
 {
+    public int LeagueIndex;
+    public List<PvPRewardBandDTO> Bands = new List<PvPRewardBandDTO>();
+}
+
+public class PvPSeasonDTO
+{
+    public string key;
+    public bool isActive;
+    public long startsAt;
+    public long endsAt;
+    public long nextStartsAt;
+}
+
+public class PvPPromotionDTO
+{
+    public int promoteCount;
+    public int demoteCount;
+}
+
+// Kết quả mùa chờ nhận ở popup Season Complete.
+public class PvPSeasonResultDTO
+{
+    public string seasonKey;
     public int leagueIndex;
-    public List<PvPRewardEntryDTO> winRewards = new List<PvPRewardEntryDTO>();
-    public List<PvPRewardEntryDTO> loseRewards = new List<PvPRewardEntryDTO>();
+    public int newLeagueIndex;
+    public int finalRank;
+    public int memberCount;
+    public int trophy;
+    public List<RewardEntry> rewards = new List<RewardEntry>();
 }
 
 public class PvPPlayerModel
@@ -40,6 +64,7 @@ public class PvPPlayerModel
     public string SnapshotContentVersion;
     public int ProjectedWinTrophy;
     public int ProjectedLossTrophy;
+    public int StarsOnWin;
     public List<BossRushItemModel> Items = new List<BossRushItemModel>();
     public List<BossRushCompanionModel> Companions = new List<BossRushCompanionModel>();
     public bool ShowCloak = true;
@@ -48,20 +73,16 @@ public class PvPPlayerModel
     public bool IsBot;
 }
 
+// 1 dòng bảng xếp hạng nhóm.
 public class PvPLeaderboardEntryModel
 {
     public string UserId;
     public string PlayerName;
-    public string CountryCode;
     public int AvatarId;
     public int Trophy;
     public int Rank;
     public double Power;
     public bool IsCurrentPlayer;
-    public List<BossRushItemModel> Items = new List<BossRushItemModel>();
-    public List<BossRushCompanionModel> Companions = new List<BossRushCompanionModel>();
-    public bool ShowCloak = true;
-    public List<int> EnchantmentTiers = new List<int>();
 }
 
 // ===== Request =====
@@ -99,11 +120,6 @@ public class PvPBattleResultRequestDTO
     public bool won;
 }
 
-public class PvPLeaderboardRequestDTO
-{
-    public string scope;
-}
-
 // ===== Response =====
 
 public class PvPOpenResponseDTO
@@ -118,6 +134,18 @@ public class PvPOpenResponseDTO
     public string contentVersion;
     public PvPTicketsDTO tickets;
     public List<PvPLeagueRewardsDTO> rewardTable;
+    public PvPSeasonDTO season;
+    public int playerRank;
+    public List<PvPLeaderboardEntryModel> leaderboard;
+    public PvPPromotionDTO promotion;
+    public PvPSeasonResultDTO pendingSeasonResult;
+}
+
+public class PvPClaimSeasonResponseDTO
+{
+    public bool success;
+    public string message;
+    public List<RewardEntry> rewards;
 }
 
 public class PvPFindOpponentsResponseDTO
@@ -138,6 +166,7 @@ public class PvPStartBattleResponseDTO
     public long battleTokenExpiresAt;
     public long startedAt;
     public int startLeagueIndex;
+    public int starsOnWin;
     public PvPPlayerModel opponent;
     public PvPTicketsDTO tickets;
 }
@@ -148,37 +177,12 @@ public class PvPBattleResultResponseDTO
     public string message;
     public bool won;
     public bool forfeit;
+    public bool seasonEnded;
     public int oldTrophy;
     public int newTrophy;
     public int trophyDelta;
-    public int oldLeagueIndex;
-    public int newLeagueIndex;
-    public int startLeagueIndex;
-    public int opponentOldTrophy;
-    public int opponentNewTrophy;
-    public PvPPlayerModel opponent;
-    public List<PvPRewardEntryDTO> rewards;
+    public int leagueIndex;
     public PvPTicketsDTO tickets;
-}
-
-public class PvPAdTicketResponseDTO
-{
-    public bool success;
-    public string message;
-    public PvPTicketsDTO tickets;
-}
-
-public class PvPLeaderboardResponseDTO
-{
-    public bool success;
-    public string message;
-    public string scope;
-    public long generatedAt;
-    public bool stale;
-    public int playerRank;
-    public int playerTrophy;
-    public List<PvPLeaderboardEntryModel> topPlayers;
-    public List<PvPLeaderboardEntryModel> nearbyPlayers;
 }
 
 // ===== Model phía client (save) =====
@@ -201,14 +205,11 @@ public class PendingPvPReport
     public int StartLeagueIndex;
 }
 
-// PendingPvPRewardSettlement gốc — kết quả đã nhận từ server nhưng CHƯA cộng thưởng (chờ bấm Claim).
+// Kết quả trận đã nhận từ server, giữ để hiện ở popup cuối trận.
 public class PendingPvPRewardSettlement
 {
     public bool Won;
     public int OldTrophy;
     public int NewTrophy;
     public int TrophyDelta;
-    public int OldLeagueIndex;
-    public int NewLeagueIndex;
-    public List<RewardEntry> Rewards = new List<RewardEntry>();
 }

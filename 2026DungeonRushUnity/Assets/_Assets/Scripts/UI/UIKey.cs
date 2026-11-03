@@ -31,7 +31,7 @@ public class UIKey
     public const string PvPFindOpponentPopup = "UIPvPFindOpponentPopup";
     public const string PvPEndPopup = "UIPvPEndPopup";
     public const string PvPRewardsPopup = "UIPvPRewardsPopup";
-    public const string PvPLeaderboardPopup = "UIPvPLeaderboardPopup";
+    public const string PvPSeasonClaimPopup = "UIPvPSeasonClaimPopup";
     public const string EnchantmentInfo = "UiEnchantmentInfoItem";
     public const string EnchantmentMerge = "UiEnchantmentMerge";
     public const string SummonEnchantment = "UiSumonEnchantment";

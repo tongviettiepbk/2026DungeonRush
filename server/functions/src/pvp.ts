@@ -1,33 +1,33 @@
 import { randomBytes } from "crypto";
-import { getFirestore, Firestore, Query } from "firebase-admin/firestore";
+import { getFirestore, Firestore } from "firebase-admin/firestore";
 import { CallableRequest, HttpsError, onCall } from "firebase-functions/v2/https";
 import { sanitizeCompanions, sanitizeEnchantmentTiers, sanitizeItems } from "./bossRush";
-import { BossRushCompanionModel, BossRushItemModel } from "./models";
+import { botLoadout, loadBank } from "./bots";
+import { BossRushCompanionModel, BossRushItemModel, BotSeed, RewardEntry } from "./models";
 import {
-  BATTLE_TOKEN_TTL_SECONDS, DAILY_FREE_TICKETS, LEADERBOARD_NEARBY, LEADERBOARD_TOP, MAX_AD_TICKETS_PER_DAY,
-  MINIMUM_TROPHY, PvPLeagueRewardsDTO, ROSTER_SIZE, ROSTER_TTL_SECONDS, START_TROPHY, getLeagueIndex,
-  getLeagueRewards, loadRewardTable, lossDelta, projectedLoss, projectedWin, winDelta,
+  BATTLE_TOKEN_TTL_SECONDS, DAILY_TICKETS, GROUP_CAPACITY, LEAGUE_NAMES, PvPRemoteConfig, ROSTER_TTL_SECONDS, START_LEAGUE,
+  assignStars, clampLeague, demoteCount, loadPvPConfig, pickOpponents, promoteCount, seasonRewardTable, seasonRewards,
 } from "./pvpConfig";
-import { getDayKey } from "./schedule";
+import { PvPGroupDoc, PvPGroupEntry, PvPRankEntry, createGroup, finalizeGroup, groupCount, pvpBotParams, rankGroup } from "./pvpGroup";
+import { getDayKey, getEventEnd, getEventKey, getEventStart, getNextEventStart, isEventActive } from "./schedule";
 
-// PvP Arena — 7 endpoint giống server gốc (tên viết thường như URL https://{fn}-umgnfrxyuq-uc.a.run.app/):
-// initpvpprofile, openpvp, findpvpopponents, startpvpbattle, reportpvpbattle, grantpvpadticket, getpvpleaderboard.
-// Trận đánh chạy ở client với SNAPSHOT đồ của đối thủ (PvP bất đồng bộ); server giữ trophy (Elo), vé, roster, token.
-// Lỗi nghiệp vụ trả {success:false, message} như DTO gốc; chỉ lỗi xác thực mới ném HttpsError.
+// PvP theo mùa + nhóm league (GDD/PVP_DESIGN.md): openpvp, findpvpopponents, startpvpbattle, reportpvpbattle,
+// claimpvpseason. Trận đánh chạy ở client với SNAPSHOT đồ của đối thủ; server giữ league, cúp, vé, nhóm, roster, token.
+// Nhóm được chốt lười: thành viên đầu tiên mở PvP sau khi hết mùa sẽ chốt cả nhóm, không cần tác vụ hẹn giờ.
+// Lỗi nghiệp vụ trả {success:false, message}; chỉ lỗi xác thực mới ném HttpsError.
 
 const PLAYERS = "pvpPlayers";
+export const GROUPS = "pvpGroups";
 const CONTENT_VERSION = "1.0.0";
+const MAX_GROUP_SEARCH = 1000;
 
 export interface PvPTicketsDTO {
-  freeRemaining: number;
-  adRemaining: number;
-  adClaimedToday: number;
-  maxAdPerDay: number;
-  dailyFreeTickets: number;
+  remaining: number;
+  dailyTickets: number;
   dayKey: string;
 }
 
-// PvPPlayerModel gốc. Khác gốc: wing/cape nằm chung Items (slot 7/6) như Boss Rush.
+// Wing/cape nằm chung Items (slot 7/6) như Boss Rush.
 export interface PvPPlayerModel {
   UserId: string;
   PlayerName: string;
@@ -39,6 +39,7 @@ export interface PvPPlayerModel {
   SnapshotContentVersion: string;
   ProjectedWinTrophy: number;
   ProjectedLossTrophy: number;
+  StarsOnWin?: number;
   Items: BossRushItemModel[];
   Companions: BossRushCompanionModel[];
   ShowCloak: boolean;
@@ -51,16 +52,29 @@ interface Roster {
   token: string;
   expiresAt: number;        // unix giây
   opponentIds: string[];
+  stars: { [id: string]: number };
 }
 
 interface ActiveBattle {
   token: string;
   opponentUserId: string;
-  myTrophyAtStart: number;
-  opponentTrophyAtStart: number;
+  starsOnWin: number;
+  seasonKey: string;
+  groupId: string;
   startLeagueIndex: number;
   startedAt: number;        // unix giây
   expiresAt: number;        // unix giây
+}
+
+// Kết quả mùa chờ bấm Claim ở popup Season Complete.
+interface PendingSeason {
+  seasonKey: string;
+  leagueIndex: number;
+  newLeagueIndex: number;
+  finalRank: number;
+  memberCount: number;
+  trophy: number;
+  rewards: RewardEntry[];
 }
 
 // Document pvpPlayers/{uid}
@@ -76,7 +90,11 @@ export interface PvPPlayerDoc {
   showCloak: boolean;
   snapshotHash: string;
   contentVersion: string;
-  trophy: number;
+  league: number;
+  seasonKey: string;
+  groupId: string;
+  trophy: number;           // cúp trong mùa hiện tại
+  pendingSeason: PendingSeason | null;
   attacksUsed: number;
   wins: number;
   losses: number;
@@ -114,27 +132,23 @@ function nowSeconds(): number {
   return Math.floor(Date.now() / 1000);
 }
 
+function toSeconds(d: Date): number {
+  return Math.floor(d.getTime() / 1000);
+}
+
 function newToken(): string {
   return randomBytes(16).toString("hex");
 }
 
-// ===== Vé (PvPTicketsDTO) =====
+// ===== Vé =====
 
 function freshTickets(dayKey: string): PvPTicketsDTO {
-  return {
-    freeRemaining: DAILY_FREE_TICKETS,
-    adRemaining: 0,
-    adClaimedToday: 0,
-    maxAdPerDay: MAX_AD_TICKETS_PER_DAY,
-    dailyFreeTickets: DAILY_FREE_TICKETS,
-    dayKey,
-  };
+  return { remaining: DAILY_TICKETS, dailyTickets: DAILY_TICKETS, dayKey };
 }
 
-// Sang ngày UTC mới → hồi vé free, xoá lượt ads (vé ads chưa dùng cũng hết hạn).
 function resetTicketsIfNewDay(player: PvPPlayerDoc, now: Date): void {
   const dayKey = getDayKey(now);
-  if (player.tickets?.dayKey !== dayKey) {
+  if (player.tickets?.dayKey !== dayKey || typeof player.tickets.remaining !== "number") {
     player.tickets = freshTickets(dayKey);
   }
 }
@@ -152,7 +166,11 @@ function newPlayerDoc(uid: string): PvPPlayerDoc {
     showCloak: true,
     snapshotHash: "",
     contentVersion: CONTENT_VERSION,
-    trophy: START_TROPHY,
+    league: START_LEAGUE,
+    seasonKey: "",
+    groupId: "",
+    trophy: 0,
+    pendingSeason: null,
     attacksUsed: 0,
     wins: 0,
     losses: 0,
@@ -162,6 +180,17 @@ function newPlayerDoc(uid: string): PvPPlayerDoc {
     isBot: false,
     updatedAt: Date.now(),
   };
+}
+
+// Document hệ Elo cũ chưa có league/mùa: về Iron, cúp sẽ reset lúc vào nhóm.
+function readPlayer(uid: string, data: FirebaseFirestore.DocumentData | undefined): PvPPlayerDoc {
+  if (!data) return newPlayerDoc(uid);
+  const player = data as PvPPlayerDoc;
+  player.league = clampLeague(player.league ?? START_LEAGUE);
+  player.seasonKey = player.seasonKey ?? "";
+  player.groupId = player.groupId ?? "";
+  player.pendingSeason = player.pendingSeason ?? null;
+  return player;
 }
 
 function applySnapshot(player: PvPPlayerDoc, data: SnapshotRequest): void {
@@ -179,65 +208,179 @@ function applySnapshot(player: PvPPlayerDoc, data: SnapshotRequest): void {
   if (typeof data.showCloak === "boolean") player.showCloak = data.showCloak;
 }
 
-// PvPPlayerModel nhìn từ góc người xem (Projected* = trophy NGƯỜI XEM sau thắng/thua đối thủ này — jkz/jla).
-function toModel(p: PvPPlayerDoc, viewerTrophy: number): PvPPlayerModel {
+function realModel(p: PvPPlayerDoc, trophy: number, viewerTrophy: number, stars: number): PvPPlayerModel {
   return {
     UserId: p.uid,
     PlayerName: p.playerName,
     CountryCode: p.countryCode,
     AvatarId: p.avatarId,
     Position: 0,
-    Trophy: p.trophy,
+    Trophy: trophy,
     Power: p.power,
     SnapshotContentVersion: p.contentVersion,
-    ProjectedWinTrophy: projectedWin(viewerTrophy, p.trophy),
-    ProjectedLossTrophy: projectedLoss(viewerTrophy, p.trophy),
+    ProjectedWinTrophy: viewerTrophy + stars,
+    ProjectedLossTrophy: viewerTrophy,
+    StarsOnWin: stars,
     Items: p.items ?? [],
     Companions: p.companions ?? [],
     ShowCloak: p.showCloak ?? true,
     AttacksUsed: p.attacksUsed ?? 0,
     EnchantmentTiers: p.enchantmentTiers ?? [],
-    IsBot: p.isBot === true,
+    IsBot: false,
   };
 }
 
-// ===== initPvPProfile =====
+// Chưa có ngân hàng bộ đồ thì bot mượn đồ người xem.
+function botModel(bot: BotSeed, e: PvPRankEntry, group: PvPGroupDoc, now: number, viewer: PvPPlayerDoc, stars: number): PvPPlayerModel {
+  const step = botLoadout(bot, pvpBotParams(group), now, loadBank());
+  return {
+    UserId: bot.id,
+    PlayerName: e.name,
+    CountryCode: "",
+    AvatarId: e.avatarId,
+    Position: 0,
+    Trophy: e.trophy,
+    Power: e.power,
+    SnapshotContentVersion: CONTENT_VERSION,
+    ProjectedWinTrophy: viewer.trophy + stars,
+    ProjectedLossTrophy: viewer.trophy,
+    StarsOnWin: stars,
+    Items: step ? step.items : viewer.items ?? [],
+    Companions: step ? step.companions : viewer.companions ?? [],
+    ShowCloak: step ? step.showCloak : true,
+    AttacksUsed: e.fights,
+    EnchantmentTiers: step ? step.enchantmentTiers : viewer.enchantmentTiers ?? [],
+    IsBot: true,
+  };
+}
 
-export const initpvpprofile = onCall(async (request) => {
-  const uid = requireUid(request);
-  const data = (request.data ?? {}) as SnapshotRequest;
-  const ref = db().collection(PLAYERS).doc(uid);
+function groupEntryOf(player: PvPPlayerDoc, trophy: number, fights: number, joinedAt: number): PvPGroupEntry {
+  return {
+    UserId: player.uid, PlayerName: player.playerName, AvatarId: player.avatarId, Power: player.power, Trophy: trophy,
+    Fights: fights, JoinedAt: joinedAt,
+  };
+}
 
-  return db().runTransaction(async (tx) => {
-    const snap = await tx.get(ref);
-    const player = snap.exists ? (snap.data() as PvPPlayerDoc) : newPlayerDoc(uid);
-    applySnapshot(player, { playerName: data.playerName, countryCode: data.countryCode });
-    player.updatedAt = Date.now();
-    tx.set(ref, player);
-    return {
-      success: true, userId: uid, playerName: player.playerName, hasName: player.playerName.length > 0,
-      created: !snap.exists, message: "",
-    };
-  });
-});
+function seasonOf(now: Date) {
+  return {
+    key: getEventKey(now),
+    isActive: isEventActive(now),
+    startsAt: toSeconds(getEventStart(now)),
+    endsAt: toSeconds(getEventEnd(now)),
+    nextStartsAt: toSeconds(getNextEventStart(now)),
+  };
+}
+
+function pendingDTO(pending: PendingSeason | null) {
+  return pending ? { ...pending, leagueName: LEAGUE_NAMES[pending.leagueIndex - 1] } : null;
+}
 
 // ===== openPvP =====
+
+// Kết quả mùa cũ của một thành viên (không có thưởng + giữ league thì không cần popup).
+function settleSeason(player: PvPPlayerDoc, group: PvPGroupDoc, results: PvPGroupDoc["results"]): void {
+  const result = results[player.uid];
+  if (!result) return;
+  const rewards = result.fights > 0 ? seasonRewards(group.league, result.rank) : [];
+  if (rewards.length > 0 || result.newLeague !== group.league) {
+    player.pendingSeason = {
+      seasonKey: group.seasonKey,
+      leagueIndex: group.league,
+      newLeagueIndex: result.newLeague,
+      finalRank: result.rank,
+      memberCount: result.count,
+      trophy: result.trophy,
+      rewards,
+    };
+  }
+  player.league = result.newLeague;
+}
 
 export const openpvp = onCall(async (request) => {
   const uid = requireUid(request);
   const data = (request.data ?? {}) as SnapshotRequest;
   const now = new Date();
-  const rewardTable = await loadRewardTable(db());
+  const config: PvPRemoteConfig = await loadPvPConfig(db());
   const ref = db().collection(PLAYERS).doc(uid);
+  const eventKey = getEventKey(now);
+  const bank = loadBank();
 
   return db().runTransaction(async (tx) => {
     const snap = await tx.get(ref);
-    const player = snap.exists ? (snap.data() as PvPPlayerDoc) : newPlayerDoc(uid);
+    const player = readPlayer(uid, snap.data());
     resetTicketsIfNewDay(player, now);
     applySnapshot(player, data);
+
+    // Firestore bắt đọc hết rồi mới ghi nên gom các lệnh ghi nhóm lại, chạy sau cùng.
+    const writes: (() => void)[] = [];
+
+    // 1. Hết mùa → chốt nhóm cũ (nếu chưa ai chốt), lấy kết quả của mình.
+    if (player.groupId && player.seasonKey !== eventKey) {
+      const oldRef = db().collection(GROUPS).doc(player.groupId);
+      const oldSnap = await tx.get(oldRef);
+      if (oldSnap.exists) {
+        const old = oldSnap.data() as PvPGroupDoc;
+        const results = old.isFinalized ? old.results : finalizeGroup(old, config, bank);
+        if (!old.isFinalized) writes.push(() => tx.update(oldRef, { isFinalized: true, results }));
+        settleSeason(player, old, results);
+      }
+      player.groupId = "";
+      player.seasonKey = "";
+      player.trophy = 0;
+      player.roster = null;
+      player.activeBattle = null;
+    }
+
+    // 2. Đang trong mùa → lấy nhóm hiện tại, chưa có thì vào nhóm còn chỗ đầu tiên của league.
+    let group: PvPGroupDoc | null = null;
+    if (eventKey) {
+      if (player.groupId) {
+        const current = await tx.get(db().collection(GROUPS).doc(player.groupId));
+        if (current.exists) group = current.data() as PvPGroupDoc;
+      }
+      if (!group) {
+        player.trophy = 0;
+        player.roster = null;
+        player.activeBattle = null;
+        const entry = groupEntryOf(player, 0, 0, now.getTime());
+        for (let n = 1; n <= MAX_GROUP_SEARCH && !group; n++) {
+          const groupId = eventKey + "_L" + player.league + "_" + n;
+          const groupRef = db().collection(GROUPS).doc(groupId);
+          const candidate = await tx.get(groupRef);
+          if (!candidate.exists) {
+            const created = createGroup(groupId, eventKey, player.league, [entry], config.groupMinSize, now.getTime(), bank);
+            writes.push(() => tx.set(groupRef, created));
+            group = created;
+          } else {
+            const existing = candidate.data() as PvPGroupDoc;
+            if (groupCount(existing) < GROUP_CAPACITY) {
+              existing.players[uid] = entry;
+              writes.push(() => tx.update(groupRef, { ["players." + uid]: entry }));
+              group = existing;
+            }
+          }
+        }
+        if (!group) return { success: false, message: "Failed to load PvP." };
+        player.groupId = group.groupId;
+        player.seasonKey = eventKey;
+      } else {
+        // Cập nhật tên + avatar + sức mạnh trong nhóm khi đổi.
+        const old = group.players[uid];
+        const entry = groupEntryOf(player, player.trophy, old?.Fights ?? 0, old?.JoinedAt ?? now.getTime());
+        if (!old || old.PlayerName !== entry.PlayerName || old.AvatarId !== entry.AvatarId || old.Power !== entry.Power) {
+          group.players[uid] = entry;
+          const groupRef = db().collection(GROUPS).doc(group.groupId);
+          writes.push(() => tx.update(groupRef, { ["players." + uid]: entry }));
+        }
+      }
+    }
+
     player.updatedAt = now.getTime();
+    writes.forEach((write) => write());
     tx.set(ref, player);
 
+    const ranked = group ? rankGroup(group, now.getTime(), bank) : [];
+    const me = ranked.find((e) => e.id === uid);
     return {
       success: true,
       message: "",
@@ -245,37 +388,49 @@ export const openpvp = onCall(async (request) => {
       hasName: player.playerName.length > 0,
       playerName: player.playerName,
       trophy: player.trophy,
-      leagueIndex: getLeagueIndex(player.trophy),
+      leagueIndex: player.league,
       contentVersion: CONTENT_VERSION,
       tickets: player.tickets,
-      rewardTable: rewardTable as PvPLeagueRewardsDTO[],
+      rewardTable: seasonRewardTable(),
+      season: seasonOf(now),
+      playerRank: me?.position ?? 0,
+      leaderboard: ranked.map((e) => ({
+        UserId: e.id, PlayerName: e.name, AvatarId: e.avatarId, Power: e.power, Trophy: e.trophy, Rank: e.position,
+        IsCurrentPlayer: e.id === uid,
+      })),
+      promotion: {
+        promoteCount: promoteCount(config, player.league, ranked.length),
+        demoteCount: demoteCount(config, player.league, ranked.length),
+      },
+      pendingSeasonResult: pendingDTO(player.pendingSeason),
     };
+  });
+});
+
+// ===== claimPvPSeason =====
+
+export const claimpvpseason = onCall(async (request) => {
+  const uid = requireUid(request);
+  const ref = db().collection(PLAYERS).doc(uid);
+
+  return db().runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists) return { success: false, message: "Failed to load PvP." };
+    const player = readPlayer(uid, snap.data());
+    const pending = player.pendingSeason;
+    if (!pending) return { success: false, message: "No season rewards to claim." };
+    tx.update(ref, { pendingSeason: null, updatedAt: Date.now() });
+    return { success: true, message: "", rewards: pending.rewards };
   });
 });
 
 // ===== findPvPOpponents =====
 
-// Ghép đối thủ (server gốc giấu luật): lấy ~3×ROSTER_SIZE người gần trophy nhất (cả trên lẫn dưới),
-// bỏ chính mình, chọn ngẫu nhiên ROSTER_SIZE trong 2×ROSTER_SIZE người gần nhất.
-async function pickOpponents(uid: string, trophy: number): Promise<PvPPlayerDoc[]> {
-  const col = db().collection(PLAYERS);
-  const fetch = ROSTER_SIZE * 3;
-  const [above, below] = await Promise.all([
-    col.where("trophy", ">=", trophy).orderBy("trophy", "asc").limit(fetch).get(),
-    col.where("trophy", "<", trophy).orderBy("trophy", "desc").limit(fetch).get(),
-  ]);
-
-  const candidates = [...above.docs, ...below.docs]
-    .map((d) => d.data() as PvPPlayerDoc)
-    .filter((p) => p.uid !== uid);
-  candidates.sort((a, b) => Math.abs(a.trophy - trophy) - Math.abs(b.trophy - trophy));
-
-  const nearest = candidates.slice(0, ROSTER_SIZE * 2);
-  for (let i = nearest.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [nearest[i], nearest[j]] = [nearest[j], nearest[i]];
-  }
-  return nearest.slice(0, ROSTER_SIZE);
+async function loadCurrentGroup(player: PvPPlayerDoc, now: Date): Promise<PvPGroupDoc | null> {
+  const eventKey = getEventKey(now);
+  if (!eventKey || player.seasonKey !== eventKey || !player.groupId) return null;
+  const snap = await db().collection(GROUPS).doc(player.groupId).get();
+  return snap.exists ? (snap.data() as PvPGroupDoc) : null;
 }
 
 export const findpvpopponents = onCall(async (request) => {
@@ -285,14 +440,33 @@ export const findpvpopponents = onCall(async (request) => {
   const snap = await ref.get();
   if (!snap.exists) return { success: false, message: "Failed to load PvP." };
 
-  const player = snap.data() as PvPPlayerDoc;
+  const player = readPlayer(uid, snap.data());
   resetTicketsIfNewDay(player, now);
-  const opponents = await pickOpponents(uid, player.trophy);
+  const group = await loadCurrentGroup(player, now);
+  if (!group) return { success: false, message: "Season ended.", tickets: player.tickets };
 
+  const bank = loadBank();
+  const ranked = rankGroup(group, now.getTime(), bank).filter((e) => e.id !== uid);
+  const picked = pickOpponents(ranked, player.trophy, Math.random);
+
+  // Đọc snapshot người thật trước khi phát cúp: người đã xoá tài khoản thì bỏ, không để hở một mức cúp.
+  const realIds = picked.filter((e) => !e.isBot).map((e) => e.id);
+  const docs = new Map<string, PvPPlayerDoc>();
+  if (realIds.length > 0) {
+    const snaps = await db().getAll(...realIds.map((id) => db().collection(PLAYERS).doc(id)));
+    snaps.forEach((s) => { if (s.exists) docs.set(s.id, s.data() as PvPPlayerDoc); });
+  }
+  const usable = picked.filter((e) => e.isBot || docs.has(e.id));
+  const botById = new Map((group.bots ?? []).map((b) => [b.id, b]));
+  const assigned = assignStars(usable);
+
+  const stars: { [id: string]: number } = {};
+  assigned.forEach((a) => { stars[a.opponent.id] = a.stars; });
   const roster: Roster = {
     token: newToken(),
     expiresAt: nowSeconds() + ROSTER_TTL_SECONDS,
-    opponentIds: opponents.map((o) => o.uid),
+    opponentIds: assigned.map((a) => a.opponent.id),
+    stars,
   };
   await ref.update({ roster, tickets: player.tickets });
 
@@ -301,7 +475,9 @@ export const findpvpopponents = onCall(async (request) => {
     message: "",
     rosterToken: roster.token,
     rosterExpiresAt: roster.expiresAt,
-    opponents: opponents.map((o) => toModel(o, player.trophy)),
+    opponents: assigned.map((a) => (a.opponent.isBot
+      ? botModel(botById.get(a.opponent.id) as BotSeed, a.opponent, group, now.getTime(), player, a.stars)
+      : realModel(docs.get(a.opponent.id) as PvPPlayerDoc, a.opponent.trophy, player.trophy, a.stars))),
     tickets: player.tickets,
   };
 });
@@ -313,12 +489,16 @@ export const startpvpbattle = onCall(async (request) => {
   const data = (request.data ?? {}) as { rosterToken?: string; opponentUserId?: string };
   const now = new Date();
   const ref = db().collection(PLAYERS).doc(uid);
+  const eventKey = getEventKey(now);
 
   return db().runTransaction(async (tx) => {
     const snap = await tx.get(ref);
     if (!snap.exists) return { success: false, message: "Failed to load PvP." };
-    const player = snap.data() as PvPPlayerDoc;
+    const player = readPlayer(uid, snap.data());
     resetTicketsIfNewDay(player, now);
+    if (!eventKey || player.seasonKey !== eventKey || !player.groupId) {
+      return { success: false, message: "Season ended.", tickets: player.tickets };
+    }
 
     const roster = player.roster;
     if (!roster || roster.token !== data.rosterToken || roster.expiresAt < nowSeconds()) {
@@ -329,30 +509,37 @@ export const startpvpbattle = onCall(async (request) => {
     if (!roster.opponentIds.includes(opponentId)) {
       return { success: false, message: "Opponent not found.", tickets: player.tickets };
     }
-    const oppSnap = await tx.get(db().collection(PLAYERS).doc(opponentId));
-    if (!oppSnap.exists) {
-      return { success: false, message: "Opponent not found.", tickets: player.tickets };
-    }
 
-    // Tiêu vé: free trước, hết free mới dùng vé ads.
-    const t = player.tickets;
-    if (t.freeRemaining > 0) {
-      t.freeRemaining--;
-    } else if (t.adRemaining > 0) {
-      t.adRemaining--;
+    const groupSnap = await tx.get(db().collection(GROUPS).doc(player.groupId));
+    if (!groupSnap.exists) return { success: false, message: "Season ended.", tickets: player.tickets };
+    const group = groupSnap.data() as PvPGroupDoc;
+    const entry = rankGroup(group, now.getTime(), loadBank()).find((e) => e.id === opponentId);
+    if (!entry) return { success: false, message: "Opponent not found.", tickets: player.tickets };
+
+    const stars = roster.stars[opponentId] ?? 0;
+    let opponent: PvPPlayerModel;
+    if (entry.isBot) {
+      opponent = botModel((group.bots ?? []).find((b) => b.id === opponentId) as BotSeed, entry, group, now.getTime(), player, stars);
     } else {
-      tx.set(ref, player);
-      return { success: false, message: "No PvP tickets remaining.", tickets: t };
+      const oppSnap = await tx.get(db().collection(PLAYERS).doc(opponentId));
+      if (!oppSnap.exists) return { success: false, message: "Opponent not found.", tickets: player.tickets };
+      opponent = realModel(oppSnap.data() as PvPPlayerDoc, entry.trophy, player.trophy, stars);
     }
 
-    const opponent = oppSnap.data() as PvPPlayerDoc;
+    if (player.tickets.remaining <= 0) {
+      tx.set(ref, player);
+      return { success: false, message: "No PvP tickets remaining.", tickets: player.tickets };
+    }
+    player.tickets.remaining--;
+
     const startedAt = nowSeconds();
     const battle: ActiveBattle = {
       token: newToken(),
       opponentUserId: opponentId,
-      myTrophyAtStart: player.trophy,
-      opponentTrophyAtStart: opponent.trophy,
-      startLeagueIndex: getLeagueIndex(player.trophy),
+      starsOnWin: stars,
+      seasonKey: player.seasonKey,
+      groupId: player.groupId,
+      startLeagueIndex: player.league,
       startedAt,
       expiresAt: startedAt + BATTLE_TOKEN_TTL_SECONDS,
     };
@@ -369,56 +556,53 @@ export const startpvpbattle = onCall(async (request) => {
       battleTokenExpiresAt: battle.expiresAt,
       startedAt,
       startLeagueIndex: battle.startLeagueIndex,
-      opponent: toModel(opponent, player.trophy),
-      tickets: t,
+      starsOnWin: stars,
+      opponent,
+      tickets: player.tickets,
     };
   });
 });
 
 // ===== reportPvPBattle =====
 
+// Thắng nhận đúng số cúp đã hiện, thua không mất cúp, người bị đánh không đổi cúp.
 export const reportpvpbattle = onCall(async (request) => {
   const uid = requireUid(request);
   const data = (request.data ?? {}) as { battleToken?: string; won?: boolean };
-  const rewardTable = await loadRewardTable(db());
+  const now = new Date();
   const ref = db().collection(PLAYERS).doc(uid);
 
   return db().runTransaction(async (tx) => {
     const snap = await tx.get(ref);
     if (!snap.exists) return { success: false, message: "Failed to report battle." };
-    const player = snap.data() as PvPPlayerDoc;
+    const player = readPlayer(uid, snap.data());
     const battle = player.activeBattle;
     if (!battle || !data.battleToken || battle.token !== data.battleToken) {
       return { success: false, message: "Missing battle token.", tickets: player.tickets };
     }
 
-    const oppRef = db().collection(PLAYERS).doc(battle.opponentUserId);
-    const oppSnap = await tx.get(oppRef);
-    const opponent = oppSnap.exists ? (oppSnap.data() as PvPPlayerDoc) : null;
+    const groupRef = db().collection(GROUPS).doc(battle.groupId);
+    const groupSnap = await tx.get(groupRef);
+    const group = groupSnap.exists ? (groupSnap.data() as PvPGroupDoc) : null;
 
-    // Nộp quá hạn → xử thua (forfeit).
+    // Nộp quá hạn → xử thua (forfeit). Hết mùa giữa trận thì trận không còn tính cúp.
     const forfeit = battle.expiresAt < nowSeconds();
     const won = !forfeit && data.won === true;
+    const inSeason = getEventKey(now) === battle.seasonKey && player.seasonKey === battle.seasonKey && !!group && !group.isFinalized;
 
     const oldTrophy = player.trophy;
-    const oppStart = battle.opponentTrophyAtStart;
-    const delta = won ? winDelta(oldTrophy, oppStart) : lossDelta(oldTrophy, oppStart);
-    player.trophy = Math.max(MINIMUM_TROPHY, oldTrophy + delta);
+    if (inSeason) {
+      if (won) player.trophy = oldTrophy + battle.starsOnWin;
+      const entry = (group as PvPGroupDoc).players[uid];
+      tx.update(groupRef, {
+        ["players." + uid]: groupEntryOf(player, player.trophy, (entry?.Fights ?? 0) + 1, entry?.JoinedAt ?? now.getTime()),
+      });
+    }
     player.attacksUsed = (player.attacksUsed ?? 0) + 1;
     if (won) player.wins = (player.wins ?? 0) + 1;
     else player.losses = (player.losses ?? 0) + 1;
     player.activeBattle = null;
-    player.updatedAt = Date.now();
-
-    // Bên phòng thủ đổi trophy ngược chiều (K theo league của họ).
-    let opponentOldTrophy = oppStart;
-    let opponentNewTrophy = oppStart;
-    if (opponent) {
-      opponentOldTrophy = opponent.trophy;
-      const oppDelta = won ? lossDelta(opponent.trophy, oldTrophy) : winDelta(opponent.trophy, oldTrophy);
-      opponentNewTrophy = Math.max(MINIMUM_TROPHY, opponent.trophy + oppDelta);
-      tx.update(oppRef, { trophy: opponentNewTrophy, updatedAt: Date.now() });
-    }
+    player.updatedAt = now.getTime();
     tx.set(ref, player);
 
     return {
@@ -426,120 +610,17 @@ export const reportpvpbattle = onCall(async (request) => {
       message: "",
       won,
       forfeit,
+      seasonEnded: !inSeason,
       oldTrophy,
       newTrophy: player.trophy,
       trophyDelta: player.trophy - oldTrophy,
-      oldLeagueIndex: getLeagueIndex(oldTrophy),
-      newLeagueIndex: getLeagueIndex(player.trophy),
-      startLeagueIndex: battle.startLeagueIndex,
-      opponentOldTrophy,
-      opponentNewTrophy,
-      opponent: opponent ? toModel({ ...opponent, trophy: opponentNewTrophy }, player.trophy) : null,
-      rewards: getLeagueRewards(rewardTable, battle.startLeagueIndex, won),
+      leagueIndex: player.league,
       tickets: player.tickets,
     };
   });
 });
 
-// ===== grantPvPAdTicket =====
-
-export const grantpvpadticket = onCall(async (request) => {
-  const uid = requireUid(request);
-  const now = new Date();
-  const ref = db().collection(PLAYERS).doc(uid);
-
-  return db().runTransaction(async (tx) => {
-    const snap = await tx.get(ref);
-    if (!snap.exists) return { success: false, message: "Failed to grant ticket." };
-    const player = snap.data() as PvPPlayerDoc;
-    resetTicketsIfNewDay(player, now);
-    const t = player.tickets;
-    if (t.adClaimedToday >= t.maxAdPerDay) {
-      tx.set(ref, player);
-      return { success: false, message: "No more PvP ad tickets today.", tickets: t };
-    }
-    t.adClaimedToday++;
-    t.adRemaining++;
-    tx.set(ref, player);
-    return { success: true, message: "", tickets: t };
-  });
-});
-
-// ===== getPvPLeaderboard (scope "world" | "country") =====
-
-interface LeaderboardEntry {
-  UserId: string;
-  PlayerName: string;
-  CountryCode: string;
-  AvatarId: number;
-  Trophy: number;
-  Rank: number;
-  Power: number;
-  IsCurrentPlayer: boolean;
-  Items: BossRushItemModel[];
-  Companions: BossRushCompanionModel[];
-  ShowCloak: boolean;
-  EnchantmentTiers: number[];
-}
-
-function toEntry(p: PvPPlayerDoc, rank: number, uid: string): LeaderboardEntry {
-  return {
-    UserId: p.uid, PlayerName: p.playerName, CountryCode: p.countryCode, AvatarId: p.avatarId, Trophy: p.trophy,
-    Rank: rank, Power: p.power, IsCurrentPlayer: p.uid === uid, Items: p.items ?? [], Companions: p.companions ?? [],
-    ShowCloak: p.showCloak ?? true, EnchantmentTiers: p.enchantmentTiers ?? [],
-  };
-}
-
-export const getpvpleaderboard = onCall(async (request) => {
-  const uid = requireUid(request);
-  const scope = (request.data as { scope?: string })?.scope === "country" ? "country" : "world";
-  const meSnap = await db().collection(PLAYERS).doc(uid).get();
-  if (!meSnap.exists) return { success: false, message: "Failed to load leaderboard." };
-  const me = meSnap.data() as PvPPlayerDoc;
-
-  let base: Query = db().collection(PLAYERS);
-  if (scope === "country") base = base.where("countryCode", "==", me.countryCode ?? "");
-
-  const [topSnap, aboveCount] = await Promise.all([
-    base.orderBy("trophy", "desc").limit(LEADERBOARD_TOP).get(),
-    base.where("trophy", ">", me.trophy).count().get(),
-  ]);
-  const playerRank = aboveCount.data().count + 1;
-
-  const topPlayers = topSnap.docs.map((d, i) => toEntry(d.data() as PvPPlayerDoc, i + 1, uid));
-  const inTop = topPlayers.some((e) => e.IsCurrentPlayer);
-
-  // Ngoài top → thêm vài người quanh mình (separator giữa 2 danh sách ở client).
-  let nearbyPlayers: LeaderboardEntry[] = [];
-  if (!inTop) {
-    const [aboveSnap, belowSnap] = await Promise.all([
-      base.where("trophy", ">", me.trophy).orderBy("trophy", "asc").limit(LEADERBOARD_NEARBY).get(),
-      base.where("trophy", "<=", me.trophy).orderBy("trophy", "desc").limit(LEADERBOARD_NEARBY + 1).get(),
-    ]);
-    const above = aboveSnap.docs.map((d) => d.data() as PvPPlayerDoc).reverse();
-    const below = belowSnap.docs.map((d) => d.data() as PvPPlayerDoc).filter((p) => p.uid !== uid)
-      .slice(0, LEADERBOARD_NEARBY);
-    nearbyPlayers = [
-      ...above.map((p, i) => toEntry(p, playerRank - above.length + i, uid)),
-      toEntry(me, playerRank, uid),
-      ...below.map((p, i) => toEntry(p, playerRank + 1 + i, uid)),
-    ];
-  }
-
-  return {
-    success: true,
-    message: "",
-    scope,
-    generatedAt: nowSeconds(),
-    stale: false,
-    playerRank,
-    playerTrophy: me.trophy,
-    topPlayers,
-    nearbyPlayers,
-  };
-});
-
-// ===== Admin (gốc: seedPvPDummyPlayers / removePvPDummyPlayers / removeAllPvPPlayers) =====
+// ===== Admin =====
 
 async function requireAdmin(uid: string | undefined): Promise<string> {
   if (!uid) throw new HttpsError("unauthenticated", "Login required");
@@ -550,56 +631,19 @@ async function requireAdmin(uid: string | undefined): Promise<string> {
   return uid;
 }
 
-// Tạo bot quanh trophy người gọi (±150), mặc đồ người gọi, power dao động ±30%.
-export const seedpvpdummyplayers = onCall(async (request) => {
-  const uid = await requireAdmin(request.auth?.uid);
-  const count = Math.max(1, Math.min(50, Number((request.data as { count?: number })?.count) || 10));
-  const meSnap = await db().collection(PLAYERS).doc(uid).get();
-  if (!meSnap.exists) return { success: false, message: "Open PvP first" };
-  const me = meSnap.data() as PvPPlayerDoc;
-
-  const batch = db().batch();
-  for (let i = 0; i < count; i++) {
-    const id = "bot_" + randomBytes(5).toString("hex");
-    const bot: PvPPlayerDoc = {
-      ...newPlayerDoc(id),
-      playerName: "Player" + Math.floor(1000 + Math.random() * 9000),
-      countryCode: me.countryCode,
-      avatarId: Math.floor(Math.random() * 8),
-      power: Math.round(me.power * (0.7 + Math.random() * 0.6)),
-      items: me.items,
-      companions: me.companions,
-      enchantmentTiers: me.enchantmentTiers ?? [],
-      showCloak: me.showCloak ?? true,
-      trophy: Math.max(MINIMUM_TROPHY, me.trophy + Math.round((Math.random() * 2 - 1) * 150)),
-      isBot: true,
-    };
-    batch.set(db().collection(PLAYERS).doc(id), bot);
-  }
-  await batch.commit();
-  return { success: true, added: count };
-});
-
-async function deleteWhere(onlyBots: boolean): Promise<number> {
-  let q: Query = db().collection(PLAYERS);
-  if (onlyBots) q = q.where("isBot", "==", true);
-  const snap = await q.get();
-  let removed = 0;
+async function deleteCollection(name: string): Promise<number> {
+  const snap = await db().collection(name).get();
   for (let i = 0; i < snap.docs.length; i += 400) {
     const batch = db().batch();
     snap.docs.slice(i, i + 400).forEach((d) => batch.delete(d.ref));
     await batch.commit();
-    removed += Math.min(400, snap.docs.length - i);
   }
-  return removed;
+  return snap.docs.length;
 }
-
-export const removepvpdummyplayers = onCall(async (request) => {
-  await requireAdmin(request.auth?.uid);
-  return { success: true, removed: await deleteWhere(true) };
-});
 
 export const removeallpvpplayers = onCall(async (request) => {
   await requireAdmin(request.auth?.uid);
-  return { success: true, removed: await deleteWhere(false) };
+  const removed = await deleteCollection(PLAYERS);
+  await deleteCollection(GROUPS);
+  return { success: true, removed };
 });

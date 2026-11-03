@@ -1,12 +1,14 @@
 ---
 name: dungonrush-pvp-mode
-description: PvP Arena ĐÃ dựng (2026-10-10) — reverse gốc ở DecodedData/PVP_MODEL.md; server pvp.ts (emulator PASS) + client Scripts/PvP + UI/PvP + 5 prefab UIPvP*; Play test thắng/thua OK; thưởng win/lose CHƯA có số gốc
+description: "PvP Elo bản v41 (2026-10-10) ĐÃ THAY bằng hệ mùa + nhóm league 2026-11-04; file này chỉ còn giá trị lịch sử, luật trận đấu 30s và snapshot vẫn đúng"
 metadata:
   node_type: memory
   type: project
   modified: 2026-10-09T18:50:32.890Z
   originSessionId: 26bc42f5-487a-4358-9838-a306be66dc37
 ---
+
+**ĐÃ THAY 2026-11-04 bằng [[dungonrush-pvp-update-requests]]: Elo, vé ads, bảng thắng/thua, leaderboard World/Country không còn. Phần trận đấu vẫn đúng.**
 
 **Gốc (reverse v41, CHẮC):** PvP bất đồng bộ — đánh với SNAPSHOT đồ+pet người khác. Trophy Elo: người mới 1000, 10 league (PvPConfig: Iron 0-1199 KWin40/KLoss-10 … Legend 2800+); E=1/(1+10^((opp-me)/400)), thắng max(1,RoundToEven(KWin(1-E))), thua min(-1,Round(-|KLoss|E)), K theo league trophy MÌNH. Vé 5 free + 4 ads/ngày. Trận 30s; đối thủ phe Away ở hàng trên lùi PvPEnemyYOffset=2, mặc snapshot, PET đối thủ cũng spawn (khác Boss Rush); thắng khi hero đối thủ chết, thua khi hero mình chết/Exit; hết giờ so Σ(HP/MaxHP) hero mỗi phe, hoà=thắng. Mình block được đòn đối thủ, đối thủ KHÔNG block đòn mình (Character.ewb). Map = MainMap không box. Đối thủ sắp theo winDelta giảm dần. Leaderboard tab world/country, "#rank", " (You)". ResetText "Tickets refreshed in" gốc KHÔNG bật (prefab để tắt). Thanh trophy "{trophy}/{MaxTrophy league}".
 **Server** `server/functions/src/pvp.ts`+`pvpConfig.ts`: openpvp/findpvpopponents/startpvpbattle/reportpvpbattle/grantpvpadticket/getpvpleaderboard/initpvpprofile + admin seed/remove bot. Firestore `pvpPlayers/{uid}`, thưởng `config/pvp.rewardTable` (Type = TÊN RewardType). Giả định (server gốc giấu): roster 5 người gần trophy, TTL 600s, token 180s, đối thủ phòng thủ cũng đổi trophy. `npm test` + `scripts/pvpEmulatorTest.mjs` PASS.

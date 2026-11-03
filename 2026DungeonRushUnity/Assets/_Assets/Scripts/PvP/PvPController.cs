@@ -37,24 +37,18 @@ public static class PvPBattleSession
     }
 }
 
-// Cổng nghiệp vụ PvP phía client — port PvPController gốc. Gọi 6 Cloud Function qua FirebaseManager,
-// cache trạng thái mở (trophy/league/vé/bảng thưởng) + roster đối thủ, lưu báo cáo trận lỗi mạng để gửi lại,
-// giữ kết quả chưa nhận thưởng (PendingPvPRewardSettlement) tới khi bấm Claim.
+// Cổng nghiệp vụ PvP phía client: gọi Cloud Function qua FirebaseManager, cache trạng thái mở (league, cúp, vé, mùa,
+// bảng xếp hạng nhóm, bảng thưởng) + roster đối thủ, lưu báo cáo trận lỗi mạng để gửi lại.
 public class PvPController : Singleton<PvPController>
 {
-    public const string FN_INIT_PROFILE = "initpvpprofile";
     public const string FN_OPEN = "openpvp";
+    public const string FN_CLAIM_SEASON = "claimpvpseason";
     public const string FN_FIND_OPPONENTS = "findpvpopponents";
     public const string FN_START_BATTLE = "startpvpbattle";
     public const string FN_REPORT_BATTLE = "reportpvpbattle";
-    public const string FN_GRANT_AD_TICKET = "grantpvpadticket";
-    public const string FN_LEADERBOARD = "getpvpleaderboard";
-    public const string FN_SEED_BOTS = "seedpvpdummyplayers";
 
-    public const string AD_PLACEMENT = "pvp_ticket_ad";     // placement gốc (RewardedType.PvPTicket = 13)
     private const int MAX_PENDING_ATTEMPTS = 5;
 
-    // StateUpdated / TicketsUpdated gốc.
     public static event Action<PvPOpenResponseDTO> StateUpdated;
     public static event Action<PvPTicketsDTO> TicketsUpdated;
 
@@ -79,10 +73,9 @@ public class PvPController : Singleton<PvPController>
     // ===== Trạng thái (jnm/jnn/jno/jnp) =====
 
     public int Trophy => User.trophy;
-    public int LeagueIndex => Static.GetLeagueIndex(User.trophy);
+    public int LeagueIndex => User.leagueIndex;
     public string LeagueName => Static.GetLeagueName(LeagueIndex);
     public int TotalTickets => User.TotalTickets;
-    public bool CanWatchAdTicket => User.tickets.adClaimedToday < Mathf.Max(1, User.tickets.maxAdPerDay);
 
     // ===== openPvP (jmx/jmy) =====
 
@@ -104,6 +97,14 @@ public class PvPController : Singleton<PvPController>
             State = res;
             RewardTable = res.rewardTable ?? new List<PvPLeagueRewardsDTO>();
             User.trophy = res.trophy;
+            User.leagueIndex = res.leagueIndex;
+            string seasonKey = res.season != null ? res.season.key : string.Empty;
+            if (User.seasonKey != seasonKey)
+            {
+                // Sang mùa/nhóm khác: roster cũ không còn giá trị.
+                User.seasonKey = seasonKey;
+                User.cachedRoster = null;
+            }
             User.lastSnapshotHash = request.snapshotHash;
             User.lastSnapshotUploadTime = Now();
             SetTickets(res.tickets);
@@ -133,7 +134,7 @@ public class PvPController : Singleton<PvPController>
                 if (!ok || res == null || !res.success)
                 {
                     DebugCustom.LogWarning("[PvP] findPvPOpponents failed | " + raw);
-                    onError?.Invoke("Failed to find opponents.");
+                    onError?.Invoke(res != null && !string.IsNullOrEmpty(res.message) ? res.message : Loc.L("Errors.PvP.FindOpponentsFailed"));
                     return;
                 }
 
@@ -290,7 +291,7 @@ public class PvPController : Singleton<PvPController>
 
     public bool HasPendingReport => User.pendingReport != null;
 
-    // jnd: kết quả server → phần thưởng chờ nhận.
+    // Kết quả server → hiện ở popup cuối trận.
     private static PendingPvPRewardSettlement BuildSettlement(PvPBattleResultResponseDTO res)
     {
         return new PendingPvPRewardSettlement
@@ -299,116 +300,52 @@ public class PvPController : Singleton<PvPController>
             OldTrophy = res.oldTrophy,
             NewTrophy = res.newTrophy,
             TrophyDelta = res.trophyDelta,
-            OldLeagueIndex = res.oldLeagueIndex,
-            NewLeagueIndex = res.newLeagueIndex,
-            Rewards = ParseRewards(res.rewards),
         };
     }
 
-    // Nút Claim ở PvPEndPopup: cộng thưởng + xoá kết quả chờ.
-    public void ClaimSettlement()
-    {
-        PendingPvPRewardSettlement settlement = User.pendingSettlement;
-        if (settlement == null)
-        {
-            return;
-        }
-        BossRushController.GrantRewards(settlement.Rewards);
-        User.pendingSettlement = null;
-        User.isDataChanged = true;
-        GameData.Save(true);
-    }
-
-    // jne: lần mở game/popup sau còn thưởng chưa nhận (tắt app trước khi bấm Claim) → tự cộng + báo.
-    public bool ApplyPendingSettlement(bool showToast)
+    // Đã xem xong popup cuối trận.
+    public void ClearSettlement()
     {
         if (User.pendingSettlement == null)
         {
-            return false;
+            return;
         }
-        ClaimSettlement();
-        if (showToast)
-        {
-            UIManager.Instance.ShowToastMessage(Loc.L("Popup.PvP.AppliedPendingRewards"), isLocalize: false);
-        }
-        return true;
+        User.pendingSettlement = null;
+        User.isDataChanged = true;
+        GameData.Save();
     }
 
-    // ===== grantPvPAdTicket (jng) — gọi SAU khi xem xong ads =====
+    // ===== Thưởng mùa =====
 
-    public void GrantAdTicket(Action<bool, string> callback)
+    public void ClaimSeason(Action<List<RewardEntry>, string> callback)
     {
-        FirebaseManager.Instance.Call<PvPAdTicketResponseDTO>(FN_GRANT_AD_TICKET, new object(), (ok, res, raw) =>
-        {
-            if (res != null) SetTickets(res.tickets);
-            GameData.Save();
-            if (!ok || res == null || !res.success)
-            {
-                DebugCustom.LogWarning("[PvP] grantPvPAdTicket failed | " + raw);
-                callback?.Invoke(false, res != null && !string.IsNullOrEmpty(res.message) ? res.message : Loc.L("Errors.PvP.GrantTicketFailed"));
-                return;
-            }
-            callback?.Invoke(true, null);
-        });
-    }
-
-    // ===== getPvPLeaderboard (jnf) =====
-
-    public void GetLeaderboard(string scope, Action<PvPLeaderboardResponseDTO> callback)
-    {
-        FirebaseManager.Instance.Call<PvPLeaderboardResponseDTO>(FN_LEADERBOARD, new PvPLeaderboardRequestDTO { scope = scope }, (ok, res, raw) =>
+        FirebaseManager.Instance.Call<PvPClaimSeasonResponseDTO>(FN_CLAIM_SEASON, new object(), (ok, res, raw) =>
         {
             if (!ok || res == null || !res.success)
             {
-                DebugCustom.LogWarning("[PvP] getPvPLeaderboard failed | " + raw);
-                callback?.Invoke(null);
+                DebugCustom.LogWarning("[PvP] claimPvPSeason failed | " + raw);
+                callback?.Invoke(null, res != null && !string.IsNullOrEmpty(res.message) ? res.message : Loc.L("Errors.PvP.LoadFailed"));
                 return;
             }
-            callback?.Invoke(res);
+
+            List<RewardEntry> rewards = res.rewards ?? new List<RewardEntry>();
+            BossRushController.GrantRewards(rewards);
+            if (State != null) State.pendingSeasonResult = null;
+            GameData.Save(true);
+            callback?.Invoke(rewards, null);
         });
     }
 
-    // Admin/test: tạo bot quanh trophy mình (chỉ chạy được trên emulator hoặc uid admin).
-    public void SeedBots(int count, Action<bool> callback)
-    {
-        FirebaseManager.Instance.Call<object>(FN_SEED_BOTS, new { count }, (ok, res, raw) =>
-        {
-            DebugCustom.Log("[PvP] Seed bots: " + ok + " | " + raw);
-            User.cachedRoster = null;
-            callback?.Invoke(ok);
-        });
-    }
-
-    // ===== Bảng thưởng (jnj/jnk/jnl) =====
-
-    public List<RewardEntry> GetRewards(int leagueIndex, bool won)
+    public List<PvPRewardBandDTO> GetRewardBands(int leagueIndex)
     {
         for (int i = 0; i < RewardTable.Count; i++)
         {
-            if (RewardTable[i].leagueIndex == leagueIndex)
+            if (RewardTable[i].LeagueIndex == leagueIndex)
             {
-                return ParseRewards(won ? RewardTable[i].winRewards : RewardTable[i].loseRewards);
+                return RewardTable[i].Bands;
             }
         }
-        return new List<RewardEntry>();
-    }
-
-    // joa: Type chuỗi → RewardType (bỏ loại lạ), Amount kẹp ≥ 0.
-    public static List<RewardEntry> ParseRewards(List<PvPRewardEntryDTO> list)
-    {
-        List<RewardEntry> result = new List<RewardEntry>();
-        if (list == null)
-        {
-            return result;
-        }
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (list[i] != null && Enum.TryParse(list[i].Type, true, out RewardType type))
-            {
-                result.Add(new RewardEntry { Type = type, Amount = Mathf.Max(0, list[i].Amount) });
-            }
-        }
-        return result;
+        return new List<PvPRewardBandDTO>();
     }
 
     // ===== Snapshot đồ (jnv/job/joc/jod/joe/jof) =====
@@ -435,7 +372,7 @@ public class PvPController : Singleton<PvPController>
         return request;
     }
 
-    // Mã quốc gia 2 chữ cho tab leaderboard "country" (gốc lấy từ CountryFlagController).
+    // Mã quốc gia 2 chữ (gốc lấy từ CountryFlagController).
     private static string GetCountryCode()
     {
         try
@@ -465,9 +402,9 @@ public class PvPController : Singleton<PvPController>
     private static void SyncEventTickets()
     {
         EventTickets tickets = GameData.userData.events.Get(EventModeType.PvP);
-        tickets.freeTickets = User.tickets.freeRemaining;
-        tickets.adTickets = User.tickets.adRemaining;
-        tickets.adClaimedToday = User.tickets.adClaimedToday;
+        tickets.freeTickets = User.tickets.remaining;
+        tickets.adTickets = 0;
+        tickets.adClaimedToday = 0;
         GameData.userData.events.isDataChanged = true;
     }
 

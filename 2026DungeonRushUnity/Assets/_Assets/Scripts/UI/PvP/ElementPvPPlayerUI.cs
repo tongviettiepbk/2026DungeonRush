@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 1 dòng đối thủ (PvPPlayerElementUI gốc): tên, Power "<sprite=0>{power}", nút đánh "<sprite=0>+{trophy nếu thắng}".
+// 1 dòng đối thủ: tên, sức mạnh, cúp nếu thắng, nút Challenge tốn 1 vé.
 public class ElementPvPPlayerUI : MonoBehaviour
 {
     public TMP_Text txtName;
@@ -25,7 +25,7 @@ public class ElementPvPPlayerUI : MonoBehaviour
         if (btBattle != null) btBattle.onClick.AddListener(OnClickBattle);
     }
 
-    // jqg: winDelta = trophy cộng nếu thắng (PvPConfig.jkx theo trophy mình).
+    // winDelta = cúp nhận nếu thắng, do server phát (StarsOnWin).
     public void Setup(PvPPlayerModel model, int winDelta, bool isMe, Action<PvPPlayerModel> onBattle)
     {
         this.model = model;
@@ -43,7 +43,7 @@ public class ElementPvPPlayerUI : MonoBehaviour
         {
             // startPvPBattle tiêu 1 vé.
             txtWinTrophy.text = "<sprite=0>+" + winDelta;
-            if (txtBattle != null) txtBattle.text = Loc.L("Common.Battle") + "\n<sprite=0>1";
+            if (txtBattle != null) txtBattle.text = Loc.L("Popup.PvP.Challenge") + "\n<sprite=0>1";
         }
         else if (txtBattle != null)
         {

@@ -18,7 +18,7 @@ public class StaticEventData
 {
     public readonly List<EventConfig> events = new List<EventConfig>
     {
-        new EventConfig { type = EventModeType.PvP, displayName = "PvP", unlockPlayerLevel = 15, dailyFreeTickets = 5, maxAdTicketsPerDay = 4 },
+        new EventConfig { type = EventModeType.PvP, displayName = "PvP", unlockPlayerLevel = 15, dailyFreeTickets = 5, maxAdTicketsPerDay = 0 },
         new EventConfig { type = EventModeType.BossRush, displayName = "Boss Rush", unlockPlayerLevel = 15, dailyFreeTickets = 3, maxAdTicketsPerDay = 3 },
     };
 

@@ -45,127 +45,78 @@ const b = await signUp();
 const anon = await fetch(`${FN}/openpvp`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data: {} }) });
 assert.equal(anon.status, 401);
 
-// --- openPvP: người mới 1000 trophy, Iron, 5 vé free, 0 vé ads, bảng thưởng 10 league ---
+// --- openPvP: người mới Iron, 0 cúp, 5 vé, bảng thưởng 10 league ---
 const oa = await call(a, "openpvp", snapshot("Alice", 1000));
 assert.equal(oa.success, true);
-assert.equal(oa.trophy, 1000);
+assert.equal(oa.trophy, 0);
 assert.equal(oa.leagueIndex, 1);
 assert.equal(oa.hasName, true);
-assert.deepEqual(
-  { f: oa.tickets.freeRemaining, a: oa.tickets.adRemaining, c: oa.tickets.adClaimedToday, m: oa.tickets.maxAdPerDay, d: oa.tickets.dailyFreeTickets },
-  { f: 5, a: 0, c: 0, m: 4, d: 5 });
+assert.deepEqual([oa.tickets.remaining, oa.tickets.dailyTickets], [5, 5]);
 assert.equal(oa.rewardTable.length, 10);
-assert.equal(typeof oa.rewardTable[0].winRewards[0].Type, "string");
-await call(b, "openpvp", snapshot("Bob", 2000));
+assert.equal(typeof oa.rewardTable[0].Bands[0].Rewards[0].Type, "number");
+assert.equal(oa.pendingSeasonResult, null);
+const b0 = await call(b, "openpvp", snapshot("Bob", 2000));
 
-// --- findPvPOpponents: A thấy B (không thấy chính mình), Projected theo Elo ---
+// Thứ Hai nghỉ: hết phần cần có mùa thì dừng ở đây.
+if (!oa.season.isActive) {
+  assert.equal(oa.leaderboard.length, 0);
+  assert.equal((await call(a, "findpvpopponents", {})).message, "Season ended.");
+  console.log("PvP emulator test PASS (Thứ Hai nghỉ, chỉ kiểm phần mở popup)");
+  process.exit(0);
+}
+
+// Nhóm đầu tiên có 30 người (bù bot), 2 người cùng league vào cùng nhóm.
+assert.equal(oa.leaderboard.length, 30);
+assert.equal(b0.leaderboard.length, 30 + 1);
+assert.equal(oa.promotion.promoteCount, 12);
+assert.equal(oa.promotion.demoteCount, 0);
+
+// --- findPvPOpponents: tối đa 5 người, không có mình, phát +5 đến +1 ---
 const fa = await call(a, "findpvpopponents", { server: PROJECT });
 assert.equal(fa.success, true);
 assert.ok(fa.rosterToken);
 assert.ok(fa.rosterExpiresAt > Date.now() / 1000);
-assert.equal(fa.opponents.length, 1);
-const ob = fa.opponents[0];
-assert.equal(ob.UserId, b.uid);
-assert.equal(ob.Trophy, 1000);
-assert.equal(ob.ProjectedWinTrophy, 1020);
-assert.equal(ob.ProjectedLossTrophy, 995);
-assert.equal(ob.Items.length, 2);
-assert.equal(ob.Companions[0].Equipped, true);
-assert.equal(ob.ShowCloak, false);
-assert.deepEqual(ob.EnchantmentTiers, [0, 2, 0, 0, 0, 0, 5, 0, 11]);
+assert.equal(fa.opponents.length, 5);
+assert.ok(!fa.opponents.some((o) => o.UserId === a.uid));
+assert.deepEqual(fa.opponents.map((o) => o.StarsOnWin), [5, 4, 3, 2, 1]);
 
-// Roster sai token → hết hạn; đối thủ ngoài roster → không tìm thấy.
-let r = await call(a, "startpvpbattle", { rosterToken: "bad", opponentUserId: b.uid });
-assert.equal(r.success, false);
+// --- startPvPBattle: lỗi roster, rồi tiêu 1 vé ---
+let r = await call(a, "startpvpbattle", { rosterToken: "bad", opponentUserId: fa.opponents[0].UserId });
 assert.equal(r.message, "Opponent roster expired.");
-r = await call(a, "startpvpbattle", { rosterToken: fa.rosterToken, opponentUserId: "nobody" });
-assert.equal(r.success, false);
-assert.equal(r.message, "Opponent not found.");
-
-// --- startPvPBattle: tiêu 1 vé free ---
-const sa = await call(a, "startpvpbattle", { rosterToken: fa.rosterToken, opponentUserId: b.uid });
+const target = fa.opponents[0];
+const sa = await call(a, "startpvpbattle", { rosterToken: fa.rosterToken, opponentUserId: target.UserId });
 assert.equal(sa.success, true);
-assert.ok(sa.battleToken);
-assert.equal(sa.startLeagueIndex, 1);
-assert.equal(sa.opponent.UserId, b.uid);
-assert.equal(sa.tickets.freeRemaining, 4);
+assert.equal(sa.starsOnWin, target.StarsOnWin);
+assert.equal(sa.tickets.remaining, 4);
+assert.ok(sa.opponent.Items !== undefined);
 
-// Đã đánh B thì B rời roster.
-r = await call(a, "startpvpbattle", { rosterToken: fa.rosterToken, opponentUserId: b.uid });
-assert.equal(r.message, "Opponent not found.");
-
-// --- reportPvPBattle: thắng +20, B (phòng thủ) −5, thưởng win league 1 ---
+// --- reportPvPBattle: thắng nhận đúng số cúp đã hiện ---
 const ra = await call(a, "reportpvpbattle", { battleToken: sa.battleToken, won: true });
-assert.equal(ra.success, true);
-assert.equal(ra.won, true);
-assert.equal(ra.forfeit, false);
-assert.equal(ra.oldTrophy, 1000);
-assert.equal(ra.newTrophy, 1020);
-assert.equal(ra.trophyDelta, 20);
-assert.equal(ra.opponentOldTrophy, 1000);
-assert.equal(ra.opponentNewTrophy, 995);
-assert.deepEqual(ra.rewards, oa.rewardTable[0].winRewards);
-
-// Token dùng rồi → lỗi.
+assert.deepEqual([ra.won, ra.oldTrophy, ra.newTrophy, ra.trophyDelta], [true, 0, target.StarsOnWin, target.StarsOnWin]);
 r = await call(a, "reportpvpbattle", { battleToken: sa.battleToken, won: true });
-assert.equal(r.success, false);
 assert.equal(r.message, "Missing battle token.");
 
-// --- Thua: B đánh A ---
-const fb = await call(b, "findpvpopponents", {});
-const sb = await call(b, "startpvpbattle", { rosterToken: fb.rosterToken, opponentUserId: a.uid });
-assert.equal(sb.success, true);
-const rb = await call(b, "reportpvpbattle", { battleToken: sb.battleToken, won: false });
-assert.equal(rb.won, false);
-assert.equal(rb.oldTrophy, 995);
-assert.ok(rb.trophyDelta <= -1);
-assert.ok(rb.opponentNewTrophy > 1020);            // A phòng thủ thắng → cộng
-assert.deepEqual(rb.rewards, oa.rewardTable[0].loseRewards);
+// --- Thua không mất cúp ---
+const lose = await call(a, "startpvpbattle", { rosterToken: fa.rosterToken, opponentUserId: fa.opponents[1].UserId });
+const rl = await call(a, "reportpvpbattle", { battleToken: lose.battleToken, won: false });
+assert.deepEqual([rl.won, rl.trophyDelta, rl.newTrophy], [false, 0, target.StarsOnWin]);
 
-// --- Vé ads: tối đa 4/ngày ---
-for (let i = 1; i <= 4; i++) {
-  const g = await call(a, "grantpvpadticket");
-  assert.equal(g.success, true);
-  assert.equal(g.tickets.adClaimedToday, i);
-  assert.equal(g.tickets.adRemaining, i);
-}
-r = await call(a, "grantpvpadticket");
-assert.equal(r.success, false);
-assert.equal(r.message, "No more PvP ad tickets today.");
+// --- Mở lại: bảng xếp hạng có cúp mới ---
+const reopen = await call(a, "openpvp", snapshot("Alice", 1000));
+assert.equal(reopen.trophy, target.StarsOnWin);
+assert.equal(reopen.leaderboard.find((e) => e.IsCurrentPlayer).Trophy, target.StarsOnWin);
 
-// Bot lấp roster + tiêu hết vé free rồi sang vé ads.
-const seeded = await call(a, "seedpvpdummyplayers", { count: 12 });
-assert.equal(seeded.added, 12);
-let tickets = null;
-for (let i = 0; i < 8; i++) {
+// --- Hết vé ---
+for (let i = 0; i < 3; i++) {
   const f = await call(a, "findpvpopponents", {});
-  assert.equal(f.opponents.length, 5);
-  assert.ok(f.opponents.every((o) => o.UserId !== a.uid));
   const s = await call(a, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: f.opponents[0].UserId });
-  assert.equal(s.success, true, JSON.stringify(s));
-  tickets = s.tickets;
-  await call(a, "reportpvpbattle", { battleToken: s.battleToken, won: i % 2 === 0 });
+  assert.equal(s.success, true, s.message);
+  await call(a, "reportpvpbattle", { battleToken: s.battleToken, won: false });
 }
-assert.equal(tickets.freeRemaining, 0);
-assert.equal(tickets.adRemaining, 0);
 const f = await call(a, "findpvpopponents", {});
 r = await call(a, "startpvpbattle", { rosterToken: f.rosterToken, opponentUserId: f.opponents[0].UserId });
 assert.equal(r.success, false);
 assert.equal(r.message, "No PvP tickets remaining.");
 
-// --- Leaderboard world + country ---
-const lw = await call(a, "getpvpleaderboard", { scope: "world" });
-assert.equal(lw.success, true);
-assert.equal(lw.scope, "world");
-assert.equal(lw.topPlayers.length, 14);   // A + B + 12 bot
-for (let i = 1; i < lw.topPlayers.length; i++) assert.ok(lw.topPlayers[i - 1].Trophy >= lw.topPlayers[i].Trophy);
-const meRow = lw.topPlayers.find((e) => e.IsCurrentPlayer);
-assert.ok(meRow);
-assert.equal(lw.playerTrophy, meRow.Trophy);
-assert.equal(lw.nearbyPlayers.length, 0);
-const lc = await call(a, "getpvpleaderboard", { scope: "country" });
-assert.equal(lc.scope, "country");
-assert.ok(lc.topPlayers.every((e) => e.CountryCode === "VN"));
-
-await call(a, "removepvpdummyplayers");
+await call(admin, "removeallpvpplayers");
 console.log("PvP emulator test PASS");

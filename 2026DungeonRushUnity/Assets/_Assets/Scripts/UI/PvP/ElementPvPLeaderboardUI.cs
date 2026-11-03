@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 1 dòng bảng xếp hạng (PvPLeaderboardElementUI gốc): hạng, tên, trophy; dòng của mình đổi màu nền.
+// 1 dòng bảng xếp hạng nhóm: hạng, avatar, tên, sức mạnh, cúp; dòng của mình đổi màu nền.
 public class ElementPvPLeaderboardUI : MonoBehaviour
 {
     public TMP_Text txtRank;
@@ -19,8 +19,7 @@ public class ElementPvPLeaderboardUI : MonoBehaviour
 
     public void Setup(PvPLeaderboardEntryModel entry)
     {
-        // jpu gốc: "#{rank}", dòng của mình thêm " (You)" (Common.YouSuffix).
-        if (txtRank != null) txtRank.text = "#" + entry.Rank;
+        if (txtRank != null) txtRank.text = entry.Rank.ToString();
         string name = string.IsNullOrEmpty(entry.PlayerName) ? Loc.L("Common.Unknown") : entry.PlayerName;
         if (txtName != null) txtName.text = entry.IsCurrentPlayer ? name + (" " + Loc.L("Common.YouSuffix")) : name;
         if (txtTrophy != null) txtTrophy.text = "<sprite=0>" + entry.Trophy;

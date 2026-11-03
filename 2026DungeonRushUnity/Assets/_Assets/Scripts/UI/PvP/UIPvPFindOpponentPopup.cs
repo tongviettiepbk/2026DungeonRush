@@ -4,8 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Chọn đối thủ (PvPFindOpponentPopup gốc): "Searching for opponents" → findPvPOpponents (roster cache còn hạn thì dùng lại)
-// → "Choose Opponent", danh sách sắp theo trophy-nếu-thắng GIẢM dần (ts.jpi). Bấm đánh → startPvPBattle → vào trận.
+// Chọn đối thủ: "Searching for opponents" → findPvPOpponents (roster cache còn hạn thì dùng lại) → "Choose an Opponent",
+// tối đa 5 người cùng nhóm, đã xếp sẵn từ +5 xuống ở server. Bấm Challenge → startPvPBattle → vào trận.
 public class UIPvPFindOpponentPopup : BaseUI
 {
     public TMP_Text txtTitle;
@@ -35,7 +35,7 @@ public class UIPvPFindOpponentPopup : BaseUI
         base.OnEnable();
         isStarting = false;
         ClearList();
-        SetLoading(true, "Searching for opponents");
+        SetLoading(true, Loc.L("Popup.PvP.SearchingOpponents"));
         if (txtError != null) txtError.gameObject.SetActive(false);
 
         PvPController.Instance.FindOpponents(OnRoster, OnError);
@@ -55,14 +55,14 @@ public class UIPvPFindOpponentPopup : BaseUI
     {
         if (txtResetTime != null)
         {
-            DateTime now = DateTime.UtcNow;
+            DateTime now = ServerTime.UtcNow;
             txtResetTime.text = string.Format(Loc.L("Popup.PvP.TicketsResetIn"), UIPvPPopup.FormatTime(now.Date.AddDays(1) - now));
         }
         if (txtTickets != null)
         {
             PvPTicketsDTO t = GameData.userData.pvp.tickets;
-            int daily = t.dailyFreeTickets > 0 ? t.dailyFreeTickets : StaticPvPData.DAILY_FREE_TICKETS;
-            txtTickets.text = "<sprite=0>" + (t.freeRemaining + t.adRemaining) + "/" + daily;
+            int daily = t.dailyTickets > 0 ? t.dailyTickets : StaticPvPData.DAILY_TICKETS;
+            txtTickets.text = "<sprite=0>" + t.remaining + "/" + daily;
         }
     }
 
@@ -76,18 +76,15 @@ public class UIPvPFindOpponentPopup : BaseUI
     private void OnRoster(PvPCachedRosterModel roster)
     {
         if (this == null || !gameObject.activeInHierarchy) return;
-        SetLoading(false, "Choose Opponent");
+        SetLoading(false, Loc.L("Popup.PvP.ChooseOpponent"));
 
-        StaticPvPData data = GameData.staticData.pvp;
-        int myTrophy = PvPController.Instance.Trophy;
-        List<PvPPlayerModel> list = new List<PvPPlayerModel>(roster.Opponents);
-        list.Sort((a, b) => data.GetWinDelta(myTrophy, b.Trophy).CompareTo(data.GetWinDelta(myTrophy, a.Trophy)));
+        List<PvPPlayerModel> list = roster.Opponents;
 
         for (int i = 0; i < list.Count; i++)
         {
             ElementPvPPlayerUI element = Instantiate(elementPrefab, listContent);
             element.gameObject.SetActive(true);
-            element.Setup(list[i], data.GetWinDelta(myTrophy, list[i].Trophy), false, OnClickBattle);
+            element.Setup(list[i], list[i].StarsOnWin, false, OnClickBattle);
             elements.Add(element);
         }
 
@@ -101,7 +98,7 @@ public class UIPvPFindOpponentPopup : BaseUI
     private void OnError(string message)
     {
         if (this == null || !gameObject.activeInHierarchy) return;
-        SetLoading(false, "Battle");
+        SetLoading(false, Loc.L("Popup.PvP.Challenge"));
         if (txtError != null)
         {
             txtError.gameObject.SetActive(true);

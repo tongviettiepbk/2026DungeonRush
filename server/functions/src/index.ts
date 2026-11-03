@@ -11,8 +11,7 @@ export {
 } from "./bossRush";
 export { seedbossrushdummyplayers, removebossrushdummyplayers, finalizebossrushnow } from "./admin";
 export {
-  initpvpprofile, openpvp, findpvpopponents, startpvpbattle, reportpvpbattle, grantpvpadticket, getpvpleaderboard,
-  seedpvpdummyplayers, removepvpdummyplayers, removeallpvpplayers,
+  openpvp, claimpvpseason, findpvpopponents, startpvpbattle, reportpvpbattle, removeallpvpplayers,
 } from "./pvp";
 export {
   createclan, updateclansettings, updateclanannouncement, searchclans, getclandetails, joinopenclan, createclanjoinrequest,

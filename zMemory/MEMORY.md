@@ -41,14 +41,14 @@
 - [Companion TODO còn thiếu](dungonrush-companion-todo.md) — còn 3 việc summon pet (tab Pet chưa khoá lv5, màu rarity, event); ads/multiplier/IsNew XONG 2026-10-17
 - [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
 - [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; cả 3 dungeon có trận (Dragon/Zombie/CultistDungeonMode)
-- [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé reset 0h UTC (PvP 5+4 ads, BossRush), mở lv15, icon IsTicket/IsBossTicket; cả 2 mode đã có
+- [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé reset 0h UTC (PvP 5 không ads, BossRush), mở lv15, icon IsTicket/IsBossTicket; cả 2 mode đã có
 - [Boss Rush online](dungonrush-boss-rush-model.md) — trận đánh đã theo v59 (skill 4 loại boss + chỗ đứng quanh boss, 2026-10-21 đã commit, UI v59 chưa làm); ĐÃ code theo GDD/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); popup hồ sơ người chơi + avatar (22 hình thứ tự gốc) + xem chi tiết đồ/pet XONG (user tự chỉnh layout UIPlayerPopup — đừng chạy lại builder); ĐỦ 10 prefab boss + animation đánh theo Animator gốc (2026-10-12); đấu trường 12×12 + dời chỗ boss theo gốc (2026-10-17); FX skill = 10 prefab particle gốc v59 (2026-10-22, đã commit); còn deploy
 - [Hệ Enchantment (Relic)](dungonrush-enchantment-system.md) — tier 1..11 ×(1+tier²/100) main stat slot; summon Vial 50 lv; merge 3→1; code+UI+scene đã dựng, CHƯA test Unity
 - [Power người chơi](dungonrush-power-model.md) — rm.iqm/iqr reverse + PlayerPower.cs; HeroUnit đã sửa: đồ thay nền PlayerBase slot + có Wing/Cape
 - [Wing/Cape trạng thái](dungonrush-wing-cape-todo.md) — Wing + Cape đã có UI/logic theo native (chưa test Unity); quặng có Mining, Cloak chưa có nguồn thật (cheat K)
 - [Substat trong combat](dungonrush-substat-combat.md) — 13 substat đối chiếu native; sửa CritDamage nền 1.05, thêm tick HealthRegen ×0.5, thêm đánh đôi DoubleChance
 - [VIỆC CÒN DỞ](dungonrush-pending-todo.md) — checklist sau đợt Enchantment/Power/Substat: test Unity, deploy server, hình ảnh, Wing/Cape, BattlePass/PvP; đọc khi user nói "làm tiếp"
-- [PvP Arena](dungonrush-pvp-mode.md) — ĐÃ dựng client+server theo gốc (Elo trophy, snapshot+pet đối thủ, 30s); thưởng win/lose chưa có số gốc
+- [PvP Arena cũ (Elo v41)](dungonrush-pvp-mode.md) — ĐÃ THAY bằng hệ mùa + nhóm league 2026-11-04; chỉ phần trận đấu còn đúng
 - [Clan + Clan War](dungonrush-clan-clanwar.md) — dựng + commit 2026-10-10; GD ở GDD/CLAN_DESIGN.md (đọc trước khi code tiếp); CHƯA test Play
 - [Store / Shop](dungonrush-shop-system.md) — dựng 2026-10-10 theo gốc: rương+pity, Daily Deals, boost exp, gói gem; PurchaseController BASE chưa có SDK; còn OfferPopup/RewardedChest
 - [Khuôn viết GD](gd-doc-layout.md) — GD nằm ở GDD/ (gốc repo), theo khuôn GDD/BOSS_RUSH_DESIGN.md: mỗi luật 1 gạch + 1 nhãn cuối dòng, bảng mỗi ô 1 số; ảnh dùng cú pháp markdown
@@ -112,3 +112,4 @@
 - [Reskin 6 boss cuối (đủ 10 boss)](dungonrush-reskin-boss-rest.md) — 2026-11-03 Elder/Green Dragon/2 Ogre/2 Hag, bảng số rig + công thức đo, đã dọn art cũ; test Play ô thật OK, đã commit
 - [Reskin DragonEnemy → cáo cầu lửa](dungonrush-reskin-dragon-enemy.md) — 2026-11-03 rồng dungeon dùng chung art Red Dragon, chỉ Idle nhún + đánh thường, thêm lật mặt ở OriginalAnimatorController; test Play OK, đã commit
 - [Commit thẳng main](git-commit-direct-main.md) — không tách nhánh rồi merge; vẫn chỉ commit khi user bảo, không tự push
+- [PvP mùa + nhóm league](dungonrush-pvp-update-requests.md) — đã code + test Play emulator 2026-11-04, đã commit, CHƯA deploy; cúp +1..+5 theo cúp đối thủ, thua không mất, 5 vé không ads, thưởng mùa ×1.2; GD ở GDD/PVP_DESIGN.md
