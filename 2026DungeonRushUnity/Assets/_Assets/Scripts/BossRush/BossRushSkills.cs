@@ -456,6 +456,8 @@ public class BossRushFireBreathSkill : BossRushSkill
     private float muzzleOffset;     // yhc
     private Quaternion visualRotation;
     private bool hasVisualRotation;
+    private Transform orb;          // rig BossNew: quả cầu bay vòng quanh thân phun lửa, thân KHÔNG xoay
+    private Vector3 orbRestLocalPosition;
 
     public BossRushFireBreathSkill(BossRushBossUnit boss) : base(boss) { }
 
@@ -472,13 +474,24 @@ public class BossRushFireBreathSkill : BossRushSkill
         float bodyScale = boss.Definition != null && boss.Definition.bodyScaleMultiplier > 0f ? boss.Definition.bodyScaleMultiplier : 1f;
         muzzleOffset = bodyScale * SR.FIRE_BREATH_MUZZLE_OFFSET;
 
+        orb = boss.FireOrb;
         Transform visual = boss.VisualTransform;
-        Vector2 up = visual != null ? (Vector2)visual.up : Vector2.up;
-        startAngle = Mathf.Atan2(up.y, up.x) * Mathf.Rad2Deg;
-        if (visual != null)
+        if (orb != null)
         {
-            visualRotation = visual.localRotation;
-            hasVisualRotation = true;
+            // Góc bắt đầu = hướng từ tâm boss tới chỗ cầu đang đứng.
+            orbRestLocalPosition = orb.localPosition;
+            Vector2 rest = (Vector2)orb.position - origin;
+            startAngle = Mathf.Atan2(rest.y, rest.x) * Mathf.Rad2Deg;
+        }
+        else
+        {
+            Vector2 up = visual != null ? (Vector2)visual.up : Vector2.up;
+            startAngle = Mathf.Atan2(up.y, up.x) * Mathf.Rad2Deg;
+            if (visual != null)
+            {
+                visualRotation = visual.localRotation;
+                hasVisualRotation = true;
+            }
         }
         savedTarget = boss.ClearTargetForSkill();
     }
@@ -486,6 +499,7 @@ public class BossRushFireBreathSkill : BossRushSkill
     public override bool Tick(float dt)
     {
         timer += dt;
+        UpdateOrb(SR.FIRE_BREATH_WINDUP_SECONDS + SR.FIRE_BREATH_SWEEP_SECONDS);
         if (!hasStarted && timer >= SR.FIRE_BREATH_WINDUP_SECONDS)
         {
             hasStarted = true;
@@ -497,7 +511,10 @@ public class BossRushFireBreathSkill : BossRushSkill
         {
             float progress = Mathf.Clamp01((timer - SR.FIRE_BREATH_WINDUP_SECONDS) / SR.FIRE_BREATH_SWEEP_SECONDS);
             float angle = startAngle + progress * 360f;
-            RotateVisual(angle);
+            if (orb == null)
+            {
+                RotateVisual(angle);
+            }
             UpdateFlame(angle);
             DamageCone(angle);
         }
@@ -553,6 +570,32 @@ public class BossRushFireBreathSkill : BossRushSkill
     {
         float radians = angle * Mathf.Deg2Rad;
         return origin + new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)) * muzzleOffset;
+    }
+
+    // Quả cầu: gồng = bay từ chỗ cũ ra miệng phun, quét = bay vòng theo hướng phun, nghỉ = bay về chỗ cũ.
+    private void UpdateOrb(float sweepEnd)
+    {
+        if (orb == null)
+        {
+            return;
+        }
+
+        Vector2 rest = orb.parent.TransformPoint(orbRestLocalPosition);
+        Vector2 position;
+        if (timer < SR.FIRE_BREATH_WINDUP_SECONDS)
+        {
+            position = Vector2.Lerp(rest, MuzzlePosition(startAngle), timer / SR.FIRE_BREATH_WINDUP_SECONDS);
+        }
+        else if (timer < sweepEnd)
+        {
+            float progress = (timer - SR.FIRE_BREATH_WINDUP_SECONDS) / SR.FIRE_BREATH_SWEEP_SECONDS;
+            position = MuzzlePosition(startAngle + progress * 360f);
+        }
+        else
+        {
+            position = Vector2.Lerp(MuzzlePosition(startAngle), rest, (timer - sweepEnd) / SR.FIRE_BREATH_RECOVERY_SECONDS);
+        }
+        orb.position = new Vector3(position.x, position.y, orb.position.z);
     }
 
     // fnm: thân boss xoay theo hướng phun.
@@ -636,6 +679,11 @@ public class BossRushFireBreathSkill : BossRushSkill
         {
             visual.localRotation = visualRotation;
             hasVisualRotation = false;
+        }
+        if (orb != null)
+        {
+            orb.localPosition = orbRestLocalPosition;
+            orb = null;
         }
     }
 

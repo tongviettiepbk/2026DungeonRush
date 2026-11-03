@@ -104,3 +104,9 @@
 - [Reskin PvP](dungonrush-reskin-pvp.md) — 2026-10-28 sảnh (danh sách world trong sảnh, bỏ Season/Promotion — bám gốc), chọn đối thủ (ô vé + avatar), Victory/Defeat, top bar "PvP"; kit 1_UIKit/PvP + IsFist; CHƯA test Play, đã commit eb26bba
 - [Giờ server cho reset Dungeon/Events](dungonrush-server-time.md) — getservertime + ServerTime.cs, sync ở Login, offline dùng giờ máy; 2026-10-29 chưa deploy prod
 - [Chat Thế giới + Clan](dungonrush-chat-system.md) — RTDB chat/ww qua REST SSE, 5 endpoint gốc, lọc tục/chặn/báo cáo/cấm; test emulator+Play đạt 2026-11-02, đã commit, CHƯA deploy; GD ở GDD/CHAT_DESIGN.md
+- [Reskin boss Black Dragon → cáo](dungonrush-reskin-boss-black-dragon.md) — 2026-11-02 rig Main ở chân + anim BossNew/BlackDragon (idle/move nhún, attack cầu phình), FireBreath cầu bay vòng; test Play OK, đã commit
+- [Reskin boss Crimson Lich → heo chùy](dungonrush-reskin-boss-crimson-lich.md) — 2026-11-03 khuôn boss cầm vũ khí: WeaponRoot + weaponMirror lật gương, clip gõ chùy đạn bay ra, skill giữ idle + FX; test Play OK, đã commit
+- [Reskin Red Dragon → cáo cầu lửa](dungonrush-reskin-boss-dragon.md) — 2026-11-03 khuôn BlackDragon, test Play ô thật OK, đã commit; BossRushDragon.prefab cũng reskin nhưng không có trong bossPrefabs (không dùng trong game)
+
+- [Reskin boss Dark Lich → gấu búa](dungonrush-reskin-boss-dark-lich.md) — 2026-11-03 chép khuôn Crimson, Slam giữ Idle + FX ô 0; test Play ô thật OK, đã commit
+- [Reskin 6 boss cuối (đủ 10 boss)](dungonrush-reskin-boss-rest.md) — 2026-11-03 Elder/Green Dragon/2 Ogre/2 Hag, bảng số rig + công thức đo; test Play ô thật OK, đã commit

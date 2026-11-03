@@ -21,12 +21,19 @@ public class BossRushBossUnit : EnemyUnit
     private const float CRIT_PUNCH_DURATION = 0.18f;
     private static readonly int ANIM_IS_IDLE = Animator.StringToHash("IsIdle");
     private static readonly int ANIM_IS_ATTACKING = Animator.StringToHash("IsAttacking");
+    private static readonly int ANIM_IS_MOVING = Animator.StringToHash("IsMoving");   // chỉ rig BossNew có
+
+    [Tooltip("Rig BossNew: quả cầu phép — skill FireBreath cho cầu bay vòng quanh thân phun lửa thay vì xoay thân. Trống = xoay thân (rồng gốc).")]
+    [SerializeField] private Transform fireOrb;
+    [Tooltip("Rig BossNew vũ khí cầm tay: node cha của vũ khí — quay mặt thì lật gương cả nhánh để clip xoay vũ khí cũng đối xứng. Trống = không lật.")]
+    [SerializeField] private Transform weaponMirror;
 
     public BossRushBossDefinition Definition { get; private set; }
     public BossRushBossModel Model { get; private set; }
     public string DisplayName => Definition != null ? Definition.bossName : "Boss";
     public BossRushMode Mode => mode;
     public Transform VisualTransform => visual;
+    public Transform FireOrb => fireOrb;
     public Vector2 Position => rigid != null ? rigid.position : (Vector2)Transform.position;
 
     private BossRushMode mode;
@@ -37,7 +44,9 @@ public class BossRushBossUnit : EnemyUnit
     private BossRushSkill skill;        // BossRushSkillState.yud
     private RigidbodyType2D bodyTypeBeforeSkill;
     private Animator animator;
-    private Transform visual;           // Character 0x2c — node hình "Soldier/Body"
+    private bool hasMoveParam;
+    private Transform visual;          // Character 0x2c — node hình "Soldier/Body"
+    private SpriteRenderer bodySprite; // rig BossNew: "Soldier/Body/Main/Sprite" (art nhìn phải)
     private Vector3 visualBaseScale;
     private float lastCritPunchTime = float.MinValue;
 
@@ -105,6 +114,33 @@ public class BossRushBossUnit : EnemyUnit
             visual.localScale *= multiplier;
         }
         visualBaseScale = visual.localScale;
+
+        Transform sprite = Transform.Find("Soldier/Body/Main/Sprite");
+        bodySprite = sprite != null ? sprite.GetComponent<SpriteRenderer>() : null;
+    }
+
+    // Rig BossNew: đầu mỗi nhịp đánh thường quay mặt về phía mục tiêu — lật sprite thân, quả cầu đổi sang bên kia.
+    private void FaceTarget()
+    {
+        if (bodySprite == null || target == null)
+        {
+            return;
+        }
+
+        bool isFaceLeft = target.Transform.position.x < Transform.position.x;
+        bodySprite.flipX = isFaceLeft;
+        if (fireOrb != null)
+        {
+            Vector3 p = fireOrb.localPosition;
+            p.x = Mathf.Abs(p.x) * (isFaceLeft ? -1f : 1f);
+            fireOrb.localPosition = p;
+        }
+        if (weaponMirror != null)
+        {
+            Vector3 s = weaponMirror.localScale;
+            s.x = Mathf.Abs(s.x) * (isFaceLeft ? -1f : 1f);
+            weaponMirror.localScale = s;
+        }
     }
 
     private void SetupAnimator()
@@ -122,11 +158,27 @@ public class BossRushBossUnit : EnemyUnit
         }
         relay.AttackAnimationHit = OnAttackAnimationHit;
         relay.AttackAnimationCompleted = OnAttackAnimationCompleted;
+
+        hasMoveParam = false;
+        foreach (AnimatorControllerParameter p in animator.parameters)
+        {
+            if (p.nameHash == ANIM_IS_MOVING) hasMoveParam = true;
+        }
+    }
+
+    // Rig BossNew: đang đi theo đường A* (dời chỗ / đuổi mục tiêu) → state Move nhún như hero chạy.
+    private void UpdateMoveAnimation()
+    {
+        if (hasMoveParam)
+        {
+            animator.SetBool(ANIM_IS_MOVING, stateCurrent != BattleState.Skill && mover != null && mover.HasPath);
+        }
     }
 
     protected override void PlayAnimAttack()
     {
         base.PlayAnimAttack();
+        FaceTarget();
         if (animator != null)
         {
             animator.SetBool(ANIM_IS_IDLE, false);
@@ -315,6 +367,7 @@ public class BossRushBossUnit : EnemyUnit
 
     protected override void UpdateBattleState()
     {
+        UpdateMoveAnimation();
         if (stateCurrent == BattleState.Skill)
         {
             UpdateSkill();
