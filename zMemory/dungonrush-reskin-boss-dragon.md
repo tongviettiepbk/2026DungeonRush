@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-boss-dragon
-description: "Boss Rush Red Dragon reskin thành cáo + cầu lửa (2026-11-03), test Play ô thật OK; BossRushDragon.prefab cũng reskin y vậy nhưng KHÔNG có trong bossPrefabs (không dùng trong game); đã commit trên nhánh reskin-boss-rush"
+description: "Boss Rush Red Dragon reskin thành cáo + cầu lửa (2026-11-03), test Play ô thật OK; đã commit trên nhánh reskin-boss-rush; BossRushDragon.prefab thừa đã XOÁ"
 metadata:
   node_type: memory
   type: project
@@ -8,7 +8,7 @@ metadata:
 
 2026-11-03: 2 prefab cùng art Boss 9 (cáo áo choàng đỏ + cầu lửa, 188x244 / 104x104 bằng BlackDragon nên số rig giống hệt), mỗi prefab art + anim riêng:
 - `BossRushRedDragon.prefab` — boss thật, ô index 3 (Boss Number 4). Art `Art/4_Characters/BossNew/BossRushRedDragon/`, anim `Animations/BossNew/BossRushRedDragon/`. Đạn giữ RedDragonWeaponData.
-- `BossRushDragon.prefab` — KHÔNG nằm trong `BossRushMode.bossPrefabs` / `StaticBossRushData.bosses`, code không gọi tên → không xuất hiện trong game. Art/anim ở thư mục cùng tên, đạn DragonWeaponData.
+- `BossRushDragon.prefab` — ĐÃ XOÁ 2026-11-03 cùng art/anim; trước đó KHÔNG nằm trong `BossRushMode.bossPrefabs` / `StaticBossRushData.bosses`, code không gọi tên → không xuất hiện trong game. Art/anim ở thư mục cùng tên, đạn DragonWeaponData.
 
 Cả 2: lưu đè giữ GUID, chép khuôn [[dungonrush-reskin-boss-black-dragon]] (Main y −1.22, Weapon 1.07/2.51, FlipPoints y 0.26), fireOrb = Weapon, Weapon flipX tắt, Soldier hết xoay 180°.
 

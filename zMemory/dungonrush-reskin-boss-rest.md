@@ -20,7 +20,9 @@ metadata:
 - Công thức (đo pixel bằng script zlib, máy không có PIL): pivot = tâm cán ở ~15% từ dưới; Weapon x = mép phải thân ở cao 60px + 0.36; FlipPoints y = bodyScale × nửa cao + 0.1 − 1.1 để thanh máu trên đầu.
 - Skill không sửa code, thân Idle: Slam FX ô (Elder tím), Earthquake vòng đất (Ogre), Teleport thu nhỏ Body + nổ sáng (Hag), FireBreath cầu bay vòng (sói).
 - Test: 1 Play chạy lần lượt Boss Number 3/6/7/8/9/10, mỗi con 26s (Begin + ChangeMode, ExitMidFight rồi đợi isChangingMode). Cả 6: đúng controller, đủ Idle/Move/Attack, 3 lần skill, quay trái OK, console sạch.
-- Còn lưu ý: khung gồng +20° trượng dài (dê, rùa, thỏ) che mặt thoáng qua; thanh máu nhóm Black/Red/Green Dragon ở .26 nằm trên trán, chưa chỉnh để 3 con giống nhau. Art/SO cũ chưa xoá.
+- Còn lưu ý: khung gồng +20° trượng dài (dê, rùa, thỏ) che mặt thoáng qua; thanh máu nhóm Black/Red/Green Dragon ở .26 nằm trên trán, chưa chỉnh để 3 con giống nhau.
 
 **Why:** user yêu cầu reskin hết boss còn lại theo [[dungonrush-reskin-boss-black-dragon]] và [[dungonrush-reskin-boss-crimson-lich]].
 **How to apply:** đủ 10 ô bossPrefabs đã có hình mới ([[dungonrush-reskin-boss-dragon]], [[dungonrush-reskin-boss-dark-lich]]); chỉnh vị trí vũ khí thì sửa prefab từng boss, không chạy lại khuôn.
+
+**Dọn art 2026-11-03:** đã xoá prefab BossRushDragon + art/anim của nó (không có trong bossPrefabs), cả thư mục `Art/4_Characters/BossRush/` (33 PNG rig cũ), 18 SO Glove/Helmet của boss ở GearsEnemy (Lych/Ogre/Witch/Green+RedDragon — không prefab nào trỏ, code không nạp thư mục này). GIỮ: 13 WeaponData trong GearsEnemy (boss vẫn dùng làm đạn), Glove/Helmet + art của Dragon/Zombie/Cultist (quái thường), override controller cũ Lich/Ogre/Witch (0 tham chiếu, không phải art, chưa xoá). Đã commit trên nhánh reskin-boss-rush.
