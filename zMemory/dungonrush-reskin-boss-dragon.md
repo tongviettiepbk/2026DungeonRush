@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-boss-dragon
-description: "Boss Rush Red Dragon reskin thành cáo + cầu lửa (2026-11-03), test Play ô thật OK; đã commit trên nhánh reskin-boss-rush; BossRushDragon.prefab thừa đã XOÁ"
+description: "Boss Rush Red Dragon reskin thành cáo + cầu lửa (2026-11-03), test Play ô thật OK; đã commit vào main; BossRushDragon.prefab thừa đã XOÁ"
 metadata:
   node_type: memory
   type: project

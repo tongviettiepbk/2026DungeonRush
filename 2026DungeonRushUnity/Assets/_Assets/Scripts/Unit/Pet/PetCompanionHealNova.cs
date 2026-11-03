@@ -21,7 +21,7 @@ public class PetCompanionHealNova : PetUnit
         {
             HealOwner(heal);
             PlayEffectActiveSfx();
-            CompanionNova.Spawn(hero, companionData.healNovaStartRadius, companionData.healNovaEndRadius,
+            CompanionNova.Spawn(this, hero, companionData.healNovaStartRadius, companionData.healNovaEndRadius,
                 companionData.healNovaDuration, companionData.healNovaTickInterval, novaColor,
                 GetEnemiesInRadius, enemy => DealDamage(enemy, novaDamage));
         });

@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-boss-black-dragon
-description: "Boss Rush Black Dragon reskin thành pháp sư cáo + quả cầu (2026-11-02) — rig Body/Main/Sprite+Weapon, anim BossNew/BlackDragon, skill FireBreath cầu bay vòng; test Play OK, đã commit trên nhánh reskin-boss-rush"
+description: "Boss Rush Black Dragon reskin thành pháp sư cáo + quả cầu (2026-11-02) — rig Body/Main/Sprite+Weapon, anim BossNew/BlackDragon, skill FireBreath cầu bay vòng; test Play OK, đã commit vào main"
 metadata:
   node_type: memory
   type: project

@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-boss-crimson-lich
-description: "Boss Rush Crimson Lich reskin thành heo rừng cầm chùy (2026-11-03) — khuôn cho boss vũ khí cầm tay: WeaponRoot lật gương, clip gõ chùy; test Play OK, đã commit trên nhánh reskin-boss-rush"
+description: "Boss Rush Crimson Lich reskin thành heo rừng cầm chùy (2026-11-03) — khuôn cho boss vũ khí cầm tay: WeaponRoot lật gương, clip gõ chùy; test Play OK, đã commit vào main"
 metadata:
   node_type: memory
   type: project

@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-boss-rest
-description: "Boss Rush đã reskin ĐỦ 10 boss (2026-11-03): 6 boss cuối gồm Elder Lich, Green Dragon, 2 Ogre, 2 Hag theo 2 khuôn cầu/vũ khí, kèm bảng số rig; test Play ô thật OK, đã commit trên nhánh reskin-boss-rush"
+description: "Boss Rush đã reskin ĐỦ 10 boss (2026-11-03): 6 boss cuối gồm Elder Lich, Green Dragon, 2 Ogre, 2 Hag theo 2 khuôn cầu/vũ khí, kèm bảng số rig; test Play ô thật OK, đã commit vào main"
 metadata:
   node_type: memory
   type: project
@@ -25,4 +25,4 @@ metadata:
 **Why:** user yêu cầu reskin hết boss còn lại theo [[dungonrush-reskin-boss-black-dragon]] và [[dungonrush-reskin-boss-crimson-lich]].
 **How to apply:** đủ 10 ô bossPrefabs đã có hình mới ([[dungonrush-reskin-boss-dragon]], [[dungonrush-reskin-boss-dark-lich]]); chỉnh vị trí vũ khí thì sửa prefab từng boss, không chạy lại khuôn.
 
-**Dọn art 2026-11-03:** đã xoá prefab BossRushDragon + art/anim của nó (không có trong bossPrefabs), cả thư mục `Art/4_Characters/BossRush/` (33 PNG rig cũ), 18 SO Glove/Helmet của boss ở GearsEnemy (Lych/Ogre/Witch/Green+RedDragon — không prefab nào trỏ, code không nạp thư mục này). GIỮ: 13 WeaponData trong GearsEnemy (boss vẫn dùng làm đạn), Glove/Helmet + art của Dragon/Zombie/Cultist (quái thường). Đã commit trên nhánh reskin-boss-rush. Bổ sung sau: xoá nốt `Animations/Lich`, `Ogre`, `Witch` (4 override controller + 8 clip, không còn tham chiếu), cũng đã commit trên nhánh này.
+**Dọn art 2026-11-03:** đã xoá prefab BossRushDragon + art/anim của nó (không có trong bossPrefabs), cả thư mục `Art/4_Characters/BossRush/` (33 PNG rig cũ), 18 SO Glove/Helmet của boss ở GearsEnemy (Lych/Ogre/Witch/Green+RedDragon — không prefab nào trỏ, code không nạp thư mục này). GIỮ: 13 WeaponData trong GearsEnemy (boss vẫn dùng làm đạn), Glove/Helmet + art của Dragon/Zombie/Cultist (quái thường). Đã commit vào main. Bổ sung sau: xoá nốt `Animations/Lich`, `Ogre`, `Witch` (4 override controller + 8 clip, không còn tham chiếu), cũng đã commit vào main.

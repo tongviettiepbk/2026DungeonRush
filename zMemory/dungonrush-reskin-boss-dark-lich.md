@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-boss-dark-lich
-description: "Boss Rush Dark Lich reskin thành gấu cầm búa (2026-11-03) — chép khuôn Crimson Lich, skill Slam giữ Idle + FX ô 0; test Play ô thật OK, đã commit trên nhánh reskin-boss-rush"
+description: "Boss Rush Dark Lich reskin thành gấu cầm búa (2026-11-03) — chép khuôn Crimson Lich, skill Slam giữ Idle + FX ô 0; test Play ô thật OK, đã commit vào main"
 metadata:
   node_type: memory
   type: project

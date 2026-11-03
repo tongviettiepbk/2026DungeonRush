@@ -5,11 +5,13 @@ using UnityEngine;
 // Vòng sáng nở dần (gốc CompanionHealNovaEffect): tâm bám theo 'anchor' (hero), bán kính đi từ
 // startRadius → endRadius trong 'duration'. Mỗi 'tickInterval' quét enemy trong bán kính hiện tại;
 // MỖI enemy chỉ bị trúng 1 lần / 1 vòng (HashSet) → onHit(enemy). Hình = vòng LineRenderer.
+// Vòng là GameObject riêng nhưng callback quét/gây damage thuộc pet 'source' → pet bị huỷ (hết trận) thì vòng tắt theo.
 public class CompanionNova : MonoBehaviour
 {
     private const int CIRCLE_SEGMENTS = 48;
 
     private BaseUnit anchor;
+    private UnityEngine.Object source;
     private Func<Vector3, float, List<BaseUnit>> queryEnemies;
     private Action<BaseUnit> onHit;
     private float startRadius;
@@ -21,12 +23,13 @@ public class CompanionNova : MonoBehaviour
     private LineRenderer circle;
     private readonly HashSet<BaseUnit> hitUnits = new HashSet<BaseUnit>();
 
-    public static CompanionNova Spawn(BaseUnit anchor, float startRadius, float endRadius, float duration, float tickInterval,
+    public static CompanionNova Spawn(UnityEngine.Object source, BaseUnit anchor, float startRadius, float endRadius, float duration, float tickInterval,
         Color color, Func<Vector3, float, List<BaseUnit>> queryEnemies, Action<BaseUnit> onHit)
     {
         GameObject go = new GameObject("CompanionNova");
         go.transform.position = anchor.Transform.position;
         CompanionNova nova = go.AddComponent<CompanionNova>();
+        nova.source = source;
         nova.anchor = anchor;
         nova.startRadius = startRadius;
         nova.endRadius = endRadius;
@@ -45,6 +48,12 @@ public class CompanionNova : MonoBehaviour
 
     private void Update()
     {
+        if (source == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         if (anchor != null)
         {
             transform.position = anchor.Transform.position;
@@ -73,6 +82,11 @@ public class CompanionNova : MonoBehaviour
 
     private void Tick()
     {
+        if (source == null)
+        {
+            return;
+        }
+
         List<BaseUnit> enemies = queryEnemies(transform.position, CurrentRadius);
         for (int i = 0; i < enemies.Count; i++)
         {
