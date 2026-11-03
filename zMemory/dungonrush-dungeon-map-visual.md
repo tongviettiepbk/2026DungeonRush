@@ -3,7 +3,7 @@ name: dungonrush-dungeon-map-visual
 description: Hình ảnh 3 map dungeon (Zombie/Dragon/Cultist) đã dựng theo prefab rip gốc, không cửa; sprite ở Art/5_Maps/Dungeon*; CHƯA mở Unity/test Play
 metadata:
   type: project
-  modified: 2026-10-17
+  modified: 2026-11-03
 ---
 
 2026-10-17 (commit de524e4): `Prefabs/Maps/{Zombie,Dragon,Cultist}MapPrefab.prefab` hết là bản sao MainMap — cây `Walls/Corners/Environments` lấy nguyên từ `AssetRipper/.../GameObject/<cùng tên>.prefab` (vị trí/rot/scale/flip/sortingOrder/màu gốc, fileID rip), **không có Doors** (gốc không có cửa).
@@ -14,5 +14,7 @@ metadata:
 - Sprite: ảnh gốc ĐÃ có sẵn trong `ArtArchive/_CommingUse/` (trùng điểm ảnh với xapk) → `git mv` sang `Art/5_Maps/Dungeon{Zombie,Dragon,Cultist}/` giữ guid (pentagram từ `_CommingUse/Fx`). Square = `_NonDefile/Square.png`. Tên sprite gốc: `tomb_stone`, `lava_corner`, `lava_middle`, `pentagram`, `wall_piece_<x>_dungeon`, `wall_corner_piece_<x>_dungeon`...
 - Dragon: tường ngoài `outer_wall_piece_dragon_dungeon` ord=0 và lava ord=-25 đúng gốc.
 - Kiểm: 0 fileID treo, 0 guid thiếu, render PIL khớp bố cục. CHƯA mở Unity (UnityMCP rớt) / CHƯA test Play.
+
+- **Square.png project rộng 2.56 unit (256px, PPU 100), gốc 1 unit (2026-11-03):** scale plane chép từ rip thì sàn to gấp 2.56 lần. Dragon: InnerPlane phủ kín vòng lửa (lava ord -25 < Inner -23); đã sửa scale InnerPlane còn 3.7226562 x 4.8046875 (= 9.53 x 12.3 unit như gốc), test Game view thấy vòng lửa đúng giữa 2 vòng tường. Vòng lửa gốc là ảnh tĩnh, không có FX. Zombie/Cultist cùng lỗi (nền ngoài bị InnerPlane che) cũng đã sửa cùng số scale, render prefab bằng camera tạm thấy sàn nằm gọn trong tường. Không đổi import Square.png vì Main/BossRush/Mining đã căn scale theo 2.56.
 
 Liên quan: [[dungonrush-map-grid-background]], [[dungonrush-dungeon-system]], [[dungonrush-campaign-map-original]], [[dungonrush-ripped-prefab-rewire]].
