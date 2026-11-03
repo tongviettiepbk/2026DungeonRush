@@ -110,3 +110,4 @@
 
 - [Reskin boss Dark Lich → gấu búa](dungonrush-reskin-boss-dark-lich.md) — 2026-11-03 chép khuôn Crimson, Slam giữ Idle + FX ô 0; test Play ô thật OK, đã commit
 - [Reskin 6 boss cuối (đủ 10 boss)](dungonrush-reskin-boss-rest.md) — 2026-11-03 Elder/Green Dragon/2 Ogre/2 Hag, bảng số rig + công thức đo, đã dọn art cũ; test Play ô thật OK, đã commit
+- [Reskin DragonEnemy → cáo cầu lửa](dungonrush-reskin-dragon-enemy.md) — 2026-11-03 rồng dungeon dùng chung art Red Dragon, chỉ Idle nhún + đánh thường, thêm lật mặt ở OriginalAnimatorController; test Play OK, đã commit

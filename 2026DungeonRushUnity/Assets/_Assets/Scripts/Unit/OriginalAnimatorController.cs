@@ -86,6 +86,23 @@ public class OriginalAnimatorController : AnimationController
         animator.SetBool(ANIM_IS_DYING, true);
     }
 
+    // Lật art bằng localScale.x của node chứa Animator (Soldier), clip không đụng transform node này. Art quay sang PHẢI.
+    public override bool isFacingRight
+    {
+        get { return base.isFacingRight; }
+        set
+        {
+            base.isFacingRight = value;
+            if (animator != null)
+            {
+                Transform art = animator.transform;
+                Vector3 scale = art.localScale;
+                scale.x = value ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+                art.localScale = scale;
+            }
+        }
+    }
+
     private void SetIdle()
     {
         isAttacking = false;
