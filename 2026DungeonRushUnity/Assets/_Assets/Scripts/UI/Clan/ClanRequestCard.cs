@@ -36,6 +36,7 @@ public class ClanRequestCard : MonoBehaviour
         this.onAccept = onAccept;
         this.onDeny = onDeny;
         this.onClick = onClick;
+        if (AvatarImage != null) AvatarImage.sprite = AvatarConfig.Get(request.AvatarId);
         ClanUIUtil.SetText(NameText, request.PlayerName);
         ClanUIUtil.SetText(PowerText, ClanUIUtil.PowerText(request.Power));
         SetInteractable(true);

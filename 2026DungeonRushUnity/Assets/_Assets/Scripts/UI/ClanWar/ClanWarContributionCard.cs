@@ -27,6 +27,7 @@ public class ClanWarContributionCard : MonoBehaviour
     {
         this.onClick = onClick;
         if (RankText != null) RankText.text = "#" + entry.rank;
+        if (ProfileImage != null) ProfileImage.sprite = AvatarConfig.Get(entry.avatarId);
         if (NameText != null) NameText.text = entry.playerName;
         if (PointsText != null) PointsText.text = ClanWarController.FormatNumber(entry.points) + " pts";
         if (CardBackground != null) CardBackground.color = entry.userId == myUserId ? SelfColor : NormalColor;

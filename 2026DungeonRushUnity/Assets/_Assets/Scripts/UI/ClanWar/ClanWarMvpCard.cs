@@ -30,6 +30,7 @@ public class ClanWarMvpCard : MonoBehaviour
         bool has = mvp != null && !string.IsNullOrEmpty(mvp.userId);
         if (ContentRoot != null) ContentRoot.SetActive(has);
         if (PlaceholderRoot != null) PlaceholderRoot.SetActive(!has);
+        if (has && ProfileImage != null) ProfileImage.sprite = AvatarConfig.Get(mvp.avatarId);
         if (NameText != null) NameText.text = has ? mvp.playerName : string.Empty;
         if (CardButton != null) CardButton.interactable = has && onClick != null;
     }

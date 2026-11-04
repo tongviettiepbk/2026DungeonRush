@@ -18,3 +18,7 @@ Reskin Clan 2026-10-20 (đã commit "Reskin Clan theo mockup BallIdle", chỉ ch
 - KHÔNG chạy lại `Tools/DungeonRush/Build Clan UI Prefabs` (ClanPrefabBuilder ghi đè prefab + catalog).
 
 Xem [[dungonrush-reskin-plan]], [[dungonrush-reskin-ui-howto]], [[dungonrush-clan-clanwar]].
+
+**Sửa sau reskin (2026-11-04):** preview reskin không chạy code nên sót: `ClanMemberCard`/`ClanWarContributionCard.NormalColor` tô đè sprite thành đen (nay = trắng, biến thể Gray ăn theo), `TierText`/`TierHeaderText` tắt rich text nên hiện nguyên thẻ `<color>`. Avatar nay gán từ `AvatarConfig.Get` ở 6 lớp Clan/ClanWar.
+
+**Bẫy lưu prefab:** lưu ClanTabPage/UIClanInfoPopup/UIClanWarRewardsPopup qua Unity kéo theo đổi hàng loạt (`m_spriteAsset` guid treo thành fileID 0, `PressYValue` cũ thành field mới của PressButtonUI). Sửa 1 field ở các prefab này thì sửa thẳng YAML rồi kiểm `git diff`.

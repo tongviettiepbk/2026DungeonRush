@@ -34,6 +34,7 @@ public class ClanWarEnemyCard : MonoBehaviour
     {
         this.onBattle = onBattle;
         this.onClick = onClick;
+        if (ProfileImage != null) ProfileImage.sprite = AvatarConfig.Get(target.avatarId);
         if (NameText != null) NameText.text = target.playerName;
         if (PowerText != null) PowerText.text = ClanUIUtil.PowerText(target.power);
         bool enabled = !target.defeated && canAttack && hasTickets;

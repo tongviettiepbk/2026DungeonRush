@@ -25,6 +25,7 @@ public class ClanMemberCard : MonoBehaviour
     {
         this.member = member;
         this.onClick = onClick;
+        if (AvatarImage != null) AvatarImage.sprite = AvatarConfig.Get(member.AvatarId);
         ClanUIUtil.SetText(NameText, member.PlayerName);
         ClanUIUtil.SetText(PowerText, ClanUIUtil.PowerText(member.Power));
         ClanUIUtil.SetText(RoleText, ClanRoleExt.RoleName(member.Role));
