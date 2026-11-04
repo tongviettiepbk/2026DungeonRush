@@ -17,3 +17,5 @@ metadata:
 
 **Why:** user muốn chống chỉnh giờ máy để hồi key/vé.
 **How to apply:** muốn hệ khác chống chỉnh giờ → đổi sang `ServerTime.UtcNow`, đừng dựng hàm mới. Xem [[dungonrush-dungeon-system]], [[dungonrush-events-tab]], [[dungonrush-firebase-prod-deploy]].
+
+Đã deploy lên server thật 2026-11-04.

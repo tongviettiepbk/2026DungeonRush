@@ -12,7 +12,7 @@ code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:13px}hr{
 .t0{background:#2e7d4f}.t1{background:#2f6fb5}.t2{background:#b9770e}.t3{background:#b03a3a}
 </style></head><body>
 <h1>Clan + Clan War — Bản thiết kế (GD)</h1>
-<p>Cập nhật: 2026-10-10. Server và client đã code theo bản này (mục 15 ghi phần còn lại). Các mục <span class="tag t2">ĐỀ XUẤT</span> đang chạy đúng như đề xuất và nằm trong config, đổi được khi bạn quyết khác. Số liệu reverse từ game gốc nằm ở <code>DecodedData/CLAN_MODEL.md</code>; file này là thiết kế của project mình.</p>
+<p>Cập nhật: 2026-11-04. Server và client đã code theo bản này (mục 15 ghi phần còn lại). Các mục <span class="tag t2">ĐỀ XUẤT</span> đang chạy đúng như đề xuất và nằm trong config, đổi được khi bạn quyết khác. Số liệu reverse từ game gốc nằm ở <code>DecodedData/CLAN_MODEL.md</code>; file này là thiết kế của project mình.</p>
 <p>Ký hiệu độ chắc chắn của từng mục:</p>
 <table><thead><tr><th>Ký hiệu</th><th>Nghĩa</th></tr></thead><tbody>
 <tr><td><span class="tag t0">GỐC</span></td><td>Xác nhận từ game gốc (đọc từ APK)</td></tr>
@@ -148,35 +148,41 @@ code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:13px}hr{
 <li>Hoạt động không thuộc ngày hôm đó thì không có điểm. <span class="tag t0">GỐC</span></li>
 <li>Điểm tính cho cá nhân, đồng thời cộng vào tổng điểm ngày của clan. <span class="tag t0">GỐC</span></li>
 </ul>
-<h3>8.1 Điểm theo độ hiếm <span class="tag t2">ĐỀ XUẤT</span></h3>
+<h3>8.1 Điểm theo độ hiếm</h3>
+<p>Số <span class="tag t0">GỐC</span> chụp từ bảng Day Actions của game gốc (2026-11-04).</p>
 <table><thead><tr><th>Độ hiếm</th><th>Nhặt 1 món đồ</th><th>Triệu hồi 1 pet</th><th>Triệu hồi 1 áo choàng</th></tr></thead><tbody>
-<tr><td>Common</td><td>1</td><td>10</td><td>10</td></tr>
-<tr><td>Uncommon</td><td>2</td><td>20</td><td>20</td></tr>
-<tr><td>Rare</td><td>5</td><td>50</td><td>50</td></tr>
-<tr><td>Epic</td><td>10</td><td>100</td><td>100</td></tr>
-<tr><td>Legendary</td><td>25</td><td>250</td><td>250</td></tr>
-<tr><td>Mythic</td><td>50</td><td>500</td><td>500</td></tr>
-<tr><td>Artifact</td><td>100</td><td>—</td><td>—</td></tr>
-<tr><td>Ancient</td><td>200</td><td>—</td><td>—</td></tr>
-<tr><td>Immortal</td><td>400</td><td>—</td><td>—</td></tr>
-<tr><td>Divine</td><td>800</td><td>—</td><td>—</td></tr>
+<tr><td>Common</td><td>1</td><td>10</td><td>100</td></tr>
+<tr><td>Uncommon</td><td>1</td><td>20</td><td>100</td></tr>
+<tr><td>Rare</td><td>1</td><td>50</td><td>200</td></tr>
+<tr><td>Epic</td><td>2</td><td>100</td><td>200</td></tr>
+<tr><td>Legendary</td><td>2</td><td>250</td><td>300</td></tr>
+<tr><td>Mythic</td><td>2</td><td>500</td><td>300</td></tr>
+<tr><td>Artifact</td><td>2</td><td>—</td><td>—</td></tr>
+<tr><td>Ancient</td><td>2</td><td>—</td><td>—</td></tr>
+<tr><td>Immortal</td><td>2</td><td>—</td><td>—</td></tr>
+<tr><td>Divine</td><td>2</td><td>—</td><td>—</td></tr>
 </tbody></table>
+<ul>
+<li>Nhặt đồ Common đến Artifact: <span class="tag t0">GỐC</span></li>
+<li>Nhặt đồ Ancient, Immortal, Divine: <span class="tag t2">ĐỀ XUẤT</span>, chưa có ảnh, giữ bằng mức Artifact.</li>
+<li>Triệu hồi áo choàng: <span class="tag t0">GỐC</span></li>
+<li>Triệu hồi pet: <span class="tag t2">ĐỀ XUẤT</span>, chưa có ảnh.</li>
+</ul>
 <h3>8.2 Điểm hoạt động khác</h3>
 <table><thead><tr><th>Hoạt động</th><th>Điểm</th><th>Độ chắc</th></tr></thead><tbody>
 <tr><td>Lên level</td><td>level mới × 100</td><td><span class="tag t0">GỐC</span></td></tr>
 <tr><td>Dùng 1 key dungeon</td><td>500</td><td><span class="tag t0">GỐC</span></td></tr>
 </tbody></table>
-<h3>8.3 Điểm đào mỏ <span class="tag t2">ĐỀ XUẤT</span></h3>
+<h3>8.3 Điểm đào mỏ <span class="tag t0">GỐC</span></h3>
 <table><thead><tr><th>Quặng</th><th>Điểm</th></tr></thead><tbody>
-<tr><td>Stone</td><td>1</td></tr>
-<tr><td>Coal</td><td>2</td></tr>
-<tr><td>Iron</td><td>4</td></tr>
-<tr><td>Ruby</td><td>8</td></tr>
-<tr><td>Emerald</td><td>15</td></tr>
+<tr><td>Stone</td><td>10</td></tr>
+<tr><td>Coal</td><td>10</td></tr>
+<tr><td>Iron</td><td>20</td></tr>
+<tr><td>Ruby</td><td>20</td></tr>
+<tr><td>Emerald</td><td>20</td></tr>
 <tr><td>Gold</td><td>30</td></tr>
-<tr><td>Diamond</td><td>60</td></tr>
+<tr><td>Diamond</td><td>30</td></tr>
 </tbody></table>
-<p>Project chưa có tính năng đào mỏ, nên Day 2 và Day 4 hiện chỉ kiếm điểm được bằng key dungeon và áo choàng.</p>
 <h3>8.4 Quy tắc ghi điểm</h3>
 <ul>
 <li>Client gom hoạt động rồi gửi lên server sau 8 giây; mất mạng thì giữ lại gửi sau. <span class="tag t0">GỐC</span></li>
@@ -220,33 +226,48 @@ code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:13px}hr{
 <li>Tối đa <b>2 lần reset</b> mỗi war. <span class="tag t2">ĐỀ XUẤT</span></li>
 </ul>
 <h2>11. Thưởng</h2>
-<h3>11.1 Mốc cá nhân — theo điểm đóng góp cả tuần <span class="tag t2">ĐỀ XUẤT</span></h3>
-<table><thead><tr><th>Mốc điểm</th><th>Lootbox</th><th>Bone</th><th>Exp</th><th>Cloak</th></tr></thead><tbody>
-<tr><td>1.000</td><td>20</td><td>20</td><td>50</td><td>—</td></tr>
-<tr><td>3.000</td><td>40</td><td>40</td><td>100</td><td>5</td></tr>
-<tr><td>6.000</td><td>60</td><td>60</td><td>200</td><td>10</td></tr>
-<tr><td>10.000</td><td>80</td><td>80</td><td>300</td><td>15</td></tr>
-<tr><td>15.000</td><td>100</td><td>100</td><td>500</td><td>20</td></tr>
-<tr><td>25.000</td><td>150</td><td>150</td><td>800</td><td>30</td></tr>
-<tr><td>40.000</td><td>200</td><td>200</td><td>1.200</td><td>40</td></tr>
-<tr><td>60.000</td><td>300</td><td>300</td><td>2.000</td><td>60</td></tr>
+<h3>11.1 Mốc cá nhân — theo điểm đóng góp cả tuần <span class="tag t0">GỐC</span></h3>
+<p>Chụp từ popup War Rewards của game gốc (2026-11-04).</p>
+<table><thead><tr><th>Mốc điểm</th><th>Lootbox</th><th>Bone</th><th>Pickaxe</th><th>Exp</th><th>Cloak</th></tr></thead><tbody>
+<tr><td>1.000</td><td>50</td><td>250</td><td>15</td><td>—</td><td>—</td></tr>
+<tr><td>2.500</td><td>—</td><td>—</td><td>—</td><td>500</td><td>50</td></tr>
+<tr><td>5.000</td><td>50</td><td>250</td><td>15</td><td>—</td><td>—</td></tr>
+<tr><td>7.500</td><td>—</td><td>—</td><td>—</td><td>500</td><td>50</td></tr>
+<tr><td>10.000</td><td>50</td><td>250</td><td>15</td><td>—</td><td>—</td></tr>
+<tr><td>12.500</td><td>—</td><td>—</td><td>—</td><td>500</td><td>50</td></tr>
+<tr><td>15.000</td><td>50</td><td>250</td><td>15</td><td>—</td><td>—</td></tr>
+<tr><td>20.000</td><td>—</td><td>—</td><td>—</td><td>500</td><td>50</td></tr>
+<tr><td>25.000</td><td>50</td><td>250</td><td>15</td><td>—</td><td>—</td></tr>
+<tr><td>30.000</td><td>—</td><td>—</td><td>—</td><td>500</td><td>50</td></tr>
+<tr><td>40.000</td><td>50</td><td>250</td><td>15</td><td>—</td><td>—</td></tr>
+<tr><td>50.000</td><td>—</td><td>—</td><td>—</td><td>500</td><td>50</td></tr>
+<tr><td>65.000</td><td>50</td><td>250</td><td>15</td><td>—</td><td>—</td></tr>
+<tr><td>80.000</td><td>—</td><td>—</td><td>—</td><td>500</td><td>50</td></tr>
+<tr><td>100.000</td><td>50</td><td>250</td><td>15</td><td>—</td><td>—</td></tr>
+<tr><td>125.000</td><td>—</td><td>—</td><td>—</td><td>500</td><td>50</td></tr>
+<tr><td>160.000</td><td>50</td><td>250</td><td>15</td><td>—</td><td>—</td></tr>
+<tr><td>200.000</td><td>—</td><td>—</td><td>—</td><td>500</td><td>50</td></tr>
 </tbody></table>
 <ul>
-<li>Đạt mốc là bấm nhận được ngay. <span class="tag t0">GỐC</span></li>
+<li>Đạt mốc là bấm cả thẻ để nhận ngay. <span class="tag t0">GỐC</span></li>
 <li>Sang Day 7 có nút gộp nhận hết các mốc còn lại. <span class="tag t0">GỐC</span></li>
 </ul>
-<h3>11.2 Thưởng clan — theo tier và thắng/thua <span class="tag t2">ĐỀ XUẤT</span></h3>
-<table><thead><tr><th>Tier</th><th>Kết quả</th><th>Lootbox</th><th>Bone</th><th>Cloak</th><th>Vial</th></tr></thead><tbody>
-<tr><td>S</td><td>Thắng</td><td>600</td><td>600</td><td>150</td><td>150</td></tr>
-<tr><td>S</td><td>Thua</td><td>300</td><td>300</td><td>75</td><td>75</td></tr>
-<tr><td>A</td><td>Thắng</td><td>450</td><td>450</td><td>110</td><td>110</td></tr>
-<tr><td>A</td><td>Thua</td><td>225</td><td>225</td><td>55</td><td>55</td></tr>
-<tr><td>B</td><td>Thắng</td><td>320</td><td>320</td><td>80</td><td>80</td></tr>
-<tr><td>B</td><td>Thua</td><td>160</td><td>160</td><td>40</td><td>40</td></tr>
-<tr><td>C</td><td>Thắng</td><td>220</td><td>220</td><td>55</td><td>55</td></tr>
-<tr><td>C</td><td>Thua</td><td>110</td><td>110</td><td>25</td><td>25</td></tr>
-<tr><td>D</td><td>Thắng</td><td>150</td><td>150</td><td>35</td><td>35</td></tr>
-<tr><td>D</td><td>Thua</td><td>75</td><td>75</td><td>15</td><td>15</td></tr>
+<h3>11.2 Thưởng clan — theo tier và thắng/thua</h3>
+<ul>
+<li>Tier S: <span class="tag t0">GỐC</span>, chụp từ game gốc.</li>
+<li>Tier A, B, C, D: <span class="tag t2">ĐỀ XUẤT</span>, chưa có ảnh gốc, giữ tỉ lệ như Tier S.</li>
+</ul>
+<table><thead><tr><th>Tier</th><th>Kết quả</th><th>Lootbox</th><th>Bone</th><th>Cloak</th></tr></thead><tbody>
+<tr><td>S</td><td>Thắng</td><td>2.500</td><td>5.000</td><td>500</td></tr>
+<tr><td>S</td><td>Thua</td><td>1.250</td><td>2.500</td><td>250</td></tr>
+<tr><td>A</td><td>Thắng</td><td>1.900</td><td>3.800</td><td>380</td></tr>
+<tr><td>A</td><td>Thua</td><td>950</td><td>1.900</td><td>190</td></tr>
+<tr><td>B</td><td>Thắng</td><td>1.350</td><td>2.700</td><td>270</td></tr>
+<tr><td>B</td><td>Thua</td><td>675</td><td>1.350</td><td>135</td></tr>
+<tr><td>C</td><td>Thắng</td><td>900</td><td>1.800</td><td>180</td></tr>
+<tr><td>C</td><td>Thua</td><td>450</td><td>900</td><td>90</td></tr>
+<tr><td>D</td><td>Thắng</td><td>600</td><td>1.200</td><td>120</td></tr>
+<tr><td>D</td><td>Thua</td><td>300</td><td>600</td><td>60</td></tr>
 </tbody></table>
 <ul>
 <li>Nhận trong Day 7. <span class="tag t0">GỐC</span></li>
@@ -264,8 +285,7 @@ code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:13px}hr{
 <tr><td>Bone</td><td><code>ItemType.BONE</code></td></tr>
 <tr><td>Exp</td><td>Exp người chơi</td></tr>
 <tr><td>Cloak</td><td><code>ItemType.CLOAK</code></td></tr>
-<tr><td>Vial</td><td><code>ItemType.VIAL</code></td></tr>
-<tr><td>Pickaxe, Golden Pickaxe, Drill</td><td>Chưa có (chờ tính năng đào mỏ), các bảng trên để 0</td></tr>
+<tr><td>Pickaxe</td><td><code>ItemType.PICKAXE</code></td></tr>
 </tbody></table>
 <h2>12. Bảng xếp hạng và Championship</h2>
 <h3>12.1 Bảng xếp hạng</h3>
@@ -306,7 +326,7 @@ code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:13px}hr{
 <h2>14. Chưa chốt</h2>
 <h3>Chờ bạn quyết định</h3>
 <ol>
-<li>Toàn bộ số điểm và thưởng ở mục 8, 9, 10, 11: đều là số tự đặt, chưa cân bằng với kinh tế game.</li>
+<li>Số điểm còn lại ở mục 8 (pet, đồ Ancient trở lên), mục 9, 10 và thưởng clan Tier A–D ở mục 11.2: đều là số tự đặt, chưa cân bằng với kinh tế game.</li>
 <li>Chống gian lận điểm: server đang tin số hoạt động client gửi lên, chưa có trần điểm mỗi ngày.</li>
 <li>Phí tạo clan do client tự trừ gem, server không kiểm tra.</li>
 <li>Người bị kick có phải chờ 24 giờ không (mục 4.3).</li>
@@ -315,40 +335,42 @@ code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:13px}hr{
 <li>Đối thủ PvP không có đồ khi chưa từng mở PvP Arena (mục 10.1). Đề xuất: gửi bộ đồ lên server ngay khi vào clan.</li>
 <li>Thưởng chưa nhận có giữ sang tuần sau không (mục 11.3).</li>
 <li>Có cần nút chuyển Leader thủ công không (mục 3).</li>
-<li>Day 2 và Day 4 khi chưa có đào mỏ: giữ nguyên hay tạm đổi nhóm hoạt động (mục 8.3).</li>
 </ol>
 <h3>Chờ số liệu từ game gốc</h3>
 <ol>
-<li>Ảnh bảng "Day N Actions" ở một ngày lẻ và một ngày chẵn → điểm thật của từng hoạt động.</li>
-<li>Ảnh popup "War Rewards" → các mốc cá nhân và thưởng Win/Lose theo tier.</li>
+<li>Ảnh cuối bảng "Day 1 Actions" (nhặt đồ Ancient trở lên, triệu hồi pet) → điểm thật còn thiếu.</li>
+<li>Ảnh popup "War Rewards" của clan Tier A, B, C, D → thưởng Win/Lose (đã có Tier S và các mốc cá nhân).</li>
 <li>Ảnh popup "War Results" sau một tuần → War Score từng ngày.</li>
 <li>Ảnh tab Battle vào Chủ Nhật → số vé PvP, điểm mỗi trận thắng, ngưỡng reset vòng.</li>
 <li>Tier của một clan qua vài tuần liên tiếp → luật lên/xuống tier.</li>
 <li>Ba con số 3 Captain, 20 clan mỗi lần tìm, 5 đơn mỗi ngày: có trong bảng hằng số của game gốc nhưng chưa xác nhận được đúng ý nghĩa → thử trong game gốc để kiểm.</li>
 </ol>
 <h2>15. Tình trạng code</h2>
-<h3>Đã làm (2026-10-10)</h3>
+<h3>Đã làm (2026-11-04)</h3>
 <table><thead><tr><th>Phần</th><th>Nội dung</th><th>Vị trí</th></tr></thead><tbody>
 <tr><td>Server Clan</td><td>13 hàm theo tên gốc</td><td><code>server/functions/src/clan.ts</code></td></tr>
 <tr><td>Server Clan War</td><td>10 hàm + tác vụ ghép cặp hàng tuần + 2 hàm admin để thử</td><td><code>server/functions/src/clanWar.ts</code></td></tr>
-<tr><td>Config</td><td>Mọi con số <span class="tag t2">ĐỀ XUẤT</span>; ghi đè bằng Firestore <code>config/clanWar</code></td><td><code>server/functions/src/clanWarConfig.ts</code></td></tr>
-<tr><td>Test server</td><td>Đạt trên emulator</td><td><code>server/functions/scripts/clanEmulatorTest.mjs</code></td></tr>
+<tr><td>Config</td><td>Mọi con số; ghi đè bằng Firestore <code>config/clanWar</code></td><td><code>server/functions/src/clanWarConfig.ts</code></td></tr>
+<tr><td>Test server</td><td>Đạt trên emulator</td><td><code>server/functions/scripts/onlineModesSeedTest.mjs</code></td></tr>
 <tr><td>Client</td><td>Tab Clan, 13 popup, tự ghi điểm đóng góp</td><td><code>Scripts/Clan/</code>, <code>Scripts/UI/Clan/</code>, <code>Scripts/UI/ClanWar/</code></td></tr>
-<tr><td>Giao diện</td><td>Dựng từ prefab game gốc</td><td>Menu <code>Tools/DungeonRush/Build Clan UI Prefabs</code></td></tr>
+<tr><td>Giao diện</td><td>Reskin theo mockup, không chạy lại <code>Build Clan UI Prefabs</code></td><td><code>Art/1_UIKit/Clan/</code></td></tr>
+<tr><td>Avatar</td><td>Thành viên, đơn xin vào, MVP, đối thủ, bảng đóng góp</td><td><code>AvatarConfig</code></td></tr>
+<tr><td>Chat Clan</td><td>Xem thiết kế riêng</td><td><code>GDD/CHAT_DESIGN.md</code></td></tr>
+<tr><td>Server thật</td><td>Đã deploy 53 hàm + Realtime Database</td><td>Project <code>dungeon-duck-quack-slash</code></td></tr>
 </tbody></table>
 <ul>
-<li>Test server đã phủ: tạo, tìm, vào, xin vào, duyệt, thăng chức, kick, rời, giải tán clan; ghép war, gửi điểm, bảng xếp hạng, nhận mốc cá nhân.</li>
-<li>Điểm đóng góp tự ghi khi: nhặt đồ, triệu hồi pet, triệu hồi áo choàng, dùng key dungeon, lên level.</li>
+<li>Test server đã phủ: tạo, tìm, vào, xin vào, duyệt, thăng chức, kick, rời, giải tán clan; ghép war, gửi điểm, bảng xếp hạng, nhận mốc cá nhân, PvP Day 6, nhận thưởng Day 7, ghép tuần kế.</li>
+<li>Test Play đã xem: tab Members, tab Battle, popup War Rewards, popup thành viên.</li>
+<li>Test trên server thật đã đạt: tạo, tìm, giải tán clan; cấu hình Clan War; Chat Clan.</li>
+<li>Điểm đóng góp tự ghi khi: nhặt đồ, triệu hồi pet, triệu hồi áo choàng, dùng key dungeon, lên level, đào mỏ.</li>
 <li>Trận PvP Day 6 dùng lại màn PvP Arena.</li>
 </ul>
 <h3>Chưa làm</h3>
 <ul>
-<li>Chạy thử trong Unity (Play mode): tab Clan, các popup, tab Battle.</li>
-<li>Test nhánh Day 6 PvP và nhận thưởng Day 7 (phụ thuộc ngày thật trong tuần).</li>
-<li>Soát bố cục và hình ảnh từng màn so với game gốc.</li>
-<li>Ảnh đại diện người chơi.</li>
-<li>Điểm đào mỏ (chờ tính năng đào mỏ).</li>
-<li>Chat clan (game gốc có).</li>
-<li>Triển khai lên project Firebase thật.</li>
+<li>Test trên server thật: nhận mốc cá nhân, PvP Day 6, thưởng Day 7 (cần chờ ghép cặp Thứ Ba).</li>
+<li>Test Play: các màn của PvP Day 6 và thưởng Day 7, thao tác bấm nhận thưởng.</li>
+<li>Test trên điện thoại.</li>
+<li>Soát các popup còn lại so với mockup (mới xem bằng ảnh chụp lúc reskin).</li>
+<li>Tạo <code>config/admins</code> trên server thật để dùng được 2 hàm admin.</li>
 </ul>
 </body></html>

@@ -1,6 +1,6 @@
 ---
 name: dungonrush-chat-system
-description: Chat Thế giới + Clan dựng theo gốc 2026-11-02 — RTDB chat/ww + chat/clans/{id} đọc qua REST SSE (không SDK), 5 endpoint gốc, lọc từ tục rp, chặn/báo cáo/cấm; test emulator + Play Editor đạt, đã commit, CHƯA deploy
+description: Chat Thế giới + Clan dựng theo gốc 2026-11-02 — RTDB chat/ww + chat/clans/{id} đọc qua REST SSE (không SDK), 5 endpoint gốc, lọc từ tục rp, chặn/báo cáo/cấm; test emulator + Play Editor đạt, đã commit, function + RTDB + rules đã deploy 2026-11-04, chưa thử gửi tin bằng tài khoản thật
 metadata:
   type: project
 ---

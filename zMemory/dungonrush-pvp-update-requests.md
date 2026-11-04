@@ -1,6 +1,6 @@
 ---
 name: dungonrush-pvp-update-requests
-description: "PvP mùa + nhóm league theo game thật: đã code + test Play emulator 2026-11-04, đã commit, CHƯA deploy; luật + số liệu gốc ở đây, GD ở GDD/PVP_DESIGN.md"
+description: "PvP mùa + nhóm league theo game thật: đã code + test Play emulator 2026-11-04, đã commit, đã deploy 2026-11-04; luật + số liệu gốc ở đây, GD ở GDD/PVP_DESIGN.md"
 metadata:
   type: project
 ---

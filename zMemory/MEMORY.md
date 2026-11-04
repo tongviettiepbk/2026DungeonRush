@@ -49,7 +49,7 @@
 - [Substat trong combat](dungonrush-substat-combat.md) — 13 substat đối chiếu native; sửa CritDamage nền 1.05, thêm tick HealthRegen ×0.5, thêm đánh đôi DoubleChance
 - [VIỆC CÒN DỞ](dungonrush-pending-todo.md) — checklist sau đợt Enchantment/Power/Substat: test Unity, deploy server, hình ảnh, Wing/Cape, BattlePass/PvP; đọc khi user nói "làm tiếp"
 - [PvP Arena cũ (Elo v41)](dungonrush-pvp-mode.md) — ĐÃ THAY bằng hệ mùa + nhóm league 2026-11-04; chỉ phần trận đấu còn đúng
-- [Clan + Clan War](dungonrush-clan-clanwar.md) — dựng + commit 2026-10-10; GD ở GDD/CLAN_DESIGN.md (đọc trước khi code tiếp); CHƯA test Play
+- [Clan + Clan War](dungonrush-clan-clanwar.md) — dựng 2026-10-10, đã deploy + test server thật 2026-11-04; GD ở GDD/CLAN_DESIGN.md (đọc trước khi code tiếp); còn nhận mốc/Day 6/Day 7 trên server thật
 - [Store / Shop](dungonrush-shop-system.md) — dựng 2026-10-10 theo gốc: rương+pity, Daily Deals, boost exp, gói gem; PurchaseController BASE chưa có SDK; còn OfferPopup/RewardedChest
 - [Khuôn viết GD](gd-doc-layout.md) — GD nằm ở GDD/ (gốc repo), theo khuôn GDD/BOSS_RUSH_DESIGN.md: mỗi luật 1 gạch + 1 nhãn cuối dòng, bảng mỗi ô 1 số; ảnh dùng cú pháp markdown
 - [Quy tắc ảnh trùng Art](dungonrush-resource-dedupe-rule.md) — giữ tên gốc game, bỏ bản tên data (*Icons); viền khác thì giữ bản có viền; dò trùng trước khi sinh icon mới
@@ -89,7 +89,7 @@
 - [Vũ khí quái campaign](dungonrush-campaign-enemy-weapon.md) — quái campaign cầm vũ khí NGƯỜI CHƠI theo seed+tier (jha gốc), L1-4 melee tay không; EnemyGearPicker 2026-10-21, chưa test Play
 - [Cận chiến chỉ đánh ngang hàng](dungonrush-melee-same-row.md) — Campaign/Zombie/Cultist: melee hero/quái phải đứng cùng hàng sát trái/phải mới đánh; LỆCH GỐC có chủ ý (user yêu cầu 2026-10-22), đừng gỡ
 - [Công cụ test chọn đồ hero](dungonrush-equipment-tester.md) — EquipmentTester ở scene Root, nút "Đồ" ở MainGame, < > lướt từng món 8 slot; dựng 2026-10-22
-- [Firebase server THẬT](dungonrush-firebase-prod-deploy.md) — đã deploy dungeon-duck-quack-slash (us-central1, Node 22) 2026-10-24; emulator giữ demo-dungeonrush; ServerId/EMULATOR_PROJECT_ID ở FirebaseSettings
+- [Firebase server THẬT](dungonrush-firebase-prod-deploy.md) — đã deploy dungeon-duck-quack-slash (us-central1, Node 22), lần cuối 2026-11-04 (53 hàm + RTDB); emulator giữ demo-dungeonrush; ServerId/EMULATOR_PROJECT_ID ở FirebaseSettings
 - [Tool test boss Boss Rush](dungonrush-boss-rush-tester.md) — BossRushTester nút "Boss" ở MainGame: chọn boss/tier/đồng đội bot, đánh offline không cần server
 - [Reskin Boss Rush](dungonrush-reskin-boss-rush.md) — 2026-10-27 5 popup + HUD trận (UIMainGame2) theo mockup, kit 1_UIKit/BossRush, icon nắm đấm ChatGPT; đã commit 45f3816, chưa test Play
 - [Reskin Clan Search](dungonrush-reskin-clan-search.md) — 2026-10-27 popup Clan Search + Enter Clan Name theo mockup, kit 1_UIKit/ClanSearch (nút −/+ art, ô nhập tan, tick xanh ChatGPT); đã commit 90d7c08
@@ -102,8 +102,8 @@
 - [MainMap bám ô](dungonrush-map-cell-snap.md) — lưới nền căn theo PointStart (MapController.AlignGridBackground), tường = vòng ô dày 1 ô, chướng ngại 1x1; sprite PPU 256 scale 1 (2026-10-28)
 - [Reskin Events](dungonrush-reskin-events.md) — 2026-10-28 EventPage theo mockup, 2 thẻ PvP/Boss Rush (Co-op giữ tắt — user chốt), kit 1_UIKit/Events; chưa test Play, đã commit
 - [Reskin PvP](dungonrush-reskin-pvp.md) — 2026-10-28 sảnh (danh sách world trong sảnh, bỏ Season/Promotion — bám gốc), chọn đối thủ (ô vé + avatar), Victory/Defeat, top bar "PvP"; kit 1_UIKit/PvP + IsFist; CHƯA test Play, đã commit eb26bba
-- [Giờ server cho reset Dungeon/Events](dungonrush-server-time.md) — getservertime + ServerTime.cs, sync ở Login, offline dùng giờ máy; 2026-10-29 chưa deploy prod
-- [Chat Thế giới + Clan](dungonrush-chat-system.md) — RTDB chat/ww qua REST SSE, 5 endpoint gốc, lọc tục/chặn/báo cáo/cấm; test emulator+Play đạt 2026-11-02, đã commit, CHƯA deploy; GD ở GDD/CHAT_DESIGN.md
+- [Giờ server cho reset Dungeon/Events](dungonrush-server-time.md) — getservertime + ServerTime.cs, sync ở Login, offline dùng giờ máy; đã deploy 2026-11-04
+- [Chat Thế giới + Clan](dungonrush-chat-system.md) — RTDB chat/ww qua REST SSE, 5 endpoint gốc, lọc tục/chặn/báo cáo/cấm; test emulator+Play đạt 2026-11-02, đã commit, function + RTDB đã deploy, chưa thử gửi tin trên prod; GD ở GDD/CHAT_DESIGN.md
 - [Reskin boss Black Dragon → cáo](dungonrush-reskin-boss-black-dragon.md) — 2026-11-02 rig Main ở chân + anim BossNew/BlackDragon (idle/move nhún, attack cầu phình), FireBreath cầu bay vòng; test Play OK, đã commit
 - [Reskin boss Crimson Lich → heo chùy](dungonrush-reskin-boss-crimson-lich.md) — 2026-11-03 khuôn boss cầm vũ khí: WeaponRoot + weaponMirror lật gương, clip gõ chùy đạn bay ra, skill giữ idle + FX; test Play OK, đã commit
 - [Reskin Red Dragon → cáo cầu lửa](dungonrush-reskin-boss-dragon.md) — 2026-11-03 khuôn BlackDragon, test Play ô thật OK, đã commit; BossRushDragon.prefab thừa đã xoá
@@ -112,4 +112,4 @@
 - [Reskin 6 boss cuối (đủ 10 boss)](dungonrush-reskin-boss-rest.md) — 2026-11-03 Elder/Green Dragon/2 Ogre/2 Hag, bảng số rig + công thức đo, đã dọn art cũ; test Play ô thật OK, đã commit
 - [Reskin DragonEnemy → cáo cầu lửa](dungonrush-reskin-dragon-enemy.md) — 2026-11-03 rồng dungeon dùng chung art Red Dragon, chỉ Idle nhún + đánh thường, thêm lật mặt ở OriginalAnimatorController; test Play OK, đã commit
 - [Commit thẳng main](git-commit-direct-main.md) — không tách nhánh rồi merge; vẫn chỉ commit khi user bảo, không tự push
-- [PvP mùa + nhóm league](dungonrush-pvp-update-requests.md) — đã code + test Play emulator 2026-11-04, đã commit, CHƯA deploy; cúp +1..+5 theo cúp đối thủ, thua không mất, 5 vé không ads, thưởng mùa ×1.2; GD ở GDD/PVP_DESIGN.md
+- [PvP mùa + nhóm league](dungonrush-pvp-update-requests.md) — đã code + test Play emulator 2026-11-04, đã commit, đã deploy; cúp +1..+5 theo cúp đối thủ, thua không mất, 5 vé không ads, thưởng mùa ×1.2; GD ở GDD/PVP_DESIGN.md

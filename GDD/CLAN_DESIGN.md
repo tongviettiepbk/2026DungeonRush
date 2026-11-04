@@ -374,27 +374,31 @@ Mục tiêu: clan lẻ khi ghép cặp vẫn có war để chơi.
 
 ## 15. Tình trạng code
 
-### Đã làm (2026-10-10)
+### Đã làm (2026-11-04)
 
 | Phần | Nội dung | Vị trí |
 |---|---|---|
 | Server Clan | 13 hàm theo tên gốc | `server/functions/src/clan.ts` |
 | Server Clan War | 10 hàm + tác vụ ghép cặp hàng tuần + 2 hàm admin để thử | `server/functions/src/clanWar.ts` |
-| Config | Mọi con số **[ĐỀ XUẤT]**; ghi đè bằng Firestore `config/clanWar` | `server/functions/src/clanWarConfig.ts` |
-| Test server | Đạt trên emulator | `server/functions/scripts/clanEmulatorTest.mjs` |
+| Config | Mọi con số; ghi đè bằng Firestore `config/clanWar` | `server/functions/src/clanWarConfig.ts` |
+| Test server | Đạt trên emulator | `server/functions/scripts/onlineModesSeedTest.mjs` |
 | Client | Tab Clan, 13 popup, tự ghi điểm đóng góp | `Scripts/Clan/`, `Scripts/UI/Clan/`, `Scripts/UI/ClanWar/` |
-| Giao diện | Dựng từ prefab game gốc | Menu `Tools/DungeonRush/Build Clan UI Prefabs` |
+| Giao diện | Reskin theo mockup, không chạy lại `Build Clan UI Prefabs` | `Art/1_UIKit/Clan/` |
+| Avatar | Thành viên, đơn xin vào, MVP, đối thủ, bảng đóng góp | `AvatarConfig` |
+| Chat Clan | Xem thiết kế riêng | `GDD/CHAT_DESIGN.md` |
+| Server thật | Đã deploy 53 hàm + Realtime Database | Project `dungeon-duck-quack-slash` |
 
 - Test server đã phủ: tạo, tìm, vào, xin vào, duyệt, thăng chức, kick, rời, giải tán clan; ghép war, gửi điểm,
-  bảng xếp hạng, nhận mốc cá nhân.
+  bảng xếp hạng, nhận mốc cá nhân, PvP Day 6, nhận thưởng Day 7, ghép tuần kế.
+- Test Play đã xem: tab Members, tab Battle, popup War Rewards, popup thành viên.
+- Test trên server thật đã đạt: tạo, tìm, giải tán clan; cấu hình Clan War; Chat Clan.
 - Điểm đóng góp tự ghi khi: nhặt đồ, triệu hồi pet, triệu hồi áo choàng, dùng key dungeon, lên level, đào mỏ.
 - Trận PvP Day 6 dùng lại màn PvP Arena.
 
 ### Chưa làm
 
-- Chạy thử trong Unity (Play mode): tab Clan, các popup, tab Battle.
-- Test nhánh Day 6 PvP và nhận thưởng Day 7 (phụ thuộc ngày thật trong tuần).
-- Soát bố cục và hình ảnh từng màn so với game gốc.
-- Ảnh đại diện người chơi.
-- Chat clan (game gốc có).
-- Triển khai lên project Firebase thật.
+- Test trên server thật: nhận mốc cá nhân, PvP Day 6, thưởng Day 7 (cần chờ ghép cặp Thứ Ba).
+- Test Play: các màn của PvP Day 6 và thưởng Day 7, thao tác bấm nhận thưởng.
+- Test trên điện thoại.
+- Soát các popup còn lại so với mockup (mới xem bằng ảnh chụp lúc reskin).
+- Tạo `config/admins` trên server thật để dùng được 2 hàm admin.
