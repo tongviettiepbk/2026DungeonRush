@@ -89,32 +89,45 @@ export const DEFAULT_CONFIG: ClanWarConfigDTO = {
     "1": ODD_DAY_SOURCES, "2": EVEN_DAY_SOURCES, "3": ODD_DAY_SOURCES, "4": EVEN_DAY_SOURCES, "5": ODD_DAY_SOURCES,
   },
   awards: {
+    // [CHẮC] common..artifact chụp từ game gốc 2026-11-04; ancient, immortal, divine [SUY] giữ bằng mức cuối đã biết (chưa có ảnh).
     lootEquipment: {
-      common: 1, uncommon: 2, rare: 5, epic: 10, legendary: 25, mythic: 50, artifact: 100, ancient: 200, immortal: 400, divine: 800,
+      common: 1, uncommon: 1, rare: 1, epic: 2, legendary: 2, mythic: 2, artifact: 2, ancient: 2, immortal: 2, divine: 2,
     },
     summonCompanion: { common: 10, uncommon: 20, rare: 50, epic: 100, legendary: 250, mythic: 500 },
     levelUpMultiplier: 100,                                  // [CHẮC] "New Level x 100 pts"
-    mining: { stone: 1, coal: 2, iron: 4, ruby: 8, emerald: 15, gold: 30, diamond: 60 },
+    mining: { stone: 10, coal: 10, iron: 20, ruby: 20, emerald: 20, gold: 30, diamond: 30 },   // [CHẮC] chụp từ game gốc 2026-11-04
     dungeonKey: 500,                                         // [CHẮC] fallback client
-    summonCape: { common: 10, uncommon: 20, rare: 50, epic: 100, legendary: 250, mythic: 500 },
+    summonCape: { common: 100, uncommon: 100, rare: 200, epic: 200, legendary: 300, mythic: 300 },   // [CHẮC] chụp từ game gốc 2026-11-04
     pvpWin: 1000,
   },
+  // [CHẮC] chụp từ game gốc (popup War Rewards, 2026-11-04): mốc cá nhân và thưởng clan Tier S.
   individualMilestones: [
-    ms(1000, 20, 20, 0, 50, 0),
-    ms(3000, 40, 40, 0, 100, 5),
-    ms(6000, 60, 60, 0, 200, 10),
-    ms(10000, 80, 80, 0, 300, 15),
-    ms(15000, 100, 100, 0, 500, 20),
-    ms(25000, 150, 150, 0, 800, 30),
-    ms(40000, 200, 200, 0, 1200, 40),
-    ms(60000, 300, 300, 0, 2000, 60),
+    ms(1000, 50, 250, 15, 0, 0),
+    ms(2500, 0, 0, 0, 500, 50),
+    ms(5000, 50, 250, 15, 0, 0),
+    ms(7500, 0, 0, 0, 500, 50),
+    ms(10000, 50, 250, 15, 0, 0),
+    ms(12500, 0, 0, 0, 500, 50),
+    ms(15000, 50, 250, 15, 0, 0),
+    ms(20000, 0, 0, 0, 500, 50),
+    ms(25000, 50, 250, 15, 0, 0),
+    ms(30000, 0, 0, 0, 500, 50),
+    ms(40000, 50, 250, 15, 0, 0),
+    ms(50000, 0, 0, 0, 500, 50),
+    ms(65000, 50, 250, 15, 0, 0),
+    ms(80000, 0, 0, 0, 500, 50),
+    ms(100000, 50, 250, 15, 0, 0),
+    ms(125000, 0, 0, 0, 500, 50),
+    ms(160000, 50, 250, 15, 0, 0),
+    ms(200000, 0, 0, 0, 500, 50),
   ],
+  // Tier A-D [SUY]: chưa có ảnh gốc, giữ tỉ lệ Bone = 2 x Lootbox, Cloak = Lootbox / 5, thua = nửa như Tier S.
   clanRewards: {
-    S: { win: rw({ lootBox: 600, bones: 600, cloakCurrency: 150, vial: 150 }), lose: rw({ lootBox: 300, bones: 300, cloakCurrency: 75, vial: 75 }) },
-    A: { win: rw({ lootBox: 450, bones: 450, cloakCurrency: 110, vial: 110 }), lose: rw({ lootBox: 225, bones: 225, cloakCurrency: 55, vial: 55 }) },
-    B: { win: rw({ lootBox: 320, bones: 320, cloakCurrency: 80, vial: 80 }), lose: rw({ lootBox: 160, bones: 160, cloakCurrency: 40, vial: 40 }) },
-    C: { win: rw({ lootBox: 220, bones: 220, cloakCurrency: 55, vial: 55 }), lose: rw({ lootBox: 110, bones: 110, cloakCurrency: 25, vial: 25 }) },
-    D: { win: rw({ lootBox: 150, bones: 150, cloakCurrency: 35, vial: 35 }), lose: rw({ lootBox: 75, bones: 75, cloakCurrency: 15, vial: 15 }) },
+    S: { win: rw({ lootBox: 2500, bones: 5000, cloakCurrency: 500 }), lose: rw({ lootBox: 1250, bones: 2500, cloakCurrency: 250 }) },
+    A: { win: rw({ lootBox: 1900, bones: 3800, cloakCurrency: 380 }), lose: rw({ lootBox: 950, bones: 1900, cloakCurrency: 190 }) },
+    B: { win: rw({ lootBox: 1350, bones: 2700, cloakCurrency: 270 }), lose: rw({ lootBox: 675, bones: 1350, cloakCurrency: 135 }) },
+    C: { win: rw({ lootBox: 900, bones: 1800, cloakCurrency: 180 }), lose: rw({ lootBox: 450, bones: 900, cloakCurrency: 90 }) },
+    D: { win: rw({ lootBox: 600, bones: 1200, cloakCurrency: 120 }), lose: rw({ lootBox: 300, bones: 600, cloakCurrency: 60 }) },
   },
   warScoreByDay: { "1": 1, "2": 1, "3": 1, "4": 1, "5": 1, "6": 2 },
   pvp: { startTickets: 5, winPoints: 1000, maxRoundResets: 2, minMembersForReset: 30 },   // minMembersForReset 30 [CHẮC]

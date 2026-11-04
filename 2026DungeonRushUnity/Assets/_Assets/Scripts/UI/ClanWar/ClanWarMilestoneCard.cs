@@ -37,9 +37,10 @@ public class ClanWarMilestoneCard : MonoBehaviour
     public void Set(ClanWarMilestoneRowDTO row, State state, Action onClaim)
     {
         this.onClaim = onClaim;
-        if (ThresholdText != null) ThresholdText.text = ClanWarController.FormatNumber(row.threshold);
+        if (ThresholdText != null) ThresholdText.text = ClanWarController.FormatNumber(row.threshold) + " pts";
         if (RewardsView != null) RewardsView.SetRewards(row.ToRewards());
-        if (ClaimButton != null) ClaimButton.gameObject.SetActive(state == State.ReachedClaimable);
+        // ClaimButton nằm ngay trên thẻ (bấm cả thẻ để nhận) nên chỉ khoá bấm, không tắt GameObject.
+        if (ClaimButton != null) ClaimButton.interactable = state == State.ReachedClaimable;
         if (BackgroundImage != null)
         {
             if (ReachedSprite != null && UnreachedSprite != null)

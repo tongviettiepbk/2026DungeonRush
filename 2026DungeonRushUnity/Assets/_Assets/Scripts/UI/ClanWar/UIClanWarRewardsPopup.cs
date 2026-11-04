@@ -87,7 +87,7 @@ public class UIClanWarRewardsPopup : BaseUI
         if (WinRewardsView != null) WinRewardsView.SetRewards(ClanWarController.ClanReward(config, tier, "win"));
         if (LoseRewardsView != null) LoseRewardsView.SetRewards(ClanWarController.ClanReward(config, tier, "lose"));
         int score = war.milestone != null ? war.milestone.weeklyContribution : war.myWeeklyPoints;
-        ClanUIUtil.SetText(MyScoreText, "Your Score: " + ClanWarController.FormatNumber(score));
+        ClanUIUtil.SetText(MyScoreText, "Your Score: " + ClanWarController.FormatNumber(score) + " pts");
         DrawTrack(war, config);
         DrawCollect(war, config);
     }
@@ -143,10 +143,11 @@ public class UIClanWarRewardsPopup : BaseUI
     private void SetProgress(float t)
     {
         if (TrackProgressBackgroundRect == null || TrackProgressFillRect == null) return;
-        bool vertical = TrackProgressBackgroundRect.rect.height > TrackProgressBackgroundRect.rect.width;
-        RectTransform.Axis axis = vertical ? RectTransform.Axis.Vertical : RectTransform.Axis.Horizontal;
-        float size = vertical ? TrackProgressBackgroundRect.rect.height : TrackProgressBackgroundRect.rect.width;
-        TrackProgressFillRect.SetSizeWithCurrentAnchors(axis, size * Mathf.Clamp01(t));
+        // Thanh dọc: neo theo tỉ lệ từ đỉnh, không phụ thuộc lúc Content đã dựng xong layout chưa.
+        TrackProgressFillRect.anchorMin = new Vector2(0.5f, 1f - Mathf.Clamp01(t));
+        TrackProgressFillRect.anchorMax = new Vector2(0.5f, 1f);
+        TrackProgressFillRect.anchoredPosition = Vector2.zero;
+        TrackProgressFillRect.sizeDelta = new Vector2(TrackProgressFillRect.sizeDelta.x, 0f);
     }
 
     private void DrawCollect(ClanWarWireDTO war, ClanWarConfigDTO config)

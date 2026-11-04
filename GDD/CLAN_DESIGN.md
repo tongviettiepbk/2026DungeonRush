@@ -1,6 +1,6 @@
 # Clan + Clan War — Bản thiết kế (GD)
 
-Cập nhật: 2026-10-10. Server và client đã code theo bản này (mục 15 ghi phần còn lại). Các mục **[ĐỀ XUẤT]** đang
+Cập nhật: 2026-11-04. Server và client đã code theo bản này (mục 15 ghi phần còn lại). Các mục **[ĐỀ XUẤT]** đang
 chạy đúng như đề xuất và nằm trong config, đổi được khi bạn quyết khác.
 Số liệu reverse từ game gốc nằm ở `DecodedData/CLAN_MODEL.md`; file này là thiết kế của project mình.
 
@@ -153,20 +153,27 @@ Chạy tự động Thứ Ba 00:05 UTC.
 - Hoạt động không thuộc ngày hôm đó thì không có điểm. **[GỐC]**
 - Điểm tính cho cá nhân, đồng thời cộng vào tổng điểm ngày của clan. **[GỐC]**
 
-### 8.1 Điểm theo độ hiếm **[ĐỀ XUẤT]**
+### 8.1 Điểm theo độ hiếm
+
+Số **[GỐC]** chụp từ bảng Day Actions của game gốc (2026-11-04).
 
 | Độ hiếm | Nhặt 1 món đồ | Triệu hồi 1 pet | Triệu hồi 1 áo choàng |
 |---|---|---|---|
-| Common | 1 | 10 | 10 |
-| Uncommon | 2 | 20 | 20 |
-| Rare | 5 | 50 | 50 |
-| Epic | 10 | 100 | 100 |
-| Legendary | 25 | 250 | 250 |
-| Mythic | 50 | 500 | 500 |
-| Artifact | 100 | — | — |
-| Ancient | 200 | — | — |
-| Immortal | 400 | — | — |
-| Divine | 800 | — | — |
+| Common | 1 | 10 | 100 |
+| Uncommon | 1 | 20 | 100 |
+| Rare | 1 | 50 | 200 |
+| Epic | 2 | 100 | 200 |
+| Legendary | 2 | 250 | 300 |
+| Mythic | 2 | 500 | 300 |
+| Artifact | 2 | — | — |
+| Ancient | 2 | — | — |
+| Immortal | 2 | — | — |
+| Divine | 2 | — | — |
+
+- Nhặt đồ Common đến Artifact: **[GỐC]**
+- Nhặt đồ Ancient, Immortal, Divine: **[ĐỀ XUẤT]**, chưa có ảnh, giữ bằng mức Artifact.
+- Triệu hồi áo choàng: **[GỐC]**
+- Triệu hồi pet: **[ĐỀ XUẤT]**, chưa có ảnh.
 
 ### 8.2 Điểm hoạt động khác
 
@@ -175,19 +182,17 @@ Chạy tự động Thứ Ba 00:05 UTC.
 | Lên level | level mới × 100 | **[GỐC]** |
 | Dùng 1 key dungeon | 500 | **[GỐC]** |
 
-### 8.3 Điểm đào mỏ **[ĐỀ XUẤT]**
+### 8.3 Điểm đào mỏ **[GỐC]**
 
 | Quặng | Điểm |
 |---|---|
-| Stone | 1 |
-| Coal | 2 |
-| Iron | 4 |
-| Ruby | 8 |
-| Emerald | 15 |
+| Stone | 10 |
+| Coal | 10 |
+| Iron | 20 |
+| Ruby | 20 |
+| Emerald | 20 |
 | Gold | 30 |
-| Diamond | 60 |
-
-Project chưa có tính năng đào mỏ, nên Day 2 và Day 4 hiện chỉ kiếm điểm được bằng key dungeon và áo choàng.
+| Diamond | 30 |
 
 ### 8.4 Quy tắc ghi điểm
 
@@ -236,36 +241,51 @@ Bảng trên: **[ĐỀ XUẤT]**
 
 ## 11. Thưởng
 
-### 11.1 Mốc cá nhân — theo điểm đóng góp cả tuần **[ĐỀ XUẤT]**
+### 11.1 Mốc cá nhân — theo điểm đóng góp cả tuần **[GỐC]**
 
-| Mốc điểm | Lootbox | Bone | Exp | Cloak |
-|---|---|---|---|---|
-| 1.000 | 20 | 20 | 50 | — |
-| 3.000 | 40 | 40 | 100 | 5 |
-| 6.000 | 60 | 60 | 200 | 10 |
-| 10.000 | 80 | 80 | 300 | 15 |
-| 15.000 | 100 | 100 | 500 | 20 |
-| 25.000 | 150 | 150 | 800 | 30 |
-| 40.000 | 200 | 200 | 1.200 | 40 |
-| 60.000 | 300 | 300 | 2.000 | 60 |
+Chụp từ popup War Rewards của game gốc (2026-11-04).
 
-- Đạt mốc là bấm nhận được ngay. **[GỐC]**
+| Mốc điểm | Lootbox | Bone | Pickaxe | Exp | Cloak |
+|---|---|---|---|---|---|
+| 1.000 | 50 | 250 | 15 | — | — |
+| 2.500 | — | — | — | 500 | 50 |
+| 5.000 | 50 | 250 | 15 | — | — |
+| 7.500 | — | — | — | 500 | 50 |
+| 10.000 | 50 | 250 | 15 | — | — |
+| 12.500 | — | — | — | 500 | 50 |
+| 15.000 | 50 | 250 | 15 | — | — |
+| 20.000 | — | — | — | 500 | 50 |
+| 25.000 | 50 | 250 | 15 | — | — |
+| 30.000 | — | — | — | 500 | 50 |
+| 40.000 | 50 | 250 | 15 | — | — |
+| 50.000 | — | — | — | 500 | 50 |
+| 65.000 | 50 | 250 | 15 | — | — |
+| 80.000 | — | — | — | 500 | 50 |
+| 100.000 | 50 | 250 | 15 | — | — |
+| 125.000 | — | — | — | 500 | 50 |
+| 160.000 | 50 | 250 | 15 | — | — |
+| 200.000 | — | — | — | 500 | 50 |
+
+- Đạt mốc là bấm cả thẻ để nhận ngay. **[GỐC]**
 - Sang Day 7 có nút gộp nhận hết các mốc còn lại. **[GỐC]**
 
-### 11.2 Thưởng clan — theo tier và thắng/thua **[ĐỀ XUẤT]**
+### 11.2 Thưởng clan — theo tier và thắng/thua
 
-| Tier | Kết quả | Lootbox | Bone | Cloak | Vial |
-|---|---|---|---|---|---|
-| S | Thắng | 600 | 600 | 150 | 150 |
-| S | Thua | 300 | 300 | 75 | 75 |
-| A | Thắng | 450 | 450 | 110 | 110 |
-| A | Thua | 225 | 225 | 55 | 55 |
-| B | Thắng | 320 | 320 | 80 | 80 |
-| B | Thua | 160 | 160 | 40 | 40 |
-| C | Thắng | 220 | 220 | 55 | 55 |
-| C | Thua | 110 | 110 | 25 | 25 |
-| D | Thắng | 150 | 150 | 35 | 35 |
-| D | Thua | 75 | 75 | 15 | 15 |
+- Tier S: **[GỐC]**, chụp từ game gốc.
+- Tier A, B, C, D: **[ĐỀ XUẤT]**, chưa có ảnh gốc, giữ tỉ lệ như Tier S.
+
+| Tier | Kết quả | Lootbox | Bone | Cloak |
+|---|---|---|---|---|
+| S | Thắng | 2.500 | 5.000 | 500 |
+| S | Thua | 1.250 | 2.500 | 250 |
+| A | Thắng | 1.900 | 3.800 | 380 |
+| A | Thua | 950 | 1.900 | 190 |
+| B | Thắng | 1.350 | 2.700 | 270 |
+| B | Thua | 675 | 1.350 | 135 |
+| C | Thắng | 900 | 1.800 | 180 |
+| C | Thua | 450 | 900 | 90 |
+| D | Thắng | 600 | 1.200 | 120 |
+| D | Thua | 300 | 600 | 60 |
 
 - Nhận trong Day 7. **[GỐC]**
 - Tính theo tier của clan **lúc war bắt đầu**.
@@ -284,8 +304,7 @@ Bảng trên: **[ĐỀ XUẤT]**
 | Bone | `ItemType.BONE` |
 | Exp | Exp người chơi |
 | Cloak | `ItemType.CLOAK` |
-| Vial | `ItemType.VIAL` |
-| Pickaxe, Golden Pickaxe, Drill | Chưa có (chờ tính năng đào mỏ), các bảng trên để 0 |
+| Pickaxe | `ItemType.PICKAXE` |
 
 ## 12. Bảng xếp hạng và Championship
 
@@ -333,7 +352,7 @@ Mục tiêu: clan lẻ khi ghép cặp vẫn có war để chơi.
 
 ### Chờ bạn quyết định
 
-1. Toàn bộ số điểm và thưởng ở mục 8, 9, 10, 11: đều là số tự đặt, chưa cân bằng với kinh tế game.
+1. Số điểm còn lại ở mục 8 (pet, đồ Ancient trở lên), mục 9, 10 và thưởng clan Tier A–D ở mục 11.2: đều là số tự đặt, chưa cân bằng với kinh tế game.
 2. Chống gian lận điểm: server đang tin số hoạt động client gửi lên, chưa có trần điểm mỗi ngày.
 3. Phí tạo clan do client tự trừ gem, server không kiểm tra.
 4. Người bị kick có phải chờ 24 giờ không (mục 4.3).
@@ -342,12 +361,11 @@ Mục tiêu: clan lẻ khi ghép cặp vẫn có war để chơi.
 7. Đối thủ PvP không có đồ khi chưa từng mở PvP Arena (mục 10.1). Đề xuất: gửi bộ đồ lên server ngay khi vào clan.
 8. Thưởng chưa nhận có giữ sang tuần sau không (mục 11.3).
 9. Có cần nút chuyển Leader thủ công không (mục 3).
-10. Day 2 và Day 4 khi chưa có đào mỏ: giữ nguyên hay tạm đổi nhóm hoạt động (mục 8.3).
 
 ### Chờ số liệu từ game gốc
 
-1. Ảnh bảng "Day N Actions" ở một ngày lẻ và một ngày chẵn → điểm thật của từng hoạt động.
-2. Ảnh popup "War Rewards" → các mốc cá nhân và thưởng Win/Lose theo tier.
+1. Ảnh cuối bảng "Day 1 Actions" (nhặt đồ Ancient trở lên, triệu hồi pet) → điểm thật còn thiếu.
+2. Ảnh popup "War Rewards" của clan Tier A, B, C, D → thưởng Win/Lose (đã có Tier S và các mốc cá nhân).
 3. Ảnh popup "War Results" sau một tuần → War Score từng ngày.
 4. Ảnh tab Battle vào Chủ Nhật → số vé PvP, điểm mỗi trận thắng, ngưỡng reset vòng.
 5. Tier của một clan qua vài tuần liên tiếp → luật lên/xuống tier.
@@ -369,7 +387,7 @@ Mục tiêu: clan lẻ khi ghép cặp vẫn có war để chơi.
 
 - Test server đã phủ: tạo, tìm, vào, xin vào, duyệt, thăng chức, kick, rời, giải tán clan; ghép war, gửi điểm,
   bảng xếp hạng, nhận mốc cá nhân.
-- Điểm đóng góp tự ghi khi: nhặt đồ, triệu hồi pet, triệu hồi áo choàng, dùng key dungeon, lên level.
+- Điểm đóng góp tự ghi khi: nhặt đồ, triệu hồi pet, triệu hồi áo choàng, dùng key dungeon, lên level, đào mỏ.
 - Trận PvP Day 6 dùng lại màn PvP Arena.
 
 ### Chưa làm
@@ -378,6 +396,5 @@ Mục tiêu: clan lẻ khi ghép cặp vẫn có war để chơi.
 - Test nhánh Day 6 PvP và nhận thưởng Day 7 (phụ thuộc ngày thật trong tuần).
 - Soát bố cục và hình ảnh từng màn so với game gốc.
 - Ảnh đại diện người chơi.
-- Điểm đào mỏ (chờ tính năng đào mỏ).
 - Chat clan (game gốc có).
 - Triển khai lên project Firebase thật.

@@ -149,7 +149,7 @@ if (war.state === "day") {
     assert.ok(cm.rewards.lootBox > 0);
     assert.equal((await call(leader, "claimclanwarmilestone", { warId: war.warId, threshold: 1000 })).code, "ERR_ALREADY_CLAIMED");
   }
-  assert.equal((await call(leader, "claimclanwarmilestone", { warId: war.warId, threshold: 60000 })).code, "ERR_MILESTONE_NOT_REACHED");
+  assert.equal((await call(leader, "claimclanwarmilestone", { warId: war.warId, threshold: 65000 })).code, "ERR_MILESTONE_NOT_REACHED");
   assert.equal((await call(leader, "claimclanwarclanreward", { warId: war.warId })).code, "ERR_WAR_STATE");
 } else if (war.state === "day6") {
   assert.ok(war.pvp && war.pvp.targets.length > 0);

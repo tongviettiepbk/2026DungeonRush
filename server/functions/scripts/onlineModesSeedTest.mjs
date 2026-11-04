@@ -715,7 +715,7 @@ try {
   await test("D3", "Ngày 1 đóng góp: loot/summon/lên cấp được điểm đúng bảng; nguồn sai ngày, giờ hôm qua, nguồn lạ, gửi trùng đều bị loại", async () => {
     const ts = Math.floor(Date.now() / 1000);
     const actions = [
-      { actionId: "a1", source: "lootEquipment", rarity: "epic", count: 2, eventTimestamp: ts },          // 10 × 2
+      { actionId: "a1", source: "lootEquipment", rarity: "epic", count: 2, eventTimestamp: ts },          // 2 × 2
       { actionId: "a2", source: "levelUp", newLevel: 12, count: 1, eventTimestamp: ts },                  // 12 × 100
       { actionId: "a3", source: "summonCompanion", rarity: "legendary", count: 1, eventTimestamp: ts },   // 250
       { actionId: "a4", source: "dungeonKey", count: 1, eventTimestamp: ts },                             // nguồn ngày chẵn
@@ -725,12 +725,12 @@ try {
     const before = (await state(ME)).war.liveBar.myDaily;
     assert.equal((await call(ME, "recordclanwarcontributions", { warId: "wrong", batchId: "b0", actions })).code, "ERR_NO_WAR");
     const r = await call(ME, "recordclanwarcontributions", { warId, batchId: "b1", actions });
-    assert.deepEqual([r.success, r.accepted, r.dropped, r.points], [true, 3, 3, 1470]);
+    assert.deepEqual([r.success, r.accepted, r.dropped, r.points], [true, 3, 3, 1454]);
     assert.equal((await call(ME, "recordclanwarcontributions", { warId, batchId: "b1", actions })).duplicate, true);
     const again = await call(ME, "recordclanwarcontributions", { warId, batchId: "b2", actions: actions.slice(0, 1) });
     assert.deepEqual([again.accepted, again.dropped, again.points], [0, 1, 0]);
     const w = (await state(ME)).war;
-    assert.deepEqual([w.myDailyPoints, w.myWeeklyPoints, w.liveBar.myDaily], [1470, 1470, before + 1470]);
+    assert.deepEqual([w.myDailyPoints, w.myWeeklyPoints, w.liveBar.myDaily], [1454, 1454, before + 1454]);
   });
 
   await test("D4", "Mốc cá nhân: đạt 1000 nhận được 1 lần; chưa đạt / mốc lạ bị từ chối; thưởng clan, gói gộp, PvP chưa mở giữa tuần", async () => {
@@ -738,9 +738,9 @@ try {
     const row = config.individualMilestones.find((x) => x.threshold === 1000);
     const r = await claim(1000);
     assert.equal(r.success, true);
-    assert.deepEqual([r.rewards.lootBox, r.rewards.bones, r.rewards.experience, r.rewards.cloakCurrency], [row.lootBox, row.bones, row.experience, row.cloakCurrency]);
+    assert.deepEqual([r.rewards.lootBox, r.rewards.bones, r.rewards.pickaxe, r.rewards.experience, r.rewards.cloakCurrency], [row.lootBox, row.bones, row.pickaxe, row.experience, row.cloakCurrency]);
     assert.equal((await claim(1000)).code, "ERR_ALREADY_CLAIMED");
-    assert.equal((await claim(3000)).code, "ERR_MILESTONE_NOT_REACHED");
+    assert.equal((await claim(2500)).code, "ERR_MILESTONE_NOT_REACHED");
     assert.equal((await claim(1234)).code, "ERR_VALIDATION");
     assert.equal((await call(ME, "claimclanwarclanreward", { warId })).code, "ERR_WAR_STATE");
     assert.equal((await call(ME, "claimclanwarpersonalbundle", { warId })).code, "ERR_WAR_STATE");
@@ -768,12 +768,12 @@ try {
       warId, batchId: "b3", actions: [
         { actionId: "c1", source: "dungeonKey", count: 2, eventTimestamp: ts },                    // 500 × 2
         { actionId: "c2", source: "mining", resource: "gold", count: 3, eventTimestamp: ts },      // 30 × 3
-        { actionId: "c3", source: "summonCape", rarity: "rare", count: 1, eventTimestamp: ts },    // 50
+        { actionId: "c3", source: "summonCape", rarity: "rare", count: 1, eventTimestamp: ts },    // 200
         { actionId: "c4", source: "lootEquipment", rarity: "epic", count: 1, eventTimestamp: ts }, // nguồn ngày lẻ
       ],
     });
-    assert.deepEqual([r.accepted, r.dropped, r.points], [3, 1, 1140]);
-    assert.equal((await state(ME)).war.myWeeklyPoints, 2610);
+    assert.deepEqual([r.accepted, r.dropped, r.points], [3, 1, 1290]);
+    assert.equal((await state(ME)).war.myWeeklyPoints, 2744);
   });
 
   await test("D6", "Chạy lại `seed war` giữa tuần: điểm người thật đã đóng góp không mất, tổng clan = tổng thành viên", async () => {
@@ -781,7 +781,7 @@ try {
     const war = await read("clanWars", warId);
     const list = await membersOf(warId);
     const me = list.find((m) => m.uid === ME);
-    assert.deepEqual([me.daily["1"], me.daily["2"], me.weekly], [1470, 1140, 2610]);
+    assert.deepEqual([me.daily["1"], me.daily["2"], me.weekly], [1454, 1290, 2744]);
     for (const day of ["1", "2"]) {
       assert.equal(war.sides[MY_CLAN].daily[day], dayTotal(list, MY_CLAN, day), "ngày " + day);
       assert.equal(war.sides[ENEMY_CLAN].daily[day], dayTotal(list, ENEMY_CLAN, day), "địch ngày " + day);
@@ -826,7 +826,7 @@ try {
 
     w = (await state(ME)).war;
     assert.deepEqual([w.myDailyPoints, w.myWeeklyPoints, w.liveBar.myDaily, w.pvp.myTickets, w.pvp.canAttack, w.pvp.defeatedCount],
-      [4000, 6610, dailyBefore + 4000, 0, false, seededDown.length + 4]);
+      [4000, 6744, dailyBefore + 4000, 0, false, seededDown.length + 4]);
   });
 
   await test("D8", "Chủ Nhật: hạ hết cả đội địch (2 clan đều ≥ 30 người) → sang vòng 2, mục tiêu hồi lại, cả clan được phát lại 5 vé", async () => {
@@ -879,7 +879,7 @@ try {
     const won = mine !== theirs ? mine > theirs : w.liveBar.myWeekly >= w.liveBar.enemyWeekly;
     assert.deepEqual([w.won, w.winnerClanId, w.claims.outcome], [won, won ? MY_CLAN : ENEMY_CLAN, won ? "win" : "lose"]);
     outcome = w.claims.outcome;
-    assert.equal(w.myWeeklyPoints, 7610);
+    assert.equal(w.myWeeklyPoints, 7744);
     assert.equal(w.cooldownEndsAt, Math.floor((fakeDay(8) - 3 * HOUR) / 1000));
 
     await state(ME);
@@ -898,13 +898,13 @@ try {
     assert.equal((await call(IDLE, "claimclanwarclanreward", { warId })).code, "ERR_NOT_ELIGIBLE");
     assert.equal((await call(IDLE, "claimclanwarpersonalbundle", { warId })).code, "ERR_NOTHING_TO_CLAIM");
 
-    const rows = config.individualMilestones.filter((x) => x.threshold <= 7610 && x.threshold !== 1000);
+    const rows = config.individualMilestones.filter((x) => x.threshold <= 7744 && x.threshold !== 1000);
     const b = await call(ME, "claimclanwarpersonalbundle", { warId });
     assert.deepEqual(b.thresholds, rows.map((x) => x.threshold));
-    assert.deepEqual([b.rewards.lootBox, b.rewards.bones, b.rewards.experience, b.rewards.cloakCurrency],
-      [sum(rows.map((x) => x.lootBox)), sum(rows.map((x) => x.bones)), sum(rows.map((x) => x.experience)), sum(rows.map((x) => x.cloakCurrency))]);
+    assert.deepEqual([b.rewards.lootBox, b.rewards.bones, b.rewards.pickaxe, b.rewards.experience, b.rewards.cloakCurrency],
+      [sum(rows.map((x) => x.lootBox)), sum(rows.map((x) => x.bones)), sum(rows.map((x) => x.pickaxe)), sum(rows.map((x) => x.experience)), sum(rows.map((x) => x.cloakCurrency))]);
     assert.equal((await call(ME, "claimclanwarpersonalbundle", { warId })).code, "ERR_ALREADY_CLAIMED");
-    assert.equal((await call(ME, "claimclanwarmilestone", { warId, threshold: 3000 })).code, "ERR_ALREADY_CLAIMED");
+    assert.equal((await call(ME, "claimclanwarmilestone", { warId, threshold: 2500 })).code, "ERR_ALREADY_CLAIMED");
     assert.equal((await call(ME, "startclanwarpvpbattle", { warId, targetUserId: "x" })).code, "ERR_WAR_STATE");
     const claims = (await state(ME)).war.claims;
     assert.deepEqual([claims.clanRewardClaimed, claims.personalBundleClaimed, claims.clanRewardEligible], [true, true, true]);
@@ -919,7 +919,7 @@ try {
       if (i > 0) assert.ok(weekly.entries[i - 1].points >= e.points);
     });
     assert.equal(sum(weekly.entries.map((e) => e.points)), w.liveBar.myWeekly);
-    assert.equal(weekly.entries.find((e) => e.userId === ME).points, 7610);
+    assert.equal(weekly.entries.find((e) => e.userId === ME).points, 7744);
     const day3 = await board(ME, { clanId: MY_CLAN, mode: "daily", day: 3 });
     assert.equal(sum(day3.entries.map((e) => e.points)), w.dailyResults[2].myDailyTotal);
     const enemy = await board(ME, { clanId: ENEMY_CLAN, mode: "weekly" });
