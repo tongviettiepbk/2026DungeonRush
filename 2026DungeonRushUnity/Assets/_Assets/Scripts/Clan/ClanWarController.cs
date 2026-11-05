@@ -423,7 +423,10 @@ public class ClanWarController : Singleton<ClanWarController>
             }
             onSuccess?.Invoke(res);
             // gao gốc: cộng thưởng vào túi đồ.
-            if (res.rewards != null) BossRushController.GrantRewards(res.rewards.ToRewardEntries());
+            if (res.rewards != null)
+            {
+                using (Analytics.Scope("clan_war")) BossRushController.GrantRewards(res.rewards.ToRewardEntries());
+            }
             GameData.Save(true);
             callback?.Invoke(true, null, res.rewards);
             if (State != null) WarStateUpdated?.Invoke(State);

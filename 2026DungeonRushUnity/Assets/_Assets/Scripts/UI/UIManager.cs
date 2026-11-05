@@ -75,7 +75,10 @@ public class UIManager : Singleton<UIManager>
         }
 
         if (activeUIs.Contains(obj) == false)
+        {
             activeUIs.Push(obj);
+            Analytics.OnScreenOpen(key);
+        }
 
         Canvas canvas = obj.GetComponent<Canvas>();
         if (canvas != null)
@@ -110,6 +113,8 @@ public class UIManager : Singleton<UIManager>
 
     public void HideUI(BaseUI uiObject)
     {
+        Analytics.OnScreenClose(uiObject.gameObject.name);
+
         if (!cachedUIs.ContainsKey(uiObject.gameObject.name) && uiObject.isPoolingWhenClose)
         {
             cachedUIs.Add(uiObject.gameObject.name, uiObject);

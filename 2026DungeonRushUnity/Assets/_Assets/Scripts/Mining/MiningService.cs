@@ -27,7 +27,8 @@ public static class MiningService
 
         User.seed = UnityEngine.Random.Range(1, int.MaxValue);
         User.lastPickaxeRegenTime = Now();
-        Items.Receive(ItemType.PICKAXE, Config.StartingPickaxeCount);
+        using (Analytics.Scope("mining_start")) Items.Receive(ItemType.PICKAXE, Config.StartingPickaxeCount);
+        Analytics.Milestone("first_mining");
         User.isDataChanged = true;
     }
 
@@ -51,6 +52,7 @@ public static class MiningService
 
     public static bool ConsumeTool(MiningToolType tool)
     {
+        using var scope = Analytics.Scope("mining");
         bool ok = Items.Consume(ToItemType(tool), 1);
         if (ok)
         {
@@ -230,7 +232,7 @@ public static class MiningService
             case MiningToolType.GoldenPickaxe: User.goldenPickaxeAdDailyCount++; break;
             default: User.pickaxeAdDailyCount++; break;
         }
-        Items.Receive(ToItemType(tool), GetAdRewardCount(tool));
+        using (Analytics.Scope("mining_ad")) Items.Receive(ToItemType(tool), GetAdRewardCount(tool));
         User.isDataChanged = true;
         GameData.Save();
     }
@@ -245,7 +247,7 @@ public static class MiningService
     // Đập vỡ khối quặng nhặt được (IsCollectible) → +quặng, ghi điểm Clan War (fzp gốc nghe OreMined).
     public static void AddOre(MineOreType ore, int amount)
     {
-        Items.Receive(WingService.ToItemType(ore), amount);
+        using (Analytics.Scope("mining")) Items.Receive(WingService.ToItemType(ore), amount);
         ClanWarController.Instance.RecordMining(GetClanOreKey(ore), amount);
     }
 

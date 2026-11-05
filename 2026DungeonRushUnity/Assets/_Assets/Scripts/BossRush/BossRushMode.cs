@@ -43,6 +43,7 @@ public class BossRushMode : BaseMode
     private BossRushBossUnit boss;
     private BossRushBossModel bossModel;
     private int tier;
+    public override int AnalyticsLevel => tier;
     private long ownDamage;      // wui gốc
     private long teamDamage;     // wuh gốc
     private Transform enemiesGroup;
@@ -456,7 +457,13 @@ public class BossRushMode : BaseMode
         {
             return false;
         }
-        return Leave(false);
+
+        bool isLeft = Leave(false);
+        if (isLeft)
+        {
+            LogMatchEnd("quit");
+        }
+        return isLeft;
     }
 
     private bool Leave(bool reopenLobby)

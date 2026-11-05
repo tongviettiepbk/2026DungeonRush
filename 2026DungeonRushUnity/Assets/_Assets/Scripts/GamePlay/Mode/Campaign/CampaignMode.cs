@@ -129,6 +129,8 @@ public class CampaignMode : BaseMode
             GameData.userData.campaign.PassStage(stageId);
             // OfferController.jiw gốc ("main_combat" thắng): đủ level 3 lần đầu → bật Weapon Offer, chào ở màn kế.
             isOfferJustUnlocked = WeaponOfferService.OnCampaignWon();
+            isOfferJustUnlocked |= StarterPackService.TryStart();
+            LocalPushController.Instance.TryRequestPermission(level);
             GameData.Save(true);
 
             StartCoroutine(RoutineLevelTransition());
@@ -171,7 +173,7 @@ public class CampaignMode : BaseMode
         if (isOfferJustUnlocked)
         {
             isOfferJustUnlocked = false;
-            UIOfferPopup.Show();
+            AutoOfferGate.TryShow();
         }
     }
 

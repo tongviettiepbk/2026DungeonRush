@@ -17,6 +17,7 @@ public class DungeonMode : BaseMode
     // Level dungeon của trận này (chốt lúc dựng màn, trước khi thắng làm level tăng).
     protected int dungeonLevel;
     public int DungeonLevel => dungeonLevel;
+    public override int AnalyticsLevel => dungeonLevel;
 
     public override void Init(GameController controller, ModeType typeModeInput = ModeType.DefaultLevel)
     {
@@ -82,6 +83,11 @@ public class DungeonMode : BaseMode
         if (GameController.Instance.isChangingMode)
         {
             return;
+        }
+
+        if (isEndMode == false)
+        {
+            LogMatchEnd("quit");
         }
 
         // Chốt trận: trong lúc fade không được tính thắng/thua nữa (thoát không tiêu key).

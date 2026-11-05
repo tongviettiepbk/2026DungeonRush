@@ -110,7 +110,7 @@ public class MasterUpgradeUI : MonoBehaviour
         }
         else if (MasteryService.TryUpgrade(data.upgradeType) == false)
         {
-            UIManager.Instance.ShowToastMessage("Không đủ Gem", isLocalize: false);
+            UIMissingGemsPopup.Show("mastery", MasteryService.GetUpgradeCost(data.upgradeType));
             return;
         }
 

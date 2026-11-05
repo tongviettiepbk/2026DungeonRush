@@ -329,7 +329,7 @@ public class PvPController : Singleton<PvPController>
             }
 
             List<RewardEntry> rewards = res.rewards ?? new List<RewardEntry>();
-            BossRushController.GrantRewards(rewards);
+            using (Analytics.Scope("pvp_season")) BossRushController.GrantRewards(rewards);
             if (State != null) State.pendingSeasonResult = null;
             GameData.Save(true);
             callback?.Invoke(rewards, null);

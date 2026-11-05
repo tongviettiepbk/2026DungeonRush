@@ -51,25 +51,43 @@ public class MaxAdController : MediationAds
 
     public override void ShowRewardedVideoAd(string placement, UnityAction<ShowResultADS> callback = null)
     {
-        if (Application.isEditor)
+        // Đã mua No Ads thì mọi chỗ đặt đều trao thưởng ngay, không phụ thuộc từng chỗ gọi tự kiểm tra.
+        if (GameData.userData.shop.isNoAdsBought)
         {
-            base.ShowRewardedVideoAd(placement, callback);
+            Analytics.LogAdSkippedNoAds(placement);
+            callback?.Invoke(ShowResultADS.Finished);
             return;
         }
 
-        FirebaseServices.LogEvent("ads_reward_offer", "placement", placement);
+        // Ghi kết quả trước khi trao thưởng: chỗ gọi thường Save ngay trong callback, bộ đếm rewarded phải kịp vào save.
+        UnityAction<ShowResultADS> tracked = result =>
+        {
+            Analytics.LogAdResult(placement, result.ToString().ToLowerInvariant());
+            callback?.Invoke(result);
+        };
+
+        if (Application.isEditor)
+        {
+            Analytics.LogAdRequest(placement, true);
+            base.ShowRewardedVideoAd(placement, tracked);
+            return;
+        }
+
+        bool isReady = string.IsNullOrEmpty(AdUnit) == false && MaxSdk.IsRewardedAdReady(AdUnit);
+        Analytics.LogAdRequest(placement, isReady);
         AppsflyerHelper.SendShowReward(GameData.userData.player.playerLevel);
 
-        if (string.IsNullOrEmpty(AdUnit) || MaxSdk.IsRewardedAdReady(AdUnit) == false)
+        if (isReady == false)
         {
             // Trả Failed để chỗ gọi không phát thưởng; lượt sau có thể đã nạp xong.
             UIManager.Instance.ShowToastMessage(MSG_AD_NOT_READY, isLocalize: false);
-            callback?.Invoke(ShowResultADS.Failed);
+            tracked(ShowResultADS.Failed);
             return;
         }
 
         isRewarded = false;
-        rewardAdCallback = callback;
+        rewardAdCallback = tracked;
+        IsFullscreenShowing = true;
         // Game chạy runInBackground nên nhạc không tự dừng khi quảng cáo che màn hình.
         AudioListener.pause = true;
         MaxSdk.ShowRewardedAd(AdUnit, placement);
@@ -138,6 +156,7 @@ public class MaxAdController : MediationAds
     private void FinishAd(ShowResultADS result)
     {
         AudioListener.pause = false;
+        IsFullscreenShowing = false;
         LoadAd();
 
         UnityAction<ShowResultADS> callback = rewardAdCallback;

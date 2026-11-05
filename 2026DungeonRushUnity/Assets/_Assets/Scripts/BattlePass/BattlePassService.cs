@@ -180,6 +180,7 @@ public static class BattlePassService
         if (CanClaim(level, isPremium) == false)
             return false;
 
+        using var scope = Analytics.Scope("battle_pass");
         BattlePassReward reward = GetReward(level, isPremium);
         Grant(reward.type1, reward.amount1);
         Grant(reward.type2, reward.amount2);
@@ -187,6 +188,7 @@ public static class BattlePassService
         User.isDataChanged = true;
         GameData.Save();
         Changed?.Invoke();
+        Analytics.Log("battle_pass_claim", ("level", level), ("premium", isPremium));
         return true;
     }
 

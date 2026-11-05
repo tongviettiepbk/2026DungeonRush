@@ -37,6 +37,9 @@ public class PurchaseController : Singleton<PurchaseController>
         STORE_ID_CHEST_BUNDLE_LEGENDARY, STORE_ID_CHEST_BUNDLE_MYTHIC,
     };
 
+    // Đang chờ hộp thoại thanh toán: app pause lúc này không phải người chơi rời game (AnalyticsTracker).
+    public static bool IsPurchasing { get; protected set; }
+
     public static Action<string> PurchaseSuccessful;
     public static Action PurchaseFailed;
 
@@ -48,19 +51,29 @@ public class PurchaseController : Singleton<PurchaseController>
 
     public virtual void Purchase(string productId)
     {
+        Analytics.LogIapClick(productId);
 #if UNITY_EDITOR
         OnPurchased(productId);
 #else
+        Analytics.LogIapFail(productId, "not_available");
         UIManager.Instance.ShowToastMessage("Store is not available", isLocalize: false);
         PurchaseFailed?.Invoke();
 #endif
     }
 
     // Store xác nhận đã thanh toán (dhk gốc): phát thưởng → lưu → báo UI; gói rương thì mở bảng kết quả.
-    protected void OnPurchased(string productId)
+    // price + currency + transactionId chỉ để Analytics, Editor không có.
+    protected void OnPurchased(string productId, double localPrice = 0d, string currency = null, string transactionId = null)
     {
-        List<ChestOutcome> outcomes = ShopService.GrantProduct(productId);
+        List<ChestOutcome> outcomes;
+        using (Analytics.Scope("iap"))
+        {
+            outcomes = ShopService.GrantProduct(productId);
+        }
+
+        MonetizeStats.RecordPurchase(productId);
         GameData.Save(true);
+        Analytics.LogIapSuccess(productId, localPrice, currency, transactionId);
 
         // Hàng đã trao và đã lưu: lỗi UI từ đây không được coi là trao hỏng, không thì đơn phát lại sẽ trao lần 2.
         try

@@ -61,11 +61,15 @@ public static class EnchantmentService
     // EnchantmentTabPage.hyw: trừ multiplier×100 Vial rồi summon multiplier×5 lượt. null nếu thiếu Vial.
     public static List<int> TrySummon(int multiplier)
     {
+        using var scope = Analytics.Scope("enchant_summon");
+
         if (GameData.userData.items.Consume(ItemType.VIAL, GetSummonCost(multiplier)) == false)
         {
             return null;
         }
 
+        Analytics.Log("enchant_summon", ("multiplier", multiplier));
+        Analytics.Milestone("first_enchant");
         return Summon(GetSummonCount(multiplier));
     }
 

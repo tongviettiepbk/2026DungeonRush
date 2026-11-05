@@ -59,6 +59,7 @@ public class UIOfflineEarningPopup : BaseUI
     {
         if (GameData.userData.shop.isNoAdsBought)
         {
+            Analytics.LogAdSkippedNoAds(OfflineEarningService.AD_PLACEMENT);
             Collect(2);
             return;
         }

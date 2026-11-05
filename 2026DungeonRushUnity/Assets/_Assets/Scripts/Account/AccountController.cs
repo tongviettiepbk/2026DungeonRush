@@ -143,12 +143,15 @@ public class AccountController : Singleton<AccountController>
     {
         Firebase.LinkWithEmail(email, password, (ok, error, message) =>
         {
+            Analytics.Log("account_link", ("method", "email"), ("ok", ok));
+
             if (ok == false)
             {
                 callback(false, GetSignUpError(error, message));
                 return;
             }
 
+            Analytics.RefreshUserProperties();
             this.PostEvent(EventID.AccountChanged);
             Cloud.BindAccount();
             // Tài khoản vừa tạo chưa có gì trên cloud → đẩy save hiện tại lên ngay.

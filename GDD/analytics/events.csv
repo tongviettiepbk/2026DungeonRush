@@ -1,0 +1,49 @@
+event,params,hook,question
+(context on every event),"plv · stage · day_n · session_n · payer",Analytics.AppendContext,cắt lớp mọi event theo tiến trình
+boot_step,"step(user_load/account/server_time/tap_to_play) · sec",Login.cs,boot chậm ở đâu · dừng ở nút Tap To Play bao nhiêu; người chưa qua màn nào tự vào nên sec gần 0
+boot_complete,sec_total,Login.OnLoadDone,chờ boot bao lâu
+session_begin,"resume · offline_sec · days_since_last · from_push(offline_full/daily/comeback) · version",AnalyticsTracker,nhịp quay lại
+session_end,"duration_sec · screens_opened · matches · ads_watched · last_screen",AnalyticsTracker,phiên dài bao lâu · thoát ở màn nào
+wallet_snapshot,"gem · hammer · bone · vial · cloak · pickaxe",Analytics.BeginSession,túi rỗng hay đầy khi vào phiên
+screen_view,"screen_name · from",UIManager.LoadUI + UIMainLobby.SetActiveTab,màn nào mở nhiều · đường đi
+screen_close,"screen_name · sec",UIManager.HideUI + UIMainLobby.SetActiveTab,thời gian ở màn · đóng dưới 2 giây là khó hiểu
+paywall_view,"popup · trigger(auto/manual/missing_gems)",Analytics.OnScreenOpen,chạm chỗ bán lúc nào
+paywall_close,"popup · sec_open · action(buy/close)",Analytics.OnScreenClose,popup nào bị đóng tức thì
+gem_short,"sink(chest/shop/mastery/clan_create) · have",UIMissingGemsPopup.Show,thiếu gem ở đâu: so với iap_success ngay sau đó
+iap_click,"product_id · price_usd · popup",PurchaseController.Purchase + IapController.Purchase,bấm mua ở cửa nào
+iap_fail,"product_id · reason(usercancelled/not_available/verify_failed/…) · popup",IapController,mất đơn ở cửa hàng hay xác minh
+iap_success,"product_id · transaction_id · price_local · currency_local · price_usd · popup · nth_purchase · iap_usd_total",PurchaseController.OnPurchased,bán được ở cửa nào; không mang value để không cộng trùng in_app_purchase
+ad_rw_request,"placement · ready",MaxAdController.ShowRewardedVideoAd,muốn xem mà quảng cáo chưa sẵn
+ad_rw_result,"placement · result(finished/skipped/failed/skipped_noads)",MaxAdController + 3 chỗ gọi tự xử lý No Ads,quảng cáo đặt ở đâu được xem
+rewarded_chest_spawn,type,RewardedChestUI,rương bay hiện bao nhiêu lần: mẫu số của tỉ lệ nhận
+ad_impression / ad_revenue_sdk,"ad_platform · ad_source · ad_unit_name · ad_format · currency · value",FirebaseServices.LogAdRevenue,doanh thu quảng cáo; BigQuery đọc ad_revenue_sdk
+ads_reward_load_fail / ads_reward_show_success / ads_reward_show_fail / ads_reward_complete,,MaxAdController,phễu SDK rewarded; load_fail chỉ lần hỏng đầu mỗi chuỗi
+earn_virtual_currency,"virtual_currency_name · value · source",UserItemData.Adjust (scope),tiền từ đâu; GEM từng lượt · loại khác gom theo phiên
+spend_virtual_currency,"virtual_currency_name · value · item_name",UserItemData.Adjust (scope),tiền đi đâu; GEM từng lượt · loại khác gom theo phiên
+ftue_milestone,"milestone(first_equip/first_gem_spend/first_paywall_seen/first_chest_open/first_pet_summon/first_mastery/first_enchant/first_cape/first_wing/first_mining/first_rarity_<bậc>) · sec_since_start",Analytics.Milestone,mốc lần đầu; mỗi tài khoản 1 lần theo save
+tutorial_step,"step · step_id · sec_since_start",TutorialService.Complete,bước FTUE nào rơi · mất bao lâu
+match_end,"mode · level · result(win/lose/quit) · sec · hero_hp · pets · power_b",BaseMode.EndGame + DungeonMode.Exit + BossRushMode.ExitMidFight,thắng thua theo mode và màn · tường khó · thoát giữa chừng; level = màn campaign / dungeon / tier Boss Rush / cúp PvP
+level_up,"level · sec_since_start",PlayerExpService.CompleteLevelUp,tốc độ lên level
+loot_batch,"auto · items · sold · best_rarity",ForgeUIController + ForgeService (gom im 3 giây hoặc tối đa 60 giây),nhịp loot · ai dùng Auto Loot · món hiếm
+gear_equip,"slot · rarity · item_level",ForgeUIController.Equip,nhịp mạnh lên
+chest_open,"chest · cost · items · new_count · best_rarity · pity",ShopService.BuyChest,gem vào rương nào · tỉ lệ thất vọng
+mastery_upgrade,"branch · level · cost",MasteryService,nhánh nào được ưu tiên
+pet_summon,"source(ad/bone) · count · new_count · best_rarity",CompanionService,nguồn pet
+pet_upgrade,"pet · level",CompanionService.TryUpgrade,
+enchant_summon,multiplier,EnchantmentService.TrySummon,
+cape_summon,multiplier,CapeService.TrySummon,
+wing_action,"action(craft/level_up/reroll) · wing · level · locked",WingService,
+battle_pass_claim,"level · premium",BattlePassService.Claim,tiến độ pass · free hay premium
+dungeon_sweep,"dungeon · level · amount",DungeonService.Sweep,quét nhanh hay đánh
+offline_collect,"minutes · multiplier · exp · hammer",OfflineEarningService.Collect,vắng bao lâu · có x2 không
+clan_create / clan_join / clan_apply / clan_leave,,UICreateClanPopup + ClanController,vào clan có giữ chân không
+chat_send,channel,ChatController.Send,
+rate_us_submit,stars,UIRateUsPopup,
+seven_day_claim,day,SevenDayService.Claim,tỉ lệ nhận từng ngày: đo giữ chân D2..D7
+push_permission,granted,LocalPushController,bao nhiêu người cho phép thông báo
+account_link,"method · ok",AccountController.SignUp,gắn email có hiệu quả
+language_change,to,LocalizeManager.ChangeLanguage,
+funnel_loot_1 / funnel_stage_1 / funnel_stage_10 / funnel_stage_30 / funnel_level_5 / funnel_level_15 / funnel_dungeon_1 / funnel_ad_1 / funnel_return_d2 / funnel_return_d7,sec_since_start,UaFunnel (Firebase + AppsFlyer cùng tên; 1 lần mỗi tài khoản),phễu UA
+first_purchase,"sec_since_start · item_id · price_usd",UaFunnel.OnPurchase (đơn đầu theo save; AppsFlyer không kèm af_revenue),phễu UA: đơn đầu
+install_attribution,"af_status · media_source · campaign · adset · is_first_launch",AppsflyerAttribution (1 lần mỗi máy),nguồn cài để cắt retention theo campaign
+(user properties),"payer_tier · iap_tier · rw_tier · segment · install_day · first_version · days_played · plv_bucket · stage_bucket · pets_owned · in_clan · no_ads · battle_pass · lifetime_boost · auth_type · af_status · af_media_source · af_campaign",Analytics.RefreshUserProperties,

@@ -300,6 +300,7 @@ public class UIMiningPopup : BaseUI, IPointerClickHandler, IPointerDownHandler, 
 
         if (GameData.userData.shop.isNoAdsBought)
         {
+            Analytics.LogAdSkippedNoAds("mining_tool");
             OnAdRewarded(tool);
             return;
         }

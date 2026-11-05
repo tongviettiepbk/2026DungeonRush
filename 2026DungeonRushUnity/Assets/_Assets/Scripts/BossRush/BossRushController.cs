@@ -310,7 +310,7 @@ public class BossRushController : Singleton<BossRushController>
             }
 
             DebugCustom.Log("[BossRush] Crediting rewards for pool " + poolId);
-            GrantRewards(res.rewards);
+            using (Analytics.Scope("boss_rush")) GrantRewards(res.rewards);
             User.SetTickets(res.tickets);
             User.tier = res.newTier > 0 ? res.newTier : User.tier;
             User.unclaimedPoolId = string.Empty;

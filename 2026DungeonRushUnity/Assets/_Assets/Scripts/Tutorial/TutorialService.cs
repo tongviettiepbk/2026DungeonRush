@@ -37,6 +37,7 @@ public static class TutorialService
         Profile.CompleteTutorial((int)step);
         GameData.Save(true);
         DebugCustom.Log("[FTUE] complete " + step);
+        Analytics.LogTutorialStep(step);
         StepCompleted?.Invoke(step);
         return true;
     }

@@ -281,11 +281,13 @@ public class IapController : PurchaseController, IAppsFlyerValidateAndLog
             return;
         }
 
+        Analytics.LogIapClick(productId);
         Product product = GetProduct(productId);
 
         if (product == null || product.availableToPurchase == false)
         {
             DebugCustom.LogError("[IAP] Product not available: " + productId);
+            Analytics.LogIapFail(productId, "not_available");
             UIManager.Instance.ShowToastMessage(MSG_STORE_NOT_AVAILABLE, isLocalize: false);
             PurchaseFailed?.Invoke();
 
@@ -299,6 +301,7 @@ public class IapController : PurchaseController, IAppsFlyerValidateAndLog
         }
 
         UIManager.Instance.ShowWaiting(true);
+        IsPurchasing = true;
         purchaseService.PurchaseProduct(product);
     }
 
@@ -336,6 +339,7 @@ public class IapController : PurchaseController, IAppsFlyerValidateAndLog
 
     private void FailOrder()
     {
+        Analytics.LogIapFail(string.Empty, "verify_failed");
         UIManager.Instance.ShowWaiting(false);
         UIManager.Instance.ShowToastMessage(MSG_PURCHASE_FAILED, isLocalize: false);
         PurchaseFailed?.Invoke();
@@ -343,6 +347,9 @@ public class IapController : PurchaseController, IAppsFlyerValidateAndLog
 
     private void ProcessPendingOrder(PendingOrder order)
     {
+        // Đơn về tới đây thì hộp thoại thanh toán đã đóng.
+        IsPurchasing = false;
+
         // Chưa vào game: để đơn treo, OnSceneLoaded sẽ hỏi lại và đơn được phát lại.
         if (IsInGame == false)
         {
@@ -472,7 +479,7 @@ public class IapController : PurchaseController, IAppsFlyerValidateAndLog
         try
         {
             // Ghi cả sổ giao dịch xuống máy trong GameData.Save(true) của OnPurchased.
-            OnPurchased(productId);
+            OnPurchased(productId, (double)product.metadata.localizedPrice, product.metadata.isoCurrencyCode, transactionId);
         }
         catch
         {
@@ -483,7 +490,6 @@ public class IapController : PurchaseController, IAppsFlyerValidateAndLog
             throw;
         }
 
-        FirebaseServices.LogPurchase(productId, (double)product.metadata.localizedPrice, product.metadata.isoCurrencyCode, transactionId);
         AppsflyerHelper.ValidateAndLogPurchase(product, order, this);
 
         purchaseService.ConfirmPurchase(order);
@@ -502,6 +508,9 @@ public class IapController : PurchaseController, IAppsFlyerValidateAndLog
     private void OnPurchaseFailed(FailedOrder order)
     {
         DebugCustom.Log("[IAP] Purchase failed: " + order.FailureReason + " " + order.Details);
+        IsPurchasing = false;
+        Product failedProduct = FirstProduct(order);
+        Analytics.LogIapFail(failedProduct != null ? failedProduct.definition.id : string.Empty, order.FailureReason.ToString().ToLowerInvariant());
 
         // Tự huỷ thì không báo lỗi: người chơi biết mình vừa bấm gì.
         if (order.FailureReason != PurchaseFailureReason.UserCancelled)
@@ -516,6 +525,7 @@ public class IapController : PurchaseController, IAppsFlyerValidateAndLog
     // Chờ người khác duyệt (Ask to Buy): chưa thu tiền. Được duyệt thì đơn quay lại qua OnPurchasePending.
     private void OnPurchaseDeferred(DeferredOrder order)
     {
+        IsPurchasing = false;
         UIManager.Instance.ShowWaiting(false);
         PurchaseFailed?.Invoke();
     }

@@ -64,6 +64,7 @@ public class UserItemData : BaseUserData
     {
         double curQuantity = GetQuantityHave(type);
         SetQuantity(type, curQuantity + quantity);
+        Analytics.OnWalletChange(type, quantity);
 
         // TODO: khi có EventDispatcher thì post EventID.ItemChanged để UI tự cập nhật
     }

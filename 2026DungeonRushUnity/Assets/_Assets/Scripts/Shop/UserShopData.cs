@@ -14,6 +14,9 @@ public class UserShopData : BaseUserData
     public int pendingDealCombo { get; set; } = -1;
 
     public bool isNoAdsBought { get; set; }
+    public bool isStarterPackBought { get; set; }
+    public long starterPackStartTime { get; set; } = -1;    // unix giây, -1 = chưa bắt đầu đếm 48 giờ
+    public long autoOfferMuteUntil { get; set; }            // unix giây, xem AutoOfferGate
     public bool isLifetimeBoostBought { get; set; }
     public bool isCapeFeatureEarlyUnlocked { get; set; }    // mua gói rương khi chưa tới level mở Cape
     public long x2ExpBoostEndTime { get; set; }             // unix giây

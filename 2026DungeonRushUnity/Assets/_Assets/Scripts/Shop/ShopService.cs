@@ -52,6 +52,8 @@ public static class ShopService
 
     private static bool BuyByGem(int cost, ItemType item, int amount)
     {
+        using var scope = Analytics.Scope("shop_tool");
+
         if (Items.Consume(ItemType.GEM, cost) == false)
         {
             return false;
@@ -89,6 +91,8 @@ public static class ShopService
     // Đang chạy thì không mua chồng. Trả false khi thiếu gem.
     public static bool BuyX2Boost()
     {
+        using var scope = Analytics.Scope("exp_boost");
+
         if (IsX2BoostActive() || Items.Consume(ItemType.GEM, StaticShopData.X2_BOOST_GEM_COST) == false)
         {
             return false;
@@ -102,6 +106,8 @@ public static class ShopService
 
     public static bool BuyX5Boost()
     {
+        using var scope = Analytics.Scope("exp_boost");
+
         if (IsX5BoostActive() || Items.Consume(ItemType.GEM, StaticShopData.X5_BOOST_GEM_COST) == false)
         {
             return false;
@@ -236,11 +242,33 @@ public static class ShopService
     // Mua 1 rương bằng gem rồi mở. null = thiếu gem.
     public static List<ChestOutcome> BuyChest(ChestData chest)
     {
+        using var scope = Analytics.Scope("chest");
+
         if (Items.Consume(ItemType.GEM, chest.GemCost) == false)
         {
             return null;
         }
-        return OpenChest(chest);
+
+        List<ChestOutcome> results = OpenChest(chest);
+        LogChestOpen(chest, results);
+        return results;
+    }
+
+    private static void LogChestOpen(ChestData chest, List<ChestOutcome> results)
+    {
+        Rarity best = Rarity.Common;
+        int newCount = 0;
+        bool isPity = false;
+        for (int i = 0; i < results.Count; i++)
+        {
+            best = results[i].rarity > best ? results[i].rarity : best;
+            newCount += results[i].isNew ? 1 : 0;
+            isPity |= results[i].isPity;
+        }
+
+        Analytics.Log("chest_open", ("chest", chest.ChestId), ("cost", chest.GemCost), ("items", results.Count),
+            ("new_count", newCount), ("best_rarity", best), ("pity", isPity));
+        Analytics.Milestone("first_chest_open");
     }
 
     public static List<ChestOutcome> OpenChest(ChestData chest)
@@ -474,6 +502,7 @@ public static class ShopService
         if (rewards != null)
         {
             for (int i = 0; i < rewards.Length; i++) Grant(rewards[i]);
+            if (productId == PurchaseController.STORE_ID_STARTER_PACK) StarterPackService.OnPurchased();
             return null;
         }
 
@@ -569,6 +598,8 @@ public static class ShopService
     // ksh + OnRewardedButtonClicked gốc: cộng thưởng rồi +1 lượt trong ngày.
     public static void ClaimRewardedChest(RewardedChestType type, int amount)
     {
+        using var scope = Analytics.Scope("rewarded_chest");
+
         Items.Receive(type == RewardedChestType.Gem ? ItemType.GEM : ItemType.LOOT_TICKET, amount);
         CheckRewardedChestReset();
         User.rewardedChestDailyCount++;

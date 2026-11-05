@@ -355,7 +355,7 @@ public class ForgeUIController : MonoBehaviour
 
         // Trừ hộp trước, mỗi hộp 1 món.
         isAutoBatch = isAuto;
-        GameData.userData.items.Consume(ItemType.LOOT_TICKET, count);
+        using (Analytics.Scope("loot")) GameData.userData.items.Consume(ItemType.LOOT_TICKET, count);
         owner.UpdateLootTicketText();
 
         for (int i = 0; i < count; i++)
@@ -366,6 +366,7 @@ public class ForgeUIController : MonoBehaviour
 
             // Clan War: điểm "Loot {rarity} Equipment" (ClanWarController.fzk gốc).
             ClanWarController.Instance.RecordLoot(item.rarity);
+            Analytics.NoteLoot(item.rarity, isAutoBatch);
             queue.Add(new PendingItem { item = item });
         }
 
@@ -596,6 +597,8 @@ public class ForgeUIController : MonoBehaviour
         this.PostEvent(EventID.EquipmentChanged, item.EquipSlot);
         owner.RefreshEquipment();
         RateUsService.OnItemEquipped(item.rarity);
+        Analytics.Log("gear_equip", ("slot", item.EquipSlot), ("rarity", item.rarity), ("item_level", item.level));
+        Analytics.Milestone("first_equip");
     }
 
     // hep/hey gốc: bán lấy EXP.

@@ -92,6 +92,7 @@ public static class PlayerExpService
         LevelChanged?.Invoke();
         ExperienceChanged?.Invoke();
         LevelUpCompleted?.Invoke();
+        Analytics.LogLevelUp(player.playerLevel);
 
         ApplyStoredOverflow();
         GameData.Save(true);

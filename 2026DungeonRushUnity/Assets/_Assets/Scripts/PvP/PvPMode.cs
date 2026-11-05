@@ -207,6 +207,8 @@ public class PvPMode : BaseMode
         return true;
     }
 
+    public override int AnalyticsLevel => GameData.userData.pvp.trophy;
+
     protected override void CalculateResult(bool isWin)
     {
         StartCoroutine(RoutineReport(isWin));

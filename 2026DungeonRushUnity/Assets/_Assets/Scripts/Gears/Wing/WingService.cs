@@ -59,7 +59,9 @@ public static class WingService
             return false;
         }
 
-        GameData.userData.items.Consume(ToItemType(wing.craftOreType), wing.craftOreCost);
+        using (Analytics.Scope("wing_craft")) GameData.userData.items.Consume(ToItemType(wing.craftOreType), wing.craftOreCost);
+        Analytics.Log("wing_action", ("action", "craft"), ("wing", wing.wingId));
+        Analytics.Milestone("first_wing");
         if (User.Get(wing.wingId) == null)
         {
             WingModel model = new WingModel
@@ -109,8 +111,9 @@ public static class WingService
             return false;
         }
 
-        GameData.userData.items.Consume(ToItemType(wing.levelUpOreType), cost);
+        using (Analytics.Scope("wing_level")) GameData.userData.items.Consume(ToItemType(wing.levelUpOreType), cost);
         model.level++;
+        Analytics.Log("wing_action", ("action", "level_up"), ("wing", wing.wingId), ("level", model.level));
         User.isDataChanged = true;
         SyncEquipped(wing, model);
         GameData.Save();
@@ -147,7 +150,8 @@ public static class WingService
             return false;
         }
 
-        GameData.userData.items.Consume(ToItemType(wing.rerollOreType), cost);
+        using (Analytics.Scope("wing_reroll")) GameData.userData.items.Consume(ToItemType(wing.rerollOreType), cost);
+        Analytics.Log("wing_action", ("action", "reroll"), ("wing", wing.wingId), ("locked", lockedCount));
 
         List<SubStatType> exclude = new List<SubStatType>();
         for (int i = 0; i < model.subStats.Count; i++)

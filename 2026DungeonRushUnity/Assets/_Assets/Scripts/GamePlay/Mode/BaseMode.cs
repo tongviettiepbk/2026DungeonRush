@@ -75,6 +75,10 @@ public class BaseMode : MonoBehaviour
 
     protected GameController GameController;
 
+    // Mốc đánh của trận này cho Analytics. Mode có tiến trình riêng thì override.
+    public virtual int AnalyticsLevel => currentLevel != null ? GameData.staticData.campaign.GetLevel(currentLevel.stageId) : 0;
+    private float matchStartRealtime;
+
     // Level đang dựng (map procedural + enemy) + gốc chứa object đã spawn — dùng chung cho spawn team.
     protected CampaignLevelBuilder.CampaignLevel currentLevel;
     protected Transform container;
@@ -251,6 +255,7 @@ public class BaseMode : MonoBehaviour
         isEndMode = false;
         isPause = false;
         remainingEnemies = teamB.Count;
+        matchStartRealtime = Time.realtimeSinceStartup;
 
         if (defaultBattleTime > 0)
         {
@@ -304,10 +309,17 @@ public class BaseMode : MonoBehaviour
         ActiveBattleTimer(false);
 
         DebugCustom.LogFormat("[EndGame] Win={0}", isWin);
+        LogMatchEnd(isWin ? "win" : "lose");
         EventDispatcher.Instance.PostEvent(EventID.EndGame, this, isWin);
 
         SaveData();
         CalculateResult(isWin);
+    }
+
+    // result: win / lose / quit.
+    protected void LogMatchEnd(string result)
+    {
+        Analytics.LogMatchEnd(this, result, Time.realtimeSinceStartup - matchStartRealtime, hero != null ? hero.GetHpPercent() : 0f);
     }
 
     protected virtual void SaveData() { }

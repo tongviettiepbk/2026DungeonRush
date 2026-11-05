@@ -73,6 +73,7 @@ public class UIRateUsPopup : BaseUI
             return;
 
         RateUsService.MarkSubmitted();
+        Analytics.Log("rate_us_submit", ("stars", selectedStars));
         if (selectedStars >= RateUsService.STORE_MIN_STARS)
             OpenStore();
         Close();

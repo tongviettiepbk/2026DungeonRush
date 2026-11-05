@@ -92,7 +92,7 @@ public class UICreateClanPopup : BaseUI
         }
         if (!GameData.userData.items.IsEnough(ItemType.GEM, StaticClanData.CREATE_COST_GEM))
         {
-            ClanUIUtil.Toast("Not enough gems");
+            UIMissingGemsPopup.Show("clan_create", StaticClanData.CREATE_COST_GEM);
             return;
         }
         ClanJoinSetting join = ApprovalOnlyToggle != null && !ApprovalOnlyToggle.IsChecked ? ClanJoinSetting.ApprovalOnly : ClanJoinSetting.Open;
@@ -109,8 +109,10 @@ public class UICreateClanPopup : BaseUI
             ClanUIUtil.Toast(error ?? Loc.L("Errors.Clan.CreateFailed"));
             return;
         }
-        GameData.userData.items.Consume(ItemType.GEM, StaticClanData.CREATE_COST_GEM);
+        using (Analytics.Scope("clan_create")) GameData.userData.items.Consume(ItemType.GEM, StaticClanData.CREATE_COST_GEM);
         GameData.Save(true);
+        Analytics.Log("clan_create");
+        Analytics.RefreshUserProperties();
         Close();
     }
 

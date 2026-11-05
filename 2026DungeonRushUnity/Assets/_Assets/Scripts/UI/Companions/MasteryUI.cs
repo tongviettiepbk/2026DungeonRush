@@ -140,7 +140,7 @@ public class MasteryUI : MonoBehaviour
         }
         else if (MasteryService.TryUnlock(next.upgradeType) == false)
         {
-            UIManager.Instance.ShowToastMessage("Không đủ Gem", isLocalize: false);
+            UIMissingGemsPopup.Show("mastery", MasteryService.GetUnlockCost(next.upgradeType));
             return;
         }
 

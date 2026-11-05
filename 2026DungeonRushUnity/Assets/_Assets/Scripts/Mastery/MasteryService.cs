@@ -71,6 +71,7 @@ public static class MasteryService
         }
 
         // cost 0 = miễn phí (bỏ qua trừ Ngọc, giống ivw kiểm tra cost < 1).
+        using var scope = Analytics.Scope("mastery");
         int cost = GetUnlockCost(type);
         if (cost > 0 && GameData.userData.items.Consume(ItemType.GEM, cost) == false)
         {
@@ -79,6 +80,7 @@ public static class MasteryService
 
         User.Unlock(type);
         GameData.Save();
+        LogUpgrade(type, cost);
         return true;
     }
 
@@ -106,6 +108,7 @@ public static class MasteryService
         }
 
         // Phí 0 (VD AutoLoot Lvl1→2 lúc tutorial) → nâng miễn phí; Consume(0) trả false nên phải bỏ qua.
+        using var scope = Analytics.Scope("mastery");
         int cost = GetUpgradeCost(type);
         if (cost > 0 && GameData.userData.items.Consume(ItemType.GEM, cost) == false)
         {
@@ -114,6 +117,13 @@ public static class MasteryService
 
         User.SetLevel(type, User.GetLevel(type) + 1);
         GameData.Save();
+        LogUpgrade(type, cost);
         return true;
+    }
+
+    private static void LogUpgrade(MasteryUpgradeType type, int cost)
+    {
+        Analytics.Log("mastery_upgrade", ("branch", type), ("level", User.GetLevel(type)), ("cost", cost));
+        Analytics.Milestone("first_mastery");
     }
 }

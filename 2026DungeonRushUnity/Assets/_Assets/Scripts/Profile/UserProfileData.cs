@@ -17,6 +17,14 @@ public class UserProfileData : BaseUserData
 
     public List<int> completedTutorials { get; set; } = new List<int>();
 
+    // Bộ đếm cho Analytics, theo tài khoản (xem GDD/analytics/TRACKING_PLAN.md).
+    public MonetizeStatsData monetize { get; set; } = new MonetizeStatsData();
+    public FunnelStatsData funnel { get; set; } = new FunnelStatsData();
+
+    // Thưởng 7 ngày (SevenDayService).
+    public int sevenDayClaimed { get; set; }
+    public string sevenDayLastDate { get; set; } = string.Empty;
+
     protected override string GetDataKey()
     {
         return UserData.DATA_KEY_PROFILE;

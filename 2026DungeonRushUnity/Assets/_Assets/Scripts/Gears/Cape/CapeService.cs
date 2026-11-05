@@ -54,7 +54,9 @@ public static class CapeService
             return null;
         }
 
-        GameData.userData.items.Consume(ItemType.CLOAK, cost);
+        using (Analytics.Scope("cape_summon")) GameData.userData.items.Consume(ItemType.CLOAK, cost);
+        Analytics.Log("cape_summon", ("multiplier", multiplier));
+        Analytics.Milestone("first_cape");
         return Summon(multiplier);
     }
 

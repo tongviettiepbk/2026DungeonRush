@@ -26,6 +26,8 @@ public class Root : MonoBehaviour
         _ = EventDispatcher.Instance;
         _ = AudioManager.Instance;
         _ = AutoSaveManager.Instance;
+        _ = AnalyticsTracker.Instance;
+        _ = LocalPushController.Instance;
     }
 
     private void Start()

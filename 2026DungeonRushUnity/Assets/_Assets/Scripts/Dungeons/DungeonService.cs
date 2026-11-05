@@ -80,6 +80,7 @@ public static class DungeonService
         ConsumeKey(progress);
         int amount = GrantReward(type, progress.level - 1);
         GameData.Save(true);
+        Analytics.Log("dungeon_sweep", ("dungeon", type), ("level", progress.level - 1), ("amount", amount));
         return amount;
     }
 
@@ -137,7 +138,7 @@ public static class DungeonService
     private static int GrantReward(DungeonType type, int level)
     {
         int amount = Static.GetReward(type, level);
-        GameData.userData.items.Receive(Static.GetData(type).rewardType, amount);
+        using (Analytics.Scope("dungeon")) GameData.userData.items.Receive(Static.GetData(type).rewardType, amount);
         return amount;
     }
 }

@@ -65,6 +65,9 @@ public class UIKey
     public const string ChestBundleOfferPopup = "UIChestBundleOfferPopup";
     public const string RewardedChestPopup = "UIRewardedChestPopup";
     public const string OfferPopup = "UIOfferPopup";
+    public const string StarterPackPopup = "UIStarterPackPopup";
+    public const string MissingGemsPopup = "UIMissingGemsPopup";
+    public const string SevenDayPopup = "UISevenDayPopup";
     public const string BattlePassPopup = "UIBattlePassPopup";
     public const string RateUsPopup = "UIRateUsPopup";
     public const string ChatTabPage = "UIChatTabPage";

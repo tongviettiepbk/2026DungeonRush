@@ -56,7 +56,22 @@ public static class CompanionService
         User.adSummonDailyCount++;
         User.adSummonBonusCount++;
         User.isDataChanged = true;
-        return Summon(count);
+        return LogSummon("ad", Summon(count));
+    }
+
+    private static List<CompanionSummonResult> LogSummon(string source, List<CompanionSummonResult> results)
+    {
+        Rarity best = Rarity.Common;
+        int newCount = 0;
+        for (int i = 0; i < results.Count; i++)
+        {
+            best = results[i].data.rarity > best ? results[i].data.rarity : best;
+            newCount += results[i].isNew ? 1 : 0;
+        }
+
+        Analytics.Log("pet_summon", ("source", source), ("count", results.Count), ("new_count", newCount), ("best_rarity", best));
+        Analytics.Milestone("first_pet_summon");
+        return results;
     }
 
     private static string GetUtcToday()
@@ -125,12 +140,14 @@ public static class CompanionService
     // Summon bằng Bone: trừ cost rồi summon `count` lượt. null nếu không đủ Bone.
     public static List<CompanionSummonResult> TrySummonByBone(int cost, int count)
     {
+        using var scope = Analytics.Scope("pet_summon");
+
         if (GameData.userData.items.Consume(ItemType.BONE, cost) == false)
         {
             return null;
         }
 
-        return Summon(count);
+        return LogSummon("bone", Summon(count));
     }
 
     // ----- Nâng cấp -----
@@ -143,6 +160,7 @@ public static class CompanionService
         }
 
         GameData.Save();
+        Analytics.Log("pet_upgrade", ("pet", id), ("level", User.GetModel(id).level));
         return true;
     }
 

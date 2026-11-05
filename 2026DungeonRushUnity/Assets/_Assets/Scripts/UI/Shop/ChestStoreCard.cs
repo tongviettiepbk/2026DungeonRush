@@ -87,7 +87,7 @@ public class ChestStoreCard : MonoBehaviour
         List<ChestOutcome> outcomes = ShopService.BuyChest(chest);
         if (outcomes == null)
         {
-            ShopUIUtil.Toast(ShopUIUtil.NOT_ENOUGH_GEMS);
+            UIMissingGemsPopup.Show("chest", chest.GemCost);
             return;
         }
 

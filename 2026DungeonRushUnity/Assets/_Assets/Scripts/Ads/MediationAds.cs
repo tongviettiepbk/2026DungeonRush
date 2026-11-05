@@ -19,6 +19,9 @@ public enum ShowResultADS
 
 public class MediationAds : Singleton<MediationAds>
 {
+    // Quảng cáo đang che màn hình: app pause lúc này không phải người chơi rời game (AnalyticsTracker).
+    public bool IsFullscreenShowing { get; protected set; }
+
     protected bool isRewarded;
     protected bool isInterstitialLoading;
     protected UnityAction<ShowResultADS> interstitialAdCallback;

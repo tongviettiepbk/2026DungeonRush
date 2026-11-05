@@ -92,6 +92,7 @@ public static class ForgeService
     public static void Sell(LootResult item)
     {
         PlayerExpService.Grant(GetSellExp(item.rarity), accumulateDisplay: true);
+        Analytics.NoteLootSold();
     }
 
     // Tỉ lệ (%) ra từng rarity ở level hiện tại (dòng bảng forge = playerLevel - 1, như LootService).

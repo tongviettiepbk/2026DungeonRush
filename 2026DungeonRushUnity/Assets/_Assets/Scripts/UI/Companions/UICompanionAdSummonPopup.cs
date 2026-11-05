@@ -76,6 +76,7 @@ public class UICompanionAdSummonPopup : BaseUI
 
         if (GameData.userData.shop.isNoAdsBought)
         {
+            Analytics.LogAdSkippedNoAds(AD_PLACEMENT);
             Summon();
             return;
         }

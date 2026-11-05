@@ -197,6 +197,7 @@ public class LocalizeManager : Singleton<LocalizeManager>
     // (gốc load lại GameplayScene) để mọi chữ — kể cả chữ code tự gán — vẽ lại theo ngôn ngữ mới.
     public void ChangeLanguage(LanguageID newLanguage)
     {
+        Analytics.Log("language_change", ("to", newLanguage.ToCode()));
         PlayerPrefs.SetString(DATA_KEY_LANGUAGE, newLanguage.ToCode());
         PlayerPrefs.Save();
         LoadNewLanguage(newLanguage);

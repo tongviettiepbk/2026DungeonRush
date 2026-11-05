@@ -57,6 +57,8 @@ public class Login : MonoBehaviour
 
         // Static data đã nạp ở Root; ở đây chỉ nạp save người chơi.
         GameData.userData.Load();
+        Analytics.MarkUserLoaded();
+        Analytics.BootStep("user_load");
         yield return null; // nhường 1 frame để UI kịp vẽ trạng thái loading
 
         // Đăng nhập (lần đầu: tự tạo tài khoản khách) + tài khoản email thì đối chiếu save cloud.
@@ -64,9 +66,11 @@ public class Login : MonoBehaviour
 
         FirebaseServices.SetUserId(FirebaseManager.Instance.Uid);
         AppsflyerHelper.SetCustomerUserId(FirebaseManager.Instance.Uid);
+        Analytics.BootStep("account");
 
         // Giờ server cho mốc reset key Dungeon / vé Events.
         yield return ServerTime.SyncRoutine(SERVER_TIME_TIMEOUT);
+        Analytics.BootStep("server_time");
 
         OnLoadDone();
     }
@@ -74,6 +78,14 @@ public class Login : MonoBehaviour
     private void OnLoadDone()
     {
         SetLoading(string.Empty);
+        Analytics.LogBootComplete();
+
+        // Người chưa qua màn nào vào thẳng game: Racing mất 32% người chỉ chơi 1 ngày ngay trong phút đầu.
+        if (GameData.userData.campaign.passedStageId == 0)
+        {
+            ClickBtTapToPlay();
+            return;
+        }
 
         if (btTapToPlay != null)
         {
@@ -100,6 +112,7 @@ public class Login : MonoBehaviour
         }
 
         isGoLobby = true;
+        Analytics.BootStep("tap_to_play");
         GameData.Save(true);
         SceneManager.LoadScene(StaticValue.SCENE_MAINGAME);
     }

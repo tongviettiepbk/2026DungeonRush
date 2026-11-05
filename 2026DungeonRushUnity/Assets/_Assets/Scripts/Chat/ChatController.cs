@@ -293,6 +293,7 @@ public class ChatController : Singleton<ChatController>
         ChannelState state = channels[channel];
         state.sentCount++;
         state.lastSendTime = Time.time;
+        Analytics.Log("chat_send", ("channel", channel));
 
         UserProfileData profile = GameData.userData.profile;
         ChatMessageModel local = new ChatMessageModel

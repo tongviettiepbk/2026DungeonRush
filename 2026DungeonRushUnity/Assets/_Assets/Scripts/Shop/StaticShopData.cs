@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 // Loại thưởng của Store (gói IAP + Daily Deal).
@@ -87,6 +88,26 @@ public class StaticShopData
         return PRODUCT_REWARDS.TryGetValue(productId, out ShopReward[] rewards) ? rewards : null;
     }
 
+    private static readonly string[] GEM_PACK_IDS =
+    {
+        PurchaseController.STORE_ID_GEM1, PurchaseController.STORE_ID_GEM2, PurchaseController.STORE_ID_GEM3,
+        PurchaseController.STORE_ID_GEM4, PurchaseController.STORE_ID_GEM5, PurchaseController.STORE_ID_GEM6,
+    };
+
+    // Gói gem nhỏ nhất đủ bù phần thiếu; thiếu nhiều hơn gói lớn nhất thì trả gói lớn nhất.
+    public static string GetGemPackFor(int missing)
+    {
+        for (int i = 0; i < GEM_PACK_IDS.Length; i++)
+        {
+            if (GetProductRewards(GEM_PACK_IDS[i])[0].amount >= missing)
+            {
+                return GEM_PACK_IDS[i];
+            }
+        }
+
+        return GEM_PACK_IDS[GEM_PACK_IDS.Length - 1];
+    }
+
     // Giá hiển thị mặc định khi CHƯA có SDK IAP. [SUY] — giá thật do store trả về, không nằm trong APK.
     private static readonly Dictionary<string, string> DEFAULT_PRICES = new Dictionary<string, string>
     {
@@ -119,6 +140,13 @@ public class StaticShopData
     public static string GetDefaultPrice(string productId)
     {
         return DEFAULT_PRICES.TryGetValue(productId, out string price) ? price : null;
+    }
+
+    // Giá niêm yết USD cho Analytics (đọc từ bảng giá trên), 0 = chưa có trong bảng.
+    public static double GetPriceUsd(string productId)
+    {
+        string price = GetDefaultPrice(productId);
+        return price != null && double.TryParse(price.TrimStart('$'), NumberStyles.Float, CultureInfo.InvariantCulture, out double usd) ? usd : 0d;
     }
 
     // Tên hiển thị (strings_en "Items.Chest.Name.{ChestId}").

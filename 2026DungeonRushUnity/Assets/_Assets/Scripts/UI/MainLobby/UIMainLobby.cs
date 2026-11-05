@@ -36,6 +36,8 @@ public class UIMainLobby : BaseUI
     public Button btChestBundleMythic;      // MythicChestBundleOfferButton gốc
     public Button btMiningOffer;            // MiningOfferButton gốc
     public OfferButtonView offerButton;     // OfferButton gốc (Weapon Offer)
+    public StarterPackButtonView starterPackButton;
+    public SevenDayButtonView sevenDayButton;
     public BattlePassButtonView battlePassButton;   // BattlePassButton gốc
     public ChatButtonUI chatButton;                 // VerticalBottomLayout/ChatButton (ChatButtonUI gốc)
 
@@ -94,6 +96,8 @@ public class UIMainLobby : BaseUI
 
     // Thưởng offline: popup đang chờ nhận thì ngừng đẩy mốc thời gian (GameplayUI gốc).
     private bool isOfflineEarningPending;
+    private bool isStartupChainPending;
+    private int activeTabIndex = -1;    // tab đang mở, để Analytics chỉ ghi lúc đổi tab thật
     private float offlineHeartbeatTimer;
 
     private void Start()
@@ -148,12 +152,29 @@ public class UIMainLobby : BaseUI
         if (GameData.userData.shop.isOfferFirstShown)
         {
             WeaponOfferService.EnsureOffer();
-            UIOfferPopup.Show();
         }
 
+        StarterPackService.TryStart();
+
+        // Gốc bật Weapon Offer rồi chồng popup Offline lên. Ở đây xếp hàng: Offline → 7 ngày → chào hàng (AutoOfferGate).
         // Gốc GameplayUI.kjb lúc vào game: vắng đủ lâu thì bật popup thưởng offline.
         if (OfflineEarningService.ShouldShowOnStart())
+        {
+            isStartupChainPending = true;
             ShowOfflineEarning();
+        }
+        else
+        {
+            ShowStartupPopups();
+        }
+    }
+
+    private static void ShowStartupPopups()
+    {
+        if (SevenDayService.CanClaim)
+            UISevenDayPopup.Show(AutoOfferGate.TryShow);
+        else
+            AutoOfferGate.TryShow();
     }
 
     #region Offline earning
@@ -175,6 +196,12 @@ public class UIMainLobby : BaseUI
         offlineHeartbeatTimer = 0f;
         Refresh();
         UpdateLootTicketText();
+
+        if (isStartupChainPending)
+        {
+            isStartupChainPending = false;
+            ShowStartupPopups();
+        }
     }
 
     // GameplayUI.Update gốc: đang chơi thì mỗi 10s đẩy mốc tính thưởng offline về "bây giờ".
@@ -308,6 +335,8 @@ public class UIMainLobby : BaseUI
     // index = -1 -> không tab nào mở.
     private void SetActiveTab(int index)
     {
+        LogTabChange(index);
+
         // Mở 1 tab menu thì đóng trang Enchantment / Wing (cùng nằm trong ContentPage).
         if (index >= 0 && pageEnchantment != null)
             pageEnchantment.Close();
@@ -327,6 +356,23 @@ public class UIMainLobby : BaseUI
         }
     }
 
+    private void LogTabChange(int index)
+    {
+        if (index == activeTabIndex)
+            return;
+
+        if (activeTabIndex >= 0)
+            Analytics.OnScreenClose(GetTabScreenName(activeTabIndex));
+        if (index >= 0)
+            Analytics.OnScreenOpen(GetTabScreenName(index));
+        activeTabIndex = index;
+    }
+
+    private static string GetTabScreenName(int index)
+    {
+        return "tab_" + ((TypeMenuLobby)index).ToString().ToLowerInvariant();
+    }
+
     // Mở trang Enchantment (đóng các tab menu đang mở).
     private void OpenEnchantment(GearSlotType slot)
     {
@@ -337,6 +383,7 @@ public class UIMainLobby : BaseUI
         if (pageWing != null)
             pageWing.Close();
         pageEnchantment.Open();
+        Analytics.OnScreenOpen("page_enchantment");
     }
 
     // Mở trang Wing (đóng tab menu / trang Enchantment). Chưa tới level mở khoá thì báo.
@@ -603,6 +650,10 @@ public class UIMainLobby : BaseUI
     {
         if (offerButton != null)
             offerButton.Refresh();
+        if (starterPackButton != null)
+            starterPackButton.Refresh();
+        if (sevenDayButton != null)
+            sevenDayButton.Refresh();
         if (battlePassButton != null)
             battlePassButton.Refresh();
         if (objOffersLayout != null && objOffersLayout.activeSelf == false)

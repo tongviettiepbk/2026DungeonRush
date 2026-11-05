@@ -29,7 +29,10 @@ public static class AppsflyerHelper
 #if UNITY_IOS
             AppsFlyer.waitForATTUserAuthorizationWithTimeoutInterval(ATT_WAIT_SECONDS);
 #endif
-            AppsFlyer.initSDK(MonetizationSettings.APPSFLYER_DEV_KEY, MonetizationSettings.APPSFLYER_IOS_APP_ID);
+            // Truyền object nghe để SDK trả nguồn cài về AppsflyerAttribution.
+            GameObject listener = new GameObject(nameof(AppsflyerAttribution));
+            UnityEngine.Object.DontDestroyOnLoad(listener);
+            AppsFlyer.initSDK(MonetizationSettings.APPSFLYER_DEV_KEY, MonetizationSettings.APPSFLYER_IOS_APP_ID, listener.AddComponent<AppsflyerAttribution>());
             AppsFlyer.startSDK();
             isStarted = true;
         });
@@ -44,6 +47,17 @@ public static class AppsflyerHelper
         }
 
         Safe(() => AppsFlyer.setCustomerUserId(uid));
+    }
+
+    // Bước phễu UA gửi nguyên tên, cùng tên bên Firebase (UaFunnel).
+    public static void SendEvent(string eventName, Dictionary<string, string> values)
+    {
+        if (isStarted == false)
+        {
+            return;
+        }
+
+        Safe(() => AppsFlyer.sendEvent(eventName, values));
     }
 
     public static void SendShowReward(int level)

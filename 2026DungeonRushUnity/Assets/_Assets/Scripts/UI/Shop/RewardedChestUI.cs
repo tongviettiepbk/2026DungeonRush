@@ -94,6 +94,7 @@ public class RewardedChestUI : MonoBehaviour
         isFlying = true;
         KillTweens();
 
+        Analytics.Log("rewarded_chest_spawn", ("type", chestType));
         ChestParentRectTransform.gameObject.SetActive(true);
         ChestParentRectTransform.localScale = Vector3.one;
         ChestParentRectTransform.localPosition = StartPosition.localPosition;

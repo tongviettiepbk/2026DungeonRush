@@ -186,7 +186,7 @@ public class UILevelPopup : BaseUI
 
         // kmz: cộng gem trước khi lên level (bay về lobby lúc hiệu ứng xong).
         int gem = GameData.staticData.experience.GetLevelUpGemReward(GameData.userData.player.playerLevel + 1);
-        GameData.userData.items.Receive(ItemType.GEM, gem);
+        using (Analytics.Scope("level_up")) GameData.userData.items.Receive(ItemType.GEM, gem);
         PlayerExpService.CompleteLevelUp();
 
         int newLevel = GameData.userData.player.playerLevel;

@@ -86,6 +86,7 @@ public class UIRewardedChestPopup : BaseUI
 
         if (GameData.userData.shop.isNoAdsBought)
         {
+            Analytics.LogAdSkippedNoAds(AD_PLACEMENT);
             Claim();
             return;
         }

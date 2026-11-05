@@ -19,7 +19,7 @@ public class StoreTabPage : MonoBehaviour
     public TextMeshProUGUI StarterPackPriceText;
     public TextMeshProUGUI EpicPackPriceText;
     public GameObject NoAdsParent;
-    public GameObject OffersRibbonParent;
+    public GameObject StarterPackParent;
     public GameObject LifetimeBoostParent;
     public TextMeshProUGUI LifetimeBoostLabelText;
     public Button BuyDrillButton;
@@ -113,15 +113,16 @@ public class StoreTabPage : MonoBehaviour
         text.text = PurchaseController.Instance.GetPriceText(productId) ?? "N/A";
     }
 
-    // ktw gốc: gói No Ads luôn ẩn; Lifetime Boost ẩn khi đã mua; mục rương chỉ mở khi đã có tính năng Cape.
+    // ktw gốc ẩn hẳn No Ads + Starter Pack; ở đây LỆCH GỐC có chủ ý, bật lại để mở cửa đơn đầu (user duyệt 2026-11-05).
+    // Gốc tắt ribbon Daily Deals khi đã mua No Ads, ở đây giữ vì mục Daily Deals vẫn còn.
+    // Lifetime Boost ẩn khi đã mua; mục rương chỉ mở khi đã có tính năng Cape.
     private void RefreshSections()
     {
         UserShopData user = GameData.userData.shop;
-        if (NoAdsParent != null)
-        {
-            NoAdsParent.SetActive(false);
-            if (OffersRibbonParent != null) OffersRibbonParent.SetActive(!user.isNoAdsBought);
-        }
+        bool showNoAds = !user.isNoAdsBought;
+        bool showStarter = StarterPackService.IsVisible;
+        if (NoAdsParent != null) NoAdsParent.SetActive(showNoAds);
+        if (StarterPackParent != null) StarterPackParent.SetActive(showStarter);
         if (LifetimeBoostParent != null) LifetimeBoostParent.SetActive(!user.isLifetimeBoostBought);
         if (ChestStoreSection != null) ChestStoreSection.Refresh(ShopService.IsChestStoreOpen());
     }
@@ -165,14 +166,14 @@ public class StoreTabPage : MonoBehaviour
     // ktx gốc: 45 gem → +3 Drill.
     private void OnBuyDrillClicked()
     {
-        OnGemPurchase(ShopService.BuyDrill());
+        OnGemPurchase(ShopService.BuyDrill(), StaticShopData.DRILL_GEM_COST);
         RefreshResources();
     }
 
     // kty gốc: 45 gem → +3 Golden Pickaxe.
     private void OnBuyGoldenPickaxeClicked()
     {
-        OnGemPurchase(ShopService.BuyGoldenPickaxe());
+        OnGemPurchase(ShopService.BuyGoldenPickaxe(), StaticShopData.GOLDEN_PICKAXE_GEM_COST);
         RefreshResources();
     }
 
@@ -180,7 +181,7 @@ public class StoreTabPage : MonoBehaviour
     private void OnBuyX2BoostClicked()
     {
         if (ShopService.IsX2BoostActive()) return;
-        OnBoostPurchase(ShopService.BuyX2Boost());
+        OnBoostPurchase(ShopService.BuyX2Boost(), StaticShopData.X2_BOOST_GEM_COST);
         RefreshBoosters();
     }
 
@@ -188,20 +189,20 @@ public class StoreTabPage : MonoBehaviour
     private void OnBuyX5BoostClicked()
     {
         if (ShopService.IsX5BoostActive()) return;
-        OnBoostPurchase(ShopService.BuyX5Boost());
+        OnBoostPurchase(ShopService.BuyX5Boost(), StaticShopData.X5_BOOST_GEM_COST);
         RefreshBoosters();
     }
 
     // kua/kub gốc: mua boost exp bằng gem lần đầu = FTUE step 11 (chỉ đánh dấu).
-    private static void OnBoostPurchase(bool isSuccess)
+    private static void OnBoostPurchase(bool isSuccess, int cost)
     {
         if (isSuccess) TutorialService.Complete(FtueStep.BuyStoreBoost);
-        OnGemPurchase(isSuccess);
+        OnGemPurchase(isSuccess, cost);
     }
 
-    private static void OnGemPurchase(bool isSuccess)
+    private static void OnGemPurchase(bool isSuccess, int cost)
     {
         if (isSuccess) ShopUIUtil.RefreshLobby();
-        else ShopUIUtil.Toast(ShopUIUtil.NOT_ENOUGH_GEMS);
+        else UIMissingGemsPopup.Show("shop", cost);
     }
 }

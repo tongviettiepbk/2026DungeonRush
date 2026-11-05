@@ -67,6 +67,12 @@ public static class OfflineEarningService
         return result;
     }
 
+    // Số giây tối đa tích được, cũng là lúc kho offline đầy.
+    public static int GetMaxSeconds()
+    {
+        return Mathf.RoundToInt(MAX_OFFLINE_SECONDS * GetMastery(MasteryUpgradeType.MaxOfflineTime));
+    }
+
     // OfflineEarnningPopup.kpl: multiplier = 1 (đóng popup) hoặc 2 (xem quảng cáo).
     public static void Collect(OfflineEarningResult result, int multiplier)
     {
@@ -79,8 +85,9 @@ public static class OfflineEarningService
         // (ExperienceController.hdq(exp, false, false, true)).
         PlayerExpService.Grant(result.exp * multiplier, applyMultiplier: false, storeOverflow: true);
 
-        GameData.userData.items.Receive(ItemType.LOOT_TICKET, result.lootBox * multiplier);
+        using (Analytics.Scope("offline")) GameData.userData.items.Receive(ItemType.LOOT_TICKET, result.lootBox * multiplier);
         GameData.Save(true);
+        Analytics.Log("offline_collect", ("minutes", result.duration / 60), ("multiplier", multiplier), ("exp", result.exp), ("hammer", result.lootBox));
     }
 
     // Exp mỗi phút = exp thắng 1 màn campaign hiện tại (ExperienceLevelBase + Scaler × User.Level), tối thiểu 1.

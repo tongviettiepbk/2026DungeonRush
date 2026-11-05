@@ -180,7 +180,12 @@ public class ClanController : Singleton<ClanController>
     {
         CallClan<ClanResponseDTO>(FN_JOIN_OPEN, BuildJoin(clanId), "Failed to join clan", (ok, res, error) =>
         {
-            if (ok) SetCurrent(ClanModel.From(res.clan));
+            if (ok)
+            {
+                SetCurrent(ClanModel.From(res.clan));
+                Analytics.Log("clan_join");
+                Analytics.RefreshUserProperties();
+            }
             callback?.Invoke(ok, ok ? CurrentClan : null, error);
         });
     }
@@ -189,6 +194,7 @@ public class ClanController : Singleton<ClanController>
     {
         CallClan<ClanCreateRequestResponseDTO>(FN_CREATE_REQUEST, BuildJoin(clanId), "Failed to send request", (ok, res, error) =>
         {
+            if (ok) Analytics.Log("clan_apply");
             callback?.Invoke(ok, error);
         });
     }
@@ -265,6 +271,8 @@ public class ClanController : Singleton<ClanController>
             if (ok || code == "ERR_NOT_IN_CLAN")
             {
                 SetCurrent(null);
+                Analytics.Log("clan_leave");
+                Analytics.RefreshUserProperties();
                 callback?.Invoke(true, ok && res.disbanded, null);
                 return;
             }

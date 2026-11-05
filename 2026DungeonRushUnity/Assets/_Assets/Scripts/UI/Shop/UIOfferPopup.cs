@@ -46,6 +46,12 @@ public class UIOfferPopup : BaseUI
         PurchaseController.PurchaseFailed -= OnPurchaseFailed;
     }
 
+    public override void Close()
+    {
+        AutoOfferGate.OnPopupClosed();
+        base.Close();
+    }
+
     private void Update()
     {
         // Gói hết hạn khi popup đang mở.

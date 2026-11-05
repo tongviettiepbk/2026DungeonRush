@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Firebase;
 using Firebase.Analytics;
 using Firebase.Crashlytics;
@@ -6,12 +7,23 @@ using Firebase.Extensions;
 using UnityEngine;
 
 // Firebase Analytics + Crashlytics qua SDK. Auth và Cloud Functions vẫn đi REST ở FirebaseManager, không liên quan lớp này.
-// Không chạy trong Editor. Event bắn trước khi SDK sẵn sàng thì bỏ: tạo Parameter sớm hơn CheckAndFixDependencies
-// là ném từ static constructor của SDK, cháy một lần thì cả phiên không event nào lên được nữa.
+// Không chạy trong Editor. Mọi lời gọi tới SDK đợi trong hàng đợi tới khi SDK sẵn sàng: tạo Parameter sớm hơn
+// CheckAndFixDependencies là ném từ static constructor của SDK, cháy một lần thì cả phiên không event nào lên được nữa.
+// Event gameplay đi qua lớp Analytics; ở đây chỉ còn event của SDK quảng cáo và phần chạm SDK.
 public static class FirebaseServices
 {
+    // Giới hạn GA4: quá là mất cả event hoặc tham số, không báo lỗi. https://support.google.com/analytics/answer/9267744
+    private const int MAX_EVENT_NAME = 40;
+    private const int MAX_PARAMS = 25;
+    private const int MAX_PARAM_NAME = 40;
+    private const int MAX_PARAM_VALUE = 100;
+    private const int MAX_USER_PROPERTY_NAME = 24;
+    private const int MAX_USER_PROPERTY_VALUE = 36;
+    private const int QUEUE_MAX = 200;
+
     private static bool isReady;
     private static string pendingUserId;
+    private static readonly List<Action> pendingCalls = new List<Action>();
 
     public static void Init()
     {
@@ -36,6 +48,13 @@ public static class FirebaseServices
                 ApplyUserId(pendingUserId);
                 pendingUserId = null;
             }
+
+            for (int i = 0; i < pendingCalls.Count; i++)
+            {
+                Safe(pendingCalls[i]);
+            }
+
+            pendingCalls.Clear();
         });
     }
 
@@ -65,32 +84,55 @@ public static class FirebaseServices
 
     public static void LogEvent(string eventName)
     {
-        if (isReady == false)
-        {
-            return;
-        }
-
-        Safe(() => FirebaseAnalytics.LogEvent(eventName));
+        Run(() => FirebaseAnalytics.LogEvent(eventName));
     }
 
-    public static void LogEvent(string eventName, string paramName, string paramValue)
+    // Tham số của Analytics.Log. Dựng Parameter ngay trước lúc gửi, không dựng lúc xếp hàng (xem đầu file).
+    public static void LogEvent(string eventName, List<(string key, object value)> values)
     {
-        if (isReady == false)
+        Run(() => FirebaseAnalytics.LogEvent(Clip(eventName, MAX_EVENT_NAME), ToParameters(values)));
+    }
+
+    public static void SetUserProperty(string name, string value)
+    {
+        Run(() => FirebaseAnalytics.SetUserProperty(Clip(name, MAX_USER_PROPERTY_NAME), Clip(value ?? string.Empty, MAX_USER_PROPERTY_VALUE)));
+    }
+
+    private static Parameter[] ToParameters(List<(string key, object value)> values)
+    {
+        int count = Math.Min(values.Count, MAX_PARAMS);
+        Parameter[] parameters = new Parameter[count];
+
+        for (int i = 0; i < count; i++)
         {
-            return;
+            parameters[i] = ToParameter(Clip(values[i].key, MAX_PARAM_NAME), values[i].value);
         }
 
-        Safe(() => FirebaseAnalytics.LogEvent(eventName, paramName, paramValue));
+        return parameters;
+    }
+
+    private static Parameter ToParameter(string key, object value)
+    {
+        switch (value)
+        {
+            case bool b: return new Parameter(key, b ? 1L : 0L);
+            case int i: return new Parameter(key, (long)i);
+            case long l: return new Parameter(key, l);
+            case float f: return new Parameter(key, (double)f);
+            case double d: return new Parameter(key, double.IsNaN(d) || double.IsInfinity(d) ? 0d : d);
+            case Enum e: return new Parameter(key, Clip(e.ToString().ToLowerInvariant(), MAX_PARAM_VALUE));
+            default: return new Parameter(key, Clip(value.ToString(), MAX_PARAM_VALUE));
+        }
+    }
+
+    private static string Clip(string text, int max)
+    {
+        return text.Length <= max ? text : text.Substring(0, max);
     }
 
     public static void LogAdRevenue(string source, string adUnit, string format, double value)
     {
-        if (isReady == false)
-        {
-            return;
-        }
-
-        Safe(() =>
+        Run(() =>
         {
             Parameter[] parameters =
             {
@@ -106,21 +148,21 @@ public static class FirebaseServices
         });
     }
 
-    public static void LogPurchase(string productId, double value, string currency, string transactionId)
+    private static void Run(Action action)
     {
-        if (isReady == false)
+        if (Application.isEditor)
         {
             return;
         }
 
-        Safe(() =>
+        if (isReady)
         {
-            FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase,
-                new Parameter(FirebaseAnalytics.ParameterItemID, productId),
-                new Parameter(FirebaseAnalytics.ParameterValue, value),
-                new Parameter(FirebaseAnalytics.ParameterCurrency, currency ?? string.Empty),
-                new Parameter(FirebaseAnalytics.ParameterTransactionID, transactionId ?? string.Empty));
-        });
+            Safe(action);
+        }
+        else if (pendingCalls.Count < QUEUE_MAX)
+        {
+            pendingCalls.Add(action);
+        }
     }
 
     // Một event hỏng không được làm chết luồng game (nhất là luồng trao hàng IAP).
