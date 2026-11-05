@@ -31,7 +31,7 @@ public class BattlePassReward
 
 // Battle Pass vô hạn (BattlePassPopup / BattlePassButton gốc, reverse il2cpp juh/juw/jvc/jvd/jtx + BattlePassConfig asset):
 //  - Tiến độ = HighestLevel campaign. Mốc thưởng: màn 20, 25, 30… (StartLevel 20, RewardInterval 5).
-//  - Mỗi mốc 2 hàng: Free / Premium (mua lootio.battlepass), mỗi hàng 2 thưởng.
+//  - Mỗi mốc 2 hàng: Free / Premium (mua tnt.battlepass), mỗi hàng 2 thưởng.
 //  - Thưởng xoay vòng trong pool LevelRewards (lọc UnlockLevel ≤ mốc): bước = (mốc − 20)/5,
 //    dòng = pool[bước % pool], lượng = BaseAmount × Multiplier^(bước / pool).
 //  - Nút lobby hiện từ playerLevel 4 (GameResources.BattlePassUnlockPlayerLevel), chấm đỏ khi còn mốc nhận được.

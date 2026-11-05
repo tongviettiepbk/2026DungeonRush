@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 // Popup Battle Pass (BattlePassPopup gốc): cột giữa là mốc level (màn 20, 25, …), trái hàng Free, phải hàng Premium.
 // Hiện tới mốc đã đạt + FutureRewardCount mốc tương lai; thanh fill tới mốc đã đạt; mở lên cuộn tới mốc đầu còn nhận được.
-// Chưa mua Premium thì hiện nút mua (lootio.battlepass).
+// Chưa mua Premium thì hiện nút mua (tnt.battlepass).
 public class UIBattlePassPopup : BaseUI
 {
     // Giá trị serialized của prefab gốc.

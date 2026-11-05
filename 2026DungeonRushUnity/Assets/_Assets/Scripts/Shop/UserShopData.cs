@@ -35,6 +35,10 @@ public class UserShopData : BaseUserData
     public List<int> claimedFreeBattlePassRewards { get; set; } = new List<int>();
     public List<int> claimedPremiumBattlePassRewards { get; set; } = new List<int>();
 
+    // Sổ giao dịch IAP đã trao hàng, chặn trao 2 lần khi đơn được phát lại (xem IapController).
+    public const int GRANTED_TRANSACTIONS_MAX = 50;
+    public List<string> grantedTransactionIds { get; set; } = new List<string>();
+
     protected override string GetDataKey()
     {
         return UserData.DATA_KEY_SHOP;
@@ -49,6 +53,7 @@ public class UserShopData : BaseUserData
         if (offerWeaponId == null) offerWeaponId = string.Empty;
         if (claimedFreeBattlePassRewards == null) claimedFreeBattlePassRewards = new List<int>();
         if (claimedPremiumBattlePassRewards == null) claimedPremiumBattlePassRewards = new List<int>();
+        if (grantedTransactionIds == null) grantedTransactionIds = new List<string>();
     }
 
     // eer gốc.

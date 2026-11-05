@@ -62,6 +62,9 @@ public class Login : MonoBehaviour
         // Đăng nhập (lần đầu: tự tạo tài khoản khách) + tài khoản email thì đối chiếu save cloud.
         yield return AccountController.Instance.BootRoutine();
 
+        FirebaseServices.SetUserId(FirebaseManager.Instance.Uid);
+        AppsflyerHelper.SetCustomerUserId(FirebaseManager.Instance.Uid);
+
         // Giờ server cho mốc reset key Dungeon / vé Events.
         yield return ServerTime.SyncRoutine(SERVER_TIME_TIMEOUT);
 

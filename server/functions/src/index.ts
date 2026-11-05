@@ -27,3 +27,4 @@ export { getservertime } from "./time";
 export {
   sendchatmessage, sendclanchatmessage, getchatplayerprofile, updatechatplayerprofile, reportchatuser, clearchatban,
 } from "./chat";
+export { verifypurchase } from "./iap";

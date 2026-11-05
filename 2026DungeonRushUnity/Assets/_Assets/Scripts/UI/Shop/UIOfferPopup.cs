@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // Popup Weapon Offer (OfferPopup gốc, reverse il2cpp jkg..jkl): thẻ vũ khí level 1, tên + dải màu theo rarity,
-// "<rarity>", chỉ số chính, các dòng substat cố định, nút mua (giá sản phẩm lootio.offer_XXX).
+// "<rarity>", chỉ số chính, các dòng substat cố định, nút mua (giá sản phẩm tnt.offer_XXX).
 // Gói hết hạn trong lúc mở → hiện lớp phủ hết hạn, khoá nút. Mua xong: vũ khí mặc thẳng vào hero.
 public class UIOfferPopup : BaseUI
 {

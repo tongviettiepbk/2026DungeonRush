@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 // rồi chuyển sang Login.
 // Đặt Root là scene index 0 trong Build Settings.
 //
-// Bản rút gọn so với StickIdle: bỏ Firebase.Init / ProtectedConst / DOTween.Init
+// Bản rút gọn so với StickIdle: bỏ ProtectedConst / DOTween.Init
 // (DOTween tự init khi dùng lần đầu). Thêm lại khi có các phần tương ứng.
 public class Root : MonoBehaviour
 {
@@ -31,6 +31,14 @@ public class Root : MonoBehaviour
     private void Start()
     {
         GameData.staticData.Load();
+
+        FirebaseServices.Init();
+        AppsflyerHelper.Init();
+        // Tạo lớp SDK trước khi ai chạm MediationAds/PurchaseController.Instance, không thì Singleton tự tạo lớp base.
+        // IapController cần static data để dựng danh mục sản phẩm nên phải sau Load.
+        new GameObject(nameof(MediationAds)).AddComponent<MaxAdController>();
+        new GameObject(nameof(PurchaseController)).AddComponent<IapController>();
+
         SceneManager.LoadScene(StaticValue.SCENE_LOGIN);
     }
 }

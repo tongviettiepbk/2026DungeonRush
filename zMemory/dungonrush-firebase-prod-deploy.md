@@ -22,3 +22,5 @@ metadata:
 **Deploy lại 2026-11-04** (commit c5a2f567, gồm PvP mùa, Clan War, Chat, getservertime; 53 hàm + firestore). Đã xoá 5 hàm PvP cũ, prod khớp local 53 hàm. Đã tạo RTDB mặc định us-central1 + deploy rules; `firebase database:instances:create` từ chối tạo instance mặc định và `firebase init database` đòi tương tác, nên gọi `createInstance(..., DEFAULT_DATABASE)` trong firebase-tools. Deploy gộp có `--force` từng bị kiểm tra quyền chặn: dùng `--only functions:...` rồi xoá riêng bằng `functions:delete`.
 
 **Test server thật 2026-11-04 (Editor, phiên khách có sẵn):** tạo/tìm/giải tán clan, state Clan War trả cấu hình mới, PvP đánh trọn trận (+1 cúp đúng StarsOnWin, trừ vé), Chat Thế giới + Clan gửi nhận qua RTDB đều đạt. Chưa test được: nhận mốc/ngày 6/ngày 7 trên prod (clan tạo giữa tuần chưa được ghép; `config/admins` chưa có nên không gọi được matchclanwarsnow). Cách test: `USE_EMULATOR=false` tạm trong FirebaseSettings, sao lưu `key_user_*`, bật `UserData.isDisableSaveDataLocal`, xong tắt cờ + restore + checkout file.
+
+**2026-11-05:** deploy thêm `verifypurchase` bằng `--only functions:verifypurchase`, prod còn 54 hàm.

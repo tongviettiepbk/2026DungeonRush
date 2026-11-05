@@ -42,6 +42,20 @@ project `demo-dungeonrush`). Trên emulator mọi tài khoản đều là admin 
    rồi thêm Scripting Define `FIREBASE_SDK` → đăng nhập qua SDK như StickIdle. Không có define vẫn chạy qua Auth REST.
 6. Admin thật: tạo document `config/admins` = `{ "uids": ["<uid của bạn>"] }`.
 
+## Xác minh mua hàng Google Play (`verifypurchase`)
+
+`functions/src/iap.ts` hỏi Play Developer API rồi ghi sổ `iapPurchases/{sha256(token)}`. Client chỉ trao hàng khi server trả `ok`.
+
+Hàm gọi được Google cần cấu hình 1 lần:
+
+1. Google Cloud Console của project: bật **Google Play Android Developer API**.
+2. Play Console → **Users and permissions** → mời `970487268119-compute@developer.gserviceaccount.com`, cấp quyền xem dữ liệu tài chính + quản lý đơn hàng cho app.
+3. App phải có trên Play Console, mã sản phẩm `tnt.*` phải được tạo và kích hoạt.
+
+Chưa cấu hình thì server trả `error` (log `play-api-401/403/...-app-not-found`), client giữ đơn treo và thử lại sau, người chơi không mất tiền.
+
+Test: `npm test` (phần thuần) và `npm run test:emulator:iap` (transaction thật trên emulator, Google giả).
+
 ## Đổi thưởng / lên-xuống tier (không cần deploy)
 
 Document `config/bossRush`:

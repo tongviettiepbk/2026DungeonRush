@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 // Weapon Offer — gói bán 1 vũ khí có sẵn substat (OfferController gốc, reverse il2cpp v41 jiv..jjw, .cctor):
 //  - Cấu hình remote "weapon_offer_config" = "giá,itemId|..." (live: 2,1301|10,1333|20,1364|50,1430|100,1432);
-//    giá → sản phẩm lootio.offer_XXX. Mở từ playerLevel 3 (OfferUnlockPlayerLevel), lần đầu sau khi thắng 1 màn campaign.
+//    giá → sản phẩm tnt.offer_XXX. Mở từ playerLevel 3 (OfferUnlockPlayerLevel), lần đầu sau khi thắng 1 màn campaign.
 //  - Mỗi gói sống 72h; hết hạn thì sinh lại CÙNG gói (offerIndex chỉ tăng khi mua). Hết danh sách thì không còn gói.
 //  - Substat cố định theo tier = clamp(rarity − 4, 0, 6) của OfferSubStatTiers, giá trị = MaxValue × 0.75.
 //  - Mua: vũ khí mặc thẳng vào slot WEAPON (level 1, thay vũ khí cũ), sang gói kế.
@@ -17,9 +17,9 @@ public static class WeaponOfferService
     // ycl gốc: mốc giá → sản phẩm IAP.
     private static readonly Dictionary<int, string> PRODUCT_BY_PRICE = new Dictionary<int, string>
     {
-        { 1, "lootio.offer_099" }, { 2, "lootio.offer_199" }, { 3, "lootio.offer_299" }, { 5, "lootio.offer_499" },
-        { 10, "lootio.offer_999" }, { 15, "lootio.offer_1499" }, { 20, "lootio.offer_1999" }, { 30, "lootio.offer_2999" },
-        { 50, "lootio.offer_4999" }, { 100, "lootio.offer_9999" },
+        { 1, "tnt.offer_099" }, { 2, "tnt.offer_199" }, { 3, "tnt.offer_299" }, { 5, "tnt.offer_499" },
+        { 10, "tnt.offer_999" }, { 15, "tnt.offer_1499" }, { 20, "tnt.offer_1999" }, { 30, "tnt.offer_2999" },
+        { 50, "tnt.offer_4999" }, { 100, "tnt.offer_9999" },
     };
 
     // OfferController.OfferSubStatTiers (giá trị serialized đọc từ APK).
@@ -37,6 +37,8 @@ public static class WeaponOfferService
     public static event Action OfferChanged;
 
     private static UserShopData User => GameData.userData.shop;
+
+    public static IEnumerable<string> AllProductIds => PRODUCT_BY_PRICE.Values;
 
     public static bool IsOfferProduct(string productId)
     {

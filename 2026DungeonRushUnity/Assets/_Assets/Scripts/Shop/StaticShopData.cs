@@ -108,11 +108,11 @@ public class StaticShopData
         { PurchaseController.STORE_ID_DEAL_LARGE, "$24.99" },
         { PurchaseController.STORE_ID_CHEST_BUNDLE_LEGENDARY, "$19.99" },
         { PurchaseController.STORE_ID_CHEST_BUNDLE_MYTHIC, "$29.99" },
-        // Weapon Offer: giá theo tên sản phẩm gốc lootio.offer_XXX = $X.XX.
-        { "lootio.offer_099", "$0.99" }, { "lootio.offer_199", "$1.99" }, { "lootio.offer_299", "$2.99" },
-        { "lootio.offer_499", "$4.99" }, { "lootio.offer_999", "$9.99" }, { "lootio.offer_1499", "$14.99" },
-        { "lootio.offer_1999", "$19.99" }, { "lootio.offer_2999", "$29.99" }, { "lootio.offer_4999", "$49.99" },
-        { "lootio.offer_9999", "$99.99" },
+        // Weapon Offer: giá theo tên sản phẩm gốc tnt.offer_XXX = $X.XX.
+        { "tnt.offer_099", "$0.99" }, { "tnt.offer_199", "$1.99" }, { "tnt.offer_299", "$2.99" },
+        { "tnt.offer_499", "$4.99" }, { "tnt.offer_999", "$9.99" }, { "tnt.offer_1499", "$14.99" },
+        { "tnt.offer_1999", "$19.99" }, { "tnt.offer_2999", "$29.99" }, { "tnt.offer_4999", "$49.99" },
+        { "tnt.offer_9999", "$99.99" },
         { PurchaseController.STORE_ID_BATTLE_PASS, "$9.99" },   // [SUY] giá Premium Battle Pass
     };
 
