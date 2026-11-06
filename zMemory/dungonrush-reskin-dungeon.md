@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-dungeon
-description: "Reskin Dungeon 2026-10-28 theo mockup _Concept/Dungeon (8 demo): trang DungeonPage trong UIMainGame2 + UIDungeonPopup + UIDungeonEndPopup + tấm DungeonUI trong trận; kit 1_UIKit/Dungeon; đổi tên EN Boss Raid/Street Rush/Mafia Crew; test Play OK, đã commit daaf59f"
+description: "Reskin Dungeon 2026-10-28 theo mockup _Concept/Dungeon (8 demo): trang DungeonPage trong UIMainGame2 + UIDungeonPopup + UIDungeonEndPopup + tấm DungeonUI trong trận; kit 1_UIKit/Dungeon; đổi tên EN Boss Raid/Street Rush/Mafia Crew; test Play OK, đã commit daaf59f; đợt 2 2026-11-07 đổi art 3 thẻ, chưa test Play, đã commit"
 metadata:
   node_type: memory
   type: project
@@ -18,5 +18,7 @@ Mockup + art giao: `ArtIncoming/_Concept/Dungeon/` (nguồn Telegram "Dungeon (2
 - 2 popup dùng kit Mastery (frame/header/X/box_tan/btn_blue); ruy băng popup luôn ĐỎ như mockup, icon ruy băng = icon thưởng theo dungeon (field mới `UIDungeonPopupStart.imgIconRibbon`). Nút Sweep/Enter/Okay transition SpriteSwap, disabled = Lobby/btn_gray (mockup Sweep xám = trạng thái khoá ở màn 1-1). Nút Ads = Lobby/btn_green.
 - EndPopup: thêm `RewardLabel` ("Reward", ẩn khi thua qua field `objRewardLabel`) + ô `RewardBox` box_tan; chữ thưởng "<sprite=0><space=40>n".
 - Phần mockup bỏ: hàng "+" pet trên map (game để ở thanh dưới), chữ nút "Enter" ở popup kết quả (giữ "Okay").
+
+**Đợt 2 (2026-11-07, đã commit, chưa test Play):** mockup mới `_unRar/Dungeon/` (Dungeon demo (2) + Mode 1/2/3 = art thẻ Boss Raid/Street Rush/Mafia Crew 990x486, cổng đá/hầm mộ/ngục). Bố cục mockup y hệt đợt 1, nên chỉ chép đè art vào `_Concept/Dungeon/` + chạy gen_dungeon.py, giữ GUID, KHÔNG sửa prefab. Ảnh card chỉ dùng trong UIMainGame2. Giữ như cũ: icon thưởng trong ruy băng + icon chìa cạnh tag (mockup trống, user chốt đợt 1), chữ gốc đúng chính tả (mockup ghi sai "comsumed", "conplate"). Ảnh so: `_Concept/Dungeon/compare_page.png` (chụp prefab bằng batchmode, ổ khoá + đầu lâu trong ảnh là trạng thái mặc định prefab, code tự bật tắt).
 
 Xem [[dungonrush-reskin-ui-howto]], [[dungonrush-dungeon-system]], [[dungonrush-reskin-plan]].
