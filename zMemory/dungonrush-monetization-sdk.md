@@ -5,7 +5,7 @@ metadata:
   type: project
 ---
 
-Tích hợp 2026-11-04, chưa commit. Lớp SDK kế thừa base, chỗ gọi cũ giữ nguyên: `MaxAdController : MediationAds`, `IapController : PurchaseController`, tạo trong `Root.Start`. Thêm `FirebaseServices`, `AppsflyerHelper`, `MonetizationSettings` (ô key) ở Scripts/Network. Compile qua cả Android lẫn iOS. Test Play qua batch 2026-11-04 đạt 24/24 trên fake store (mua, huỷ, phát lại đơn, UI lỗi sau khi trao, trả quyền NoAds); chưa chạy máy thật, chưa test quảng cáo thật.
+Tích hợp 2026-11-04, đã commit 520b5d02 (2026-11-05). Lớp SDK kế thừa base, chỗ gọi cũ giữ nguyên: `MaxAdController : MediationAds`, `IapController : PurchaseController`, tạo trong `Root.Start`. Thêm `FirebaseServices`, `AppsflyerHelper`, `MonetizationSettings` (ô key) ở Scripts/Network. Compile qua cả Android lẫn iOS. Test Play qua batch 2026-11-04 đạt 24/24 trên fake store (mua, huỷ, phát lại đơn, UI lỗi sau khi trao, trả quyền NoAds); chưa chạy máy thật, chưa test quảng cáo thật.
 
 Khác RaceManager có chủ ý:
 - Không dùng define `MAX`: SDK luôn nằm trong project, bỏ được bẫy thiếu define.
