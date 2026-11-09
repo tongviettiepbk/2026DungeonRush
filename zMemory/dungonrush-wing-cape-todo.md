@@ -14,6 +14,6 @@ Trạng thái 2026-10-09:
 - Wing/Cape đang mặc vẫn copy vào UserEquipmentData (slot WING/CAPE: equipId = wingId/capeId, level, subStats) → service đồng bộ khi lên cấp/reroll/salvage.
 - `RarityBackgroundConfig` (Resources/Scriptable Objects/UI) = nền ô item theo rarity, dùng chung (Cape đang dùng; Wing dùng list riêng trên UITabWing).
 - Bỏ qua so với gốc: CloseOnClickDark, animation ClaimPage chi tiết, auto-scroll bảng summon nhiều, NotificationUI.
-- 2026-11-09 sửa UICapePopup: ô số Cloak + giá nút Summon có icon vương miện (TMP sprite asset `IsCrown` = icon Cloak, chữ `<sprite=0>`); thanh Summon Level = bar_track kit Companion + xp_fill kiểu Filled (`imgSummonFill.fillAmount`, giống UIPetInfo); cùng cách sửa cho thanh UICapeUpgradeInfoPopup (`imgFill`) + UICapeSalvagePopup (`imgXPFill`). Chưa test Play, chưa commit.
+- 2026-11-09 sửa UICapePopup: ô số Cloak + giá nút Summon có icon vương miện (TMP sprite asset `IsCrown` = icon Cloak, chữ `<sprite=0>`); thanh Summon Level = bar_track kit Companion + xp_fill kiểu Filled (`imgSummonFill.fillAmount`, giống UIPetInfo); cùng cách sửa cho thanh UICapeUpgradeInfoPopup (`imgFill`) + UICapeSalvagePopup (`imgXPFill`). Chưa test Play, đã commit e0b78921.
 
 **How to apply:** mở Unity kiểm tra 4 popup Cape + PageWing trước khi làm tiếp; nguồn Cloak/quặng (Mining, BattlePass, shop…) là bước kế. Xem [[dungonrush-power-model]], [[dungonrush-enchantment-system]], [[dungonrush-reverse-native-il2cpp]], [[dungonrush-ripped-prefab-rewire]].

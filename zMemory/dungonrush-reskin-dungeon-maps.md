@@ -1,6 +1,6 @@
 ---
 name: dungonrush-reskin-dungeon-maps
-description: "3 map dungeon (Boss Raid/Zombie Horde/Dark Ritual) 2026-11-07 đổi sang art liền tấm: sàn + tường 1 ảnh, nền 1 ảnh, bỏ node trang trí cũ; test Play OK, chưa commit; 20 asset cũ của Zombie/Cultist chưa xoá"
+description: "3 map dungeon (Boss Raid/Zombie Horde/Dark Ritual) 2026-11-07 đổi sang art liền tấm: sàn + tường 1 ảnh, nền 1 ảnh, bỏ node trang trí cũ; test Play OK, đã commit 8bc97939; 20 asset cũ của Zombie/Cultist chưa xoá"
 metadata:
   type: project
   modified: 2026-11-07

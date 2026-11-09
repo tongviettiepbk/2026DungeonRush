@@ -14,6 +14,6 @@ metadata:
 - `SetTool(Sprite, MiningToolType)`: cuốc xoay −45° như vũ khí cận chiến hero, khoan +90° (mũi chĩa ra trước). Đã xoá `MiningConfig.GetToolAnimator`. Các field *Animator trong config còn đó nhưng không dùng nữa.
 - Rig ở prefab MiningWorld: MiningCharacter > Visual (scale 0.65) > Soldier (Animator unit_all + UnitAnimationEventRelay) > shadow + main/body (toạ độ y hệt 00Hero) + main/weapon/weapon_slot (scale 0.4). Sorting order = order của hero + 10 để luôn đè khối quặng.
 - Menu riêng `Tools/DungeonRush/Build Mining/Duck Character` (MiningPrefabBuilder.RebuildCharacterInWorld) chỉ thay node nhân vật, KHÔNG đụng phần reskin, nên chạy lại được. Vẫn CẤM chạy Build Mining/All.
-- Test Play 2026-11-09 OK: mặc đủ đồ, quay trái, vung cuốc, cầm khoan. Save đã khôi phục sau test. CHƯA commit.
+- Test Play 2026-11-09 OK: mặc đủ đồ, quay trái, vung cuốc, cầm khoan. Save đã khôi phục sau test. Đã commit 5df35392.
 
 Xem [[dungonrush-mining-system]], [[dungonrush-reskin-mining]], [[dungonrush-hero-anim-unit-all]].
