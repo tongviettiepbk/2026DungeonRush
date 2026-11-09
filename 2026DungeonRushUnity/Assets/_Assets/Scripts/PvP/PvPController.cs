@@ -410,6 +410,7 @@ public class PvPController : Singleton<PvPController>
 
     public static long Now()
     {
-        return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        // Giờ server: so với ExpiresAt server trả về.
+        return new DateTimeOffset(ServerTime.UtcNow).ToUnixTimeSeconds();
     }
 }

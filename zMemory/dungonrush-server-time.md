@@ -19,3 +19,5 @@ metadata:
 **How to apply:** muốn hệ khác chống chỉnh giờ → đổi sang `ServerTime.UtcNow`, đừng dựng hàm mới. Xem [[dungonrush-dungeon-system]], [[dungonrush-events-tab]], [[dungonrush-firebase-prod-deploy]].
 
 Đã deploy lên server thật 2026-11-04.
+
+**2026-11-09:** Editor cũng gọi server thật (`USE_EMULATOR = false` cố định, muốn emulator thì tạm đổi true). `ServerTime` bù nửa RTT, tự sync lại khi app lấy lại focus (`Application.focusChanged`), chưa sync thì tự thử lại 15s/lần khi đã đăng nhập. `BossRushSchedule.UtcNow` + `Now()` của BossRushController/PvPController đã chuyển sang `ServerTime.UtcNow`. Compile sạch, CHƯA test Play, chưa commit.

@@ -1,6 +1,4 @@
-// Cấu hình kết nối Firebase cho DungeonRush. Khi đã tạo Firebase project thật:
-//   1. Đổi PROJECT_ID + WEB_API_KEY (Firebase console → Project settings → General → Web API Key).
-//   2. USE_EMULATOR = false để gọi server thật (Cloud Functions us-central1).
+// Cấu hình kết nối Firebase cho DungeonRush: project thật dungeon-duck-quack-slash (Cloud Functions us-central1).
 // Emulator local (cd server && firebase emulators:start --project demo-dungeonrush): không cần API key thật.
 public static class FirebaseSettings
 {
@@ -8,11 +6,8 @@ public static class FirebaseSettings
     public const string WEB_API_KEY = "AIzaSyBcv3df1dRysLRq8b_YX90tYt8iMLdQ5Gg";
     public const string REGION = "us-central1";
 
-#if UNITY_EDITOR
-    public const bool USE_EMULATOR = true;
-#else
+    // Editor + build đều gọi server thật. Muốn test emulator local thì tạm đổi true (phiên đăng nhập lưu riêng theo đuôi _emu).
     public const bool USE_EMULATOR = false;
-#endif
     public const string EMULATOR_PROJECT_ID = "demo-dungeonrush";
     public const string EMULATOR_HOST = "127.0.0.1";
     public const int EMULATOR_AUTH_PORT = 9099;

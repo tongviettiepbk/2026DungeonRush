@@ -5,7 +5,8 @@ using System;
 //   eventKey = "yyyy-MM-dd" của ngày bắt đầu (Thứ 3).
 public static class BossRushSchedule
 {
-    public static DateTime UtcNow => GameUtils.GetTimeNow().ToUniversalTime();
+    // Giờ server (ServerTime) — chỉnh giờ máy không đổi được lịch mở/đóng; offline tạm giờ máy.
+    public static DateTime UtcNow => ServerTime.UtcNow;
 
     // ely: đang mở ⇔ không phải Thứ 2.
     public static bool IsActive(DateTime utc)
