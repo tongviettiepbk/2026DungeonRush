@@ -23,7 +23,7 @@ public class UICapePopup : BaseUI
     public TMP_Text txtSummon;
     public TMP_Text txtSummonLevel;
     public TMP_Text txtSummonProgress;
-    public RectTransform rectSummonFill;
+    public Image imgSummonFill;           // Filled ngang (kit Companion), fillAmount = tiến độ
     public GameObject objSummonNotification;
     public Button btMultiplier;
     public TMP_Text txtMultiplier;
@@ -107,7 +107,7 @@ public class UICapePopup : BaseUI
     public void Refresh()
     {
         int cloak = CapeService.GetCloak();
-        txtCloak.text = cloak.ToString();
+        txtCloak.text = "<sprite=0>" + cloak;   // sprite asset IsCrown = icon Cloak
         RefreshMultiplier(cloak);
         RefreshSummonLevel();
         RefreshSummonButton(cloak);
@@ -127,7 +127,7 @@ public class UICapePopup : BaseUI
         txtMultiplier.text = "x" + CapeSummonConfig.MULTIPLIERS[multiplierIndex];
     }
 
-    // eta: "Lvl N" + "cur/req" + thanh (scale X), max → "Max Level".
+    // eta: "Lvl N" + "cur/req" + thanh (fillAmount), max → "Max Level".
     private void RefreshSummonLevel()
     {
         int total = GameData.userData.capes.totalSummons;
@@ -136,12 +136,12 @@ public class UICapePopup : BaseUI
         if (isMax)
         {
             txtSummonProgress.text = "Max Level";
-            rectSummonFill.localScale = Vector3.one;
+            imgSummonFill.fillAmount = 1f;
             return;
         }
 
         txtSummonProgress.text = current + "/" + required;
-        rectSummonFill.localScale = new Vector3(required > 0 ? Mathf.Clamp01((float)current / required) : 0f, 1f, 1f);
+        imgSummonFill.fillAmount = required > 0 ? Mathf.Clamp01((float)current / required) : 0f;
     }
 
     // etb: "<giá>\nSummon x<lượt>", giá đỏ khi thiếu Cloak; nút màu Default/Disabled.
@@ -150,7 +150,7 @@ public class UICapePopup : BaseUI
         int multiplier = CapeSummonConfig.MULTIPLIERS[multiplierIndex];
         int cost = CapeService.GetSummonCost(multiplier);
         bool isEnough = cloak >= cost;
-        string costText = isEnough ? cost.ToString() : "<color=red>" + cost + "</color>";
+        string costText = "<sprite=0>" + (isEnough ? cost.ToString() : "<color=red>" + cost + "</color>");
         txtSummon.text = costText + "\nSummon x" + multiplier;
         UITabWing.SetButtonState(imgSummon, isEnough, sprButtonOn, sprButtonOff);
     }

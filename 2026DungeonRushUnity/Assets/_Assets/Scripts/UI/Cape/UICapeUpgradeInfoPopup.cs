@@ -13,7 +13,7 @@ public class UICapeUpgradeInfoPopup : BaseUI
     public Button btRight;
     public GameObject objProgress;
     public TMP_Text txtProgress;
-    public RectTransform rectFill;
+    public Image imgFill;   // Filled ngang (kit Companion), fillAmount = tiến độ
     public Button btClose;
 
     private int viewLevel;
@@ -37,12 +37,12 @@ public class UICapeUpgradeInfoPopup : BaseUI
         if (isMax)
         {
             txtProgress.text = "Max Level";
-            rectFill.localScale = Vector3.one;
+            imgFill.fillAmount = 1f;
         }
         else
         {
             txtProgress.text = current + "/" + required;
-            rectFill.localScale = new Vector3(required > 0 ? Mathf.Clamp01((float)current / required) : 0f, 1f, 1f);
+            imgFill.fillAmount = required > 0 ? Mathf.Clamp01((float)current / required) : 0f;
         }
 
         SetViewLevel(currentLevel);

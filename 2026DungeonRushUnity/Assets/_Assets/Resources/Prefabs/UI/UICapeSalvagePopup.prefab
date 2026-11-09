@@ -810,7 +810,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 3, y: 0.000036716}
+  m_AnchoredPosition: {x: 3, y: 0}
   m_SizeDelta: {x: 633.98, y: 51.2}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &222078995588955051
@@ -834,23 +834,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.17528482, g: 0.5911226, b: 0.9528302, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d8376a66c87c6c3b8879c865ce1029ea, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 09fc6f39a4bef455889f2dd21a124f3f, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1.4
+  m_PixelsPerUnitMultiplier: 1.7
 --- !u!1 &1372346276385494
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,14 +1414,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 10d6dd33d0f8117a3cdb49e41bb60040, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2bbc998585c9440939636362e52d582b, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1430,7 +1430,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1.4
+  m_PixelsPerUnitMultiplier: 1.51
 --- !u!1 &1484073421346432
 GameObject:
   m_ObjectHideFlags: 0
@@ -2312,7 +2312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &224488748683222234
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3049,7 +3049,7 @@ MonoBehaviour:
   txtName: {fileID: 114375105580463885}
   txtDamage: {fileID: 114580460188309186}
   txtHealth: {fileID: 114004386647661053}
-  rectXPFill: {fileID: 224863963850504304}
+  imgXPFill: {fileID: 114447467019628628}
   txtXP: {fileID: 114710275419090626}
   transContent: {fileID: 224985836296430310}
   objPrefabElement: {fileID: 1664562638163048, guid: 3b4704b1c03746d4b56702c993456ee1, type: 3}

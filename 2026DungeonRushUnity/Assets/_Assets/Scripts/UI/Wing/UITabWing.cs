@@ -379,7 +379,7 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
         // Chưa sở hữu: nút Craft + giá chế tạo; đã có: nút Reroll + Upgrade + Equip.
         int ore = WingService.GetOre(wing.craftOreType);
-        txtCraftResource.text = GetOreText(wing.craftOreType, ore, wing.craftOreCost);
+        SetOreText(txtCraftResource, wing.craftOreType, ore, wing.craftOreCost);
         objCraftArea.SetActive(model == null);
         objRerollArea.SetActive(model != null);
         SetButtonState(imgCraft, model != null || ore >= wing.craftOreCost, sprButtonOn, sprButtonOff);
@@ -408,7 +408,7 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
         int levelUpOre = WingService.GetOre(wing.levelUpOreType);
         int cost = WingService.GetLevelUpCost(wing, model.level);
-        txtLevelUpResource.text = GetOreText(wing.levelUpOreType, levelUpOre, cost);
+        SetOreText(txtLevelUpResource, wing.levelUpOreType, levelUpOre, cost);
         txtLevelUpResource.color = levelUpOre >= cost ? Color.white : Color.red;
         SetButtonState(imgLevelUp, levelUpOre >= cost, sprButtonOn, sprButtonOff);
     }
@@ -683,9 +683,14 @@ public class UITabWing : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         }
     }
 
-    // "<quặng> có/cần" (gốc: "<sprite=0> có/cần" với spriteAsset của quặng — chưa có sprite asset quặng).
-    public static string GetOreText(MineOreType ore, int have, int need)
+    // Gốc: "<sprite=0> có/cần" với spriteAsset của quặng (MiningConfig.OreSpriteAssets); thiếu asset thì ghi tên quặng.
+    public static void SetOreText(TMP_Text txt, MineOreType ore, int have, int need)
     {
-        return GetOreName(ore) + " " + have + "/" + need;
+        TMP_SpriteAsset asset = MiningService.Config != null ? MiningService.Config.GetOreSpriteAsset(ore) : null;
+        if (asset != null)
+        {
+            txt.spriteAsset = asset;
+        }
+        txt.text = (asset != null ? "<sprite=0>" : GetOreName(ore) + " ") + have + "/" + need;
     }
 }

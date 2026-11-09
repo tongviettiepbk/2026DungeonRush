@@ -13,7 +13,7 @@ public class UICapeSalvagePopup : BaseUI
     public TMP_Text txtName;
     public TMP_Text txtDamage;
     public TMP_Text txtHealth;
-    public RectTransform rectXPFill;
+    public Image imgXPFill;   // Filled ngang (kit Companion), fillAmount = tiến độ XP
     public TMP_Text txtXP;
     public Transform transContent;
     public GameObject objPrefabElement;
@@ -124,13 +124,13 @@ public class UICapeSalvagePopup : BaseUI
         if (level >= CapeService.MaxLevel)
         {
             txtXP.text = Loc.L("Common.Level.Max");
-            rectXPFill.localScale = Vector3.one;
+            imgXPFill.fillAmount = 1f;
         }
         else
         {
             int need = CapeService.GetLevelUpXP(data.rarity, level);
             txtXP.text = xp + "/" + need + " xp";
-            rectXPFill.localScale = new Vector3(need > 0 ? Mathf.Clamp01((float)xp / need) : 0f, 1f, 1f);
+            imgXPFill.fillAmount = need > 0 ? Mathf.Clamp01((float)xp / need) : 0f;
         }
 
         UITabWing.SetButtonState(imgUpgrade, selected.Count > 0, sprButtonOn, sprButtonOff);

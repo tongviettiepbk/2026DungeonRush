@@ -94,7 +94,7 @@ public class UIWingRerollPopup : BaseUI
         int ore = WingService.GetOre(wing.rerollOreType);
         int cost = WingService.GetRerollCost(wing, lockedCount);
 
-        txtRerollResource.text = UITabWing.GetOreText(wing.rerollOreType, ore, cost);
+        UITabWing.SetOreText(txtRerollResource, wing.rerollOreType, ore, cost);
         txtRerollResource.color = ore >= cost ? Color.white : Color.red;
         UITabWing.SetButtonState(imgReroll, ore >= cost && lockedCount < count, sprButtonOn, sprButtonOff);
     }
