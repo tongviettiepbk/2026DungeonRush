@@ -52,7 +52,7 @@ public class ClanWarDayActionsSection : MonoBehaviour
                     Add("Use Dungeon Key", ClanWarController.FormatNumber(key) + " pts");
                     break;
                 case StaticClanData.SOURCE_SUMMON_CAPE:
-                    foreach (string r in StaticClanData.SUMMON_RARITIES) Add("Summon " + r + " Cape", Points(aw?.summonCape, r));
+                    foreach (string r in StaticClanData.SUMMON_RARITIES) Add("Summon " + r + " Pipe", Points(aw?.summonCape, r));
                     break;
             }
         }

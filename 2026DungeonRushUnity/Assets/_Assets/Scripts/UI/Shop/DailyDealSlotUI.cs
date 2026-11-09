@@ -24,7 +24,7 @@ public class DailyDealSlotUI : MonoBehaviour
     public TMP_SpriteAsset[] RewardSpriteAssets;
 
     // Tên loại deal (strings_en "Common.DealType.*").
-    private static readonly string[] TYPE_NAMES = { "Dungeon", "Gem", "Cloak", "Mining", "Companion" };
+    private static readonly string[] TYPE_NAMES = { "Dungeon", "Gem", "Pipe", "Mining", "Companion" };
 
     private void Awake()
     {

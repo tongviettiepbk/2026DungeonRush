@@ -249,7 +249,7 @@ public class UICapePopup : BaseUI
         List<CapeModel> results = CapeService.TrySummon(multiplier);
         if (results == null)
         {
-            UIManager.Instance.ShowToastMessage("Không đủ Cloak", isLocalize: false);
+            UIManager.Instance.ShowToastMessage("Không đủ Pipe", isLocalize: false);
             return;
         }
 

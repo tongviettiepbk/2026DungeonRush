@@ -589,8 +589,8 @@ public class UIMainLobby : BaseUI
             case GearSlotType.RING: return "Nhẫn";
             case GearSlotType.NECKLACE: return "Dây chuyền";
             case GearSlotType.BACKPACK: return "Ba lô";
-            case GearSlotType.CAPE: return "Áo choàng";
-            case GearSlotType.WING: return "Cánh";
+            case GearSlotType.CAPE: return "Tẩu thuốc";
+            case GearSlotType.WING: return "Kính";
             default: return slot.ToString();
         }
     }
