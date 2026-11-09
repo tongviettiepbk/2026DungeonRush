@@ -15,7 +15,10 @@ metadata:
 Cách làm: Codex vẽ lưới 2×3 concept (lưu ở `ArtArchive/Concepts/cultist_weapons_concept.png`), cắt ô bằng grid_split, tách nền xám bằng flood fill
 (cái liềm KHÔNG xoá đảo nền kín vì vệt sáng lưỡi màu xám), ghi đè PNG giữ .meta/GUID nên prefab không phải sửa. Pivot đặt sao cho tay cầm
 cách pivot đúng như sprite cũ (sprite cũ pivot giữa, có viền tối to). Đã chụp so cũ/mới ở tư thế UnitIdle trong preview scene qua UnityMCP HTTP
-(`ArtArchive/Concepts/cultist_weapons_ingame_compare.png`). Icon `CultistWeaponData_Ranged.png` (của SO) chưa đổi, đạn `Projectile_Weapon_Cultist` giữ nguyên.
+(`ArtArchive/Concepts/cultist_weapons_ingame_compare.png`). Icon `CultistWeaponData_Ranged.png` (của SO) chưa đổi.
+
+Đạn (`Projectile_Weapon_Cultist`, sprite `Art/5_Maps/DungeonCultist/cultist_dungeon_arrow.png`) đổi sang mũi tên gỗ, đầu đen khắc ngôi sao hồng
+(mẫu 3 trong `ArtArchive/Concepts/cultist_arrow_concept.png`, user chọn), 230×958, PPU 340, pivot giữa, mũi hướng LÊN như cũ; đã commit.
 
 **Why:** user muốn vũ khí hợp chủ đề nghi lễ hắc ám (nến, ngôi sao năm cánh).
 **How to apply:** chưa test Play, đã commit. Xem [[dungonrush-reskin-dungeon-maps]], [[dungonrush-reskin-ui-howto]].
