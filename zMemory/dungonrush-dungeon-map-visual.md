@@ -17,4 +17,6 @@ metadata:
 
 - **Square.png project rộng 2.56 unit (256px, PPU 100), gốc 1 unit (2026-11-03):** scale plane chép từ rip thì sàn to gấp 2.56 lần. Dragon: InnerPlane phủ kín vòng lửa (lava ord -25 < Inner -23); đã sửa scale InnerPlane còn 3.7226562 x 4.8046875 (= 9.53 x 12.3 unit như gốc), test Game view thấy vòng lửa đúng giữa 2 vòng tường. Vòng lửa gốc là ảnh tĩnh, không có FX. Zombie/Cultist cùng lỗi (nền ngoài bị InnerPlane che) cũng đã sửa cùng số scale, render prefab bằng camera tạm thấy sàn nằm gọn trong tường. Không đổi import Square.png vì Main/BossRush/Mining đã căn scale theo 2.56.
 
+**2026-11-07:** cả 3 map đã đổi sang art liền tấm, mô tả ở trên chỉ còn đúng về lịch sử, xem [[dungonrush-reskin-dungeon-maps]].
+
 Liên quan: [[dungonrush-map-grid-background]], [[dungonrush-dungeon-system]], [[dungonrush-campaign-map-original]], [[dungonrush-ripped-prefab-rewire]].
