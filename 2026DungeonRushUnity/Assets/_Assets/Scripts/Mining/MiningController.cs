@@ -54,7 +54,7 @@ public class MiningController : MonoBehaviour
         grid.GenerateRows(data.currentDepth, data.mineLevel);
 
         character.Init(grid, config.CharacterMoveSpeed, new Vector2Int(data.characterGridX, data.characterGridY));
-        character.SetTool(config.GetToolSprite(SelectedTool), config.GetToolAnimator(SelectedTool));
+        character.SetTool(config.GetToolSprite(SelectedTool), SelectedTool);
         miningCamera.Init(config, data.currentDepth, blockParent);
 
         AdvanceDepthOnInit();
@@ -131,7 +131,7 @@ public class MiningController : MonoBehaviour
     public void SelectTool(MiningToolType tool)
     {
         SelectedTool = tool;
-        character.SetTool(config.GetToolSprite(tool), config.GetToolAnimator(tool));
+        character.SetTool(config.GetToolSprite(tool), tool);
     }
 
     // jbm: bấm vào ô lưới.
@@ -559,7 +559,6 @@ public class MiningController : MonoBehaviour
     {
         StopToolRoutine();
         character.StopMoving();
-        character.KillRotate();
         miningCamera.Stop();
         grid.ClearAll();
         SaveProgress();

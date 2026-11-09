@@ -137,17 +137,6 @@ public class MiningConfig : ScriptableObject
         }
     }
 
-    // izm
-    public AnimatorOverrideController GetToolAnimator(MiningToolType tool)
-    {
-        switch (tool)
-        {
-            case MiningToolType.Drill: return DrillAnimator;
-            case MiningToolType.GoldenPickaxe: return GoldenPickaxeAnimator;
-            default: return PickaxeAnimator;
-        }
-    }
-
     // izo: gói offer kế tiếp (theo số gói đã mua), -1 = mua hết.
     public int GetOfferTierIndex(int purchasedCount)
     {

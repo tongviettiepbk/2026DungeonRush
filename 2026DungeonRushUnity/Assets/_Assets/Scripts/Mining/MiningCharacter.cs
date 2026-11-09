@@ -1,148 +1,120 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 
-// Nhân vật đào trong mỏ (MiningCharacter gốc). Nhìn từ trên xuống: cả transform xoay theo hướng đi/đập
-// (góc = atan2(dy_world, dx) − 90°, tween 0.15s OutQuad). Mặc Mũ/Ba lô/Găng theo đồ đang mặc của Hero,
-// tay cầm dụng cụ đang chọn (MineToolRenderer). Đập: Animator bool IsAttacking/IsIdle + animation event
-// OnAttackAnimationHit/OnAttackAnimationCompleted; có hẹn giờ dự phòng 0.5s (hit) + 0.3s (xong).
+// Nhân vật đào trong mỏ. LỆCH GỐC có chủ ý (user chốt 2026-11-09): gốc nhìn từ trên xuống, xoay cả người
+// theo hướng đi; ở đây dùng VỊT NHÌN NGANG như Hero campaign (rig 00Hero + unit_all.controller):
+//   - Không xoay, chỉ lật trái/phải (visualRoot.localScale.x) khi hướng đi/đập có thành phần ngang.
+//   - Đứng → UnitIdle, đi → UnitRun, đập → strike_atk (tua cho vừa nhịp gốc 0.5s/nhát).
+//   - Mặc Mũ/Kính(Wing)/Tẩu(Cape)/Ba lô/Áo(Gloves) theo đồ đang mặc của Hero, tay cầm dụng cụ đang chọn.
 public class MiningCharacter : MonoBehaviour
 {
-    public Action AttackAnimationHit;
-    public Action AttackAnimationCompleted;
-
+    public Transform visualRoot;
     public Animator animator;
-    public Transform bodyTransform;
     public SpriteRenderer helmetRenderer;
+    public SpriteRenderer glassRenderer;
+    public SpriteRenderer pipeRenderer;
     public SpriteRenderer backpackRenderer;
-    public SpriteRenderer glovesRendererLeft;
-    public SpriteRenderer glovesRendererRight;
+    public SpriteRenderer clothesRenderer;
     public SpriteRenderer mineToolRenderer;
 
     public Vector2Int GridPosition { get; private set; }
     public bool IsMoving { get; private set; }
     public bool IsAttacking { get; private set; }
 
-    private const float ROTATE_DURATION = 0.15f;
-    private const float FALLBACK_HIT_DELAY = 0.5f;
-    private const float FALLBACK_COMPLETE_DELAY = 0.3f;
-    private const string ANIM_IS_ATTACKING = "IsAttacking";
-    private const string ANIM_IS_IDLE = "IsIdle";
+    // Nhịp gốc (Weapon_Hammer_Attack): hết nhát 0.5s. Clip strike_atk dài 0.6667s, AE_Attack ở 0.4167s
+    // → tua nhanh cho vừa 0.5s, ra đòn đúng khung chạm (62.5% nhát).
+    private const float ATTACK_DURATION = 0.5f;
+    private const float STRIKE_CLIP_LENGTH = 0.6666667f;
+    private const float STRIKE_HIT_TIME = 0.41666666f;
+    private const float HIT_DELAY = ATTACK_DURATION * STRIKE_HIT_TIME / STRIKE_CLIP_LENGTH;
+
+    private static readonly int HASH_IDLE = Animator.StringToHash("UnitIdle");
+    private static readonly int HASH_RUN = Animator.StringToHash("UnitRun");
+    private static readonly int HASH_ATTACK = Animator.StringToHash("strike_atk");
+
+    // Góc cầm dụng cụ: cuốc dựng đứng → nghiêng như vũ khí cận chiến Hero; khoan mũi xuống → chĩa ra trước.
+    private const float PICKAXE_ANGLE = -45f;
+    private const float DRILL_ANGLE = 90f;
 
     private MiningGrid grid;
     private float moveSpeed;
     private Coroutine moveRoutine;
     private Coroutine attackRoutine;
-    private RuntimeAnimatorController baseController;
-    private AnimatorOverrideController overrideController;
-    private Tween rotateTween;
-    private Action onHit;
-    private Action onComplete;
-    private bool hitFired;
+    private int currentAnim;
 
     // iys
     public void Init(MiningGrid miningGrid, float speed, Vector2Int position)
     {
         grid = miningGrid;
         moveSpeed = speed;
-        if (animator != null && baseController == null)
-        {
-            baseController = animator.runtimeAnimatorController;
-        }
-
         GridPosition = position;
         transform.position = grid.GridToWorld(position);
-        transform.rotation = Quaternion.Euler(0f, 0f, -180f);
+        transform.rotation = Quaternion.identity;
+        SetFacing(1f);
         IsMoving = false;
         IsAttacking = false;
         ApplyEquipment();
+        PlayAnim(HASH_IDLE);
     }
 
-    // iyt/iyu: Mũ / Ba lô / Găng (gốc ItemType 1/2/3) lấy hình đồ Hero đang mặc.
+    // Mặc đồ theo save như HeroVisual: có hình mới bật object, Cape ẩn khi tắt "Show Cloak".
     private void ApplyEquipment()
     {
         UserEquipmentData equipment = GameData.userData.equipment;
-        ApplySprite(helmetRenderer, EquipVisualResolver.GetBodySprite(GearSlotType.HELMET, equipment.GetEquipped(GearSlotType.HELMET)));
-        ApplySprite(backpackRenderer, EquipVisualResolver.GetBodySprite(GearSlotType.BACKPACK, equipment.GetEquipped(GearSlotType.BACKPACK)));
-        Sprite gloves = EquipVisualResolver.GetBodySprite(GearSlotType.GLOVES, equipment.GetEquipped(GearSlotType.GLOVES));
-        if (gloves != null)
-        {
-            ApplySprite(glovesRendererLeft, gloves);
-            ApplySprite(glovesRendererRight, gloves);
-        }
+        ApplySlot(helmetRenderer, EquipVisualResolver.GetBodySprite(GearSlotType.HELMET, equipment.GetEquipped(GearSlotType.HELMET)));
+        ApplySlot(glassRenderer, EquipVisualResolver.GetBodySprite(GearSlotType.WING, equipment.GetEquipped(GearSlotType.WING)));
+        ApplySlot(backpackRenderer, EquipVisualResolver.GetBodySprite(GearSlotType.BACKPACK, equipment.GetEquipped(GearSlotType.BACKPACK)));
+        ApplySlot(clothesRenderer, EquipVisualResolver.GetBodySprite(GearSlotType.GLOVES, equipment.GetEquipped(GearSlotType.GLOVES)));
+        bool showCloak = GameData.userData.capes == null || GameData.userData.capes.showCloak;
+        ApplySlot(pipeRenderer, showCloak ? EquipVisualResolver.GetBodySprite(GearSlotType.CAPE, equipment.GetEquipped(GearSlotType.CAPE)) : null);
     }
 
-    // iyv: gán sprite, không có hình thì tắt renderer.
-    private static void ApplySprite(SpriteRenderer sr, Sprite sprite)
+    // Gán sprite, không có hình thì tắt object.
+    private static void ApplySlot(SpriteRenderer sr, Sprite sprite)
     {
         if (sr == null)
         {
             return;
         }
         sr.sprite = sprite;
-        sr.enabled = sprite != null;
+        sr.gameObject.SetActive(sprite != null);
     }
 
-    // iyw: đổi dụng cụ cầm tay + bộ animation của dụng cụ.
-    public void SetTool(Sprite toolSprite, AnimatorOverrideController toolAnimator)
+    // iyw: đổi dụng cụ cầm tay.
+    public void SetTool(Sprite toolSprite, MiningToolType tool)
     {
-        ApplySprite(mineToolRenderer, toolSprite);
-        ApplyAnimator(toolAnimator);
+        ApplySlot(mineToolRenderer, toolSprite);
+        if (mineToolRenderer != null)
+        {
+            float angle = tool == MiningToolType.Drill ? DRILL_ANGLE : PICKAXE_ANGLE;
+            mineToolRenderer.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
+        }
     }
 
-    // iyx: bọc override của dụng cụ lên controller gốc của nhân vật.
-    private void ApplyAnimator(AnimatorOverrideController toolAnimator)
+    // Controller unit_all không có parameter/transition → chuyển state bằng Play.
+    private void PlayAnim(int hash, bool restart = false)
     {
-        if (animator == null)
+        if (animator == null || (currentAnim == hash && restart == false))
         {
             return;
         }
-
-        if (toolAnimator == null)
-        {
-            animator.runtimeAnimatorController = baseController;
-        }
-        else
-        {
-            if (overrideController == null || overrideController.runtimeAnimatorController != toolAnimator.runtimeAnimatorController)
-            {
-                overrideController = new AnimatorOverrideController(toolAnimator.runtimeAnimatorController);
-            }
-
-            List<KeyValuePair<AnimationClip, AnimationClip>> overrides =
-                new List<KeyValuePair<AnimationClip, AnimationClip>>(toolAnimator.overridesCount);
-            toolAnimator.GetOverrides(overrides);
-            overrideController.ApplyOverrides(overrides);
-            animator.runtimeAnimatorController = overrideController;
-        }
-
-        animator.Rebind();
-        animator.Update(0f);
-        SetIdleAnim();
+        currentAnim = hash;
+        animator.speed = hash == HASH_ATTACK ? STRIKE_CLIP_LENGTH / ATTACK_DURATION : 1f;
+        animator.Play(hash, 0, 0f);
     }
 
-    // izf
-    private void SetIdleAnim()
+    // Vịt gốc quay mặt sang phải: x > 0 → phải, x < 0 → trái.
+    private void SetFacing(float sign)
     {
-        if (animator == null || animator.runtimeAnimatorController == null)
+        if (visualRoot == null)
         {
             return;
         }
-        animator.SetBool(ANIM_IS_ATTACKING, false);
-        animator.SetBool(ANIM_IS_IDLE, true);
-    }
-
-    // izg
-    private void SetAttackAnim()
-    {
-        if (animator == null || animator.runtimeAnimatorController == null)
-        {
-            return;
-        }
-        animator.SetBool(ANIM_IS_IDLE, false);
-        animator.SetBool(ANIM_IS_ATTACKING, true);
+        Vector3 s = visualRoot.localScale;
+        s.x = Mathf.Abs(s.x) * Mathf.Sign(sign);
+        visualRoot.localScale = s;
     }
 
     // iyy/iza: đi theo đường (bỏ ô đầu = ô đang đứng), mỗi ô quay mặt rồi MoveTowards.
@@ -158,7 +130,10 @@ public class MiningCharacter : MonoBehaviour
     private IEnumerator MoveAlongPathRoutine(List<Vector2Int> path, Action onArrived)
     {
         IsMoving = true;
-        SetIdleAnim();
+        if (path.Count > 1)
+        {
+            PlayAnim(HASH_RUN);
+        }
         for (int i = 1; i < path.Count; i++)
         {
             Vector2Int cell = path[i];
@@ -175,7 +150,7 @@ public class MiningCharacter : MonoBehaviour
 
         IsMoving = false;
         moveRoutine = null;
-        SetIdleAnim();
+        PlayAnim(HASH_IDLE);
         onArrived?.Invoke();
     }
 
@@ -188,127 +163,40 @@ public class MiningCharacter : MonoBehaviour
             moveRoutine = null;
         }
         IsMoving = false;
-        KillRotate();
-        SetIdleAnim();
+        PlayAnim(HASH_IDLE);
     }
 
-    // izi
-    public void KillRotate()
-    {
-        if (rotateTween != null)
-        {
-            rotateTween.Kill();
-            rotateTween = null;
-        }
-    }
-
-    // izb: vung dụng cụ 1 lần. Không có animator thì gọi luôn 2 callback.
+    // izb: vung dụng cụ 1 nhát: hit ở khung chạm, complete khi hết nhát.
     public void PlayAttack(Action hit, Action complete)
     {
         IsAttacking = true;
-        hitFired = false;
-        if (animator == null)
-        {
-            hit?.Invoke();
-            IsAttacking = false;
-            complete?.Invoke();
-            return;
-        }
-
-        onHit = hit;
-        onComplete = complete;
-        SetAttackAnim();
         if (attackRoutine != null)
         {
             StopCoroutine(attackRoutine);
         }
-        attackRoutine = StartCoroutine(AttackFallbackRoutine());
+        attackRoutine = StartCoroutine(AttackRoutine(hit, complete));
     }
 
-    // izc (sd): hẹn giờ dự phòng khi clip không có animation event.
-    private IEnumerator AttackFallbackRoutine()
+    private IEnumerator AttackRoutine(Action hit, Action complete)
     {
-        yield return new WaitForSeconds(FALLBACK_HIT_DELAY);
-        FireHit();
-        yield return new WaitForSeconds(FALLBACK_COMPLETE_DELAY);
+        PlayAnim(HASH_ATTACK, restart: true);
+        yield return new WaitForSeconds(HIT_DELAY);
+        hit?.Invoke();
+        yield return new WaitForSeconds(ATTACK_DURATION - HIT_DELAY);
         attackRoutine = null;
-        FireComplete();
-    }
-
-    // Animation event (clip đập).
-    public void OnAttackAnimationHit()
-    {
-        AttackAnimationHit?.Invoke();
-        FireHit();
-    }
-
-    // Animation event (clip đập).
-    public void OnAttackAnimationCompleted()
-    {
-        AttackAnimationCompleted?.Invoke();
-        if (attackRoutine != null)
-        {
-            StopCoroutine(attackRoutine);
-            attackRoutine = null;
-        }
-        FireHit();
-        FireComplete();
-    }
-
-    // izd: hit chỉ 1 lần mỗi nhát.
-    private void FireHit()
-    {
-        if (hitFired)
-        {
-            return;
-        }
-        hitFired = true;
-        Action cb = onHit;
-        onHit = null;
-        cb?.Invoke();
-    }
-
-    // ize
-    private void FireComplete()
-    {
-        if (IsAttacking == false)
-        {
-            return;
-        }
         IsAttacking = false;
-        SetIdleAnim();
-        Action cb = onComplete;
-        onComplete = null;
-        cb?.Invoke();
+        PlayAnim(HASH_IDLE);
+        complete?.Invoke();
     }
 
-    // izh: quay mặt theo hướng (ô lưới) rồi gọi onDone. Hướng 0 → gọi luôn.
+    // izh: quay mặt theo hướng (ô lưới) rồi gọi onDone. Chỉ lật khi có thành phần ngang.
     public void Face(Vector2Int direction, Action onDone)
     {
-        if (direction == Vector2Int.zero)
+        if (direction.x != 0)
         {
-            onDone?.Invoke();
-            return;
+            SetFacing(direction.x);
         }
-
-        float angle = Mathf.Atan2(-direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-        Quaternion target = Quaternion.Euler(0f, 0f, angle);
-        KillRotate();
-
-        float dot = Mathf.Min(Mathf.Abs(Quaternion.Dot(target, transform.rotation)), 1f);
-        if (dot > 0.999999f)
-        {
-            transform.rotation = target;
-            onDone?.Invoke();
-            return;
-        }
-
-        rotateTween = transform.DORotateQuaternion(target, ROTATE_DURATION).SetEase(Ease.OutQuad)
-            .OnComplete(() =>
-            {
-                rotateTween = null;
-                onDone?.Invoke();
-            });
+        onDone?.Invoke();
     }
 
     // izj: dịch tức thời (bị kẹt khi độ sâu tăng).
@@ -324,16 +212,13 @@ public class MiningCharacter : MonoBehaviour
         Face(cell - GridPosition, null);
         GridPosition = cell;
         Vector3 target = grid.GridToWorld(cell);
+        PlayAnim(HASH_RUN);
         while (Vector3.Distance(transform.position, target) > 0.01f)
         {
             transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
             yield return null;
         }
         transform.position = target;
-    }
-
-    private void OnDestroy()
-    {
-        KillRotate();
+        PlayAnim(HASH_IDLE);
     }
 }

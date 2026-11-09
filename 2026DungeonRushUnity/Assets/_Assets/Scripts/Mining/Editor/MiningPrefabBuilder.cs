@@ -11,7 +11,7 @@ using UnityEngine.UI;
 //   - layer "Mining" (camera mỏ chỉ render layer này, camera chính bỏ layer này)
 //   - Animations/Weapons/Weapon_Hammer_AnimatorController (gốc dùng chung cho cả 3 dụng cụ)
 //   - Art/5_Maps/Campaign/Materials/_MiningGridMaterial (nền lưới nâu, Custom/GridShader)
-//   - Prefabs/Mining/MiningBlock + MiningWorld (camera, BlockParent, nhân vật rig Soldier, 2 tấm nền)
+//   - Prefabs/Mining/MiningBlock + MiningWorld (camera, BlockParent, nhân vật vịt nhìn ngang rig 00Hero, 2 tấm nền)
 //   - Resources/Scriptable Objects/Mining/MiningConfig (số liệu DecodedData/tables/MiningConfig.json)
 //   - Resources/Prefabs/UI/UIMiningPopup, UIMiningRarityPopup, UIMiningOfferPopup (bọc bản rip Prefabs/UI/Mining)
 // Chạy lại là GHI ĐÈ — đã chỉnh tay prefab nào thì chạy từng mục riêng, bỏ mục đó.
@@ -28,7 +28,6 @@ public static class MiningPrefabBuilder
     private const string MATERIAL_PATH = "Assets/_Assets/Art/5_Maps/Campaign/Materials/_MiningGridMaterial.mat";
     private const string HAMMER_PATH = "Assets/_Assets/Animations/Weapons/Weapon_Hammer_AnimatorController.overrideController";
     private const string CHARACTER_CONTROLLER = "Assets/_Assets/Animations/Heroes/CharacterAnimatorController.controller";
-    private const string PUNCH_CONTROLLER = "Assets/_Assets/Animations/Heroes/PunchAnimatorController.overrideController";
     private const string RESOURCE = "Assets/_Assets/Art/";
     private const string FX = "Assets/_Assets/Prefabs/Fx/Mining/";
 
@@ -271,36 +270,105 @@ public static class MiningPrefabBuilder
         return SavePrefab(root, WORLD_PATH);
     }
 
-    // Rig nhân vật như gốc: Body (0.5) + 2 tay + dụng cụ + mũ + ba lô; Animator theo CharacterAnimatorController.
     private static MiningCharacter BuildCharacter(Transform parent)
     {
         GameObject go = new GameObject("MiningCharacter");
         go.transform.SetParent(parent, false);
-        Animator animator = go.AddComponent<Animator>();
-        RuntimeAnimatorController baseController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(PUNCH_CONTROLLER);
-        if (baseController == null)
-        {
-            baseController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(CHARACTER_CONTROLLER);
-        }
-        animator.runtimeAnimatorController = baseController;
-
-        SpriteRenderer body = NewSprite("Body", go.transform, FindSprite("body", "Character"), 4, Vector3.zero, 0.5f);
-        Sprite hand = FindSprite("hand", "Character");
-        SpriteRenderer left = NewSprite("LeftHand", body.transform, hand, 2, new Vector3(-0.45f, 0.354f, 0f), 1f);
-        SpriteRenderer right = NewSprite("RightHand", body.transform, hand, 2, new Vector3(0.45f, 0.354f, 0f), 1f);
-        SpriteRenderer weapon = NewSprite("Weapon", body.transform, FindSprite("pickaxe_character"), 1, new Vector3(0f, 0.87f, 0f), 1f);
-        SpriteRenderer helmet = NewSprite("HelmetRenderer", body.transform, null, 5, new Vector3(0f, -0.19f, 0f), 1f);
-        SpriteRenderer backpack = NewSprite("BackpackRenderer", body.transform, null, 3, Vector3.zero, 1f);
-
         MiningCharacter character = go.AddComponent<MiningCharacter>();
-        character.animator = animator;
-        character.bodyTransform = body.transform;
-        character.helmetRenderer = helmet;
-        character.backpackRenderer = backpack;
-        character.glovesRendererLeft = left;
-        character.glovesRendererRight = right;
-        character.mineToolRenderer = weapon;
+        BuildDuckRig(character);
         return character;
+    }
+
+    // Thay rig nhân vật trong MiningWorld có sẵn bằng vịt nhìn ngang — CHỈ đụng node MiningCharacter
+    // (giữ component + ref của MiningController), không ghi đè phần khác của prefab đã reskin.
+    [MenuItem("Tools/DungeonRush/Build Mining/Duck Character")]
+    public static string RebuildCharacterInWorld()
+    {
+        GameObject root = PrefabUtility.LoadPrefabContents(WORLD_PATH);
+        MiningCharacter character = root.GetComponentInChildren<MiningCharacter>(true);
+        if (character == null)
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+            return "Duck character FAILED (không thấy MiningCharacter trong MiningWorld)";
+        }
+
+        for (int i = character.transform.childCount - 1; i >= 0; i--)
+        {
+            Object.DestroyImmediate(character.transform.GetChild(i).gameObject);
+        }
+        Animator oldAnimator = character.GetComponent<Animator>();
+        if (oldAnimator != null)
+        {
+            Object.DestroyImmediate(oldAnimator);
+        }
+        BuildDuckRig(character);
+
+        int layer = LayerMask.NameToLayer(LAYER);
+        if (layer >= 0)
+        {
+            MiningGrid.SetLayerRecursive(character.gameObject, layer);
+        }
+        PrefabUtility.SaveAsPrefabAsset(root, WORLD_PATH);
+        PrefabUtility.UnloadPrefabContents(root);
+        return "MiningWorld: nhân vật = vịt nhìn ngang";
+    }
+
+    // Rig vịt nhìn ngang chép từ 00Hero (Soldier/main/body + main/weapon, toạ độ y hệt) để clip unit_all chạy được.
+    // Visual thu nhỏ cho vịt lọt 1 ô mỏ; sortingOrder +10 so với hero để luôn đè khối quặng (order 0..2).
+    private const string UNIT_ALL_CONTROLLER = "Assets/_Assets/_QuackBag/Animators/Battle/Runtime/unit_all.controller";
+    private const string HERO_SPRITE = "Assets/_Assets/Art/4_Characters/Hero/Hero.png";
+    private const string SHADOW_SPRITE = "Assets/_Assets/_QuackBag/Sprites/Common/unit_shadow_0.asset";
+    private const float DUCK_SCALE = 0.65f;
+    private const int ORDER_OFFSET = 10;
+
+    private static void BuildDuckRig(MiningCharacter character)
+    {
+        Transform visual = NewNode("Visual", character.transform, Vector3.zero, DUCK_SCALE);
+        Transform soldier = NewNode("Soldier", visual, new Vector3(0f, -0.7476f, 0f), 1f);
+        Animator animator = soldier.gameObject.AddComponent<Animator>();
+        animator.runtimeAnimatorController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(UNIT_ALL_CONTROLLER);
+        soldier.gameObject.AddComponent<UnitAnimationEventRelay>();
+
+        Transform shadow = NewNode("shadow", soldier, Vector3.zero, 1f);
+        SpriteRenderer shadowSr = NewSprite("shadow_slot", shadow, AssetDatabase.LoadAssetAtPath<Sprite>(SHADOW_SPRITE), 1, new Vector3(-0.1f, 0f, 0f), 1f);
+        shadowSr.transform.localScale = new Vector3(0.7f, 0.5f, 1f);
+
+        Transform main = NewNode("main", soldier, Vector3.zero, 1f);
+        Transform body = NewNode("body", main, Vector3.zero, 1.68f);
+        NewSprite("body_slot", NewNode("body_slot", body, new Vector3(0f, 0.445f, 0f), 1f),
+            AssetDatabase.LoadAssetAtPath<Sprite>(HERO_SPRITE), ORDER_OFFSET + 1, Vector3.zero, 1f);
+        SpriteRenderer helmet = NewSprite("Helmet", NewNode("HelmetRenderer", body, new Vector3(0.04f, 0.876f, 0f), 1f),
+            null, ORDER_OFFSET + 6, Vector3.zero, 0.9f);
+        SpriteRenderer glass = NewSprite("Wing_Glass", NewNode("Wing_Glass", body, new Vector3(0.035f, 0.7f, 0f), 1f),
+            null, ORDER_OFFSET + 2, new Vector3(-0.005f, 0.021f, 0f), 0.9f);
+        SpriteRenderer pipe = NewSprite("Cape_Pipes (1)", NewNode("Cape_Pipes", body, new Vector3(0.292f, 0.517f, 0f), 1f),
+            null, ORDER_OFFSET, Vector3.zero, 0.9f);
+        SpriteRenderer backpack = NewSprite("BackpackRenderer (1)", NewNode("BackpackRenderer", body, new Vector3(-0.218f, 0.463f, 0f), 1f),
+            null, ORDER_OFFSET, Vector3.zero, 1f);
+        SpriteRenderer clothes = NewSprite("Hand_Clothes (1)", NewNode("Hand_Clothes", body, new Vector3(-0.093f, 0.279f, 0f), 1f),
+            null, ORDER_OFFSET + 5, new Vector3(0.026f, 0.013f, 0f), 0.8f);
+
+        Transform weapon = NewNode("weapon", main, new Vector3(1f, 0.68f, 0f), 1.68f);
+        SpriteRenderer tool = NewSprite("weapon_slot", weapon, FindSprite("pickaxe_character"), ORDER_OFFSET + 8, Vector3.zero, 0.4f);
+        tool.transform.localRotation = Quaternion.Euler(0f, 0f, -45f);
+
+        character.visualRoot = visual;
+        character.animator = animator;
+        character.helmetRenderer = helmet;
+        character.glassRenderer = glass;
+        character.pipeRenderer = pipe;
+        character.backpackRenderer = backpack;
+        character.clothesRenderer = clothes;
+        character.mineToolRenderer = tool;
+    }
+
+    private static Transform NewNode(string name, Transform parent, Vector3 pos, float scale)
+    {
+        GameObject go = new GameObject(name);
+        go.transform.SetParent(parent, false);
+        go.transform.localPosition = pos;
+        go.transform.localScale = Vector3.one * scale;
+        return go.transform;
     }
 
     private static Transform NewPlane(string name, Transform parent, Sprite sprite, Material mat, Vector3 pos)
@@ -451,7 +519,8 @@ public static class MiningPrefabBuilder
             new MineOreSprite { OreType = MineOreType.RubyMine, Sprite = FindSprite("ruby_icon") },
             new MineOreSprite { OreType = MineOreType.Stone, Sprite = FindSprite("stone_icon") },
         };
-        cfg.OreSpriteAssets = new List<MineOreSpriteAsset>();
+        // Giữ sprite asset quặng đã gán tay (IsCoal..IsRuby) — dựng lại không xoá.
+        if (cfg.OreSpriteAssets == null) cfg.OreSpriteAssets = new List<MineOreSpriteAsset>();
 
         if (isNew)
         {
