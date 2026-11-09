@@ -360,7 +360,6 @@ public static class RetentionUIBuilder
             SevenDayButtonView view = go.AddComponent<SevenDayButtonView>();
             view.Button = go.GetComponent<Button>();
             view.TimerText = go.transform.Find("TimeText").GetComponent<TMP_Text>();
-            view.objReady = go.transform.Find("UIParticle").gameObject;
             lobby.sevenDayButton = view;
         }
 

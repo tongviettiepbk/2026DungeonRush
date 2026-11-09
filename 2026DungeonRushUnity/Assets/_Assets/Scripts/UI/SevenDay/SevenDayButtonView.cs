@@ -2,12 +2,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Nút thưởng 7 ngày ở lobby: có ô nhận được thì sáng hiệu ứng, chưa thì đếm tới ngày kế.
+// Nút thưởng 7 ngày ở lobby: luôn sáng hiệu ứng như các nút offer; chưa nhận được thì đếm tới ngày kế.
 public class SevenDayButtonView : MonoBehaviour
 {
     public Button Button;
     public TMP_Text TimerText;
-    public GameObject objReady;
 
     private float nextRefreshAt;
 
@@ -34,8 +33,6 @@ public class SevenDayButtonView : MonoBehaviour
     public void Refresh()
     {
         gameObject.SetActive(SevenDayService.IsActive);
-        if (objReady != null)
-            objReady.SetActive(SevenDayService.CanClaim);
         RefreshTimer();
     }
 
