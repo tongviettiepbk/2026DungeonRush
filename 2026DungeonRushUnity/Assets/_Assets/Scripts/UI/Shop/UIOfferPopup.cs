@@ -18,6 +18,7 @@ public class UIOfferPopup : BaseUI
     public TMP_Text BuyButtonPriceText;
     public GameObject ExpiredOverlay;
     public Button btBackground;
+    public TMP_Text txtTapToClose;
 
     private bool isBuying;
 
@@ -82,6 +83,7 @@ public class UIOfferPopup : BaseUI
             return;
         }
 
+        if (txtTapToClose != null) txtTapToClose.text = Loc.L("Common.TapToClose");
         Color color = UITabWing.GetRarityColor(item.rarity);
         ItemElementUI.SetItem(item);
         WeaponNameText.text = ItemTextUtil.Name(item);

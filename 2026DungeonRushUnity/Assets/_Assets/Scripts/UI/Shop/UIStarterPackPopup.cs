@@ -12,6 +12,7 @@ public class UIStarterPackPopup : BaseUI
     public Button btBuy;
     public TMP_Text txtPrice;
     public Button btBackground;
+    public TMP_Text txtTapToClose;
 
     private long lastSecondsLeft = -1;
 
@@ -61,6 +62,7 @@ public class UIStarterPackPopup : BaseUI
     {
         ShopReward[] rewards = StaticShopData.GetProductRewards(PurchaseController.STORE_ID_STARTER_PACK);
         txtTitle.text = Loc.L("Popup.StarterPack.Title");
+        if (txtTapToClose != null) txtTapToClose.text = Loc.L("Common.TapToClose");
         for (int i = 0; i < rewards.Length; i++)
         {
             if (rewards[i].type == ShopRewardType.Gem) txtGem.text = "x" + rewards[i].amount;

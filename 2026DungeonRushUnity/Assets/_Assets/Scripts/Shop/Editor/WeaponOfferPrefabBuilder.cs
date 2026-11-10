@@ -50,6 +50,8 @@ public static class WeaponOfferPrefabBuilder
         ui.ExpiredOverlay = Find(popup, BG + "LoadingImage").gameObject;
         ui.ExpiredOverlay.SetActive(false);
         ui.btBackground = btBackground;
+        RetentionUIBuilder.CenterPanel(ui.BuyButton.transform.parent);
+        ui.txtTapToClose = RetentionUIBuilder.AddTapToClose(Text(popup, BG + "Ribbon/Text_1"), ui.BuyButton);
 
         PrefabUtility.SaveAsPrefabAsset(root, OUT, out bool ok);
         Object.DestroyImmediate(root);

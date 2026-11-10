@@ -52,7 +52,7 @@ public class UISevenDayPopup : BaseUI
     private void Refresh()
     {
         txtTitle.text = Loc.L("Popup.SevenDay.Title");
-        if (txtTapToClose != null) txtTapToClose.text = Loc.L("Popup.SevenDay.TapToClose");
+        if (txtTapToClose != null) txtTapToClose.text = Loc.L("Common.TapToClose");
         int claimed = SevenDayService.ClaimedCount;
         bool canClaim = SevenDayService.CanClaim;
 

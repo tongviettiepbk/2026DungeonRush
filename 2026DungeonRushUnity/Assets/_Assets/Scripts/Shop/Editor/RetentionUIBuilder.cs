@@ -107,6 +107,8 @@ public static class RetentionUIBuilder
         popup.btBuy = buy;
         popup.txtPrice = price;
         popup.btBackground = background;
+        CenterPanel(buy.transform.parent);
+        popup.txtTapToClose = AddTapToClose(title, buy);
         End(root, "UIStarterPackPopup");
     }
 
@@ -172,6 +174,7 @@ public static class RetentionUIBuilder
         popup.btClaim = buy;
         popup.txtClaim = price;
         popup.btBackground = background;
+        CenterPanel(buy.transform.parent);
         popup.txtTapToClose = AddTapToClose(title, buy);
         popup.sprGem = AssetDatabase.LoadAssetAtPath<Sprite>(SPR_GEM);
         popup.sprHammer = hammer;
@@ -193,6 +196,19 @@ public static class RetentionUIBuilder
         rt.anchoredPosition = new Vector2(0f, -55f);
         text.text = "Tap anywhere to close";
         return text;
+    }
+
+    // Dời khung popup về giữa màn hình (ContentTransform neo giữa màn; khung là chính nó hoặc con neo giữa của nó).
+    public static void CenterPanel(Transform panel)
+    {
+        RectTransform frame = (RectTransform)panel;
+        if (frame.name == "ContentTransform")
+            frame.anchoredPosition = new Vector2(frame.anchoredPosition.x, 0f);
+        else
+        {
+            RectTransform content = (RectTransform)frame.parent;
+            content.anchoredPosition = new Vector2(content.anchoredPosition.x, -frame.anchoredPosition.y);
+        }
     }
 
     private static Transform NewRow(Transform parent, string name)
