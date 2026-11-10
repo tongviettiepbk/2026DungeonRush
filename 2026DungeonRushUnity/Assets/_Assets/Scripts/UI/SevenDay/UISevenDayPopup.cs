@@ -12,6 +12,7 @@ public class UISevenDayPopup : BaseUI
     public Button btClaim;
     public TMP_Text txtClaim;
     public Button btBackground;
+    public TMP_Text txtTapToClose;
     public Sprite sprGem;
     public Sprite sprHammer;
     public Sprite sprBone;
@@ -51,6 +52,7 @@ public class UISevenDayPopup : BaseUI
     private void Refresh()
     {
         txtTitle.text = Loc.L("Popup.SevenDay.Title");
+        if (txtTapToClose != null) txtTapToClose.text = Loc.L("Popup.SevenDay.TapToClose");
         int claimed = SevenDayService.ClaimedCount;
         bool canClaim = SevenDayService.CanClaim;
 

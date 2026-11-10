@@ -119,4 +119,5 @@
 - [Reskin 3 map dungeon](dungonrush-reskin-dungeon-maps.md) — 2026-11-07 Boss Raid/Zombie Horde/Dark Ritual sang art liền tấm (sàn+tường 1 ảnh, nền 1 ảnh, Codex outpaint rìa, chướng ngại cắt từ cột tường), test Play OK, đã commit 8bc97939; 20 asset cũ Zombie/Cultist chưa xoá
 - [Vũ khí quái Dark Ritual](dungonrush-reskin-cultist-weapons.md) — 2026-11-09 liềm đen + cung nến + đạn mũi tên ngôi sao thay đồ cũ, ghi đè giữ GUID; vũ khí + đạn đã commit; chưa test Play
 - [Mining = vịt nhìn ngang](dungonrush-mining-duck-character.md) — LỆCH GỐC có chủ ý 2026-11-09: rig 00Hero + unit_all, lật trái/phải, menu Build Mining/Duck Character; test Play OK, đã commit
-- [Glow nút trái/phải lobby](dungonrush-lobby-button-glow.md) — Coffee UIParticle v4 + PowerupGlow1_1, material glow1_ADD 1 giữ guid gốc; + rương bay (UI/Additive viết lại); test Play OK 2026-11-09, chưa commit; rương bay đã hiện (bật GameUI)
+- [Glow nút trái/phải lobby](dungonrush-lobby-button-glow.md) — Coffee UIParticle v4 + PowerupGlow1_1, material glow1_ADD 1 giữ guid gốc; + rương bay (UI/Additive viết lại); test Play OK 2026-11-09, đã commit d8bdad9e; rương bay đã hiện (bật GameUI)
+- [Icon app Android](dungonrush-app-icon.md) — vịt cầm búa mẫu 4, Art/AppIcon, adaptive chỉ lớp nền thu 72/108; commit 30239c1c 2026-11-10; iOS chưa gán

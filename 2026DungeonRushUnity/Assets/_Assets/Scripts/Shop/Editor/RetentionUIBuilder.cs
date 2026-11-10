@@ -172,10 +172,27 @@ public static class RetentionUIBuilder
         popup.btClaim = buy;
         popup.txtClaim = price;
         popup.btBackground = background;
+        popup.txtTapToClose = AddTapToClose(title, buy);
         popup.sprGem = AssetDatabase.LoadAssetAtPath<Sprite>(SPR_GEM);
         popup.sprHammer = hammer;
         popup.sprBone = AssetDatabase.LoadAssetAtPath<Sprite>(SPR_BONE);
         End(root, "UISevenDayPopup");
+    }
+
+    // Dòng "Tap anywhere to close" dưới khung; bấm cả lên khung cũng rơi xuống nút nền để đóng (trừ nút Claim).
+    public static TMP_Text AddTapToClose(TMP_Text title, Button claim)
+    {
+        Transform panel = claim.transform.parent;
+        foreach (Graphic graphic in panel.GetComponentsInChildren<Graphic>(true))
+            if (!graphic.transform.IsChildOf(claim.transform)) graphic.raycastTarget = false;
+
+        TMP_Text text = NewText(panel, "TapToClose", title, Vector2.zero, 720f, 36f);
+        foreach (LocalizeText localize in text.GetComponents<LocalizeText>()) Object.DestroyImmediate(localize);
+        RectTransform rt = text.rectTransform;
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+        rt.anchoredPosition = new Vector2(0f, -55f);
+        text.text = "Tap anywhere to close";
+        return text;
     }
 
     private static Transform NewRow(Transform parent, string name)

@@ -16,5 +16,5 @@ node `UIParticle` (Coffee UIParticle, Scale3D 60, AutoScalingMode=Transform) →
 - RewardedChestUI (rương bay): đã gắn UIParticle Scale3D 20 + material `sparkle_ADD 1` (guid gốc 21ed1748…) dùng shader `UI/Additive` VIẾT LẠI ở Prefabs/Fx/Shaders (bản rip là dummy); test Play OK.
 - ĐÃ SỬA 2026-11-09: `SafeArea/GameUI` trước tắt sẵn (gốc bật) nên rương bay không bao giờ hiện → bật GameUI, TẮT sẵn BossGateBossHpUI + LevelProgressParent (gốc do GameplayUI điều khiển, bản mình không script nào dùng, Boss Gate tắt). Test Play: rương tự bay qua map.
 
-Test Play 2026-11-09: glow hiện ở vé, rương Legendary, kiếm OfferButton, rương bay. Chưa commit.
+Test Play 2026-11-09: glow hiện ở vé, rương Legendary, kiếm OfferButton, rương bay. Đã commit d8bdad9e.
 Liên quan: [[dungonrush-main-ui-uimaingame2]], [[assetripper-export-no-meta]]

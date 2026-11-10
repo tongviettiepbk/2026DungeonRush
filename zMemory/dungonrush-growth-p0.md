@@ -13,6 +13,7 @@ User duyệt 2026-11-05 ("Làm nhóm P0"), các mục này LỆCH GỐC có ch�
 - `UIMissingGemsPopup`: thay toast thiếu gem ở chest, Store, Mastery, tạo clan; chọn gói nhỏ nhất đủ bù.
 - Login: `passedStageId == 0` thì tự vào game.
 - `SevenDayService` + `UISevenDayPopup`: số thưởng là đề xuất, chưa cân kinh tế; mốc lưu ở profile.
+  - 2026-11-10: thêm dòng "Tap anywhere to close" (key `Popup.SevenDay.TapToClose`, 10 ngôn ngữ) dưới khung; mọi Graphic trong khung tắt raycast (trừ nút Claim) nên bấm đâu cũng đóng. Sửa thẳng prefab, builder có `AddTapToClose` tương ứng.
 - `LocalPushController` + package `com.unity.mobile.notifications` 2.4.2: 3 thông báo, xin quyền sau màn 10.
 - 3 popup sinh bằng `Scripts/Shop/Editor/RetentionUIBuilder` (Tools/DungeonRush/Build Retention UI) từ khung UIMiningOfferPopup; chạy lại sẽ dựng lại popup với GUID mới, ghi đè chỉnh tay.
 
