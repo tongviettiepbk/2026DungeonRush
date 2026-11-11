@@ -12,7 +12,8 @@ public class UIWingRerollPopup : BaseUI
     public Image imgItemIcon;
     public TMP_Text txtItemName;
     public TMP_Text txtItemLevel;
-    public TMP_Text txtItemBaseStat;
+    public TMP_Text txtItemBaseStat;      // cột số chữ viền "1.00K\n12.2K"
+    public TMP_Text txtItemBaseLabels;    // cột nhãn nâu "Health\nDamage" (Batch4Reskin tạo)
     public GameObject objEquipped;
     public Transform transSubStatContent;
     public GameObject objPrefabSubStat;
@@ -62,7 +63,7 @@ public class UIWingRerollPopup : BaseUI
         txtItemName.text = UITabWing.GetWingName(wing);
         int level = model != null ? model.level : 1;
         txtItemLevel.text = "Lv " + level;
-        txtItemBaseStat.text = UITabWing.GetBaseStatText(wing, level);
+        SetBaseStats(UITabWing.GetBaseStatText(wing, level));
         if (objEquipped != null)
         {
             objEquipped.SetActive(WingService.IsEquipped(wing));
@@ -70,6 +71,32 @@ public class UIWingRerollPopup : BaseUI
 
         RefreshCost();
         gameObject.SetActive(true);
+    }
+
+    // "Health 1.00K\nDamage 12.2K" → cột nhãn + cột số (tách ở dấu cách cuối mỗi dòng), số đứng sau nhãn dài nhất.
+    private void SetBaseStats(string stats)
+    {
+        if (txtItemBaseLabels == null)
+        {
+            txtItemBaseStat.text = stats;
+            return;
+        }
+
+        string[] lines = stats.Split('\n');
+        string labels = string.Empty;
+        string values = string.Empty;
+        for (int i = 0; i < lines.Length; i++)
+        {
+            int space = lines[i].LastIndexOf(' ');
+            labels += (i > 0 ? "\n" : string.Empty) + (space > 0 ? lines[i].Substring(0, space) : lines[i]);
+            values += (i > 0 ? "\n" : string.Empty) + (space > 0 ? lines[i].Substring(space + 1) : string.Empty);
+        }
+        txtItemBaseLabels.text = labels;
+        txtItemBaseStat.text = values;
+        RectTransform labelRect = txtItemBaseLabels.rectTransform;
+        RectTransform valueRect = txtItemBaseStat.rectTransform;
+        float width = txtItemBaseLabels.GetPreferredValues(labels).x;
+        valueRect.anchoredPosition = new Vector2(labelRect.anchoredPosition.x + width + 14f, valueRect.anchoredPosition.y);
     }
 
     // lae: đếm lại số dòng khoá → giá mới.

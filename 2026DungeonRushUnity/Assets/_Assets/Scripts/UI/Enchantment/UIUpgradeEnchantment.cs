@@ -35,9 +35,14 @@ public class UIUpgradeEnchantment : BaseUI
             listRarity[i].gameObject.SetActive(isValid);
             if (isValid)
             {
-                listRarity[i].txtName.text = "Relic +" + tier;
-                listRarity[i].txtRateCurret.text = EnchantmentConfig.GetRate(level, tier).ToString("F2") + "%";
-                listRarity[i].txtRateNext.text = EnchantmentConfig.GetRate(nextLevel, tier).ToString("F2") + "%";
+                float current = EnchantmentConfig.GetRate(level, tier);
+                float next = EnchantmentConfig.GetRate(nextLevel, tier);
+                listRarity[i].txtName.text = Loc.L("Popup.Enchantment.Tier", tier);
+                listRarity[i].txtRateCurret.text = current.ToString("F2") + "%";
+                listRarity[i].txtRateNext.text = next.ToString("F2") + "%";
+                // Cột Lv sau: tăng xanh / giảm hồng nhạt (khuôn Summon Rates Đợt 3).
+                listRarity[i].txtRateNext.color = next > current ? ElementRarityPet.RATE_UP_COLOR
+                    : next < current ? ElementRarityPet.RATE_DOWN_COLOR : Color.white;
             }
         }
 

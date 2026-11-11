@@ -12,6 +12,8 @@ public class UICapeDetailPopup : BaseUI
     public TMP_Text txtDamage;
     public TMP_Text txtHealth;
     public TMP_Text txtSubStats;
+    public TMP_Text txtStatLabels;   // cột nhãn nâu Damage/Health (Batch4Reskin tạo); null = chữ gộp như cũ
+    public TMP_Text txtSubValues;    // cột số substat bên phải (Batch4Reskin tạo)
     public Button btClose;
     public Button btUpgrade;
     public Button btEquip;
@@ -48,11 +50,29 @@ public class UICapeDetailPopup : BaseUI
         string color = ColorUtility.ToHtmlStringRGB(UITabWing.GetRarityColor(data.rarity));
         txtName.text = "<color=#" + color + ">" + Loc.Or(data.localizationKey, data.capeName) + "</color>";
         txtRarity.text = "<color=#" + color + ">[" + Loc.Rarity(data.rarity) + "]</color>";
-        txtDamage.text = UICapePopup.GetDamageText(data, model.level);
-        txtHealth.text = UICapePopup.GetHealthText(data, model.level);
+        if (txtStatLabels != null)
+        {
+            txtDamage.text = UICapePopup.GetDamageValue(data, model.level);
+            txtHealth.text = UICapePopup.GetHealthValue(data, model.level);
+            UICapePopup.SetStatLabels(txtStatLabels, txtDamage, txtHealth);
+        }
+        else
+        {
+            txtDamage.text = UICapePopup.GetDamageText(data, model.level);
+            txtHealth.text = UICapePopup.GetHealthText(data, model.level);
+        }
 
-        txtSubStats.gameObject.SetActive(model.subStats.Count > 0);
-        txtSubStats.text = UITabWing.GetSubStatsText(model.subStats);
+        if (txtSubValues != null)
+        {
+            // Ô substat cao cố định 2 dòng (tối đa của Cape) — luôn hiện, chỉ đổi chữ.
+            txtSubStats.text = ItemTextUtil.SubStatNames(model.subStats);
+            txtSubValues.text = ItemTextUtil.SubStatValues(model.subStats);
+        }
+        else
+        {
+            txtSubStats.gameObject.SetActive(model.subStats.Count > 0);
+            txtSubStats.text = UITabWing.GetSubStatsText(model.subStats);
+        }
 
         txtEquip.text = isEquipped ? Loc.L("Common.Unequip") : Loc.L("Common.Equip");
         UITabWing.SetButtonState(imgEquip, !isEquipped, sprEquip, sprUnequip);

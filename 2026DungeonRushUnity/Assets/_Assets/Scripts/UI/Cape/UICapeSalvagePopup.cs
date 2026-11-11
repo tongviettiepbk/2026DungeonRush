@@ -13,6 +13,7 @@ public class UICapeSalvagePopup : BaseUI
     public TMP_Text txtName;
     public TMP_Text txtDamage;
     public TMP_Text txtHealth;
+    public TMP_Text txtStatLabels;   // cột nhãn nâu Damage/Health (Batch4Reskin tạo); null = chữ gộp như cũ
     public Image imgXPFill;   // Filled ngang (kit Companion), fillAmount = tiến độ XP
     public TMP_Text txtXP;
     public Transform transContent;
@@ -117,9 +118,20 @@ public class UICapeSalvagePopup : BaseUI
         CapeService.SimulateXP(data.rarity, model.level, model.currentXP, addXP, out int level, out int xp);
         int gained = level - model.level;
 
-        elementCape.txtLevel.text = "Lvl " + model.level + (gained > 0 ? " <color=green>(+" + gained + ")</color>" : string.Empty);
-        txtDamage.text = UICapePopup.GetDamageText(data, model.level) + GetGainText(GearStatCalculator.GetCapeDamagePercent(data, level) - GearStatCalculator.GetCapeDamagePercent(data, model.level));
-        txtHealth.text = UICapePopup.GetHealthText(data, model.level) + GetGainText(GearStatCalculator.GetCapeHealthPercent(data, level) - GearStatCalculator.GetCapeHealthPercent(data, model.level));
+        elementCape.txtLevel.text = "Lvl " + model.level + (gained > 0 ? " <color=#62D34A>(+" + gained + ")</color>" : string.Empty);
+        float damageGain = GearStatCalculator.GetCapeDamagePercent(data, level) - GearStatCalculator.GetCapeDamagePercent(data, model.level);
+        float healthGain = GearStatCalculator.GetCapeHealthPercent(data, level) - GearStatCalculator.GetCapeHealthPercent(data, model.level);
+        if (txtStatLabels != null)
+        {
+            txtDamage.text = UICapePopup.GetDamageValue(data, model.level) + GetGainText(damageGain);
+            txtHealth.text = UICapePopup.GetHealthValue(data, model.level) + GetGainText(healthGain);
+            UICapePopup.SetStatLabels(txtStatLabels, txtDamage, txtHealth);
+        }
+        else
+        {
+            txtDamage.text = UICapePopup.GetDamageText(data, model.level) + GetGainText(damageGain);
+            txtHealth.text = UICapePopup.GetHealthText(data, model.level) + GetGainText(healthGain);
+        }
 
         if (level >= CapeService.MaxLevel)
         {
@@ -138,7 +150,7 @@ public class UICapeSalvagePopup : BaseUI
 
     private static string GetGainText(float gain)
     {
-        return gain > 0f ? " <color=green>(+" + gain.ToString("F1") + "%)</color>" : string.Empty;
+        return gain > 0f ? " <color=#62D34A>+" + gain.ToString("F1") + "%</color>" : string.Empty;
     }
 
     // euy

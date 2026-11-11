@@ -37,6 +37,11 @@ public class UICapePopup : BaseUI
     public Button btShowCloak;
     public Image imgShowCloak;
     public TMP_Text txtShowCloak;
+    // Công tắc kit Setting (Batch4Reskin gán): núm đổi sprite + chạy trái/phải, vệt xanh hiện khi bật. null = tô màu như cũ.
+    public Sprite sprKnobOn;
+    public Sprite sprKnobOff;
+    public GameObject objShowCloakFill;
+    public float knobOffset = 40f;
 
     [Header("Kết quả summon nhiều")]
     public GameObject objSummonPanel;        // bấm bất kỳ đâu trên panel để đóng (TapToCloseExtension gốc)
@@ -218,7 +223,18 @@ public class UICapePopup : BaseUI
         objShowCloakRoot.SetActive(GameData.userData.capes.owned.Count > 0);
         bool isShow = CapeService.IsShowCloak();
         txtShowCloak.text = isShow ? "ON" : "OFF";
-        if (imgShowCloak != null)
+        if (imgShowCloak != null && sprKnobOn != null && sprKnobOff != null)
+        {
+            imgShowCloak.sprite = isShow ? sprKnobOn : sprKnobOff;
+            imgShowCloak.color = Color.white;
+            RectTransform knob = imgShowCloak.rectTransform;
+            knob.anchoredPosition = new Vector2(isShow ? knobOffset : -knobOffset, knob.anchoredPosition.y);
+            if (objShowCloakFill != null)
+            {
+                objShowCloakFill.SetActive(isShow);
+            }
+        }
+        else if (imgShowCloak != null)
         {
             imgShowCloak.color = isShow ? UITabWing.DEFAULT_BUTTON_COLOR : UITabWing.DISABLED_BUTTON_COLOR;
         }
@@ -348,6 +364,26 @@ public class UICapePopup : BaseUI
     }
 
     // "+X.X% Damage" (fu.eqx gốc)
+    // Chỉ phần số "+55.2%" — dùng khi nhãn Damage/Health nằm ở cột riêng (Detail/Salvage, Batch4Reskin).
+    public static string GetDamageValue(CapeData data, int level)
+    {
+        return "+" + GearStatCalculator.GetCapeDamagePercent(data, level).ToString("F1") + "%";
+    }
+
+    public static string GetHealthValue(CapeData data, int level)
+    {
+        return "+" + GearStatCalculator.GetCapeHealthPercent(data, level).ToString("F1") + "%";
+    }
+
+    // Nhãn "Damage\nHealth" (cột nâu) + đặt 2 ô số ngay sau nhãn dài nhất (nhãn đổi theo ngôn ngữ).
+    public static void SetStatLabels(TMP_Text labels, TMP_Text damage, TMP_Text health)
+    {
+        labels.text = Loc.L("Items.SubStat.Damage") + "\n" + Loc.L("Items.SubStat.Health");
+        float x = labels.rectTransform.anchoredPosition.x + labels.GetPreferredValues(labels.text).x + 14f;
+        damage.rectTransform.anchoredPosition = new Vector2(x, damage.rectTransform.anchoredPosition.y);
+        health.rectTransform.anchoredPosition = new Vector2(x, health.rectTransform.anchoredPosition.y);
+    }
+
     public static string GetDamageText(CapeData data, int level)
     {
         return "+" + GearStatCalculator.GetCapeDamagePercent(data, level).ToString("F1") + "% Damage";

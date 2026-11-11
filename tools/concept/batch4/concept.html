@@ -1,0 +1,323 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Đợt 4 – Enchantment (Relic), Wing (Kính), Cape (Tẩu). Kit chung tools/concept/kit/kit.css, sprite thật trong Art/, 1 px CSS = 2 đơn vị canvas.
+     Chụp: tools/concept/render_concept.sh tools/concept/batch4/concept.html tools/concept/batch4/concept.png 1700 <cao> -->
+<base href="../../../2026DungeonRushUnity/Assets/_Assets/Art/">
+<link rel="stylesheet" href="../../../../tools/concept/kit/kit.css">
+<style>
+body{display:flex;flex-wrap:wrap;gap:22px;width:1700px;align-items:flex-start}
+.col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.cap{color:#cfcde0;font-size:17px;font-family:sans-serif;max-width:520px;text-align:center;line-height:1.35}
+.cap b{color:#fff}
+.scr{width:530px;background:#3e3d4d;border-radius:18px;padding:30px 0;display:flex;flex-direction:column;align-items:center;gap:14px;position:relative}
+.w680{width:340px}.w817{width:408px}.w968{width:484px}
+/* thẻ món (khuôn Đợt 1/3) */
+.icard{width:100%;display:flex;gap:14px;align-items:flex-start}
+.big{width:96px;height:96px;flex:none}
+.big img{width:68px;height:68px}
+.big .lv{font-size:17px;left:6px;bottom:2px}
+.inf{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.rar{font-size:17px}
+.nm{font-size:23px;line-height:1.1}
+.ms{display:flex;align-items:center;gap:6px;font-size:21px}
+.ms .k{color:#7a5c3c}
+.ms .g{color:#62d34a}
+.subs{width:100%;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;padding:6px 10px;display:flex;flex-direction:column;gap:4px}
+.subs div{display:flex;justify-content:space-between;font-size:17px}
+.subs .k{color:#7a5c3c}
+.subs.r2{height:58px}
+.btns{display:flex;gap:12px;justify-content:center}
+.btns .b{min-width:0}
+.mute15{color:#a68b67;font-size:15px}
+.sect{width:100%;display:flex;align-items:center;justify-content:space-between;color:#7a5c3c;font-size:18px}
+/* ô relic / tẩu */
+.rc{position:relative;background-size:100% 100%;flex:none}
+.rc img{position:absolute;left:14%;top:12%;width:72%;height:72%;object-fit:contain}
+.rc .lv{position:absolute;left:5px;bottom:1px;font-size:14px}
+.rc .chk{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60%}
+.rc .eq{position:absolute;left:0;right:0;bottom:-2px;height:20px;background:rgba(0,0,0,.55);border-radius:0 0 8px 8px;display:flex;align-items:center;justify-content:center}
+.rc .eq span{font-size:12px}
+.rc.dim{filter:grayscale(1) brightness(.75)}
+.empty{border:3px dashed #b99a6f;border-radius:10px;background:rgba(255,255,255,.18)}
+.dk2{width:100%;border-style:solid;border-width:22px;border-image:url(1_UIKit/Mastery/mastery_panel.png) 45 fill;display:flex;align-items:center;justify-content:center;gap:10px}
+.dk2 > *{margin:-12px 0}
+.grid{display:grid;gap:8px}
+.inv{width:100%;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;padding:10px;position:relative;overflow:hidden}
+.inv .sbar{position:absolute;right:4px;top:10px;width:5px;height:80%;border-radius:3px;background:#cdb38a}
+.inv .sbar i{position:absolute;left:0;right:0;top:0;height:40%;border-radius:3px;background:#a68b67}
+/* bảng tỉ lệ */
+.thd{width:100%;display:grid;grid-template-columns:1fr 76px 76px;color:#7a5c3c;font-size:16px;padding:0 12px}
+.thd span:not(:first-child){text-align:right}
+.trow{height:30px;border-style:solid;border-width:7px;border-image-slice:14 fill;display:grid;grid-template-columns:1fr 76px 76px;align-items:center;padding:0 5px;margin:0 0 5px}
+.trow.one{grid-template-columns:1fr 90px}
+.trow span{font-size:15px}
+.trow span:not(:first-child){text-align:right}
+.up{color:#9dff7a}.dn{color:#ffb3b3}
+/* chi phí quặng */
+.cost{display:flex;align-items:center;gap:6px;justify-content:center}
+.cost img{height:28px}
+.cost .o3{font-size:21px}
+.red{color:#ff5a5a}
+.stat2{height:46px;min-width:150px;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 10px}
+.stat2 img{height:28px}
+.stat2 .o3{font-size:21px}
+/* dòng substat reroll */
+.srow{width:100%;height:42px;display:flex;align-items:center;gap:8px}
+.lk{width:38px;height:38px;flex:none;border-style:solid;border-width:8px;border-image:url(1_UIKit/ClanSearch/input_tan.png) 20 fill;position:relative}
+.lk img{position:absolute;left:-2px;top:-3px;width:22px}
+.sbox{flex:1;height:40px;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-size:17px}
+.sbox .k{color:#7a5c3c}
+.srow.on .sbox{border-image-source:url(1_UIKit/Mastery/mastery_panel.png);border-image-slice:45 fill;border-width:14px}
+.srow.on .sbox .k{color:#cfcde0}
+.srow.on .sbox span{margin:-10px 0}
+/* toggle */
+.togrow{display:flex;align-items:center;gap:10px;color:#7a5c3c;font-size:17px}
+/* màn toàn phần */
+.phone{width:540px;height:1080px;background:#2b2a36;border-radius:18px;position:relative;overflow:hidden}
+.phone .lob{position:absolute;inset:0;background:linear-gradient(#4a4860,#2f2d3d);opacity:.35}
+.ab{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap}
+.cname{width:340px;height:80px;padding-bottom:10px}
+.cname .o{font-size:32px}
+.lvnav{display:flex;align-items:center;gap:18px}
+.lvnav img{height:42px}
+.lvnav .c{display:flex;flex-direction:column;align-items:center}
+</style></head><body>
+
+<!-- 1. Relic info -->
+<div class="col"><div class="cap"><b>UiEnchantmentInfoItem — relic trong kho</b> (vừa 817): header = <b>"Relic +5"</b> (bỏ chữ "Enchantment" + dòng tier riêng). Thẻ khuôn Đợt 1: ô tier + icon, bên phải "Relic Power" nâu + <b>+25%</b> viền + câu giải thích mờ. 3 nút: Equip <b>xanh lá</b>, Merge <b>cam</b>, Dismantle <b>đỏ</b> (phá huỷ).</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Relic +5</span><div class="x"></div></div>
+ <div class="bd">
+  <div class="icard" style="align-items:center">
+   <div class="rc" style="width:96px;height:96px;background-image:url(1_UIKit/Rarity/tier_05_background.png)"><img src="2_Icons/Enchantment/enchantment_05.png"><span class="lv o3" style="font-size:17px">Lvl 5</span></div>
+   <div class="inf">
+    <div class="ms"><span class="k">Relic Power</span><span class="o3">+25%</span></div>
+    <span class="mute15" style="line-height:1.3">Boosts the main stat of the slot it is equipped in.</span>
+   </div>
+  </div>
+  <div class="btns"><div class="b g" style="width:118px"><span class="o" style="font-size:22px">Equip</span></div><div class="b or" style="width:118px"><span class="o" style="font-size:22px">Merge</span></div><div class="b rd" style="width:118px"><span class="o" style="font-size:22px">Dismantle</span></div></div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="b vi sm" style="min-width:110px"><span class="o">Unequip</span></div><span class="nt">relic đang đeo</span></div>
+ <div class="it"><div class="b gr sm" style="min-width:110px"><span class="o">Merge</span></div><span class="nt">Relic +11 (max)</span></div>
+ <div class="it"><div class="b gr sm" style="min-width:110px"><span class="o">Dismantle</span></div><span class="nt">Relic +1</span></div>
+</div></div></div>
+
+<!-- 2. Relic merge -->
+<div class="col"><div class="cap"><b>UiEnchantmentMerge</b> (vừa 817): tiêu đề <b>"Relic Merge"</b> (sửa lỗi gõ "Echantment"). 3 ô nguyên liệu → mũi tên → ô kết quả trên <b>panel tối</b>, nút Merge <b>xanh lá</b> dưới (chưa đủ 3 = xám). Ô trống = khung nét đứt. Kho relic: lưới 5 cột cuộn, chữ nâu "Inventory".</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Relic Merge</span><div class="x"></div></div>
+ <div class="bd">
+  <div class="dk2" style="height:130px">
+   <div class="rc" style="width:64px;height:64px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+   <div class="rc" style="width:64px;height:64px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+   <div class="rc empty" style="width:64px;height:64px"></div>
+   <img src="1_UIKit/Enchantment/arrow_right.png" style="width:40px">
+   <div class="rc empty" style="width:64px;height:64px"></div>
+  </div>
+  <div class="b gr" style="width:170px;margin-top:-4px"><span class="o">Merge</span></div>
+  <div class="sect"><span>Inventory</span><span class="mute15">Tap a relic to add</span></div>
+  <div class="inv" style="height:250px">
+   <div class="grid" style="grid-template-columns:repeat(5,56px);justify-content:center">
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+   </div>
+   <div class="sbar"><i></i></div>
+  </div>
+ </div>
+</div>
+<div class="nt">Đủ 3 ô: ô kết quả hiện relic +1 tier, nút Merge xanh lá:</div>
+<div class="pp w817"><div class="bd" style="margin-top:0;padding:12px 20px"><div class="dk2" style="height:110px">
+   <div class="rc" style="width:64px;height:64px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+   <div class="rc" style="width:64px;height:64px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+   <div class="rc" style="width:64px;height:64px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+   <img src="1_UIKit/Enchantment/arrow_right.png" style="width:40px">
+   <div class="rc" style="width:64px;height:64px;background-image:url(1_UIKit/Rarity/tier_04_background.png)"><img src="2_Icons/Enchantment/enchantment_04.png"><span class="lv o3">Lvl 4</span></div>
+  </div><div class="b g" style="width:170px"><span class="o">Merge</span></div></div></div>
+</div></div>
+
+<!-- 3. Tier chances relic -->
+<div class="col"><div class="cap"><b>uiUpgradeEnchantment (Tier Chances)</b> (vừa 817): cùng khuôn Summon Rates Đợt 3 — 6 dòng "Relic +1..+6" trên thanh màu (bar_common..bar_mythic theo thứ tự), cột Lv sau tăng xanh / giảm hồng nhạt. Popup co theo 6 dòng.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Tier Chances</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px">
+  <div class="thd"><span>Tier</span><span>Lv 7</span><span>Lv 8</span></div>
+  <div style="width:100%">
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_common.png)"><span class="o3">Relic +1</span><span class="o3">60.00%</span><span class="o3 dn">57.50%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_uncommon.png)"><span class="o3">Relic +2</span><span class="o3">25.00%</span><span class="o3">25.00%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_rare.png)"><span class="o3">Relic +3</span><span class="o3">10.00%</span><span class="o3 up">11.00%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_epic.png)"><span class="o3">Relic +4</span><span class="o3">4.00%</span><span class="o3 up">5.00%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_legendary.png)"><span class="o3">Relic +5</span><span class="o3">0.90%</span><span class="o3 up">1.20%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_mythic.png);margin:0"><span class="o3">Relic +6</span><span class="o3">0.10%</span><span class="o3 up">0.30%</span></div>
+  </div>
+ </div>
+</div></div></div>
+
+<!-- 4. Wing craft -->
+<div class="col"><div class="cap"><b>UIWingCraftPopup</b> (nhỏ 680): header "Glasses Crafting" (giữ không có X — đã có nút Cancel). Ô lớn nền rarity + kính + vệt sáng, chi phí quặng trong ô nâu (thiếu = <b>số đỏ</b>). Cancel <b>tím</b> (phụ), Craft <b>xanh lá</b>; thiếu quặng = Craft xám.</div>
+<div class="scr"><div class="pp w680">
+ <div class="hd"><span class="o">Glasses Crafting</span></div>
+ <div class="bd">
+  <div class="rc" style="width:110px;height:110px;background-image:url(1_UIKit/Rarity/tier_04_background.png)"><img src="3_Equipment/08_Wing_Glass/Wing_4.png"></div>
+  <div class="stat2"><img src="5_Maps/Mining/coal_icon.png"><span class="o3">120/100</span></div>
+  <div class="btns"><div class="b vi" style="width:140px"><span class="o">Cancel</span></div><div class="b g" style="width:140px"><span class="o">Craft</span></div></div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="stat2" style="min-width:120px"><img src="5_Maps/Mining/coal_icon.png"><span class="o3 red">40/100</span></div><span class="nt">thiếu quặng</span></div>
+ <div class="it"><div class="b gr sm" style="min-width:120px"><span class="o">Craft</span></div><span class="nt">Craft khi thiếu</span></div>
+</div></div></div>
+
+<!-- 5. Wing reroll -->
+<div class="col"><div class="cap"><b>UIWingRerollPopup</b> (vừa 817): thẻ kính khuôn Item Info (ô + Lv, [rarity] tên màu, Health/Damage nhãn nâu + số viền). Dòng substat tối đa <b>5</b> (Mythic+): ô khoá bên trái (tick ổ khoá), dòng đã khoá chuyển <b>panel tối</b>. Đáy: chi phí quặng + nút Reroll <b>xanh lá</b>; khoá hết / thiếu quặng = xám.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Reroll Substats</span><div class="x"></div></div>
+ <div class="bd">
+  <div class="icard">
+   <div class="rc" style="width:96px;height:96px;background-image:url(1_UIKit/Rarity/tier_06_background.png)"><img src="3_Equipment/08_Wing_Glass/Wing_6.png"><span class="lv o3" style="font-size:17px">Lv 12</span></div>
+   <div class="inf"><span class="rar o3" style="color:#A288F2">Mythic</span><span class="nm o" style="color:#A288F2">Onyx</span><div class="ms"><span class="k">Health</span><span class="o3">1.00K</span></div><div class="ms"><span class="k">Damage</span><span class="o3">12.2K</span></div></div>
+  </div>
+  <div class="sect" style="font-size:16px"><span>Lock</span><span class="mute15">Locked stats stay after reroll</span></div>
+  <div style="width:100%;display:flex;flex-direction:column;gap:6px">
+   <div class="srow"><div class="lk"></div><div class="sbox"><span class="k">+Critical Damage</span><span class="o3">73%</span></div></div>
+   <div class="srow on"><div class="lk"><img src="1_UIKit/BattlePass/icon_lock.png"></div><div class="sbox"><span class="k">+Double Hit Chance</span><span class="o3">12.5%</span></div></div>
+   <div class="srow"><div class="lk"></div><div class="sbox"><span class="k">+Companion Cooldown</span><span class="o3">8%</span></div></div>
+   <div class="srow"><div class="lk"></div><div class="sbox"><span class="k">+Lifesteal</span><span class="o3">6.25%</span></div></div>
+   <div class="srow"><div class="lk"></div><div class="sbox"><span class="k">+Health Regen</span><span class="o3">5.72%</span></div></div>
+  </div>
+  <div class="b g" style="width:200px;height:84px"><div style="display:flex;flex-direction:column;align-items:center;line-height:1.05"><span class="o" style="font-size:24px">Reroll</span><div class="cost"><img src="5_Maps/Mining/coal_icon.png" style="height:22px"><span class="o3" style="font-size:18px">80/50</span></div></div></div>
+ </div>
+</div></div></div>
+
+<!-- 6. Cape detail -->
+<div class="col"><div class="cap"><b>UICapeDetailPopup</b> (vừa 817): khuôn Item Info — header "Pipe Info", thẻ ô tẩu + [rarity] + tên màu, Damage/Health % nhãn nâu + số viền; substat ô cố định <b>2 dòng</b> (Epic+ có 2, thấp hơn 1 dòng). Equip <b>xanh lá</b> / Unequip <b>tím</b>, Upgrade <b>cam</b>.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Pipe Info</span><div class="x"></div></div>
+ <div class="bd">
+  <div class="icard">
+   <div class="rc" style="width:96px;height:96px;background-image:url(1_UIKit/Rarity/tier_05_background.png)"><img src="3_Equipment/07_Cape_Pipe/9-Cape.png"><span class="lv o3" style="font-size:17px">Lvl 7</span></div>
+   <div class="inf"><span class="rar o3" style="color:#FFDD61">Legendary</span><span class="nm o" style="color:#FFDD61">Vampire Pipe</span><div class="ms"><span class="k">Damage</span><span class="o3">+55.2%</span></div><div class="ms"><span class="k">Health</span><span class="o3">+55.2%</span></div></div>
+  </div>
+  <div class="subs r2"><div><span class="k">+Critical Chance</span><span class="o3">4.2%</span></div><div><span class="k">+Lifesteal</span><span class="o3">2.5%</span></div></div>
+  <div class="btns"><div class="b g" style="width:150px"><span class="o">Equip</span></div><div class="b or" style="width:150px"><span class="o">Upgrade</span></div></div>
+ </div>
+</div></div></div>
+
+<!-- 7. Cape salvage -->
+<div class="col"><div class="cap"><b>UICapeSalvagePopup</b> (vừa 817): thẻ tẩu đang nâng + Damage/Health có phần tăng <b>xanh</b>, thanh XP; câu "Select pipes to combine" + nút Upgrade <b>xanh lá</b> (chưa chọn = xám). Kho: ô được chọn có <b>tick xanh</b>, tẩu đang mặc mờ + chữ Equipped (không chọn được).</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Pipe Upgrade</span><div class="x"></div></div>
+ <div class="bd">
+  <div class="icard">
+   <div class="rc" style="width:96px;height:96px;background-image:url(1_UIKit/Rarity/tier_05_background.png)"><img src="3_Equipment/07_Cape_Pipe/9-Cape.png"><span class="lv o3" style="font-size:17px">Lvl 7 <span style="color:#62d34a">(+2)</span></span></div>
+   <div class="inf"><span class="nm o" style="color:#FFDD61;font-size:21px">[Legendary] Vampire Pipe</span><div class="ms"><span class="k">Damage</span><span class="o3">+55.2%</span><span class="o3 g" style="font-size:18px">+6.1%</span></div><div class="ms"><span class="k">Health</span><span class="o3">+55.2%</span><span class="o3 g" style="font-size:18px">+6.1%</span></div></div>
+  </div>
+  <div class="bar" style="width:100%"><div class="fill" style="width:62%"></div><span class="o3">174/280 xp</span></div>
+  <div style="width:100%;display:flex;align-items:center;justify-content:space-between"><span class="brown" style="font-size:17px">Select pipes to combine</span><div class="b g sm" style="min-width:130px"><span class="o">Upgrade</span></div></div>
+  <div class="inv" style="height:190px">
+   <div class="grid" style="grid-template-columns:repeat(5,56px);justify-content:center">
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="3_Equipment/07_Cape_Pipe/1-Cape.png"><span class="lv o3">Lvl 1</span><img class="chk" src="1_UIKit/ClanSearch/check_green.png" style="left:50%;top:50%;width:62%;height:auto;transform:translate(-50%,-50%)"></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_02_background.png)"><img src="3_Equipment/07_Cape_Pipe/3-Cape.png"><span class="lv o3">Lvl 2</span><img class="chk" src="1_UIKit/ClanSearch/check_green.png" style="left:50%;top:50%;width:62%;height:auto;transform:translate(-50%,-50%)"></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="3_Equipment/07_Cape_Pipe/2-Cape.png"><span class="lv o3">Lvl 1</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="3_Equipment/07_Cape_Pipe/5-Cape.png"><span class="lv o3">Lvl 1</span></div>
+    <div class="rc dim" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_04_background.png)"><img src="3_Equipment/07_Cape_Pipe/7-Cape.png"><div class="eq"><span class="o3">Equipped</span></div></div>
+   </div>
+   <div class="sbar"><i></i></div>
+  </div>
+ </div>
+</div></div></div>
+
+<!-- 8. Cape summon rates -->
+<div class="col"><div class="cap"><b>UICapeUpgradeInfoPopup</b> (vừa 817): header "Summon Rates" (thay "Pipes"); "Level 12" giữa 2 mũi tên xanh (art Wing arrow_left/right, thay icon tô màu). 6 dòng thanh rarity 1 cột %. Thanh tiến độ chỉ ở level hiện tại.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Summon Rates</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px">
+  <div class="lvnav"><img src="1_UIKit/Wing/arrow_left.png"><div class="c"><span class="o" style="font-size:28px">Level 12</span></div><img src="1_UIKit/Wing/arrow_right.png"></div>
+  <div style="width:100%">
+   <div class="trow one" style="border-image-source:url(1_UIKit/RarityTable/bar_common.png)"><span class="o3">Common</span><span class="o3">45.0%</span></div>
+   <div class="trow one" style="border-image-source:url(1_UIKit/RarityTable/bar_uncommon.png)"><span class="o3">Uncommon</span><span class="o3">30.0%</span></div>
+   <div class="trow one" style="border-image-source:url(1_UIKit/RarityTable/bar_rare.png)"><span class="o3">Rare</span><span class="o3">15.0%</span></div>
+   <div class="trow one" style="border-image-source:url(1_UIKit/RarityTable/bar_epic.png)"><span class="o3">Epic</span><span class="o3">7.0%</span></div>
+   <div class="trow one" style="border-image-source:url(1_UIKit/RarityTable/bar_legendary.png)"><span class="o3">Legendary</span><span class="o3">2.5%</span></div>
+   <div class="trow one" style="border-image-source:url(1_UIKit/RarityTable/bar_mythic.png);margin:0"><span class="o3">Mythic</span><span class="o3">0.5%</span></div>
+  </div>
+  <div class="bar" style="width:100%"><div class="fill" style="width:40%"></div><span class="o3">4/10</span></div>
+ </div>
+</div></div></div>
+
+<!-- 9. Cape popup (trang Pipes) -->
+<div class="col"><div class="cap"><b>UICapePopup</b> (lớn 968): header "Pipes" + X, chip tiền crown bên trái header-dưới. Khu summon trên <b>panel tối</b>: "Lvl 1" + thanh tiến độ + nút (i) xanh lơ; nút Summon <b>xanh lá</b> (crown 50 / Summon x1, chấm đỏ khi đủ) + hệ số <b>tím</b> x20. Kho tẩu lưới 6 cột cuộn; "Show Pipe" = công tắc kit Setting.</div>
+<div class="scr"><div class="pp w968">
+ <div class="hd"><span class="o">Pipes</span><div class="x"></div></div>
+ <div class="bd" style="gap:12px">
+  <div style="width:100%;display:flex;justify-content:space-between;align-items:center">
+   <div class="stat2" style="min-width:120px"><img src="1_UIKit/Common/crown_icon.png"><span class="o3">330</span></div>
+   <div class="togrow"><span>Show Pipe</span><div class="tog"><div class="tr"></div><div class="fl" style="right:40px"></div><img src="1_UIKit/Setting/knob_on.png" style="left:46px" onerror="this.style.display='none'"></div></div>
+  </div>
+  <div class="dk2" style="flex-direction:column;gap:14px;height:auto;padding:4px 0">
+   <div style="width:100%;display:flex;align-items:center;gap:10px;margin:0">
+    <span class="o3" style="font-size:20px">Lvl 1</span>
+    <div class="bar" style="flex:1"><div class="fill" style="width:30%"></div><span class="o3">3/7</span></div>
+    <div class="b bl sm" style="min-width:44px;width:44px;height:44px;padding:0"><span class="o" style="font-size:20px">i</span></div>
+   </div>
+   <div class="btns" style="margin:0;align-items:center">
+    <div class="b g" style="width:170px;height:84px;position:relative"><div style="display:flex;flex-direction:column;align-items:center;line-height:1.05"><div class="cost"><img src="1_UIKit/Common/crown_icon.png" style="height:22px"><span class="o3" style="font-size:19px">50</span></div><span class="o" style="font-size:22px">Summon x1</span></div><img src="1_UIKit/BattlePass/icon_alert.png" style="position:absolute;right:-16px;top:-16px;width:26px"></div>
+    <div class="b vi" style="width:80px;height:64px"><span class="o" style="font-size:22px">x20</span></div>
+   </div>
+  </div>
+  <div class="inv" style="height:240px">
+   <div class="grid" style="grid-template-columns:repeat(6,56px);justify-content:center">
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_05_background.png)"><img src="3_Equipment/07_Cape_Pipe/9-Cape.png"><span class="lv o3">Lvl 7</span><div class="eq"><span class="o3">Equipped</span></div></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_04_background.png)"><img src="3_Equipment/07_Cape_Pipe/7-Cape.png"><span class="lv o3">Lvl 3</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="3_Equipment/07_Cape_Pipe/5-Cape.png"><span class="lv o3">Lvl 2</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_02_background.png)"><img src="3_Equipment/07_Cape_Pipe/3-Cape.png"><span class="lv o3">Lvl 1</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_02_background.png)"><img src="3_Equipment/07_Cape_Pipe/4-Cape.png"><span class="lv o3">Lvl 1</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="3_Equipment/07_Cape_Pipe/1-Cape.png"><span class="lv o3">Lvl 1</span></div>
+    <div class="rc" style="width:56px;height:56px;background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="3_Equipment/07_Cape_Pipe/2-Cape.png"><span class="lv o3">Lvl 1</span></div>
+   </div>
+   <div class="sbar"><i></i></div>
+  </div>
+ </div>
+</div>
+<div class="nt">Hết crown: nút Summon xám, số crown đỏ. Hệ số x20 chỉ hiện khi crown &gt; 99 (như gốc).</div>
+</div></div>
+
+<!-- 10. Pipe claim / relic summon result -->
+<div class="col"><div class="cap" style="max-width:540px"><b>UICapePopup — ClaimPage (summon 1)</b> toàn màn: ruy băng vàng "New Pipe Obtained!", hào quang + tẩu lớn, [rarity] tên màu, Damage/Health nhãn nâu… trên panel tối, nút Claim <b>xanh lá</b>. Summon nhiều + <b>UiSumonEnchantment</b> dùng chung khuôn màn kết quả Đợt 3 (Rewards, lưới 5 cột ô 150, Tap anywhere to close).</div>
+<div class="phone"><div class="lob"></div>
+ <div class="ab rib cname" style="top:110px;width:420px"><span class="o">New Pipe Obtained!</span></div>
+ <img class="ab" src="7_FX/Glow_Circle02.png" style="top:230px;width:420px;opacity:.5">
+ <img class="ab" src="3_Equipment/07_Cape_Pipe/11-Cape.png" style="top:330px;width:220px">
+ <span class="ab o" style="top:610px;font-size:28px;color:#A288F2">[Mythic] Holy Pipe</span>
+ <div class="ab" style="top:670px;width:380px"><div class="dk2" style="flex-direction:column;gap:6px;height:auto">
+  <div class="ms" style="margin:0"><span class="o3" style="color:#cfcde0">Damage</span><span class="o3">+12%</span></div>
+  <div class="ms" style="margin:0"><span class="o3" style="color:#cfcde0">Health</span><span class="o3">+12%</span></div>
+  <div class="ms" style="margin:0;font-size:18px"><span class="o3" style="color:#cfcde0">+Critical Chance</span><span class="o3">3%</span></div>
+ </div></div>
+ <div class="ab b g" style="top:880px;width:200px"><span class="o">Claim</span></div>
+</div></div>
+
+<div class="col"><div class="cap" style="max-width:540px"><b>UiSumonEnchantment</b> (toàn màn): khuôn màn kết quả summon pet Đợt 3 — ruy băng "Rewards", lưới 5 cột ô 150 nền tier + relic + "Lvl N", "Tap anywhere to close" (thay "Click To Close").</div>
+<div class="phone"><div class="lob"></div>
+ <div class="ab rib cname" style="top:100px"><span class="o">Rewards</span></div>
+ <div class="ab grid" style="top:220px;grid-template-columns:repeat(5,75px);gap:14px">
+  <div class="rc" style="width:75px;height:75px;background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="2_Icons/Enchantment/enchantment_01.png"><span class="lv o3">Lvl 1</span></div>
+  <div class="rc" style="width:75px;height:75px;background-image:url(1_UIKit/Rarity/tier_02_background.png)"><img src="2_Icons/Enchantment/enchantment_02.png"><span class="lv o3">Lvl 2</span></div>
+  <div class="rc" style="width:75px;height:75px;background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="2_Icons/Enchantment/enchantment_01.png"><span class="lv o3">Lvl 1</span></div>
+  <div class="rc" style="width:75px;height:75px;background-image:url(1_UIKit/Rarity/tier_03_background.png)"><img src="2_Icons/Enchantment/enchantment_03.png"><span class="lv o3">Lvl 3</span></div>
+  <div class="rc" style="width:75px;height:75px;background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="2_Icons/Enchantment/enchantment_01.png"><span class="lv o3">Lvl 1</span></div>
+  <div class="rc" style="width:75px;height:75px;background-image:url(1_UIKit/Rarity/tier_02_background.png)"><img src="2_Icons/Enchantment/enchantment_02.png"><span class="lv o3">Lvl 2</span></div>
+  <div class="rc" style="width:75px;height:75px;background-image:url(1_UIKit/Rarity/tier_04_background.png)"><img src="2_Icons/Enchantment/enchantment_04.png"><span class="lv o3">Lvl 4</span></div>
+  <div class="rc" style="width:75px;height:75px;background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="2_Icons/Enchantment/enchantment_01.png"><span class="lv o3">Lvl 1</span></div>
+  <div class="rc" style="width:75px;height:75px;background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="2_Icons/Enchantment/enchantment_01.png"><span class="lv o3">Lvl 1</span></div>
+  <div class="rc" style="width:75px;height:75px;background-image:url(1_UIKit/Rarity/tier_02_background.png)"><img src="2_Icons/Enchantment/enchantment_02.png"><span class="lv o3">Lvl 2</span></div>
+ </div>
+ <span class="ab tap o3" style="top:960px;font-size:30px">Tap anywhere to close</span>
+</div></div>
+
+</body></html>

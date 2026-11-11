@@ -12,6 +12,8 @@ public class ElementEchantmentUI : MonoBehaviour
     public Image imgIcon;
     public Image imgBgTier;
 
+    private static readonly Color EMPTY_COLOR = new Color(1f, 1f, 1f, 0.3f);
+
     private Action<ElementEchantmentUI> onClick;
 
     public int Tier { get; private set; }
@@ -40,6 +42,7 @@ public class ElementEchantmentUI : MonoBehaviour
         if (imgBgTier != null)
         {
             imgBgTier.sprite = data.GetTierBackground(Mathf.Max(tier, 1));
+            imgBgTier.color = hasRelic ? Color.white : EMPTY_COLOR;   // ô trống (Merge) = nền mờ
         }
         if (textLvl != null)
         {

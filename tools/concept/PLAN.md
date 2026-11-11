@@ -54,7 +54,7 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 - Đổi trạng thái bằng đổi sprite / ẩn hiện trong script, không tô màu đè.
 
 ## Tiến độ
-**Đang ở:** Đợt 3 xong (áp + chụp kiểm batch3/unity.png + commit). **Tiếp theo:** Đợt 4 Enchantment, Wing, Cape — bắt đầu từ bước A. Đợt 2 + 3 CHƯA test Play.
+**Đang ở:** Đợt 4 xong (áp + chụp kiểm batch4/unity.png + commit). **Tiếp theo:** Đợt 5 Dungeon & Mining — bắt đầu từ bước A. Đợt 2 + 3 + 4 CHƯA test Play.
 
 | Đợt | Concept | Chốt | Áp vào game | Commit |
 |---|---|---|---|---|
@@ -62,7 +62,7 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 | 1 | ✅ tools/concept/batch1/ | ✅ 2026-11-11 | ✅ Batch1Reskin (chụp edit mode: batch1/unity.png); user test Play Auto Loot → sửa viền bị mask cắt; các popup khác CHƯA test Play | ✅ 812200d0 + sửa viền |
 | 2 | ✅ tools/concept/batch2/ (khảo sát: before/); user sửa: ô mốc Battle Pass ghi tên màn "Normal 3-5" (StaticCampaignData.GetLevelText, tên Tier dịch Items.Tier.Name.TierN) thay số level | ✅ 2026-11-11 | ✅ Batch2Reskin (chụp edit mode: batch2/unity.png, 14 ảnh); CHƯA test Play | ✅ |
 | 3 | ✅ tools/concept/batch3/ (khảo sát: before/; max: mô tả pet DE 126 ký tự = 4 dòng, tên mastery DE 33 ký tự → 2 dòng, summon tới 1055 ô) | ✅ 2026-11-11 (duyệt cả 4 đề xuất: Summon Rates, Unequip, key ads summon, mô tả pet/mastery dùng key dịch) | ✅ Batch3Reskin (chụp edit mode: batch3/unity.png, 7 ảnh); CHƯA test Play | ✅ |
-| 4 | | | | |
+| 4 | ✅ tools/concept/batch4/ (khảo sát: before/; max: Wing 5 substat, Cape 2 substat, relic tier 11, kho cuộn) | ✅ 2026-11-11 (duyệt: header "Relic +N", "Relic Merge", "Summon Rates" tẩu, 10 key mới) | ✅ Batch4Reskin (chụp edit mode: batch4/unity.png, 11 ảnh); CHƯA test Play | ✅ |
 | 5 | | | | |
 | 6 | | | | |
 | 7 | | | | |

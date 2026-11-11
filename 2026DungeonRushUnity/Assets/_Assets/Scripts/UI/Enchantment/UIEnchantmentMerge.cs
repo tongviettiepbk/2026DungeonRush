@@ -19,6 +19,8 @@ public class UIEnchantmentMerge : BaseUI
     public Transform transParrentInventory;
 
     public Button btMerge;
+    public Sprite sprButtonOn;     // Batch4Reskin: xanh lá khi đủ 3 ô, xám khi chưa
+    public Sprite sprButtonOff;
 
     private readonly List<ElementEnchantmentMergeUI> listInventory = new List<ElementEnchantmentMergeUI>();
     private int selectedTier;       // xli: 0 = chưa chọn
@@ -76,6 +78,10 @@ public class UIEnchantmentMerge : BaseUI
         mergeItemDone.SetData(isFull ? selectedTier + 1 : 0);
         mergeItemDone.SetInteractable(isFull);
         btMerge.interactable = isFull;
+        if (sprButtonOn != null && sprButtonOff != null)
+        {
+            btMerge.image.sprite = isFull ? sprButtonOn : sprButtonOff;
+        }
 
         RefreshInventory();
     }

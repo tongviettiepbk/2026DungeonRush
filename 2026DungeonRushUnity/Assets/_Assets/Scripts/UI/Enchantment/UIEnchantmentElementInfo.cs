@@ -21,6 +21,14 @@ public class UIEnchantmentElementInfo : BaseUI
     public Button btMerge;
     public Button btDismantle;
 
+    [Space(5)]
+    // Trạng thái nút bằng sprite (Batch4Reskin gán): Equip xanh lá / Unequip tím, Merge cam, Dismantle đỏ, khoá xám.
+    public Sprite sprEquip;
+    public Sprite sprUnequip;
+    public Sprite sprMerge;
+    public Sprite sprDismantle;
+    public Sprite sprDisabled;
+
     private int tier;
     private bool isEquipped;
     private GearSlotType slot;
@@ -66,26 +74,40 @@ public class UIEnchantmentElementInfo : BaseUI
     private void SetLayout()
     {
         StaticEnchantmentData data = GameData.staticData.enchantments;
-        txtTier.text = "Relic +" + tier;
+        txtTier.text = Loc.L("Popup.Enchantment.Tier", tier);   // tiêu đề header "Relic +N"
         imgBg.sprite = data.GetTierBackground(tier);
         imgIcon.sprite = data.GetTierIcon(tier);
-        // "Popup.Enchantment.Buff" = "Relic Power +{0}%" với {0} = " <color=#E5F36B>{tier²:0.#}</color>".
-        txtInfo.text = "Relic Power + <color=#E5F36B>" + EnchantmentConfig.GetBuffPercent(tier).ToString("0.#") + "</color>%";
+        // Chỉ số: nhãn "Relic Power" nằm riêng (key Popup.Enchantment.PowerLabel), ô này chỉ ghi "+X%".
+        txtInfo.text = "+" + EnchantmentConfig.GetBuffPercent(tier).ToString("0.#") + "%";
 
         if (txtEquip != null)
         {
             txtEquip.text = isEquipped ? Loc.L("Popup.Enchantment.Unequip") : Loc.L("Popup.Enchantment.Equip");
         }
+        if (btEquip != null)
+        {
+            SetSprite(btEquip, isEquipped ? sprUnequip : sprEquip);
+        }
         if (btMerge != null)
         {
             btMerge.interactable = tier < EnchantmentConfig.MAX_TIER;
+            SetSprite(btMerge, btMerge.interactable ? sprMerge : sprDisabled);
         }
         if (btDismantle != null)
         {
             btDismantle.interactable = tier >= 2;
+            SetSprite(btDismantle, btDismantle.interactable ? sprDismantle : sprDisabled);
         }
 
         gameObject.SetActive(true);
+    }
+
+    private static void SetSprite(Button button, Sprite sprite)
+    {
+        if (sprite != null)
+        {
+            button.image.sprite = sprite;
+        }
     }
 
     private void OnClickEquip()

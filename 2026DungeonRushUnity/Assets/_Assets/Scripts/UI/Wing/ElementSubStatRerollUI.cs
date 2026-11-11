@@ -13,6 +13,12 @@ public class ElementSubStatRerollUI : MonoBehaviour
     public Image imgBackground;
     public Image imgFlash;
     public TMP_Text txtStat;
+    public TMP_Text txtValue;          // cột số bên phải (Batch4Reskin tạo); null = gộp chung txtStat như cũ
+    // Dòng khoá đổi nền sprite (box_tan → panel tối) + màu chữ nhãn (Batch4Reskin gán); null = tô màu như cũ.
+    public Sprite spriteBgLocked;
+    public Sprite spriteBgUnlocked;
+    public Color colorTextLocked = Color.white;
+    public Color colorTextUnlocked = Color.white;
     public Color colorLocked = new Color(0.50980395f, 0.50980395f, 0.50980395f, 1f);
     public Color colorUnlocked = new Color(0.7137255f, 0.7294118f, 0.23921569f, 1f);
     public Sprite spriteLocked;
@@ -32,9 +38,9 @@ public class ElementSubStatRerollUI : MonoBehaviour
     {
         this.onClickLock = onClickLock;
         IsLocked = false;
-        txtStat.text = UITabWing.GetSubStatText(subStat);
+        SetText(subStat);
         imgLockIcon.sprite = spriteUnlocked;
-        imgBackground.color = colorUnlocked;
+        SetLockVisual();
         if (imgFlash != null)
         {
             imgFlash.DOKill();
@@ -45,7 +51,7 @@ public class ElementSubStatRerollUI : MonoBehaviour
     // kxm: đổi chữ sau khi reroll + chớp sáng.
     public void SetData(GearSubStat subStat, float delay)
     {
-        txtStat.text = UITabWing.GetSubStatText(subStat);
+        SetText(subStat);
         if (imgFlash == null)
         {
             return;
@@ -71,7 +77,30 @@ public class ElementSubStatRerollUI : MonoBehaviour
     {
         IsLocked = !IsLocked;
         imgLockIcon.sprite = IsLocked ? spriteLocked : spriteUnlocked;
-        imgBackground.color = IsLocked ? colorLocked : colorUnlocked;
+        SetLockVisual();
         onClickLock?.Invoke(this);
+    }
+
+    private void SetText(GearSubStat subStat)
+    {
+        if (txtValue == null)
+        {
+            txtStat.text = UITabWing.GetSubStatText(subStat);
+            return;
+        }
+        txtStat.text = "+" + UIMainLobby.SubStatName(subStat.type);
+        txtValue.text = subStat.value.ToString("0.##") + "%";
+    }
+
+    private void SetLockVisual()
+    {
+        if (spriteBgLocked == null || spriteBgUnlocked == null)
+        {
+            imgBackground.color = IsLocked ? colorLocked : colorUnlocked;
+            return;
+        }
+        imgBackground.sprite = IsLocked ? spriteBgLocked : spriteBgUnlocked;
+        imgBackground.color = Color.white;
+        txtStat.color = IsLocked ? colorTextLocked : colorTextUnlocked;
     }
 }
