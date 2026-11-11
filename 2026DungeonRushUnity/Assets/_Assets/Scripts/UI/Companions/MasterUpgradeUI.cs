@@ -19,6 +19,11 @@ public class MasterUpgradeUI : MonoBehaviour
 
     public Button btUpgrade;
     public TMP_Text txtQuantityRequest;
+    public GameObject objCostIcon;       // icon gem cạnh phí — ẩn khi MAX
+
+    // Trạng thái nút bằng sprite (Batch3Reskin gán): xanh lá = nâng (tiêu gem), xám = MAX.
+    public Sprite spriteUpgrade;
+    public Sprite spriteMax;
     public TutorialUI upgradeTutorial;   // MasteryUpgradeDetailPanel.UpgradeButtonTutorialUI gốc
 
     private MasteryUpgradeData data;
@@ -54,14 +59,20 @@ public class MasterUpgradeUI : MonoBehaviour
         int level = GameData.userData.mastery.GetLevel(data.upgradeType);
         bool isMax = level >= data.MaxLevel;
 
-        txtName.text = data.upgradeName;
+        txtName.text = Loc.Or("Items.Mastery.Name." + data.upgradeType, data.upgradeName);
         imgIcon.sprite = data.icon;
         txtLevel.text = "Lvl " + level;
-        txtDescirpts.text = data.description;
+        txtDescirpts.text = Loc.Or("Items.Mastery.Desc." + data.upgradeType, data.description);
 
         txtProcess.spriteAsset = data.valueSpriteAsset;
         string current = FormatValue(data.GetValueAtLevel(level));
-        txtProcess.text = isMax ? current : current + " > " + FormatValue(data.GetValueAtLevel(level + 1));
+        // Giá trị hiện tại > cấp kế: mũi tên vàng nhấn, số cấp kế xanh (concept batch3).
+        txtProcess.text = isMax ? current
+            : current + "  <color=#FFD35A>></color>  <color=#9DFF7A>" + FormatValue(data.GetValueAtLevel(level + 1)) + "</color>";
+        if (objCostIcon != null)
+            objCostIcon.SetActive(isMax == false);
+        if (spriteUpgrade != null && spriteMax != null)
+            btUpgrade.image.sprite = isMax ? spriteMax : spriteUpgrade;
 
         if (isMax)
         {

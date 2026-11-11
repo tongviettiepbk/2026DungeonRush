@@ -21,6 +21,11 @@ public class UICompanionAdSummonPopup : BaseUI
     public Button CloseButton;
     public Button btBackground;
 
+    // Trạng thái nút bằng sprite (Batch3Reskin gán): hồng = xem ads, xanh lá = đã mua No Ads, xám = hết lượt.
+    public Sprite spriteAd;
+    public Sprite spriteFree;
+    public Sprite spriteDisabled;
+
     private Action<List<CompanionSummonResult>> onSummoned;
     private bool isWaitingAd;
 
@@ -50,22 +55,29 @@ public class UICompanionAdSummonPopup : BaseUI
         int remaining = CompanionService.GetAdSummonRemainingToday();
         bool isNoAds = GameData.userData.shop.isNoAdsBought;
 
-        infoText.text = "(Max " + max + " times)";
+        infoText.text = Loc.L("Popup.CompanionAdSummon.Max", max);
         SummonCountText.text = "x" + count;
-        NextSummonText.text = "Next summon " + next;
+        NextSummonText.text = Loc.L("Popup.CompanionAdSummon.Next", next);
 
         if (remaining <= 0)
         {
             SummonButton.interactable = false;
-            SummonButtonImage.color = UITabWing.DISABLED_BUTTON_COLOR;
+            SetButtonSprite(spriteDisabled);
             SummonButtonText.text = ShopUIUtil.FormatDuration((long)CompanionService.GetTimeToAdSummonReset().TotalSeconds);
             return;
         }
 
         SummonButton.interactable = true;
-        SummonButtonImage.color = Color.white;   // ảnh nút đã có màu (btn_yellow), không tô thêm
+        SetButtonSprite(isNoAds ? spriteFree : spriteAd);
         SummonButtonText.text = (isNoAds ? string.Empty : "<sprite=0>") + remaining + "/" + CompanionSummonConfig.AD_DAILY_LIMIT
-            + "\nSummon x" + count;
+            + "\n" + Loc.L("UI.Companion.SummonX", count);
+    }
+
+    private void SetButtonSprite(Sprite sprite)
+    {
+        SummonButtonImage.color = Color.white;
+        if (sprite != null)
+            SummonButtonImage.sprite = sprite;
     }
 
     // gqg gốc: hết lượt thì thôi; No Ads → nhận luôn, không thì xem quảng cáo xong mới nhận.

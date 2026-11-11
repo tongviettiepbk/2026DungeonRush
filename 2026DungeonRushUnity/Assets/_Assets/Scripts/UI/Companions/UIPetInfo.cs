@@ -11,8 +11,8 @@ using UnityEngine.UI;
 // Đối chiếu game thật: Flame Wing lv1 → 252 / Damage 47 Health 63 ; Magic Wool lv6 → 78 / Damage 6 Health 65.
 public class UIPetInfo : BaseUI
 {
-    // Màu số trong text — lấy từ prefab gốc (<color=#E5F36B>).
-    private const string VALUE_COLOR = "#E5F36B";
+    // Màu số trong mô tả: xanh đậm đọc được trên nền kem (concept batch3; gốc vàng #E5F36B trên nền tối).
+    private const string VALUE_COLOR = "#2F8F1F";
     private const string VALUE_TAG = "<Value>";
 
     public Button btClose;
@@ -30,9 +30,19 @@ public class UIPetInfo : BaseUI
 
     [Space(20)]
     public TMP_Text txtDescription;
-    public TMP_Text txtOwnEffect;
+    public TMP_Text txtOwnLabels;   // cột nhãn nâu "Damage\nHealth"
+    public TMP_Text txtOwnEffect;   // cột số chữ viền "+1.2k\n+2.2k", đặt ngay sau nhãn dài nhất
     public Button btEquip;
     public Button btUpgrade;
+    public TMP_Text txtHint;        // chữ mờ thay chỗ nút: chưa sở hữu / xem pet người khác
+    public Button btBackground;     // chạm nền để đóng
+
+    [Space(20)]
+    // Trạng thái nút bằng sprite (Batch3Reskin gán): Equip xanh lá, Unequip tím, Upgrade cam, khoá xám.
+    public Sprite spriteEquip;
+    public Sprite spriteUnequip;
+    public Sprite spriteUpgrade;
+    public Sprite spriteDisabled;
 
     private CompanionUI owner;
     private CompanionData data;
@@ -45,6 +55,8 @@ public class UIPetInfo : BaseUI
         btClose.onClick.AddListener(Close);
         btEquip.onClick.AddListener(OnClickEquip);
         btUpgrade.onClick.AddListener(OnClickUpgrade);
+        if (btBackground != null)
+            btBackground.onClick.AddListener(Close);
     }
 
     public void Show(CompanionData data, CompanionUI owner)
@@ -75,12 +87,13 @@ public class UIPetInfo : BaseUI
         int level = isViewOther ? viewLevel : user.GetLevel(data.assetName); // chưa sở hữu → 1
 
         txtName.text = Loc.Or(data.localizationKey, data.companionName);
-        // TODO: màu chữ theo rarity — chưa có bảng màu gốc, đang giữ màu mặc định của prefab.
-        txtRarity.text = Loc.Rarity(data.rarity);
+        txtRarity.text = ShopUIUtil.ColoredRarity(data.rarity);
 
         txtDescription.text = BuildDescription(level);
-        txtOwnEffect.text = (Loc.L("Items.SubStat.Damage") + " ") + Highlight(FormatNumber(CompanionService.GetOwnAttack(data, level)))
-                          + " Health " + Highlight(FormatNumber(CompanionService.GetOwnHealth(data, level)));
+        txtOwnLabels.text = Loc.L("Items.SubStat.Damage") + "\n" + Loc.L("Items.SubStat.Health");
+        txtOwnEffect.text = "+" + FormatNumber(CompanionService.GetOwnAttack(data, level))
+                          + "\n+" + FormatNumber(CompanionService.GetOwnHealth(data, level));
+        PlaceOwnValues();
 
         if (imgBackground != null)
         {
@@ -94,15 +107,22 @@ public class UIPetInfo : BaseUI
         textLv.gameObject.SetActive(isOwned);
         textProcess.gameObject.SetActive(isMine);
         imgProcess.gameObject.SetActive(isMine);
+        imgProcess.transform.parent.gameObject.SetActive(isMine);   // cả thanh (track) — không để track rỗng khi khoá
         btEquip.gameObject.SetActive(isMine);
         btUpgrade.gameObject.SetActive(isMine);
         textLv.text = Loc.L("Common.Level.Abbrev", level);
+        if (txtHint != null)
+        {
+            txtHint.gameObject.SetActive(isMine == false);
+            txtHint.text = isViewOther ? Loc.L("Common.TapToClose") : Loc.L("Popup.Companion.SummonToUnlock");
+        }
         if (isMine == false)
         {
             return;
         }
 
-        if (model.level >= CompanionUpgradeConfig.MAX_LEVEL)
+        bool isMax = model.level >= CompanionUpgradeConfig.MAX_LEVEL;
+        if (isMax)
         {
             textProcess.text = Loc.L("Common.Level.Max");
             imgProcess.fillAmount = 1f;
@@ -117,16 +137,42 @@ public class UIPetInfo : BaseUI
         TMP_Text txtEquip = btEquip.GetComponentInChildren<TMP_Text>(true);
         if (txtEquip != null)
         {
-            txtEquip.text = isEquipped ? "Remove" : Loc.L("Common.Equip");
+            txtEquip.text = isEquipped ? Loc.L("Common.Unequip") : Loc.L("Common.Equip");
         }
-        btUpgrade.interactable = user.CanUpgrade(data.assetName);
+        SetSprite(btEquip, isEquipped ? spriteUnequip : spriteEquip);
+
+        bool canUpgrade = user.CanUpgrade(data.assetName);
+        btUpgrade.interactable = canUpgrade;
+        SetSprite(btUpgrade, canUpgrade ? spriteUpgrade : spriteDisabled);
+        TMP_Text txtUpgrade = btUpgrade.GetComponentInChildren<TMP_Text>(true);
+        if (txtUpgrade != null)
+        {
+            txtUpgrade.text = isMax ? Loc.L("Common.Level.Max") : Loc.L("Common.Upgrade");
+        }
+    }
+
+    private static void SetSprite(Button button, Sprite sprite)
+    {
+        if (sprite != null)
+        {
+            button.image.sprite = sprite;
+        }
+    }
+
+    // Cột số đứng ngay sau nhãn dài nhất (nhãn đổi theo ngôn ngữ). Hai cột cùng neo/pivot trái.
+    private void PlaceOwnValues()
+    {
+        RectTransform labels = txtOwnLabels.rectTransform;
+        RectTransform values = txtOwnEffect.rectTransform;
+        float width = txtOwnLabels.GetPreferredValues(txtOwnLabels.text).x;
+        values.anchoredPosition = new Vector2(labels.anchoredPosition.x + width + 14f, values.anchoredPosition.y);
     }
 
     // Điền lần lượt từng <Value> trong data.details theo kiểu kỹ năng (khớp field các lớp PetCompanion*).
     private string BuildDescription(int level)
     {
         List<string> values = GetDescriptionValues(level);
-        string text = data.details;
+        string text = Loc.Or(data.descriptionKey, data.details);
         for (int i = 0; i < values.Count; i++)
         {
             int index = text.IndexOf(VALUE_TAG);
