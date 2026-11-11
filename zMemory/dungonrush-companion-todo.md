@@ -1,6 +1,6 @@
 ---
 name: dungonrush-companion-todo
-description: "(1,3,4 XONG 2026-10-17, CHƯA test Play) Danh sách việc CÒN THIẾU của hệ Companion/summon pet (rà 2026-09-29) — để xử lý sau, chưa làm"
+description: "(1,3,4 XONG 2026-10-17, 5 XONG 2026-11-11, CHƯA test Play) Danh sách việc CÒN THIẾU của hệ Companion/summon pet (rà 2026-09-29) — để xử lý sau, chưa làm"
 metadata:
   node_type: memory
   type: project
@@ -16,7 +16,7 @@ Rà toàn bộ summon pet ngày 2026-09-29. Phần ĐÃ XONG: popup kết quả 
 2. **[LỖI] Tab Pet không khoá theo level** — `UIMainLobby.OnClickTab` mở tab Pet luôn; mốc `COMPANION_UNLOCK_PLAYER_LEVEL = 5` chỉ áp cho 3 ô pet lobby. Gốc khoá cả tab (TabData.UnlockPlayerLevel=5).
 3. ~~Multiplier Bone lớn~~ XONG 2026-10-17: wke gốc = [1,2,3,5,10,20,30], nút copy từ rip vào UIMainGame2, index không lưu.
 4. ~~IsNew~~ XONG 2026-10-17: CompanionSummonResult{data,isNew}, chữ NEW (copy NewTextObj) trên ô UiSumonPet.
-5. **Khung/màu rarity** — popup kết quả (ElementPetSummon), UIPetInfo (txtRarity) đều TODO vì chưa có bảng màu rarity gốc.
+5. ~~Khung/màu rarity~~ XONG 2026-11-11 (reskin Đợt 3): ô kết quả dùng RarityBackgroundConfig, UIPetInfo.txtRarity = ShopUIUtil.ColoredRarity.
 6. **Event sau mỗi lượt summon** — gốc bắn `co.cvd(CharacterRarity)` (Action<CharacterRarity>, có lẽ quest/analytics); chưa port.
 
 **How to apply:** khi user quay lại hệ pet/summon, đọc list này trước; làm xong mục nào thì xoá mục đó (hết thì xoá file + dòng index).

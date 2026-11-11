@@ -38,7 +38,7 @@
 - [Companion save/upgrade/summon-level + UI](dungonrush-companion-save-upgrade.md) — whn/whm ĐÃ trích; nâng cấp THỦ CÔNG; CompanionService + CompanionUI + UIPetInfo xong; màu rarity popup còn thiếu
 - [Own Effect pet = buff hero khi SỞ HỮU](dungonrush-companion-own-effect.md) — lu.gov cộng OwnAttack/OwnHealth của MỌI pet owned (không cần equip) vào hero; ĐÃ áp ở HeroUnit
 - [Test logic bằng UnityMCP edit mode](dungonrush-unity-mcp-editmode-test.md) — staticData chưa load phải gọi Load(); codedom C#6; backup/restore userData, không Save; cách nối lại cầu MCP khi rớt + gọi MCP qua HTTP khi session thiếu tool + compile-check trên Mac
-- [Companion TODO còn thiếu](dungonrush-companion-todo.md) — còn 3 việc summon pet (tab Pet chưa khoá lv5, màu rarity, event); ads/multiplier/IsNew XONG 2026-10-17
+- [Companion TODO còn thiếu](dungonrush-companion-todo.md) — còn 2 việc summon pet (tab Pet chưa khoá lv5, event); màu rarity XONG 2026-11-11; ads/multiplier/IsNew XONG 2026-10-17
 - [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
 - [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; cả 3 dungeon có trận (Dragon/Zombie/CultistDungeonMode)
 - [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé reset 0h UTC (PvP 5 không ads, BossRush), mở lv15, icon IsTicket/IsBossTicket; cả 2 mode đã có
@@ -75,7 +75,7 @@
 - [Gốc KHÔNG rơi Bone từ quái](dungonrush-no-combat-bone-drop.md) — combat_drop Bone/rương là code chết (BoneDropPrefab null); đừng port; doc LOOT_DROP_MODEL.md
 - [Reskin toàn game](dungonrush-reskin-plan.md) — CHỈ thay hình; Art/<1_UIKit..7_FX> + ArtIncoming gương + Apply Reskin; các màn đã reskin + commit
 - [Cách reskin 1 màn UI](dungonrush-reskin-ui-howto.md) — quy trình lobby: nhóm A ghi đè/B ảnh mới+prefab, pha màu thay ChatGPT cho hình học, ChatGPT cho icon, bẫy TMP sprite/Slider/Game view nhỏ; script tools/reskin/
-- [Quy trình concept → reskin UI](dungonrush-ui-concept-workflow.md) — reskin MỌI popup theo đợt (concept → user chốt → PopupStyle/Batch<N>Reskin); quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0+1+2 xong, tiếp Đợt 3
+- [Quy trình concept → reskin UI](dungonrush-ui-concept-workflow.md) — reskin MỌI popup theo đợt (concept → user chốt → PopupStyle/Batch<N>Reskin); quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..3 xong, tiếp Đợt 4
 - [Reskin gameplay](dungonrush-reskin-gameplay.md) — map tường/sàn vẽ code, quái vịt đen ChatGPT trên rig hero, 3 popup đồ/offer kit Mastery; 2026-10-18 CHƯA commit
 - [Reskin Shop](dungonrush-reskin-shop.md) — StoreTabPage + 5 popup Shop (kit Mastery, ribbon_tint tô rarity) 2026-10-18: khung art + 19 icon ChatGPT ghi đè giữ size cũ + 6 gói gem; bẫy tách nền tím; đã commit
 - [Reskin Mining](dungonrush-reskin-mining.md) — 2026-10-19 đã commit: kit Mastery + art 1_UIKit/Mining, ChatGPT 7 icon quặng (diamond=thạch anh tím), nút dụng cụ đổi sprite; CẤM chạy lại Build Mining

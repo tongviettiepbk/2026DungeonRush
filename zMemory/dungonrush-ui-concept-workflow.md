@@ -1,11 +1,11 @@
 ---
 name: dungonrush-ui-concept-workflow
-description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0+1+2 xong 2026-11-11, tiếp Đợt 3"
+description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..3 xong 2026-11-11, tiếp Đợt 4"
 metadata:
   node_type: memory
   type: project
   originSessionId: 3164be48-a1fc-4de0-a1a9-4dd4a3175277
-  modified: 2026-11-11T22:00:00.000Z
+  modified: 2026-11-11T23:30:00.000Z
 ---
 
 User duyệt cách làm này ngày 2026-11-11, dặn CHỈ lưu trong bộ nhớ, KHÔNG viết tài liệu vào GDD/.
@@ -46,6 +46,9 @@ PLAN.md giữ: danh sách 67 popup chia Đợt 0..9, quy trình tối ưu 3 phas
 - Mẫu đầu: popup 7 ngày (`SevenDayPopupReskin`) + kết quả dungeon (`DungeonEndPopupReskin`) — commit 37505a04.
 - Đợt 0 kit + Đợt 1 Trang bị & Loot (6 popup) — commit 812200d0, sửa viền Auto Loot sau đó. Thêm nút Claim tím ở Combat Summary (user chốt concept). Popup Đợt 1 khác Auto Loot CHƯA test Play.
 - Đợt 2 Shop & ưu đãi (9 popup + ô con ChestRewardElementUI/ChestContentUI ở Prefabs/UINew/Shop) — 2026-11-11, chụp edit mode batch2/unity.png khớp concept, CHƯA test Play. Lệch gốc user duyệt: X Battle Pass lên header + nút mua xanh lá, X cho Missing Gems, tiêu đề "Rewards" + "Tap anywhere to close" ở 2 màn mở rương. Glow_Circle02 đã bỏ nén (ASTC làm vệt khối).
+
+- Đợt 3 Pet & Mastery (UIPetInfo, uiUpgradePet, UiSumonPet, UICompanionAdSummonPopup, MateryPopupUpgrade trong UIMainGame2) — 2026-11-11, tool `Batch3Reskin`, chụp batch3/unity.png khớp concept, CHƯA test Play. User duyệt: tiêu đề "Summon Rates", "Remove"→Common.Unequip, 7 key mới (Popup.Companion.OwnEffect/SummonToUnlock, Popup.CompanionAdSummon.*), mô tả pet (descriptionKey) + tên/mô tả mastery (Items.Mastery.Name/Desc.<type>) dùng key dịch. Số trong mô tả pet đổi xanh #2F8F1F (vàng gốc không đọc được trên kem). Pet info chạm nền tối để đóng.
+- Bẫy Đợt 3: chữ cũ để fontStyle Bold → PopupStyle.Outline không reset, phải đặt Normal; chữ viền đen trên panel tối (mastery_panel) trông như không viền — đúng như concept, không phải lỗi; SaveAsPrefabAsset UIMainGame2 sắp lại thứ tự component (diff to nhưng đủ 8 UIParticle).
 
 **Why:** user sẽ reskin lại cả bộ UI theo style mới; concept trước → duyệt → áp để khỏi làm lại prefab nhiều lần.
 
