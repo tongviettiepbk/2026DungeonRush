@@ -375,6 +375,7 @@ public static class Batch1Reskin
     private const float ROW_HEIGHT = 60f;
     private const float CHECK_SIZE = 60f;
     private const float BAR_LEFT = 76f;
+    private const float SCROLL_PAD = 8f;
     private static readonly string[] RARITY_BARS =
         { "common", "uncommon", "rare", "epic", "legendary", "mythic", "artifact", "ancient", "immortal", "divine" };
 
@@ -404,9 +405,14 @@ public static class Batch1Reskin
             float scrollHeight = AUTO_HEIGHT - PopupStyle.CONTENT_TOP - AUTO_BOTTOM - 20f;
             float innerWidth = PopupStyle.WIDTH_LARGE - 2f * PopupStyle.SIDE_INSET;
             PopupStyle.PlaceTop(scroll, 0f, PopupStyle.CONTENT_TOP + scrollHeight / 2f, innerWidth, scrollHeight);
-            PopupStyle.Stretch(scroll.Find("Viewport"));
-            Transform content = scroll.Find("Viewport/Content");
-            SetVertical(content.GetComponent<VerticalLayoutGroup>(), 24f);
+            // Mặt nạ cắt vuông (sprite UIMask bo mờ mép 10 làm đứt viền đen ô tick/thanh) + chừa lề 8 hai bên.
+            Transform viewport = scroll.Find("Viewport");
+            PopupStyle.Stretch(viewport);
+            viewport.GetComponent<Image>().sprite = null;
+            Transform content = viewport.Find("Content");
+            VerticalLayoutGroup contentLayout = content.GetComponent<VerticalLayoutGroup>();
+            SetVertical(contentLayout, 24f);
+            contentLayout.padding = new RectOffset((int)SCROLL_PAD, (int)SCROLL_PAD, 6, 6);
 
             Transform loot = content.Find("LootList");
             SetVertical(loot.GetComponent<VerticalLayoutGroup>(), 10f);
@@ -419,7 +425,7 @@ public static class Batch1Reskin
             PopupStyle.RemoveComponent<VerticalLayoutGroup>(filterList);
             GridLayoutGroup grid = filterList.GetComponent<GridLayoutGroup>();
             if (grid == null) grid = filterList.gameObject.AddComponent<GridLayoutGroup>();
-            grid.cellSize = new Vector2((innerWidth - 16f) / 2f, 56f);
+            grid.cellSize = new Vector2((innerWidth - 2f * SCROLL_PAD - 16f) / 2f, 56f);
             grid.spacing = new Vector2(16f, 12f);
             grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             grid.constraintCount = 2;
