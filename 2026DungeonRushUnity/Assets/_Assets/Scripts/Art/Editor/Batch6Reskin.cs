@@ -242,7 +242,7 @@ public static class Batch6Reskin
             RectTransform panel = Panel(root, "ContentTransform", "Background", JOIN_HEIGHT, false);
             PopupStyle.Title(ui.txtTitle, W);
             Close(ui.btClose);
-            Decor(Find(panel, "BossImage"), 190f, 190f, -65f);
+            BossIcon(Find(panel, "BossImage"));
 
             PopupStyle.PlaceTop(ui.txtTimer.transform, 0f, 199f, INNER, 50f);
             PopupStyle.Plain(ui.txtTimer, PopupStyle.BROWN, 36f, 24f);
@@ -271,7 +271,7 @@ public static class Batch6Reskin
             RectTransform panel = Panel(root, "ContentTransform", "Background", LOBBY_HEIGHT, false);
             Close(ui.btClose);
             HeaderButton(ui.btRewards);
-            Decor(Find(panel, "BossImage"), 190f, 190f, -65f);
+            BossIcon(Find(panel, "BossImage"));
 
             // Header 2 dòng: "Boss Rush" + tên league.
             TMP_Text title = Text(panel, "TitleText");
@@ -412,7 +412,7 @@ public static class Batch6Reskin
             RectTransform panel = Panel(root, "ContentTransform", "Background", CLAIM_HEIGHT, false);
             PopupStyle.Title(ui.txtTitle, W);
             Close(ui.btClose);
-            Decor(Find(panel, "BossImage"), 190f, 190f, -65f);
+            BossIcon(Find(panel, "BossImage"));
 
             // Ô league: giữ toạ độ chữ con (hiệu ứng trượt đọc vị trí lúc Awake), chỉ đổi khung + chữ.
             Transform tier = ui.txtCurrentTier.transform.parent.parent;
@@ -486,6 +486,18 @@ public static class Batch6Reskin
         PopupStyle.PlaceTop(image, 0f, topToCenter, width, height);
         Transform header = image.parent.Find("Header");
         if (header != null) image.SetSiblingIndex(header.GetSiblingIndex() + 1);
+    }
+
+    // Icon boss Boss Rush = đầu cáo đỏ (boss #4, user chọn 2026-11-11) thay đầu quỷ dragon_without_wings
+    // (sprite đó vẫn dùng cho DragonHelmetData nên không ghi đè). Nhô trên header, đáy chạm mép trên chữ tiêu đề.
+    private static void BossIcon(Transform image)
+    {
+        Image icon = image.GetComponent<Image>();
+        icon.sprite = PopupStyle.Kit("BossRush/boss_icon_fox");
+        icon.type = Image.Type.Simple;
+        icon.preserveAspect = true;
+        icon.color = Color.white;
+        Decor(image, 208f, 213f, -86f);
     }
 
     // Nút vuông xanh lơ góc trái header (Rewards), icon 64.

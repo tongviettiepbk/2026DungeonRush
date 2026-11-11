@@ -16,3 +16,5 @@ Reskin Boss Rush 2026-10-27 theo mockup `ArtIncoming/_Concept/BossRush/` (4 demo
 - Bảng damage: dòng 972x68, rowSpacing 75 (8 dòng vừa trên nút Exit).
 
 Xem [[dungonrush-reskin-plan]], [[dungonrush-reskin-ui-howto]], [[dungonrush-boss-rush-model]], [[dungonrush-boss-rush-damage-board]].
+
+**2026-11-11 icon boss mới:** đầu quỷ `dragon_without_wings` trên header 3 popup (Join / sảnh / Results) đã thay bằng đầu CÁO ĐỎ (boss #4 Red Dragon, user chọn) `Art/1_UIKit/BossRush/boss_icon_fox.png` 313×320, gắn bằng `Batch6Reskin.BossIcon` (208×213, tâm cách mép trên −86). Không ghi đè `dragon_without_wings` vì DragonHelmetData còn dùng. User muốn: biểu cảm ngầu/nguy hiểm (cười gian, nanh dài, mắt rực, lửa quanh đầu) nhưng NÉT GAME (mảng màu lớn, ít chi tiết, viền đen dày) — bản painterly bị chê "không hợp game", bản phẳng đầu tiên bị chê "truyện tranh quá". Prompt ở `ArtIncoming/_Concept/BossRush/gen_fox_icon/` (prompts3 + ref ghép boss gốc|biểu cảm), concept `tools/concept/batch6/boss_icon.png`.
