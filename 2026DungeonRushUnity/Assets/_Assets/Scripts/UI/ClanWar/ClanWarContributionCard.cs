@@ -14,6 +14,9 @@ public class ClanWarContributionCard : MonoBehaviour
     public Image CardBackground;
     public Color NormalColor = Color.white;
     public Color SelfColor = new Color(1f, 0.93f, 0.6f, 1f);
+    // Reskin Đợt 8: chính mình = thẻ xanh (đổi sprite), không tô màu đè.
+    public Sprite NormalSprite;       // Clan/card_gray
+    public Sprite SelfSprite;         // Clan/card_blue
 
     private Action onClick;
 
@@ -29,7 +32,12 @@ public class ClanWarContributionCard : MonoBehaviour
         if (RankText != null) RankText.text = "#" + entry.rank;
         if (ProfileImage != null) ProfileImage.sprite = AvatarConfig.Get(entry.avatarId);
         if (NameText != null) NameText.text = entry.playerName;
-        if (PointsText != null) PointsText.text = ClanWarController.FormatNumber(entry.points) + " pts";
-        if (CardBackground != null) CardBackground.color = entry.userId == myUserId ? SelfColor : NormalColor;
+        if (PointsText != null) PointsText.text = Loc.L("Clan.War.Points", ClanWarController.FormatNumber(entry.points));
+        bool self = entry.userId == myUserId;
+        if (CardBackground != null)
+        {
+            if (NormalSprite != null && SelfSprite != null) CardBackground.sprite = self ? SelfSprite : NormalSprite;
+            else CardBackground.color = self ? SelfColor : NormalColor;
+        }
     }
 }

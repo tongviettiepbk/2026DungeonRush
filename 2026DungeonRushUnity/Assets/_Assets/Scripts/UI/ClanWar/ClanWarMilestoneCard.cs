@@ -25,6 +25,9 @@ public class ClanWarMilestoneCard : MonoBehaviour
     // Reskin: có sprite thì đổi SPRITE theo trạng thái (đạt/đã nhận = xanh dương, chưa đạt = xám) thay cho tô màu.
     public Sprite ReachedSprite;
     public Sprite UnreachedSprite;
+    // Reskin Đợt 8: mốc nhận được hiện nút Claim xanh lá + chấm "!" (cả thẻ vẫn là nút), đã nhận hiện tick.
+    public GameObject ClaimTag;
+    public GameObject CollectedTag;
 
     private Action onClaim;
 
@@ -37,10 +40,13 @@ public class ClanWarMilestoneCard : MonoBehaviour
     public void Set(ClanWarMilestoneRowDTO row, State state, Action onClaim)
     {
         this.onClaim = onClaim;
-        if (ThresholdText != null) ThresholdText.text = ClanWarController.FormatNumber(row.threshold) + " pts";
+        // Reskin Đợt 8: chỉ số mốc (mốc lớn "200,000 pts" không vừa cột).
+        if (ThresholdText != null) ThresholdText.text = ClanWarController.FormatNumber(row.threshold);
         if (RewardsView != null) RewardsView.SetRewards(row.ToRewards());
         // ClaimButton nằm ngay trên thẻ (bấm cả thẻ để nhận) nên chỉ khoá bấm, không tắt GameObject.
         if (ClaimButton != null) ClaimButton.interactable = state == State.ReachedClaimable;
+        if (ClaimTag != null) ClaimTag.SetActive(state == State.ReachedClaimable);
+        if (CollectedTag != null) CollectedTag.SetActive(state == State.Collected);
         if (BackgroundImage != null)
         {
             if (ReachedSprite != null && UnreachedSprite != null)

@@ -53,7 +53,7 @@ public class UIClanContributionLeaderboardPopup : BaseUI
         Clear();
         ClanWarWireDTO war = ClanWarController.Instance.State?.war;
         int day = war != null ? Mathf.Clamp(war.activeDay, 1, 6) : 1;
-        ClanUIUtil.SetText(SubheaderText, mode == MODE_DAILY ? "Day " + day + (" " + Loc.L("Clan.War.Button.Leaderboard")) : Loc.L("Clan.War.Leaderboard.WeeklySubheader"));
+        ClanUIUtil.SetText(SubheaderText, mode == MODE_DAILY ? Loc.L("Clan.War.Leaderboard.DailySubheader", day) : Loc.L("Clan.War.Leaderboard.WeeklySubheader"));
         if (LoadingView != null) LoadingView.ShowLoading();
         ClanWarController.Instance.GetContributionLeaderboard(side.clanId, mode == MODE_DAILY ? "daily" : "weekly", res =>
         {

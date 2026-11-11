@@ -64,7 +64,8 @@ public class UIClanWarDaysAndResultsPopup : BaseUI
     {
         ClanWarProgressSection.SetSide(war.myClan, MyBanner, MyClanNameText, MyTierText, MyServerText);
         ClanWarProgressSection.SetSide(war.enemyClan, EnemyBanner, EnemyClanNameText, EnemyTierText, EnemyServerText);
-        ClanUIUtil.SetText(ScoreboardText, war.myWarScore + " : " + war.enemyWarScore);
+        // Bên mình xanh như thanh war (Reskin Đợt 8).
+        ClanUIUtil.SetText(ScoreboardText, "<color=#5EC8FF>" + war.myWarScore + "</color> : " + war.enemyWarScore);
         for (int i = 0; i < cards.Count; i++)
         {
             if (cards[i] != null) Destroy(cards[i].gameObject);

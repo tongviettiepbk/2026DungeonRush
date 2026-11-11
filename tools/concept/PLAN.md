@@ -37,6 +37,10 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 - `PvP/slot_dark` là đen trong 55% → trên nền KEM ra xám nhạt (Linear); ô tối trên nền kem dùng `Clan/box_dark` (đặc). Trên thẻ xám thì slot_dark vẫn ổn.
 - UI `Outline` nhân effectColor với màu sprite → sprite tối cho viền tối. Viền màu = lớp sprite trắng tô màu to hơn + đè ô trong.
 - Chụp edit mode ô nhập TMP_InputField: phải gán `input.text` (gán textComponent.text bị đè trắng).
+- Helper Batch7Reskin (Panel/Close/ScrollList/Loading/CardHeight/AvatarSlot/LeftText/Anchored/ClanRow…) đã để `internal` — đợt sau gọi lại, đừng chép.
+- Popup mà ảnh khung = chính panel (Report): Shell tạo Header mới ở CUỐI → phải SetSiblingIndex(0) kẻo header che tiêu đề.
+- Trường prefab chưa nối (vd UIClanWarRewardsPopup.ClaimLoadingView null) → helper bỏ qua; script chụp phải kiểm null.
+- Tool chạy lần 1 có reparent → lần 2 khác lần 1 một chút; từ lần 2 trở đi y hệt (kiểm bằng md5).
 
 ## Các đợt (thứ tự theo mức người chơi gặp sớm)
 
@@ -49,7 +53,7 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 | 4 | Enchantment, Wing, Cape | UiEnchantmentInfoItem, UiEnchantmentMerge, UiSumonEnchantment, uiUpgradeEnchantment, UIWingCraftPopup, UIWingRerollPopup, UICapePopup, UICapeDetailPopup, UICapeSalvagePopup, UICapeUpgradeInfoPopup | 10 |
 | 5 | Dungeon & Mining | UIDungeonPopup, UIMiningPopup, UIMiningRarityPopup, UIMiningOfferPopup | 4 |
 | 6 | PvP & Boss Rush | UIPvPPopup, UIPvPFindOpponentPopup, UIPvPEndPopup, UIPvPRewardsPopup, UIPvPSeasonClaimPopup, UIBossRushJoinPopup, UIBossRushPopup, UIBossRushEndPopup, UIBossRushClaimPopup, UIPlayerPopup | 10 |
-| 7 | ✅ tools/concept/batch7/ (khảo sát: before/ + *_filled; max: mô tả 200 ≈ 6 dòng, thông báo 300 ≈ 8 dòng, catalog banner 8/10/20/8, tiêu đề ES 29 ký tự, nhãn FR 33) | ✅ 2026-11-12 (duyệt: lưới banner thấy hết, tên clan/tên người chơi lên header, nút Clear + key Popup.ClanSearch.Clear) | ✅ Batch7Reskin (chụp edit mode: batch7/unity.png, 16 ảnh); CHƯA test Play | ✅ |
+| 7 | Clan | UICreateClanPopup, UIClanSettingsPopup, UIClanBannerEditorPopup, UIEditAnnouncementPopup, UIClanRequestsPopup, UIClanInfoPopup, UIClanPlayerPopup, UIAdvancedSearchPopup, UILeadershipRankPopup | 9 |
 | 8 | Clan War & Chat | UIClanContributionLeaderboardPopup, UIClanWarDaysAndResultsPopup, UIClanWarLeaderboardPopup, UIClanWarRewardsPopup, UIReportPopup | 5 |
 | 9 | Hồ sơ & tài khoản | UIProfilePopup, UIAvatarSelectPopup, UILanguageSelectPopup, UINicknamePopup, UISignInPopup, UISignUpPopup, UIAccountSelectPopup, UICloudSavePopup, UIRateUsPopup | 9 |
 
@@ -59,7 +63,7 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 - Đổi trạng thái bằng đổi sprite / ẩn hiện trong script, không tô màu đè.
 
 ## Tiến độ
-**Đang ở:** Đợt 7 xong (áp + chụp kiểm batch7/unity.png + commit). **Tiếp theo:** Đợt 8 Clan War & Chat — bắt đầu từ bước A. Đợt 2 → 7 CHƯA test Play.
+**Đang ở:** Đợt 8 xong (áp + chụp kiểm batch8/unity.png + commit). **Tiếp theo:** Đợt 9 Hồ sơ & tài khoản — bắt đầu từ bước A. Đợt 2 → 8 CHƯA test Play.
 
 | Đợt | Concept | Chốt | Áp vào game | Commit |
 |---|---|---|---|---|
@@ -70,6 +74,6 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 | 4 | ✅ tools/concept/batch4/ (khảo sát: before/; max: Wing 5 substat, Cape 2 substat, relic tier 11, kho cuộn) | ✅ 2026-11-11 (duyệt: header "Relic +N", "Relic Merge", "Summon Rates" tẩu, 10 key mới) | ✅ Batch4Reskin (chụp edit mode: batch4/unity.png, 11 ảnh); CHƯA test Play | ✅ bf958a49 + căn giữa Lvl ô relic/tẩu (4dbe2152, 4779b9cc) |
 | 5 | ✅ tools/concept/batch5/ (khảo sát: before/; max: tiêu đề dungeon 17 ký tự ES, offer x3200 gem, tỉ lệ quặng thật lv1→2 / lv60) | ✅ 2026-11-11 (duyệt: nhãn "Keys" key mới Popup.Dungeon.Keys, dòng mô tả UI.Dungeon.Description, màu nút dụng cụ theo trạng thái) | ✅ Batch5Reskin (chụp edit mode: batch5/unity.png, 8 ảnh); CHƯA test Play | ✅ |
 | 6 | ✅ tools/concept/batch6/ (khảo sát: before/; giữ art dòng/thanh máu mockup PvP + Boss Rush; UIPlayerPopup giữ bố cục user chỉnh tay; icon boss đổi sang đầu cáo đỏ — batch6/boss_icon.png) | ✅ 2026-11-11 (duyệt: Continue thua tím, Fight vé ads hồng + icon IsAd, hồ sơ chỉ X + tách cột chỉ số; key mới Popup.BossRushRewards.BossesKilled) | ✅ Batch6Reskin (chụp edit mode: batch6/unity.png, 14 ảnh); CHƯA test Play | ✅ |
-| 7 | ✅ tools/concept/batch7/ (khảo sát: before/ + *_filled; max: mô tả 200 ≈ 6 dòng, thông báo 300 ≈ 8 dòng, catalog banner 8/10/20/8, tiêu đề ES 29 ký tự, nhãn FR 33) | chờ | | |
-| 8 | | | | |
+| 7 | ✅ tools/concept/batch7/ (khảo sát: before/ + *_filled; max: mô tả 200 ≈ 6 dòng, thông báo 300 ≈ 8 dòng, catalog banner 8/10/20/8, tiêu đề ES 29 ký tự, nhãn FR 33) | ✅ 2026-11-12 (duyệt: lưới banner thấy hết, tên clan/tên người chơi lên header, nút Clear + key Popup.ClanSearch.Clear) | ✅ Batch7Reskin (chụp edit mode: batch7/unity.png, 16 ảnh); CHƯA test Play | ✅ d8faf732 |
+| 8 | ✅ tools/concept/batch8/ (khảo sát: before/; max: 50 thành viên/50 clan, 6 ngày, 18 mốc, gói cá nhân 5 loại, tên 15 ký tự, dòng phụ ES 44 ký tự) | ✅ 2026-11-12 (duyệt: tên clan lên header bảng đóng góp, thẻ ngày xanh/xám/tối + 2 key Popup.ClanWarResults.Day/.Points, nút ? Champion, mốc Claim + ! / tick, cooldown ẩn Win/Lose, Report nút đỏ + key) | ✅ Batch8Reskin (chụp edit mode: batch8/unity.png, 9 ảnh); CHƯA test Play | ✅ |
 | 9 | | | | |

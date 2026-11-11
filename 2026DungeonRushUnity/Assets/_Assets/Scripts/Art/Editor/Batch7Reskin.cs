@@ -598,7 +598,7 @@ public static class Batch7Reskin
     }
 
     // Thẻ xám 160, clan của mình = thẻ xanh (đổi sprite). Dùng chung với Clan War Leaderboard (Đợt 8).
-    private static void ClanRow(GameObject root)
+    internal static void ClanRow(GameObject root)
     {
         ClanWarClanRowCard card = root.GetComponent<ClanWarClanRowCard>();
         CardHeight(root, PopupStyle.Kit("Clan/card_gray"), 160f);
@@ -625,7 +625,7 @@ public static class Batch7Reskin
 
     #region Helper
     // Popup chuẩn: container W×height căn giữa màn, khung (frame) phủ kín container.
-    private static RectTransform Panel(GameObject root, string containerName, string frameName, float height)
+    internal static RectTransform Panel(GameObject root, string containerName, string frameName, float height)
     {
         Transform container = Find(root.transform, containerName);
         RectTransform frame = (RectTransform)Find(container, frameName);
@@ -727,7 +727,7 @@ public static class Batch7Reskin
     }
 
     // Danh sách cuộn: mask chữ nhật (không sprite UIMask bo mờ), lề trong 8.
-    private static void ScrollList(ScrollRect scroll, float topToCenter, float height)
+    internal static void ScrollList(ScrollRect scroll, float topToCenter, float height)
     {
         PopupStyle.PlaceTop(scroll.transform, 0f, topToCenter, INNER, height);
         Image bg = scroll.GetComponent<Image>();
@@ -747,7 +747,7 @@ public static class Batch7Reskin
     }
 
     // Lớp tải/lỗi: icon xoay tông nâu, chữ lỗi đỏ, Retry cam. belowHeader → phủ phần thân popup.
-    private static void Loading(ClanLoadingView view, bool belowHeader)
+    internal static void Loading(ClanLoadingView view, bool belowHeader)
     {
         if (view == null) return;
         if (belowHeader) PopupStyle.Stretch(view.transform, 14f, 14f, 14f, PopupStyle.HEADER_HEIGHT);
@@ -788,7 +788,7 @@ public static class Batch7Reskin
         Swap(button);
     }
 
-    private static void CardHeight(GameObject root, Sprite sprite, float height)
+    internal static void CardHeight(GameObject root, Sprite sprite, float height)
     {
         ReskinPrefabUtil.Img(root.transform, sprite);
         RectTransform rt = (RectTransform)root.transform;
@@ -798,7 +798,7 @@ public static class Batch7Reskin
     }
 
     // Avatar trong ô tối (ô mới chèn phía sau ảnh avatar).
-    private static void AvatarSlot(Image avatar, float x, float slot, float size)
+    internal static void AvatarSlot(Image avatar, float x, float slot, float size)
     {
         Image frame = PopupStyle.NewImage(avatar.transform.parent, "AvatarSlot", PopupStyle.Kit("PvP/slot_dark"));
         PutBehind(frame.transform, avatar.transform);
@@ -807,7 +807,7 @@ public static class Batch7Reskin
     }
 
     // Chữ trắng viền canh trái, mép trái cách mép trái thẻ `left`.
-    private static void LeftText(TMP_Text text, float left, float y, float width, float height, float size)
+    internal static void LeftText(TMP_Text text, float left, float y, float width, float height, float size)
     {
         Anchored(text.transform, 0f, left + width / 2f, y, width, height);
         PopupStyle.Outline(text, size, size * 0.65f);
@@ -817,7 +817,7 @@ public static class Batch7Reskin
     }
 
     // Neo theo cạnh trái (ax=0) / phải (ax=1), giữa theo chiều dọc.
-    private static void Anchored(Transform t, float ax, float x, float y, float width, float height)
+    internal static void Anchored(Transform t, float ax, float x, float y, float width, float height)
     {
         RectTransform rt = (RectTransform)t;
         rt.anchorMin = rt.anchorMax = new Vector2(ax, 0.5f);
@@ -838,13 +838,13 @@ public static class Batch7Reskin
     }
 
     // Đặt `back` ngay sau lưng `front` (cùng cha) — chạy lại không đảo thứ tự.
-    private static void PutBehind(Transform back, Transform front)
+    internal static void PutBehind(Transform back, Transform front)
     {
         int index = front.GetSiblingIndex();
         if (back.GetSiblingIndex() > index) back.SetSiblingIndex(index);
     }
 
-    private static Transform NewNode(Transform parent, string name)
+    internal static Transform NewNode(Transform parent, string name)
     {
         Transform t = parent.Find(name);
         if (t != null) return t;
@@ -855,12 +855,12 @@ public static class Batch7Reskin
     }
 
     // Chữ cũ hay để Bold (bẫy Đợt 3) → về Normal.
-    private static void Normal(TMP_Text text)
+    internal static void Normal(TMP_Text text)
     {
         text.fontStyle = FontStyles.Normal;
     }
 
-    private static void Close(Button button)
+    internal static void Close(Button button)
     {
         if (button == null) return;
         bool active = button.gameObject.activeSelf;
@@ -870,30 +870,30 @@ public static class Batch7Reskin
     }
 
     // Kit: không tô màu khi bấm/tắt (PressButtonUI lo hiệu ứng nhấn).
-    private static void Button(Button button)
+    internal static void Button(Button button)
     {
         if (button != null) button.transition = Selectable.Transition.None;
     }
 
     // Nút có trạng thái khoá: đổi sang sprite xám khi interactable = false.
-    private static void Swap(Button button)
+    internal static void Swap(Button button)
     {
         button.transition = Selectable.Transition.SpriteSwap;
         button.spriteState = new SpriteState { disabledSprite = PopupStyle.ButtonSprite(PopupStyle.ButtonColor.Gray) };
     }
 
-    private static void Reparent(Transform t, Transform parent)
+    internal static void Reparent(Transform t, Transform parent)
     {
         if (t.parent != parent) t.SetParent(parent, false);
     }
 
-    private static T GetOrAdd<T>(GameObject go) where T : Component
+    internal static T GetOrAdd<T>(GameObject go) where T : Component
     {
         T component = go.GetComponent<T>();
         return component != null ? component : go.AddComponent<T>();
     }
 
-    private static Transform Find(Transform root, string path)
+    internal static Transform Find(Transform root, string path)
     {
         Transform t = root.Find(path);
         if (t != null) return t;

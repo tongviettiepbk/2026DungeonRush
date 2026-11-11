@@ -18,6 +18,7 @@ public class UIReportPopup : BaseUI
     public Button SubmitButton;
     public Button CloseButton;
     public Image LoadingImage;
+    public TMPro.TMP_Text SubmitText;   // ẩn khi đang gửi — icon xoay thế chỗ chữ trên nút (Reskin Đợt 8)
 
     private ChatReportContext context;
     private bool isSubmitting;
@@ -81,5 +82,6 @@ public class UIReportPopup : BaseUI
         isSubmitting = value;
         SubmitButton.interactable = !value;
         if (LoadingImage != null) LoadingImage.gameObject.SetActive(value);
+        if (SubmitText != null) SubmitText.enabled = !value;
     }
 }

@@ -1,0 +1,261 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Đợt 8 – Clan War & Chat. Kit chung tools/concept/kit/kit.css, sprite thật trong Art/, 1 px CSS = 2 đơn vị canvas.
+     Giữ kit Clan đã reskin (card_gray/card_blue/card_dark, vbar, banner ghép 6_Features/Clan); dòng clan dùng chung ClanWarClanRowCard Đợt 7.
+     Chụp: tools/concept/render_concept.sh tools/concept/batch8/concept.html tools/concept/batch8/concept.png 1700 <cao> -->
+<base href="../../../2026DungeonRushUnity/Assets/_Assets/Art/">
+<link rel="stylesheet" href="../../../../tools/concept/kit/kit.css">
+<style>
+body{display:flex;flex-wrap:wrap;gap:22px;width:1700px;align-items:flex-start}
+.stack{display:flex;flex-direction:column;gap:26px;width:530px}
+.col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.cap{color:#cfcde0;font-size:17px;font-family:sans-serif;max-width:520px;text-align:center;line-height:1.35}
+.cap b{color:#fff}
+.cap i{color:#ffd35a;font-style:normal}
+.scr{width:530px;background:#3e3d4d;border-radius:18px;padding:30px 0;display:flex;flex-direction:column;align-items:center;gap:14px;position:relative}
+.w408{width:408px}
+.states{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+.red{color:#ff5a5a}.grn{color:#62d34a}.yel{color:#ffd35a}.blu{color:#5ec8ff}
+.ic{height:1em;vertical-align:-0.15em}
+/* banner ghép: khung + lớp màu (mask) + icon tô màu */
+.ban{position:relative;flex:none}
+.ban>*{position:absolute;inset:0}
+.ban .f{background:center/contain no-repeat}
+.ban .c{-webkit-mask:center/contain no-repeat}
+.ban .cm{background:center/contain no-repeat;mix-blend-mode:multiply}
+.ban .i{-webkit-mask:center/contain no-repeat}
+.ban .im{background:center/contain no-repeat;mix-blend-mode:multiply}
+.ban .cr{position:absolute;inset:auto;left:50%;top:-16px;width:30px;transform:translateX(-50%);background:url(1_UIKit/Common/crown_icon.png) center/contain no-repeat;height:22px}
+/* dòng thẻ (card_gray 746x122 / card_blue / card_dark) */
+.cd{width:100%;border-style:solid;border-width:11px;border-image:url(1_UIKit/Clan/card_gray.png) 22 fill;display:flex;align-items:center;gap:8px;padding:0 2px;position:relative}
+.cd.me{border-image-source:url(1_UIKit/Clan/card_blue.png)}
+.cd.dk2{border-image-source:url(1_UIKit/Clan/card_dark.png)}
+.av{width:43px;height:43px;border-style:solid;border-width:6px;border-image:url(1_UIKit/PvP/slot_dark.png) 12 fill;display:flex;align-items:center;justify-content:center;flex:none;margin:-6px 0}
+.av img{width:36px;height:36px;margin:-6px}
+.nm{flex:1;display:flex;flex-direction:column;min-width:0}
+.nm .o3{font-size:17px;line-height:1.2;white-space:nowrap}
+.list{width:100%;display:flex;flex-direction:column;gap:5px;position:relative;overflow:hidden}
+.fade{position:absolute;left:0;right:0;bottom:0;height:22px;background:linear-gradient(transparent,#f4e6c9)}
+.tan{border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill}
+.lab{color:#7a5c3c;font-size:17px;text-align:center;line-height:1.25}
+.note{color:#ffd35a;font-size:14px;font-family:sans-serif;text-align:center;max-width:500px;line-height:1.35}
+.rk{font-size:22px;width:38px;text-align:center;flex:none}
+/* bảng ngày */
+.dh{width:100%;display:grid;grid-template-columns:52px 34px 1fr 112px;gap:6px;padding:0 13px;font-size:15px}
+.dr{height:46px;display:grid;grid-template-columns:52px 34px 1fr 112px;gap:6px;padding:0 2px}
+.dr>span{display:flex;align-items:center;white-space:nowrap;overflow:hidden;font-size:16px}
+.dr .c2{justify-content:center}
+/* thưởng: icon + số */
+.rw{display:flex;align-items:center;gap:10px;flex-wrap:nowrap}
+.rw span{display:flex;align-items:center;gap:2px;font-size:16px;white-space:nowrap}
+.rw img{width:22px;height:22px;object-fit:contain}
+/* track mốc */
+.trk{width:100%;display:flex;gap:8px;position:relative;overflow:hidden}
+.vb{width:26px;flex:none;border-style:solid;border-width:6px 0;border-image:url(1_UIKit/Clan/vbar_track.png) 12 0 fill;position:relative;margin:4px 0}
+.vb i{position:absolute;left:3px;right:3px;top:-3px;border-style:solid;border-width:5px 0;border-image:url(1_UIKit/Clan/vbar_fill.png) 10 0 fill}
+.ms{height:62px;padding:0 4px 0 2px;gap:4px}
+.ms .th{width:66px;font-size:16px;flex:none}
+.ms .rw{flex:1;gap:6px}
+.ms .rw span{font-size:15px}
+.ms .rw img{width:20px;height:20px}
+.ms .tagc{flex:none}
+.ok{width:30px}
+.alert2{position:absolute;right:-8px;top:-10px;width:24px}
+/* ô tick report */
+.rr{width:100%;height:52px;display:flex;align-items:center;gap:12px;padding:0 10px;border-bottom:2px solid #e3cfa8}
+.rr:last-child{border-bottom:0}
+.chk2{width:40px;height:40px;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;position:relative;flex:none}
+.chk2 img{position:absolute;left:-4px;top:-8px;width:42px}
+.rr .t{color:#5a3f22;font-size:19px}
+.qb{width:30px;height:30px;background:url(1_UIKit/Common/question.png) center/contain no-repeat;flex:none}
+.spin{width:38px;opacity:.8;filter:brightness(.55) sepia(1) saturate(1.3)}
+</style></head><body>
+
+<!-- ========== CỘT 1 ========== -->
+<div class="stack">
+
+<!-- 1. Contribution leaderboard -->
+<div class="col"><div class="cap"><b>UIClanContributionLeaderboardPopup</b> (vừa 816×1440): banner to đang <b>đè lên header trống</b> → <i>đề xuất</i> <b>tên clan lên header</b> (như Clan Info Đợt 7), banner nhỏ cạnh dòng "Day 3 Leaderboard". Tab Daily | Weekly kit. Dòng = <b>thẻ xám</b>, chính mình = <b>thẻ xanh</b> (đổi sprite, bỏ tô vàng đè thẻ tối). Điểm "12,500 pts" vàng viền. Cuộn tới 50 thành viên.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">DuckLords</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px;padding-top:14px">
+  <div style="display:flex;align-items:center;gap:12px;width:100%;padding-left:6px">
+   <div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_03.png)"></div><div class="c" style="background:#2D5BB5;-webkit-mask-image:url(6_Features/Clan/clan_flag_03_color.png)"></div><div class="i" style="background:#FFC038;-webkit-mask-image:url(6_Features/Clan/clan_icon_dragon.png)"></div></div>
+   <span class="o" style="font-size:24px">Day 3 Leaderboard</span>
+  </div>
+  <div class="tabs" style="width:300px;margin:0"><div class="tb on"><span class="o3">Daily</span></div><div class="tb">Weekly</div></div>
+  <div class="list" style="height:452px">
+   <div class="cd" style="height:62px"><span class="o rk">#1</span><div class="av"><img src="2_Icons/Avatar/king.png"></div><div class="nm"><span class="o3">PondKing</span></div><span class="o3 yel" style="font-size:18px">125,400 pts</span></div>
+   <div class="cd" style="height:62px"><span class="o rk">#2</span><div class="av"><img src="2_Icons/Avatar/viking.png"></div><div class="nm"><span class="o3">Ironbrute</span></div><span class="o3 yel" style="font-size:18px">80,250 pts</span></div>
+   <div class="cd me" style="height:62px"><span class="o rk">#3</span><div class="av"><img src="2_Icons/Avatar/angel.png"></div><div class="nm"><span class="o3">Featherfist1234</span></div><span class="o3 yel" style="font-size:18px">12,500 pts</span></div>
+   <div class="cd" style="height:62px"><span class="o rk">#4</span><div class="av"><img src="2_Icons/Avatar/orc.png"></div><div class="nm"><span class="o3">Babacan</span></div><span class="o3 yel" style="font-size:18px">9,000 pts</span></div>
+   <div class="cd" style="height:62px"><span class="o rk">#5</span><div class="av"><img src="2_Icons/Avatar/kitty.png"></div><div class="nm"><span class="o3">Voiddroid</span></div><span class="o3 yel" style="font-size:18px">2,100 pts</span></div>
+   <div class="cd" style="height:62px"><span class="o rk">#6</span><div class="av"><img src="2_Icons/Avatar/devil.png"></div><div class="nm"><span class="o3">QuackNorris</span></div><span class="o3 yel" style="font-size:18px">500 pts</span></div>
+   <div class="cd" style="height:62px"><span class="o rk">#7</span><div class="av"><img src="2_Icons/Avatar/gladiator.png"></div><div class="nm"><span class="o3">Mallard</span></div><span class="o3 yel" style="font-size:18px">0 pts</span></div>
+   <div class="fade"></div>
+  </div>
+  <span class="mute" style="font-size:17px">Updates every minute.</span>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><span class="o" style="font-size:20px">Weekly Leaderboard</span><span class="nt">tab Weekly: dòng tiêu đề đổi</span></div>
+ <div class="it"><img class="spin" src="1_UIKit/Common/Loading_Frame2.png"><span class="nt">đang tải: icon xoay nâu</span></div>
+ <div class="it"><span class="o red" style="font-size:18px">Connection error</span><div class="b or sm"><span class="o">Retry</span></div><span class="nt">lỗi: Retry cam</span></div>
+</div>
+<div class="note">"Day 3 Leaderboard" đang ghép cứng "Day "+n → dùng key có sẵn <b>Clan.War.Leaderboard.DailySubheader</b>; "pts" dùng <b>Clan.War.Points</b>. Dài nhất: ES 25 ký tự, tên người chơi 15 ký tự.</div>
+</div></div>
+
+
+</div>
+
+<!-- ========== CỘT 2 ========== -->
+<div class="stack">
+
+<!-- 2. War results -->
+<div class="col"><div class="cap"><b>UIClanWarDaysAndResultsPopup</b> "War Results" (vừa 816×1330): dòng phụ <b>nâu</b>. Ô <b>tan</b> 2 clan: banner + tên/Tier/server, tỉ số giữa to (bên mình <b class="blu">xanh</b> như thanh war). Bảng 6 ngày: tiêu đề cột <b>nâu</b>; dòng = <b>thẻ xanh</b> mình thắng / <b>thẻ xám</b> địch thắng / <b>thẻ tối</b> chưa chốt (đổi sprite, bỏ tô màu đè). Chưa chốt: cột Winner ghi "Not Concluded" mờ.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">War Results</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px;padding-top:12px">
+  <span class="brown" style="font-size:17px">War Scores earned this week</span>
+  <div class="tan" style="width:100%;padding:10px 6px;display:flex;align-items:center">
+   <div style="width:118px;flex:none;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <div class="ban" style="width:70px;height:84px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_03.png)"></div><div class="c" style="background:#2D5BB5;-webkit-mask-image:url(6_Features/Clan/clan_flag_03_color.png)"></div><div class="i" style="background:#FFC038;-webkit-mask-image:url(6_Features/Clan/clan_icon_dragon.png)"></div></div>
+    <span class="o3" style="font-size:17px">DuckLords</span><span class="brown" style="font-size:14px">Tier A · server1</span>
+   </div>
+   <span class="o" style="font-size:40px;flex:1;text-align:center;white-space:nowrap"><span class="blu">8</span> : 5</span>
+   <div style="width:118px;flex:none;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <div class="ban" style="width:70px;height:84px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_02.png)"></div><div class="c" style="background:#CC1B35;-webkit-mask-image:url(6_Features/Clan/clan_flag_02_color.png)"></div><div class="i" style="background:#FFC038;-webkit-mask-image:url(6_Features/Clan/clan_icon_lion.png)"></div></div>
+    <span class="o3" style="font-size:10px;line-height:21px">WWWWWWWWWWWWWWW</span><span class="brown" style="font-size:14px">Tier A · server2</span>
+   </div>
+  </div>
+  <span class="o" style="font-size:22px;margin-top:4px">Daily Scores</span>
+  <div style="width:100%;display:flex;flex-direction:column;gap:5px">
+   <div class="dh brown"><span>Day</span><span style="text-align:center">Pts</span><span>Winner</span><span>MVP</span></div>
+   <div class="cd me dr"><span class="o3">Day 1</span><span class="o3 c2">1</span><span class="o3">DuckLords</span><span class="o3" style="font-size:15px">PondKing</span></div>
+   <div class="cd dr"><span class="o3">Day 2</span><span class="o3 c2">1</span><span class="o3" style="font-size:9.5px">WWWWWWWWWWWWWWW</span><span class="o3" style="font-size:13px">Featherfist1234</span></div>
+   <div class="cd me dr"><span class="o3">Day 3</span><span class="o3 c2">1</span><span class="o3">DuckLords</span><span class="o3" style="font-size:15px">Ironbrute</span></div>
+   <div class="cd dk2 dr"><span class="o3">Day 4</span><span class="o3 c2">1</span><span class="mute" style="font-size:16px;grid-column:span 2">Not Concluded</span></div>
+   <div class="cd dk2 dr"><span class="o3">Day 5</span><span class="o3 c2">1</span><span class="mute" style="font-size:16px;grid-column:span 2">Not Concluded</span></div>
+   <div class="cd dk2 dr"><span class="o3">Day 6</span><span class="o3 c2">2</span><span class="mute" style="font-size:16px;grid-column:span 2">Not Concluded</span></div>
+  </div>
+ </div>
+</div>
+<div class="note">Tiêu đề cột đang ghi cứng "Day / Pts / Winner Clan / MVP" → "Winner" dùng <b>Clan.War.DaysResults.Winner</b>, "MVP" dùng <b>Clan.War.Mvp.Label</b>; <i>2 key mới</i> <b>Popup.ClanWarResults.Day</b> + <b>.Points</b>. "Day n" trong dòng dùng <b>Clan.War.Day</b>. Dòng phụ ES 44 ký tự → tự co. Tên clan / MVP 15 ký tự → tự co.</div>
+</div></div>
+</div>
+
+<!-- ========== CỘT 3 ========== -->
+<div class="stack">
+
+<!-- 3. Clan leaderboard -->
+<div class="col"><div class="cap"><b>UIClanWarLeaderboardPopup</b> "Clan Leaderboard" (vừa 816×1360): nhãn "Champion Clan" <b>nâu</b> + nút <b>?</b> (art question có sẵn, thay nút tròn xám chữ "i") mở Championship Ranking. Dòng Champion = <b>thẻ xám</b> có vương miện trên banner (như dòng thường, bỏ ô tan riêng). Danh sách dùng lại dòng Đợt 7: <b>thẻ xám</b>, clan mình <b>thẻ xanh</b>. Cuộn tới 50 clan.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Clan Leaderboard</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px;padding-top:14px">
+  <div style="display:flex;align-items:center;gap:8px"><img src="1_UIKit/Common/crown_icon.png" style="width:28px"><span class="brown" style="font-size:19px">Champion Clan</span><div class="qb"></div></div>
+  <div class="cd" style="height:90px"><span class="o rk" style="font-size:24px">#1</span><div class="ban" style="width:52px;height:62px;margin-top:14px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_02.png)"></div><div class="c" style="background:#CC1B35;-webkit-mask-image:url(6_Features/Clan/clan_flag_02_color.png)"></div><div class="i" style="background:#FFC038;-webkit-mask-image:url(6_Features/Clan/clan_icon_lion.png)"></div><div class="cr"></div></div><div class="nm"><span class="o3" style="font-size:19px">IronBeaks</span><span class="o3" style="font-size:14px">Tier S · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">12.5B</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server1</span></div>
+  <div style="width:100%;height:2px;background:#d8bf95;margin:6px 0 2px"></div>
+  <div class="list" style="height:430px">
+   <div class="cd" style="height:80px"><span class="o rk" style="font-size:24px">#1</span><div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_05.png)"></div><div class="c" style="background:#47A871;-webkit-mask-image:url(6_Features/Clan/clan_flag_05_color.png)"></div><div class="i" style="background:#F3EEE6;-webkit-mask-image:url(6_Features/Clan/clan_icon_swords.png)"></div></div><div class="nm"><span class="o3" style="font-size:19px">PondGuard</span><span class="o3" style="font-size:14px">Tier S · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">8.1B</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server1</span></div>
+   <div class="cd me" style="height:80px"><span class="o rk" style="font-size:24px">#2</span><div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_03.png)"></div><div class="c" style="background:#2D5BB5;-webkit-mask-image:url(6_Features/Clan/clan_flag_03_color.png)"></div><div class="i" style="background:#FFC038;-webkit-mask-image:url(6_Features/Clan/clan_icon_dragon.png)"></div></div><div class="nm"><span class="o3" style="font-size:19px">DuckLords</span><span class="o3" style="font-size:14px">Tier A · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">1.25B</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server1</span></div>
+   <div class="cd" style="height:80px"><span class="o rk" style="font-size:24px">#3</span><div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_07.png)"></div><div class="c" style="background:#9839C4;-webkit-mask-image:url(6_Features/Clan/clan_flag_07_color.png)"></div><div class="i" style="background:#DAD1E7;-webkit-mask-image:url(6_Features/Clan/clan_icon_wizard_hat.png)"></div></div><div class="nm"><span class="o3" style="font-size:19px">Featherstorm</span><span class="o3" style="font-size:14px">Tier B · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">640M</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server2</span></div>
+   <div class="cd" style="height:80px"><span class="o rk" style="font-size:24px">#4</span><div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_08.png)"></div><div class="c" style="background:#FF8E2B;-webkit-mask-image:url(6_Features/Clan/clan_flag_08_color.png)"></div><div class="i" style="background:#383838;-webkit-mask-image:url(6_Features/Clan/clan_icon_torch.png)"></div></div><div class="nm"><span class="o3" style="font-size:19px">Quackers</span><span class="o3" style="font-size:14px">Tier B · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">95M</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server1</span></div>
+   <div class="cd" style="height:80px"><span class="o rk" style="font-size:24px">#5</span><div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_01.png)"></div><div class="c" style="background:#57C9FF;-webkit-mask-image:url(6_Features/Clan/clan_flag_01_color.png)"></div><div class="i" style="background:#383838;-webkit-mask-image:url(6_Features/Clan/clan_icon_axe.png)"></div></div><div class="nm"><span class="o3" style="font-size:13px;line-height:23px">WWWWWWWWWWWWWWW</span><span class="o3" style="font-size:14px">Tier C · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">12M</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server1</span></div>
+   <div class="fade"></div>
+  </div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="tan" style="width:340px;height:80px;display:flex;align-items:center;justify-content:center"><span class="lab">No champion clan yet</span></div><span class="nt">chưa có Champion: chữ nâu trong ô tan cao bằng dòng (IT 27 ký tự)</span></div>
+</div>
+</div></div>
+</div>
+
+<!-- ========== HÀNG DƯỚI ========== -->
+<div class="stack">
+<!-- 4. War rewards -->
+<div class="col"><div class="cap"><b>UIClanWarRewardsPopup</b> "War Rewards" (vừa 816×1500; prefab đang ghi nhầm tiêu đề "Clan Leaderboard"): nhãn mục <b>nâu</b>. Thưởng clan theo tier = 2 <b>ô tan</b> Win (<b class="grn">xanh</b>) / Lose (<b class="red">đỏ</b>) + icon số viền. "Your Score" to. Track mốc cá nhân: thanh dọc kit Clan bên trái; thẻ mốc <b>xám</b> chưa đạt / <b>xanh</b> đạt. <i>Đề xuất</i>: mốc nhận được có nút <b>Claim xanh lá</b> + chấm <b>!</b> (giờ cả thẻ là nút nhưng không có gì báo bấm được), đã nhận = <b>tick xanh</b>.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">War Rewards</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px;padding-top:12px">
+  <span class="brown" style="font-size:19px">Tier S Rewards</span>
+  <div class="tan" style="width:100%;height:52px;display:flex;align-items:center;padding:0 12px;gap:10px"><span class="o3 grn" style="font-size:20px;width:64px">Win</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/box_icon.png">2,500</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">5,000</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">500</span></div></div>
+  <div class="tan" style="width:100%;height:52px;display:flex;align-items:center;padding:0 12px;gap:10px"><span class="o3 red" style="font-size:20px;width:64px">Lose</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/box_icon.png">1,250</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">2,500</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">250</span></div></div>
+  <span class="o" style="font-size:24px;margin-top:6px">Your Score: 12,500</span>
+  <div class="trk" style="height:330px">
+   <div class="vb"><i style="height:52%"></i></div>
+   <div class="list" style="flex:1;min-width:0;gap:6px;overflow:visible">
+    <div class="cd me ms"><span class="o3 th">1,000</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/box_icon.png">50</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">250</span><span class="o3"><img src="5_Maps/Mining/pickaxe.png">15</span></div><img class="ok" src="1_UIKit/BattlePass/icon_check.png"></div>
+    <div class="cd me ms"><span class="o3 th">2,500</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/exp-shard.png">500</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">50</span></div><img class="ok" src="1_UIKit/BattlePass/icon_check.png"></div>
+    <div class="cd me ms"><span class="o3 th">5,000</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/box_icon.png">50</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">250</span><span class="o3"><img src="5_Maps/Mining/pickaxe.png">15</span></div><div class="b g sm" style="min-width:62px;width:62px;padding:0;height:42px;border-width:7px 7px 11px;margin:-4px 0;flex:none"><span class="o" style="font-size:15px">Claim</span></div><img class="alert2" src="1_UIKit/BattlePass/icon_alert.png"></div>
+    <div class="cd me ms"><span class="o3 th">7,500</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/exp-shard.png">500</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">50</span></div><div class="b g sm" style="min-width:62px;width:62px;padding:0;height:42px;border-width:7px 7px 11px;margin:-4px 0;flex:none"><span class="o" style="font-size:15px">Claim</span></div><img class="alert2" src="1_UIKit/BattlePass/icon_alert.png"></div>
+    <div class="cd ms"><span class="o3 th">10,000</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/box_icon.png">50</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">250</span><span class="o3"><img src="5_Maps/Mining/pickaxe.png">15</span></div></div>
+    <div class="cd ms"><span class="o3 th">200,000</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/exp-shard.png">500</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">50</span></div></div>
+   </div>
+   <div class="fade"></div>
+  </div>
+  <span class="mute" style="font-size:17px">Updates every minute.</span>
+ </div>
+</div></div>
+<div class="note">Tối đa: thưởng clan 3 loại (S Win 5,000 bone), gói cá nhân còn lại tới <b>5 loại</b> (450 / 2,250 / 135 / 4,500 / 450) → thưởng xuống hàng riêng dưới tiêu đề, 5 icon vừa 1 hàng. 18 mốc, mốc lớn nhất "200,000" (7 ký tự). "Tier S Rewards" dùng key <b>Clan.War.Rewards.TierHeader</b>, "Your Score" dùng <b>Clan.War.Rewards.MyScore</b> (đang ghép cứng "Your Score: … pts"). Không cần ảnh art mới.</div>
+</div>
+</div>
+
+<div class="stack">
+<div class="col" style="width:530px;gap:12px">
+<div class="cap" style="font-size:16px"><b>Tuần nghỉ (Day 7 cooldown)</b>: hiện đang để 2 thẻ nhận thưởng <b>đè chồng lên</b> 2 ô Win/Lose (cùng chỗ, cả hai cùng bật) → <i>đề xuất</i> cooldown thì <b>ẩn</b> Win/Lose, 2 thẻ nhận thế chỗ (tiêu đề + Claim hàng trên, thưởng hàng dưới — 5 loại không vừa 1 hàng cạnh nút). Nút đang ghi "Collect Remaining Personal Rewards" (FR 48 ký tự) trong nút 170 → dùng <b>Claim</b> (key Clan.War.RewardCard.Claim). Mốc trong track lúc này: đạt = xanh không nút (gom vào thẻ Personal).</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">War Rewards</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px;padding-top:12px">
+  <div class="tan" style="width:100%;padding:6px 8px 8px 12px;display:flex;flex-direction:column;gap:6px">
+   <div style="display:flex;align-items:center;justify-content:space-between"><span class="brown" style="font-size:19px">Clan Rewards</span><div class="b g sm" style="min-width:96px;height:48px"><span class="o" style="font-size:19px">Claim</span></div></div>
+   <div class="rw"><span class="o3"><img src="2_Icons/Currency/box_icon.png">2,500</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">5,000</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">500</span></div>
+  </div>
+  <div class="tan" style="width:100%;padding:6px 8px 8px 12px;display:flex;flex-direction:column;gap:6px">
+   <div style="display:flex;align-items:center;justify-content:space-between"><span class="brown" style="font-size:19px">Personal Rewards</span><div class="b g sm" style="min-width:96px;height:48px"><span class="o" style="font-size:19px">Claim</span></div></div>
+   <div class="rw" style="gap:9px"><span class="o3"><img src="2_Icons/Currency/box_icon.png">450</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">2,250</span><span class="o3"><img src="5_Maps/Mining/pickaxe.png">135</span><span class="o3"><img src="2_Icons/Currency/exp-shard.png">4,500</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">450</span></div>
+  </div>
+  <span class="o" style="font-size:24px;margin-top:6px">Your Score: 225,000</span>
+  <div class="ph" style="height:90px">track mốc (như bên trái)</div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="tan" style="width:300px;padding:6px 10px 8px;display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:center;justify-content:space-between;height:48px"><span class="brown" style="font-size:19px">Clan Rewards</span><span class="o3 grn" style="font-size:17px;display:flex;align-items:center;gap:4px"><img src="1_UIKit/BattlePass/icon_check.png" style="width:24px">Claimed</span></div><div class="rw" style="opacity:.5"><span class="o3"><img src="2_Icons/Currency/box_icon.png">2,500</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">5,000</span></div></div><span class="nt">đã nhận: thưởng mờ + tick "Claimed"</span></div>
+ <div class="it"><div class="b gr sm" style="min-width:96px;height:50px"><span class="o" style="font-size:19px">Claim</span></div><span class="nt">không còn gì: xám</span></div>
+</div>
+</div></div>
+</div>
+
+<div class="stack">
+<!-- 5. Report -->
+<div class="col"><div class="cap"><b>UIReportPopup</b> (vừa 816, đang khung tối kiểu cũ): kit kem. Nhãn "Reason" <b>nâu</b> căn trái; 7 dòng = <b>ô tick tan</b> + chữ nâu đậm căn trái (bấm cả dòng). Nút Report <b>đỏ</b> (hành động tiêu cực, như Kick). Đang gửi: icon xoay thay chữ nút.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Report</span><div class="x"></div></div>
+ <div class="bd" style="gap:2px;padding-top:14px">
+  <span class="brown" style="font-size:19px;align-self:flex-start;padding-left:10px;margin-bottom:4px">Reason</span>
+  <div style="width:100%;padding:0 0 4px">
+   <div class="rr"><div class="chk2"><img src="1_UIKit/ClanSearch/check_green.png"></div><span class="t">Harassment</span></div>
+   <div class="rr"><div class="chk2"></div><span class="t">Spam</span></div>
+   <div class="rr"><div class="chk2"><img src="1_UIKit/ClanSearch/check_green.png"></div><span class="t">Inappropriate Language</span></div>
+   <div class="rr"><div class="chk2"></div><span class="t">Offensive Player Name</span></div>
+   <div class="rr"><div class="chk2"></div><span class="t">Cheating</span></div>
+   <div class="rr"><div class="chk2"></div><span class="t">Hate Speech</span></div>
+   <div class="rr"><div class="chk2"></div><span class="t">Other</span></div>
+  </div>
+  <div class="b rd" style="width:170px;margin-top:16px"><span class="o">Report</span></div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="b rd" style="width:150px"><img class="spin" style="height:34px;filter:none;opacity:1" src="1_UIKit/Common/Loading_Frame2.png"></div><span class="nt">đang gửi</span></div>
+</div>
+<div class="note">Chữ đang <b>ghi cứng + sai chính tả</b> ("Harrasment", "Inappropraite") → dùng key có sẵn <b>Popup.Report.Title / Reason.Label / Reason.*</b>, nút <b>Common.Report</b>. Dài nhất: ES "Nombre de jugador ofensivo" 26 ký tự — vừa 1 dòng.</div>
+</div></div>
+</div>
+
+<script>
+// banner: lớp màu + icon = mask màu rồi nhân (multiply) chính ảnh xám lên để giữ nét/bóng như code tô màu
+document.querySelectorAll('.ban').forEach(b=>{
+ b.querySelectorAll('.c,.i').forEach(d=>{const u=d.style.webkitMaskImage;const m=document.createElement('div');m.className=d.className=='c'?'cm':'im';m.style.backgroundImage=u;d.after(m);});
+});
+</script>
+</body></html>

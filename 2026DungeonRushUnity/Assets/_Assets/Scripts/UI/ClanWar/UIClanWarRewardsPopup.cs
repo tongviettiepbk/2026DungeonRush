@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class UIClanWarRewardsPopup : BaseUI
 {
     public Button CloseButton;
+    public GameObject TierSummaryRoot;   // Win/Lose theo tier — ẩn trong cooldown để 2 thẻ nhận thưởng thế chỗ (Reskin Đợt 8)
     public ClanWarRewardsView WinRewardsView;
     public ClanWarRewardsView LoseRewardsView;
     public ClanWarMilestoneCard MilestoneCardPrefab;
@@ -57,8 +58,9 @@ public class UIClanWarRewardsPopup : BaseUI
         ClanUIUtil.SetText(LoseCardLabelText, Loc.L("Clan.War.Rewards.LoseCard"));
         ClanUIUtil.SetText(CollectClanTitleText, Loc.L("Clan.War.RewardCard.ClanTitle"));
         ClanUIUtil.SetText(CollectPersonalTitleText, Loc.L("Clan.War.RewardCard.PersonalTitle"));
-        ClanUIUtil.SetText(CollectClanCardText, Loc.L("Clan.War.Rewards.CollectClan"));
-        ClanUIUtil.SetText(CollectPersonalCardText, Loc.L("Clan.War.Rewards.CollectPersonal"));
+        // Chữ trong nút (nút nhỏ cạnh tiêu đề thẻ) → "Claim"; "Collect ... Rewards" quá dài cho nút.
+        ClanUIUtil.SetText(CollectClanCardText, Loc.L("Clan.War.RewardCard.Claim"));
+        ClanUIUtil.SetText(CollectPersonalCardText, Loc.L("Clan.War.RewardCard.Claim"));
         ClanUIUtil.SetText(CollectClanClaimedText, Loc.L("Clan.War.RewardCard.Claimed"));
         ClanUIUtil.SetText(CollectPersonalClaimedText, Loc.L("Clan.War.RewardCard.Claimed"));
         ClanUIUtil.SetText(DelayInfoText, Loc.L("Clan.War.Leaderboard.DelayInfo"));
@@ -83,11 +85,11 @@ public class UIClanWarRewardsPopup : BaseUI
     private void Draw(ClanWarWireDTO war, ClanWarConfigDTO config)
     {
         string tier = war.myClan != null ? war.myClan.rewardTier : "D";
-        ClanUIUtil.SetText(TierHeaderText, (Loc.L("Clan.Common.Tier") + " ") + ClanRoleExt.TierText(tier) + (" " + Loc.L("Clan.War.Button.Rewards")));
+        ClanUIUtil.SetText(TierHeaderText, Loc.L("Clan.War.Rewards.TierHeader", ClanRoleExt.TierText(tier)));
         if (WinRewardsView != null) WinRewardsView.SetRewards(ClanWarController.ClanReward(config, tier, "win"));
         if (LoseRewardsView != null) LoseRewardsView.SetRewards(ClanWarController.ClanReward(config, tier, "lose"));
         int score = war.milestone != null ? war.milestone.weeklyContribution : war.myWeeklyPoints;
-        ClanUIUtil.SetText(MyScoreText, "Your Score: " + ClanWarController.FormatNumber(score) + " pts");
+        ClanUIUtil.SetText(MyScoreText, Loc.L("Clan.War.Rewards.MyScore", ClanWarController.FormatNumber(score)));
         DrawTrack(war, config);
         DrawCollect(war, config);
     }
@@ -153,6 +155,7 @@ public class UIClanWarRewardsPopup : BaseUI
     private void DrawCollect(ClanWarWireDTO war, ClanWarConfigDTO config)
     {
         bool cooldown = war.IsCooldown;
+        ClanUIUtil.SetActive(TierSummaryRoot, !cooldown);
         ClanUIUtil.SetActive(CollectClanCardRoot, cooldown);
         ClanUIUtil.SetActive(CollectPersonalCardRoot, cooldown);
         if (!cooldown) return;
@@ -164,6 +167,7 @@ public class UIClanWarRewardsPopup : BaseUI
         ClanUIUtil.SetActive(CollectClanButton, !claims.clanRewardClaimed);
         if (CollectClanButton != null) CollectClanButton.interactable = claims.clanRewardEligible && clan != null && !clan.IsEmpty;
         ClanUIUtil.SetActive(CollectClanClaimedRoot, claims.clanRewardClaimed);
+        Fade(CollectClanRewardsView, claims.clanRewardClaimed);
 
         ClanWarRewardsDTO personal = ClanWarController.RemainingPersonalRewards(war.milestone, config);
         bool bundleClaimed = war.milestone != null && war.milestone.bundleClaimed;
@@ -171,6 +175,16 @@ public class UIClanWarRewardsPopup : BaseUI
         ClanUIUtil.SetActive(CollectPersonalButton, !bundleClaimed);
         if (CollectPersonalButton != null) CollectPersonalButton.interactable = !personal.IsEmpty;
         ClanUIUtil.SetActive(CollectPersonalClaimedRoot, bundleClaimed);
+        Fade(CollectPersonalRewardsView, bundleClaimed);
+    }
+
+    // Đã nhận: thưởng mờ đi (concept Đợt 8).
+    private static void Fade(ClanWarRewardsView view, bool claimed)
+    {
+        if (view == null) return;
+        CanvasGroup group = view.GetComponent<CanvasGroup>();
+        if (group == null) group = view.gameObject.AddComponent<CanvasGroup>();
+        group.alpha = claimed ? 0.5f : 1f;
     }
 
     // gel/geo gốc.
