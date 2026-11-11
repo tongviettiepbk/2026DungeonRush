@@ -75,7 +75,7 @@
 - [Gốc KHÔNG rơi Bone từ quái](dungonrush-no-combat-bone-drop.md) — combat_drop Bone/rương là code chết (BoneDropPrefab null); đừng port; doc LOOT_DROP_MODEL.md
 - [Reskin toàn game](dungonrush-reskin-plan.md) — CHỈ thay hình; Art/<1_UIKit..7_FX> + ArtIncoming gương + Apply Reskin; các màn đã reskin + commit
 - [Cách reskin 1 màn UI](dungonrush-reskin-ui-howto.md) — quy trình lobby: nhóm A ghi đè/B ảnh mới+prefab, pha màu thay ChatGPT cho hình học, ChatGPT cho icon, bẫy TMP sprite/Slider/Game view nhỏ; script tools/reskin/
-- [Quy trình concept → reskin UI](dungonrush-ui-concept-workflow.md) — reskin MỌI popup theo đợt (concept → user chốt → PopupStyle/Batch<N>Reskin); quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..7 xong, tiếp Đợt 8
+- [Quy trình concept → reskin UI](dungonrush-ui-concept-workflow.md) — reskin MỌI popup theo đợt (concept → user chốt → PopupStyle/Batch<N>Reskin); quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..8 xong, tiếp Đợt 9
 - [Reskin gameplay](dungonrush-reskin-gameplay.md) — map tường/sàn vẽ code, quái vịt đen ChatGPT trên rig hero, 3 popup đồ/offer kit Mastery; 2026-10-18 CHƯA commit
 - [Reskin Shop](dungonrush-reskin-shop.md) — StoreTabPage + 5 popup Shop (kit Mastery, ribbon_tint tô rarity) 2026-10-18: khung art + 19 icon ChatGPT ghi đè giữ size cũ + 6 gói gem; bẫy tách nền tím; đã commit
 - [Reskin Mining](dungonrush-reskin-mining.md) — 2026-10-19 đã commit: kit Mastery + art 1_UIKit/Mining, ChatGPT 7 icon quặng (diamond=thạch anh tím), nút dụng cụ đổi sprite; CẤM chạy lại Build Mining

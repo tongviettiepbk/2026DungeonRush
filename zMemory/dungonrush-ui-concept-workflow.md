@@ -1,11 +1,11 @@
 ---
 name: dungonrush-ui-concept-workflow
-description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..7 xong (Đợt 7 Clan 2026-11-12), tiếp Đợt 8"
+description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..8 xong (Đợt 8 Clan War & Chat 2026-11-12), tiếp Đợt 9"
 metadata:
   node_type: memory
   type: project
   originSessionId: 3164be48-a1fc-4de0-a1a9-4dd4a3175277
-  modified: 2026-11-12T10:00:00.000Z
+  modified: 2026-11-12T16:00:00.000Z
 ---
 
 User duyệt cách làm này ngày 2026-11-11, dặn CHỈ lưu trong bộ nhớ, KHÔNG viết tài liệu vào GDD/.
@@ -60,6 +60,8 @@ PLAN.md giữ: danh sách 67 popup chia Đợt 0..9, quy trình tối ưu 3 phas
 
 - Đợt 7 Clan (Create, Settings, Banner Editor, Edit Announcement, Requests, Clan Info, Clan Player, Clan Search, Championship Ranking + ô con ClanRequestCard/ClanWarClanRowCard/ClanBannerOptionItem ở Prefabs/UINew/Clan) — 2026-11-12, tool `Batch7Reskin` (chạy lại ra y hệt), chụp batch7/unity.png 16 ảnh, CHƯA test Play. User duyệt: Banner Editor bỏ dải cuộn → lưới thấy hết (8 / 5×2 / 7 cột / 8, ô box_dark, chọn = viền vàng + tick), tên clan lên header Clan Info, tên người chơi lên header Clan Player (icon Leader/Captain, Promote cam ↔ Demote tím đổi sprite, không nút → popup thấp lại), thêm nút Clear tím (key mới Popup.ClanSearch.Clear). Sửa kèm: Create dùng key Clan.Create.Button + thiếu gem số đỏ; bộ đếm n/200 mô tả clan (ClanUIUtil.SetCounter, đủ → đỏ); dòng clan của mình ở bảng xếp hạng = card_blue đổi sprite (ClanWarClanRowCard.NormalSprite/HighlightSprite, dùng chung Clan War Leaderboard Đợt 8).
 - Bẫy Đợt 7: `PvP/slot_dark` đen trong 55% → trên nền kem ra xám nhạt, dùng `Clan/box_dark`; UI `Outline` nhân màu sprite (viền vàng trên sprite tối ra tối) → lớp trắng tô vàng to hơn + đè ô trong; chụp edit mode ô nhập phải gán `input.text`. Lưu prefab Clan qua Unity chỉ đổi PressYValue → PressScale/PressDuration (vô hại), sprite asset TMP không mất.
+
+- Đợt 8 Clan War & Chat (Contribution Leaderboard, War Results, Clan Leaderboard, War Rewards, Report + ô con ClanWarContributionCard/ClanWarDayCard/ClanWarMilestoneCard) — 2026-11-12, tool `Batch8Reskin` (gọi lại helper Batch7Reskin đã để `internal`), chụp batch8/unity.png 9 ảnh, CHƯA test Play. User duyệt: tên clan lên header bảng đóng góp (banner nhỏ cạnh "Day n Leaderboard"); thẻ ngày đổi sprite mình thắng card_blue / địch thắng card_gray / chưa chốt card_dark (ClanWarDayCard.StatusImage + StateLabelText "Not Concluded" phủ cột Winner+MVP); 2 key mới Popup.ClanWarResults.Day/.Points; nút ? (Common/question) thay nút "i" Champion; mốc thưởng có ClaimTag (nút xanh + chấm !) / CollectedTag (tick) — ClanWarMilestoneCard; cooldown ẩn Win/Lose (UIClanWarRewardsPopup.TierSummaryRoot), nút Collect → "Claim", đã nhận thì thưởng mờ; Report nút đỏ, lý do/tiêu đề dùng key Popup.Report.* (trước ghi cứng sai chính tả), UIReportPopup.SubmitText ẩn khi gửi. Chữ ghép cứng → key: DailySubheader, Clan.War.Points, Clan.War.Day, TierHeader, MyScore; tỉ số bên mình xanh #5EC8FF.
 
 **Why:** user sẽ reskin lại cả bộ UI theo style mới; concept trước → duyệt → áp để khỏi làm lại prefab nhiều lần.
 
