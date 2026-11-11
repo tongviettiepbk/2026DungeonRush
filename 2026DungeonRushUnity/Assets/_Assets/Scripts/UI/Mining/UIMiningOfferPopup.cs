@@ -62,7 +62,7 @@ public class UIMiningOfferPopup : BaseUI
         if (objGem != null) objGem.SetActive(tier.Gem > 0);
         if (txtGem != null) txtGem.text = "x" + tier.Gem;
         if (objMaxPickaxe != null) objMaxPickaxe.SetActive(tier.MaxPickaxeIncrease > 0);
-        if (txtMaxPickaxe != null) txtMaxPickaxe.text = "Increase Maximum Pickaxe Storage +" + tier.MaxPickaxeIncrease;
+        if (txtMaxPickaxe != null) txtMaxPickaxe.text = Loc.L("UI.Mining.MaxPickaxeIncrease", "<color=#FFD35A>" + tier.MaxPickaxeIncrease + "</color>");
 
         string price = PurchaseController.Instance.GetPriceText(tier.StoreId);
         txtPrice.text = string.IsNullOrEmpty(price) ? "N/A" : price;

@@ -1,11 +1,11 @@
 ---
 name: dungonrush-ui-concept-workflow
-description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..4 xong 2026-11-11, tiếp Đợt 5"
+description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..5 xong 2026-11-11, tiếp Đợt 6"
 metadata:
   node_type: memory
   type: project
   originSessionId: 3164be48-a1fc-4de0-a1a9-4dd4a3175277
-  modified: 2026-11-12T02:00:00.000Z
+  modified: 2026-11-11T16:30:00.000Z
 ---
 
 User duyệt cách làm này ngày 2026-11-11, dặn CHỈ lưu trong bộ nhớ, KHÔNG viết tài liệu vào GDD/.
@@ -53,6 +53,9 @@ PLAN.md giữ: danh sách 67 popup chia Đợt 0..9, quy trình tối ưu 3 phas
 
 - Đợt 4 Enchantment/Kính/Tẩu (10 popup + ô con CapeElementUI, SubstatUIElementPrefab) — tool `Batch4Reskin`, chụp batch4/unity.png, CHƯA test Play. User duyệt: header relic "Relic +N" (bỏ "Enchantment"), "Relic Merge", Summon Rates tẩu, 10 key mới (Popup.Enchantment.PowerLabel/PowerDesc/RelicMerge/Inventory/TapToAdd, Popup.WingReroll.LockedHint, Popup.CapeDetail.Title, Popup.CapeSalvage.Title/Select, Popup.Cape.NewPipe). Cape Detail/Salvage + Wing Reroll tách cột nhãn nâu/số viền (UICapePopup.SetStatLabels, UIWingRerollPopup.SetBaseStats); Show Pipe = công tắc kit Setting (sprKnobOn/Off + objShowCloakFill).
 - Bẫy Đợt 4: prefab rip hay có HLG TẮT + phần tử đặt tay / LayoutElement.ignoreLayout (Merge) → bật lại; panel mới chèn trong trang có nền toàn màn phải đặt sibling SAU nền; input_tan trùng màu thân popup → dùng box_tan; ClaimPage/CapeShowOffPanel là con của popup nên toạ độ tính theo tâm popup (= tâm màn).
+
+- Đợt 5 Dungeon & Mining (UIDungeonPopup, UIMiningPopup, UIMiningRarityPopup, UIMiningOfferPopup) — 2026-11-11, tool `Batch5Reskin` (chạy lại ra y hệt), chụp batch5/unity.png khớp concept, CHƯA test Play. User duyệt: Dungeon thêm nhãn "Keys" (key mới Popup.Dungeon.Keys) + dòng mô tả UI.Dungeon.Description; Sweep tím / Enter cam / Ads hồng / khoá xám (UIDungeonPopupStart.sprSweep/sprEnter/sprDisabled); nút dụng cụ Mining: chọn cam / còn hàng tím / hết còn ads hồng / hết cả ads xám (UIMiningPopup.sprToolAd/sprToolEmpty); cột level kế bảng quặng tăng xanh/giảm đỏ. Sửa kèm: "Next in" + "Increase Maximum Pickaxe Storage" dùng key dịch, gỡ key nhầm trên tiêu đề Offer. OfferShell/TapToClose của Batch2Reskin đổi sang `internal` để dùng lại.
+- Bẫy Đợt 5: UnityMCP rớt vì server 8080 không chạy (không phải bridge) → script tạm gọi `MCPServiceLocator.Server.StartLocalHttpServer(true)` rồi `Bridge.StartAsync()`; RawImage mỏ chụp edit mode ra trắng (chỉ có hình khi Play).
 
 **Why:** user sẽ reskin lại cả bộ UI theo style mới; concept trước → duyệt → áp để khỏi làm lại prefab nhiều lần.
 

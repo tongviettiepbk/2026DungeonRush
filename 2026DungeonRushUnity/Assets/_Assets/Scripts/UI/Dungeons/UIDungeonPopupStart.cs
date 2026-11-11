@@ -30,6 +30,12 @@ public class UIDungeonPopupStart : BaseUI
 
     public TutorialUI enterTutorial;   // DungeonPopup.EnterTutorialUI gốc
 
+    [Space(20)]
+    // Reskin Đợt 5: trạng thái nút bằng sprite kit (Sweep tím, Enter cam, khoá xám).
+    public Sprite sprSweep;
+    public Sprite sprEnter;
+    public Sprite sprDisabled;
+
     private DungeonType type;
     private Action onChanged;
 
@@ -74,6 +80,8 @@ public class UIDungeonPopupStart : BaseUI
         btEnter.interactable = hasKey;
         btEnterByAds.gameObject.SetActive(showAd);
         txtQuantityProcessAds.text = (StaticDungeonData.MAX_AD_PER_DAY - progress.adWatchCount) + "/" + StaticDungeonData.MAX_AD_PER_DAY;
+        SetButtonSprite(btSweepLast, sprSweep);
+        SetButtonSprite(btEnter, sprEnter);
         if (enterTutorial != null)
             enterTutorial.SetVisible(GetEnterTutorialStep() != null);
     }
@@ -87,6 +95,12 @@ public class UIDungeonPopupStart : BaseUI
         if (type == DungeonType.ZombieHorde && dragonDone && TutorialService.IsCompleted(FtueStep.EnterZombieDungeon) == false)
             return FtueStep.EnterZombieDungeon;
         return null;
+    }
+
+    private void SetButtonSprite(Button button, Sprite normal)
+    {
+        if (normal != null && sprDisabled != null)
+            button.image.sprite = button.interactable ? normal : sprDisabled;
     }
 
     private void SetIcon(Image image, Sprite[] icons)

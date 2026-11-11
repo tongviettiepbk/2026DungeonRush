@@ -1,0 +1,234 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Đợt 5 – Dungeon & Mining. Kit chung tools/concept/kit/kit.css, sprite thật trong Art/, 1 px CSS = 2 đơn vị canvas.
+     Chụp: tools/concept/render_concept.sh tools/concept/batch5/concept.html tools/concept/batch5/concept.png 1700 <cao> -->
+<base href="../../../2026DungeonRushUnity/Assets/_Assets/Art/">
+<link rel="stylesheet" href="../../../../tools/concept/kit/kit.css">
+<style>
+body{display:flex;flex-wrap:wrap;gap:22px;width:1700px;align-items:flex-start}
+.col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.cap{color:#cfcde0;font-size:17px;font-family:sans-serif;max-width:520px;text-align:center;line-height:1.35}
+.cap b{color:#fff}
+.scr{width:530px;background:#3e3d4d;border-radius:18px;padding:30px 0;display:flex;flex-direction:column;align-items:center;gap:14px;position:relative}
+.w680{width:340px}.w817{width:408px}.w968{width:484px}
+.tap{color:#fff;font-size:16px}
+.stack{display:flex;flex-direction:column;gap:30px;width:530px}
+.states{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+.btns{display:flex;gap:16px;justify-content:center}
+.lab{color:#7a5c3c;font-size:19px}
+.mute15{color:#a68b67;font-size:15px;text-align:center;line-height:1.3}
+/* Dungeon */
+.drib{position:absolute;left:-1px;top:6px;width:76px;height:53px;background:url(1_UIKit/Dungeon/ribbon_red.png) center/100% 100%;z-index:3}
+.drib img{position:absolute;left:13px;top:8px;width:36px;height:36px;object-fit:contain}
+.big1{font-size:56px;line-height:1;margin-top:-8px}
+.duo{display:flex;gap:16px}
+.duo .c{display:flex;flex-direction:column;align-items:center;gap:4px}
+.rbox{width:164px;height:60px;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;display:flex;align-items:center;justify-content:center;gap:8px}
+.rbox img{width:36px;height:36px;object-fit:contain}
+.rbox .o{font-size:28px}
+.ad img{height:24px}
+/* Mining */
+.top{width:100%;display:flex;align-items:center;justify-content:space-between}
+.sq{width:76px;height:78px;background-size:100% 100%;position:relative;display:flex;align-items:center;justify-content:center}
+.sq img{width:52px;height:52px;object-fit:contain;margin-top:-6px}
+.sq .gl{position:absolute;width:120px;height:120px;opacity:.5;margin:0}
+.lvbox{display:flex;flex-direction:column;align-items:center;gap:6px;width:250px}
+.lvbox .o{font-size:22px}
+.lvbox .bar{width:100%}
+.ores{width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ore{height:40px;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;display:flex;align-items:center;gap:6px;padding:0 2px}
+.ore img{width:36px;height:36px;object-fit:contain;margin:-6px 0 -6px -10px}
+.ore .o3{font-size:17px}
+.world{width:435px;height:435px;background:url(1_UIKit/Mining/world_frame.png) center/100% 100%;padding:5px;position:relative}
+.wi{position:absolute;inset:5px;background:#eea063;overflow:hidden;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr)}
+.wi i{background-size:100% 100%}
+.wi .d{background-image:url(5_Maps/Mining/dirt.png)}
+.wi .s{background-image:url(5_Maps/Mining/stone_block.png)}
+.wi .co{background-image:url(5_Maps/Mining/coal_mine.png)}
+.wi .ir{background-image:url(5_Maps/Mining/iron_mine.png)}
+.wi .em{background-image:url(5_Maps/Mining/emerald_mine.png)}
+.wdark{position:absolute;left:5px;right:5px;bottom:5px;height:47px;background:rgba(0,0,0,.6)}
+.wline{position:absolute;left:5px;right:5px;bottom:52px;height:3px;background:#2aff00}
+.wtag{position:absolute;left:5px;bottom:41px;height:22px;padding:0 10px;background:#2aff00;border-radius:0 11px 11px 0;display:flex;align-items:center}
+.wtag .o3{font-size:14px}
+.tool{width:83px;height:77px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-style:solid}
+.tool.wide{width:138px}
+.tool img.ic{width:40px;height:40px;object-fit:contain;margin-top:-6px}
+.tool .n{font-size:17px;margin-top:-4px}
+.tool .x{position:static;transform:none;background:none;width:auto;height:auto}
+.tool .xn{position:absolute;right:2px;top:-2px;font-size:16px}
+.tool .lim{display:flex;align-items:center;gap:4px;font-size:16px;margin-top:-4px}
+.tool .lim img{height:15px}
+.t-or{border-width:15px;border-image:url(1_UIKit/BattlePass/btn_orange.png) 30 fill}
+.t-vi{border-width:15px;border-image:url(1_UIKit/Common/btn_violet.png) 30 fill}
+.t-pk{border-width:15px;border-image:url(1_UIKit/Common/btn_pink.png) 30 fill}
+.t-gr{border-width:9px 9px 15px;border-image:url(1_UIKit/Lobby/btn_gray.png) 18 18 30 18 fill}
+.tool > *{margin-left:-12px;margin-right:-12px}
+.tools{display:flex;gap:14px;align-items:center}
+/* bảng tỉ lệ quặng */
+.thd{width:100%;display:grid;grid-template-columns:1fr 70px 70px;color:#7a5c3c;font-size:16px;padding:0 10px}
+.thd span:not(:first-child){text-align:right}
+.orow{height:36px;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;display:grid;grid-template-columns:28px 1fr 70px 70px;align-items:center;gap:4px;padding:0 4px;margin:0 0 5px}
+.orow img{width:28px;height:28px;object-fit:contain}
+.orow .k{color:#7a5c3c;font-size:16px}
+.orow .o3{font-size:16px;text-align:right}
+.up{color:#62d34a}.dn{color:#ff5a5a}
+/* offer */
+.offer .bd{margin-top:0;padding-top:46px}
+.offer .rib{position:absolute;left:50%;top:-30px;transform:translateX(-50%);width:330px;height:78px;z-index:3;padding-bottom:10px}
+.offer .rib .o{font-size:28px}
+.show{width:100%;height:170px;border-style:solid;border-width:22px;border-image:url(1_UIKit/Mastery/mastery_panel.png) 45 fill;position:relative}
+.show .gl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:250px;opacity:.55}
+.show .t{position:absolute;top:50%;width:96px}
+.cnt{display:flex;gap:12px;justify-content:center}
+.cc{width:76px;height:84px;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cc img.ic{width:48px;height:42px;object-fit:contain}
+.cc .o3{font-size:17px;margin-top:-4px}
+.dkrow{width:100%;height:58px;border-style:solid;border-width:22px;border-image:url(1_UIKit/Mastery/mastery_panel.png) 45 fill;display:flex;align-items:center;gap:8px}
+.dkrow img{height:40px;margin:-22px 0}
+.dkrow span{color:#fff;font-size:17px;margin:-22px 0;line-height:1.2}
+.dkrow b{color:#ffd35a;font-weight:normal}
+.disc{position:absolute;right:-30px;top:-26px;width:66px;height:66px}
+.disc .o3{font-size:17px}
+</style></head><body>
+
+<div class="stack">
+<!-- 1. Dungeon popup -->
+<div class="col"><div class="cap"><b>UIDungeonPopup</b> (vừa 817): giữ ruy băng đỏ + icon thưởng bên trái header. "Difficulty" nâu, độ khó <b>1-1</b> to viền. <b>Thưởng + Key</b> 2 ô cạnh nhau có nhãn nâu (thêm nhãn <b>"Keys"</b>). Thêm 1 dòng mờ <b>"Keys are only consumed when you complete the dungeon."</b> (key có sẵn, chưa dùng). Sweep Last <b>tím</b> (phụ), Enter <b>cam</b> (hành động chính).</div>
+<div class="scr"><div class="pp w817">
+ <div class="drib"><img src="2_Icons/Currency/box_icon.png"></div>
+ <div class="hd"><span class="o">Boss Raid</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px">
+  <span class="lab">Difficulty</span>
+  <span class="o big1">1-1</span>
+  <div class="duo" style="margin-top:6px">
+   <div class="c"><span class="lab" style="font-size:17px">Reward</span><div class="rbox"><img src="2_Icons/Currency/box_icon.png"><span class="o">255</span></div></div>
+   <div class="c"><span class="lab" style="font-size:17px">Keys</span><div class="rbox"><img src="2_Icons/Currency/red_key.png"><span class="o">2/2</span></div></div>
+  </div>
+  <span class="mute15" style="max-width:330px">Keys are only consumed when you complete the dungeon.</span>
+  <div class="btns" style="margin-top:4px"><div class="b vi" style="width:150px"><span class="o" style="font-size:22px;text-align:center;line-height:1">Sweep Last</span></div><div class="b or" style="width:150px"><span class="o">Enter</span></div></div>
+ </div>
+</div>
+<div class="nt">Trạng thái 2 nút (đổi sprite, giữ chỗ):</div>
+<div class="states">
+ <div class="it"><div class="b pk ad" style="width:150px"><img src="1_UIKit/Common/rewarded.png"><span class="o">3/3</span></div><span class="nt">hết key, còn lượt ads → nút <b>hồng</b> thay Enter</span></div>
+ <div class="it"><div class="b gr" style="width:150px"><span class="o">Enter</span></div><span class="nt">hết key + hết ads</span></div>
+ <div class="it"><div class="b gr" style="width:150px"><span class="o" style="font-size:22px;text-align:center;line-height:1">Sweep Last</span></div><span class="nt">chưa thắng màn nào (1-1)</span></div>
+</div></div></div>
+
+<!-- 2. Mining rarity -->
+<div class="col"><div class="cap"><b>UIMiningRarityPopup</b> (nhỏ 680): header "Mining Rarity" + X. Bảng 7 quặng mỗi dòng 1 ô nâu: icon + tên nâu, % viền trắng. Cột level kế: <b>tăng xanh / giảm đỏ</b> (giống Summon Rates Đợt 3-4). Số thật level 1 → 2.</div>
+<div class="scr"><div class="pp w680">
+ <div class="hd"><span class="o" style="font-size:25px">Mining Rarity</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px">
+  <div class="thd"><span>Ore</span><span>Lvl 1</span><span>Lvl 2</span></div>
+  <div style="width:100%">
+   <div class="orow"><img src="5_Maps/Mining/stone_icon.png"><span class="k">Stone</span><span class="o3">95.2%</span><span class="o3 dn">90.5%</span></div>
+   <div class="orow"><img src="5_Maps/Mining/coal_icon.png"><span class="k">Coal</span><span class="o3">4.8%</span><span class="o3 up">9.1%</span></div>
+   <div class="orow"><img src="5_Maps/Mining/iron_icon.png"><span class="k">Iron</span><span class="o3">0.0%</span><span class="o3 up">0.5%</span></div>
+   <div class="orow"><img src="5_Maps/Mining/ruby_icon.png"><span class="k">Ruby</span><span class="o3">0.0%</span><span class="o3">0.0%</span></div>
+   <div class="orow"><img src="5_Maps/Mining/emerald_icon.png"><span class="k">Emerald</span><span class="o3">0.0%</span><span class="o3">0.0%</span></div>
+   <div class="orow"><img src="5_Maps/Mining/gold_icon.png"><span class="k">Gold</span><span class="o3">0.0%</span><span class="o3">0.0%</span></div>
+   <div class="orow" style="margin:0"><img src="5_Maps/Mining/diamond_icon.png"><span class="k">Diamond</span><span class="o3">0.0%</span><span class="o3">0.0%</span></div>
+  </div>
+ </div>
+</div>
+<div class="nt">Mỏ max (Lvl 60): cột kế = "-":</div>
+<div class="pp w680"><div class="bd" style="margin-top:0;padding:10px 20px;gap:6px">
+  <div class="thd"><span>Ore</span><span>Lvl 60</span><span>-</span></div>
+  <div style="width:100%"><div class="orow" style="margin:0"><img src="5_Maps/Mining/diamond_icon.png"><span class="k">Diamond</span><span class="o3">10.5%</span><span class="o3">-</span></div></div>
+</div></div>
+</div></div>
+
+</div>
+
+<div class="stack">
+<!-- 4. Mining main -->
+<div class="col"><div class="cap"><b>UIMiningPopup</b> (lớn 968, cao như cũ): giữ nút Rarity (xám) / Offer (vàng) art Mining. Giữa: "Lvl 1" + <b>thanh tiến độ kit</b> (fill thụt đều). 7 ô quặng ô nâu kit. Khung mỏ giữ viền đen. 3 nút dụng cụ: <b>đang chọn = cam</b>, còn hàng = <b>tím</b>, hết hàng còn ads = <b>hồng</b> (icon ads + lượt), hết cả ads = <b>xám</b>. "Next in" chữ nâu, dùng key dịch.</div>
+<div class="scr"><div class="pp w968">
+ <div class="hd"><span class="o">Mining</span><div class="x"></div></div>
+ <div class="bd" style="gap:12px;padding:16px 18px 18px">
+  <div class="top">
+   <div class="sq" style="background-image:url(1_UIKit/Mining/btn_square_gray.png)"><img src="5_Maps/Mining/mining (1).png"></div>
+   <div class="lvbox"><span class="o">Lvl 1</span><div class="bar"><div class="fill" style="width:10%"></div><span class="o3">100/1000</span></div></div>
+   <div class="sq" style="background-image:url(1_UIKit/Mining/btn_square_yellow.png)"><img src="5_Maps/Mining/gold_pickaxe_character.png"></div>
+  </div>
+  <div class="ores">
+   <div class="ore"><img src="5_Maps/Mining/stone_icon.png"><span class="o3">55555</span></div>
+   <div class="ore"><img src="5_Maps/Mining/coal_icon.png"><span class="o3">55555</span></div>
+   <div class="ore"><img src="5_Maps/Mining/iron_icon.png"><span class="o3">55555</span></div>
+   <div class="ore"><img src="5_Maps/Mining/emerald_icon.png"><span class="o3">55555</span></div>
+   <div class="ore"><img src="5_Maps/Mining/gold_icon.png"><span class="o3">55555</span></div>
+   <div class="ore"><img src="5_Maps/Mining/diamond_icon.png"><span class="o3">55555</span></div>
+   <div class="ore"><img src="5_Maps/Mining/ruby_icon.png"><span class="o3">55555</span></div>
+  </div>
+  <div class="world"><div class="wi">
+   <i></i><i class="d"></i><i class="d"></i><i class="d"></i><i></i><i class="d"></i><i class="d"></i><i class="s"></i><i class="d"></i>
+   <i class="d"></i><i class="d"></i><i class="s"></i><i class="d"></i><i></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i>
+   <i class="d"></i><i class="co"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="s"></i><i class="d"></i><i class="co"></i><i class="d"></i>
+   <i class="s"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="s"></i>
+   <i class="d"></i><i class="d"></i><i class="d"></i><i class="ir"></i><i class="d"></i><i class="d"></i><i class="s"></i><i class="d"></i><i class="d"></i>
+   <i class="d"></i><i class="s"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="co"></i><i class="d"></i><i class="d"></i><i class="d"></i>
+   <i class="d"></i><i class="d"></i><i class="d"></i><i class="s"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="em"></i><i class="d"></i>
+   <i class="co"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="s"></i><i class="d"></i><i class="d"></i>
+   <i class="d"></i><i class="d"></i><i class="s"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="s"></i>
+  </div><div class="wdark"></div><div class="wline"></div><div class="wtag"><span class="o3">Depth: 1</span></div></div>
+  <div class="tools">
+   <div class="tool t-pk"><span class="xn o3">x3</span><img class="ic" src="5_Maps/Mining/gold_pickaxe.png"><span class="lim o3"><img src="1_UIKit/Common/rewarded.png">3/3</span></div>
+   <div class="tool wide t-or"><img class="ic" src="5_Maps/Mining/pickaxe.png"><span class="n o3">30/30</span></div>
+   <div class="tool t-vi"><img class="ic" src="5_Maps/Mining/drill.png"><span class="n o3">4</span></div>
+  </div>
+  <span class="lab" style="font-size:18px">Next in: 3m 23s</span>
+ </div>
+</div>
+<div class="nt">Các trạng thái nút dụng cụ:</div>
+<div class="states">
+ <div class="it"><div class="tool wide t-or"><img class="ic" src="5_Maps/Mining/pickaxe.png"><span class="n o3">30/30</span></div><span class="nt">đang chọn</span></div>
+ <div class="it"><div class="tool t-vi"><img class="ic" src="5_Maps/Mining/drill.png"><span class="n o3">4</span></div><span class="nt">còn hàng</span></div>
+ <div class="it"><div class="tool t-pk"><span class="xn o3">x3</span><img class="ic" src="5_Maps/Mining/drill.png"><span class="lim o3"><img src="1_UIKit/Common/rewarded.png">2/3</span></div><span class="nt">hết, còn ads</span></div>
+ <div class="it"><div class="tool t-gr"><img class="ic" src="5_Maps/Mining/drill.png"><span class="lim o3"><img src="1_UIKit/Common/rewarded.png">0/3</span></div><span class="nt">hết cả ads</span></div>
+</div>
+</div></div>
+
+</div>
+
+<div class="stack">
+<!-- 3. Mining offer -->
+<div class="col"><div class="cap"><b>UIMiningOfferPopup</b> (vừa 817): khuôn ưu đãi Đợt 2 — ruy băng vàng, panel tối có hào quang + 3 dụng cụ, 4 ô quà (khoan / cuốc vàng / cuốc / gem). Dòng <b>+10 cuốc tối đa</b> trên panel tối, chữ dùng key dịch có sẵn (đang cứng tiếng Anh). Nút mua <b>xanh lá</b>, "Tap anywhere to close".</div>
+<div class="scr" style="padding-top:56px"><div class="pp w817 offer">
+ <div class="rib"><span class="o">Mining Offer</span></div>
+ <div class="bd" style="gap:14px">
+  <div class="show">
+   <img class="gl" src="7_FX/Glow_Circle02.png">
+   <img class="t" src="5_Maps/Mining/drill_character.png" style="left:42px;transform:translateY(-50%) rotate(-12deg);width:80px">
+   <img class="t" src="5_Maps/Mining/gold_pickaxe_character.png" style="left:50%;transform:translate(-50%,-50%);width:110px">
+   <img class="t" src="5_Maps/Mining/pickaxe_character.png" style="right:42px;transform:translateY(-50%) rotate(12deg);width:80px">
+  </div>
+  <div class="cnt">
+   <div class="cc"><img class="ic" src="5_Maps/Mining/drill.png"><span class="o3">x17</span></div>
+   <div class="cc"><img class="ic" src="5_Maps/Mining/gold_pickaxe.png"><span class="o3">x17</span></div>
+   <div class="cc"><img class="ic" src="5_Maps/Mining/pickaxe.png"><span class="o3">x55</span></div>
+   <div class="cc"><img class="ic" src="2_Icons/Currency/gem.png"><span class="o3">x600</span></div>
+  </div>
+  <div class="dkrow"><img src="2_Icons/Mastery/mastery_13.png"><span>Increase Maximum Pickaxe Storage <b>+10</b></span></div>
+  <div class="b g" style="width:190px;position:relative"><span class="o">$9.99</span></div>
+ </div>
+</div><span class="tap o3">Tap anywhere to close</span>
+<div class="nt" style="margin-top:6px">Gói thứ 2 (data: 100 / 100 / 330 / 3200 gem, +20):</div>
+<div class="pp w817 offer" style="margin-top:40px">
+ <div class="rib"><span class="o">Large Mining Offer</span></div>
+ <div class="bd" style="gap:14px;padding-bottom:16px">
+  <div class="cnt">
+   <div class="cc"><img class="ic" src="5_Maps/Mining/drill.png"><span class="o3">x100</span></div>
+   <div class="cc"><img class="ic" src="5_Maps/Mining/gold_pickaxe.png"><span class="o3">x100</span></div>
+   <div class="cc"><img class="ic" src="5_Maps/Mining/pickaxe.png"><span class="o3">x330</span></div>
+   <div class="cc"><img class="ic" src="2_Icons/Currency/gem.png"><span class="o3">x3200</span></div>
+  </div>
+  <div class="dkrow"><img src="2_Icons/Mastery/mastery_13.png"><span>Increase Maximum Pickaxe Storage <b>+20</b></span></div>
+ </div>
+</div>
+</div></div>
+
+</div>
+
+</body></html>

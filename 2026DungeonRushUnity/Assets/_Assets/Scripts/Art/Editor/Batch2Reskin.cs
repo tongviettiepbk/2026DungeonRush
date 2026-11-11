@@ -684,7 +684,7 @@ public static class Batch2Reskin
 
     #region Helper bố cục
     // Khung ưu đãi: thân kem không header, ruy băng vàng lấn mép trên (tâm cách mép trên 18), tiêu đề trắng viền.
-    private static void OfferShell(RectTransform panel, float width, float height, Transform frame, Transform ribbon, TMP_Text title)
+    internal static void OfferShell(RectTransform panel, float width, float height, Transform frame, Transform ribbon, TMP_Text title)
     {
         PopupStyle.Center(panel, 0f, 0f, width, height);
         ReskinPrefabUtil.Img(frame, PopupStyle.Kit("Mastery/popup_frame"));
@@ -707,7 +707,7 @@ public static class Batch2Reskin
     }
 
     // "Tap anywhere to close" trắng viền ngay dưới khung (neo đáy panel).
-    private static void TapToClose(TMP_Text text)
+    internal static void TapToClose(TMP_Text text)
     {
         RectTransform rt = text.rectTransform;
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);

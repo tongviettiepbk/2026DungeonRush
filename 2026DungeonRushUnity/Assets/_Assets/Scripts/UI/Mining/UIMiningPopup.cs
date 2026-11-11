@@ -45,6 +45,9 @@ public class UIMiningPopup : BaseUI, IPointerClickHandler, IPointerDownHandler, 
     // Reskin: nút đang chọn đổi sprite xanh, nút khác xám (thay cho tô màu DEFAULT/PASSIVE).
     public Sprite sprToolSelected;
     public Sprite sprToolPassive;
+    // Reskin Đợt 5: hết hàng còn lượt ads = hồng, hết cả ads = xám.
+    public Sprite sprToolAd;
+    public Sprite sprToolEmpty;
 
     [Header("Quặng")]
     public TMP_Text txtCoal;
@@ -375,7 +378,9 @@ public class UIMiningPopup : BaseUI, IPointerClickHandler, IPointerDownHandler, 
             bool active = count > 0 && tool == selected;
             if (sprToolSelected != null && sprToolPassive != null)
             {
-                img.sprite = active ? sprToolSelected : sprToolPassive;
+                Sprite sprite = count > 0 ? (active ? sprToolSelected : sprToolPassive)
+                    : MiningService.GetAdRemaining(tool) >= 1 ? sprToolAd : sprToolEmpty;
+                img.sprite = sprite != null ? sprite : sprToolPassive;
                 img.color = Color.white;
             }
             else
@@ -409,7 +414,7 @@ public class UIMiningPopup : BaseUI, IPointerClickHandler, IPointerDownHandler, 
         }
 
         int seconds = MiningService.GetSecondsToNextPickaxe();
-        SetText(txtPickaxeTimer, seconds > 0 ? "Next in: " + FormatTime(seconds) : string.Empty);
+        SetText(txtPickaxeTimer, seconds > 0 ? Loc.L("Popup.Mining.NextIn", FormatTime(seconds)) : string.Empty);
     }
 
     private static string FormatTime(int seconds)
