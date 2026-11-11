@@ -1,0 +1,355 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Đợt 1 – Trang bị & Loot. Dùng kit chung tools/concept/kit/kit.css, sprite thật trong Art/, 1 px CSS = 2 đơn vị canvas.
+     Chụp: tools/concept/render_concept.sh tools/concept/batch1/concept.html tools/concept/batch1/concept.png 1700 <cao> -->
+<base href="../../../2026DungeonRushUnity/Assets/_Assets/Art/">
+<link rel="stylesheet" href="../../../../tools/concept/kit/kit.css">
+<style>
+body{display:flex;flex-wrap:wrap;gap:22px;width:1700px;align-items:flex-start}
+.col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.cap{color:#cfcde0;font-size:17px;font-family:sans-serif;max-width:520px;text-align:center}
+.cap b{color:#fff}
+.scr{width:530px;background:#3e3d4d;border-radius:18px;padding:30px 0;display:flex;justify-content:center;position:relative}
+.w680{width:340px}.w817{width:408px}.w968{width:484px}
+/* thẻ món */
+.icard{width:100%;display:flex;gap:14px;align-items:center}
+.big{width:96px;height:96px;flex:none}
+.big img{width:68px;height:68px}
+.big .lv{font-size:17px;left:6px;bottom:2px}
+.inf{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rar{font-size:17px}
+.nm{font-size:24px;line-height:1.1}
+.ms{display:flex;align-items:center;gap:6px;font-size:22px;margin-top:4px}
+.ms .k{color:#7a5c3c}
+.ms img{width:18px}
+.subs{width:100%;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;padding:6px 10px;display:flex;flex-direction:column;gap:4px}
+.subs div{display:flex;justify-content:space-between;font-size:17px}
+.subs .k{color:#7a5c3c}
+.newlbl{position:absolute;left:-12px;top:-14px;transform:rotate(-10deg);height:30px;border-width:0 20px 0 8px}
+.newlbl .o3{font-size:14px}
+/* ô substat CAO CỐ ĐỊNH theo số dòng tối đa của popup: dòng 21 + cách 4 */
+.subs.r3{height:95px}.subs.r5{height:145px}
+.subs .none{justify-content:center;color:#a68b67;font-size:16px;margin:auto 0}
+.cmp .subs.r3{height:71px;padding:0 2px}
+/* vùng cuộn Auto Loot */
+.scroll{width:100%;height:470px;overflow:hidden;position:relative;display:flex;flex-direction:column;gap:8px;padding-right:12px}
+.scroll.e2::after{display:none}
+.scroll::after{content:"";position:absolute;left:0;right:12px;bottom:0;height:40px;background:linear-gradient(transparent,#f4e6c9)}
+.sbar{position:absolute;right:0;top:0;width:6px;height:100%;border-radius:3px;background:#dfc9a0}
+.sbar i{position:absolute;left:0;right:0;top:0;height:62%;border-radius:3px;background:#a68b67}
+/* thẻ so sánh */
+.cmp{width:100%;position:relative;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;padding:34px 12px 10px;display:flex;flex-direction:column;gap:8px}
+.cmp .subs{border:none;padding:0 2px}
+.cmp .eq{position:absolute;left:-10px;top:-16px;width:96px}
+.cmp .eq span{position:absolute;left:10px;top:4px;font-size:14px}
+.vs{color:#a68b67;font-size:15px;font-family:sans-serif;margin:-4px 0}
+/* hộp xác nhận chồng lên */
+.dim{position:absolute;inset:0;background:rgba(20,18,30,.65);border-radius:18px;display:flex;align-items:center;justify-content:center}
+/* auto loot */
+.sect{width:100%;display:flex;align-items:center;justify-content:space-between;color:#7a5c3c;font-size:18px}
+.rows{width:100%;display:flex;flex-direction:column;gap:5px}
+.rr{display:flex;align-items:center;gap:8px}
+.cb{width:30px;height:30px;flex:none;border-style:solid;border-width:8px;border-image:url(1_UIKit/ClanSearch/input_tan.png) 20 fill;position:relative}
+.cb img{position:absolute;left:-8px;top:-12px;width:32px}
+.bar2{flex:1;height:30px;border-style:solid;border-width:7px;border-image-slice:14 fill;display:flex;align-items:center;justify-content:space-between;padding:0 4px;margin:0}
+.bar2 .o3{font-size:15px}
+.chips{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.chip{display:flex;align-items:center;gap:6px;color:#7a5c3c;font-size:15px}
+.chip .cb{width:26px;height:26px}
+.chip .cb img{width:28px;left:-7px;top:-10px}
+.ham{display:flex;align-items:center;gap:8px}
+.hsel{height:52px;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;border-style:solid;border-width:15px;border-image:url(1_UIKit/Common/btn_violet.png) 30 fill}
+.hsel img{height:28px;margin:-12px 0}
+.hsel .o3{font-size:19px;margin:-12px 0}
+.hgrid{display:grid;grid-template-columns:repeat(4,64px);gap:8px}
+.hc{height:64px;border-style:solid;border-width:9px 9px 13px;display:flex;align-items:center;justify-content:center;position:relative}
+.hc .o3{font-size:22px}
+.hc.on{border-image:url(1_UIKit/BattlePass/btn_orange.png) 30 fill;border-width:13px}
+.hc.of{border-image:url(1_UIKit/Lobby/btn_blue.png) 18 18 30 18 fill}
+.hc.lk{border-image:url(1_UIKit/Lobby/btn_gray.png) 18 18 30 18 fill}
+.hc.lk img{width:22px;position:absolute;right:-6px;top:-8px}
+.lockrow{display:flex;align-items:center;gap:6px;color:#a68b67;font-size:15px}
+.lockrow img{width:18px}
+/* bảng rarity */
+.thd{width:100%;display:grid;grid-template-columns:1fr 70px 70px;color:#7a5c3c;font-size:16px;padding:0 12px}
+.thd span:not(:first-child){text-align:right}
+.trow{height:30px;border-style:solid;border-width:7px;border-image-slice:14 fill;display:grid;grid-template-columns:1fr 70px 70px;align-items:center;padding:0 5px;margin:0 0 5px}
+.trow span{font-size:15px}
+.trow span:not(:first-child){text-align:right}
+.up{color:#9dff7a}
+.rew{display:flex;align-items:center;gap:10px}
+/* offline */
+.away{color:#7a5c3c;font-size:20px;text-align:center;line-height:1.3}
+.away .o3{color:#ffd35a;font-size:21px}
+.pair{display:flex;gap:14px}
+.rbox{width:178px;height:92px;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.rbox .t{display:flex;align-items:center;gap:8px}
+.rbox img{width:44px;height:44px;object-fit:contain}
+.rbox .o{font-size:28px}
+.rbox .r{color:#7a5c3c;font-size:15px}
+</style></head><body>
+
+<!-- A. Item info: nặng nhất = Wing (2 chỉ số chính + 5 substat) -->
+<div class="col"><div class="cap"><b>UIItemInfoPopup — nhiều dòng nhất</b>: Wing/Cape mở qua hồ sơ = 2 chỉ số chính + tối đa <b>5</b> substat. Ô substat cao cố định 5 dòng.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Item Info</span><div class="x"></div></div>
+ <div class="bd">
+  <div class="icard">
+   <div class="slot big" style="background-image:url(1_UIKit/Rarity/tier_10_background.png)"><img src="3_Equipment/08_Wing_Glass/Wing_10.png"><span class="lv o3">Lv.40</span></div>
+   <div class="inf"><span class="rar o3" style="color:#ffb236">Divine</span><span class="nm o" style="color:#ffb236">Phoenix Wings</span><div class="ms"><span class="k">Health</span><span class="o3">3.4B</span></div><div class="ms" style="margin-top:0"><span class="k">Damage</span><span class="o3">812.5M</span></div></div>
+  </div>
+  <div class="subs r5">
+   <div><span class="k">+Critical Damage</span><span class="o3">73%</span></div>
+   <div><span class="k">+Double Hit Chance</span><span class="o3">12.5%</span></div>
+   <div><span class="k">+Companion Cooldown</span><span class="o3">8%</span></div>
+   <div><span class="k">+Lifesteal</span><span class="o3">6.25%</span></div>
+   <div><span class="k">+Health Regen</span><span class="o3">5.72%</span></div>
+  </div>
+  <span class="mute" style="font-size:15px">Tap anywhere to close</span>
+ </div>
+</div></div></div>
+
+<!-- A2. Item info: ít dòng nhất -->
+<div class="col"><div class="cap"><b>UIItemInfoPopup — ít dòng nhất</b>: đồ Common/Uncommon không có substat → ô vẫn giữ cao 5 dòng, hiện chữ mờ "No bonus stats" (popup không nhảy kích thước).</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Item Info</span><div class="x"></div></div>
+ <div class="bd">
+  <div class="icard">
+   <div class="slot big" style="background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="3_Equipment/02_Helmet/Helmet_1_1.png"><span class="lv o3">Lv.1</span></div>
+   <div class="inf"><span class="rar o3" style="color:#cacaca">Common</span><span class="nm o" style="color:#cacaca">Wooden Helm</span><div class="ms"><span class="k">Health</span><span class="o3">50</span></div></div>
+  </div>
+  <div class="subs r5"><div class="none">No bonus stats</div></div>
+  <span class="mute" style="font-size:15px">Tap anywhere to close</span>
+ </div>
+</div></div></div>
+
+<!-- B. New item -->
+<div class="col"><div class="cap"><b>UINewItemPopup</b> — món loại mới (chỉ gear loot): tối đa 1 chỉ số chính + <b>3</b> substat (Immortal/Divine). Ô substat cao cố định 3 dòng.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">New Item!</span></div>
+ <div class="bd">
+  <div class="icard" style="position:relative">
+   <div class="slot big" style="background-image:url(1_UIKit/Rarity/tier_09_background.png);position:relative"><img src="3_Equipment/02_Helmet/Helmet_9_2.png"><span class="lv o3">Lv.1</span><div class="lbl newlbl"><span class="o3">NEW</span></div></div>
+   <div class="inf"><span class="rar o3" style="color:#e66161">Immortal</span><span class="nm o" style="color:#e66161">Blood Crown</span><div class="ms"><span class="k">Health</span><span class="o3">24.8K</span></div></div>
+  </div>
+  <div class="subs r3">
+   <div><span class="k">+Critical Chance</span><span class="o3">4.2%</span></div>
+   <div><span class="k">+Attack Speed</span><span class="o3">6%</span></div>
+   <div><span class="k">+Ranged Damage</span><span class="o3">11%</span></div>
+  </div>
+  <div class="b g" style="width:170px;margin-top:4px"><span class="o">Equip</span></div>
+ </div>
+</div></div></div>
+
+<!-- C. New forge (so sánh) -->
+<div class="col"><div class="cap"><b>UINewForgePopup — nhiều dòng nhất</b> (lớn 968): 2 thẻ cao bằng nhau, mỗi thẻ ô substat cố định <b>3</b> dòng → nút Sell/Equip luôn đứng yên. Mũi tên so chỉ số chính.</div>
+<div class="scr"><div class="pp w968">
+ <div class="hd"><span class="o">New Item!</span></div>
+ <div class="bd" style="gap:12px">
+  <div class="cmp">
+   <div class="eq"><img src="1_UIKit/Gameplay/tag_equipped.png" style="width:96px"><span class="o3">Equipped</span></div>
+   <div class="icard">
+    <div class="slot big" style="background-image:url(1_UIKit/Rarity/tier_09_background.png)"><img src="3_Equipment/02_Helmet/Helmet_9_2.png"><span class="lv o3">Lv.95</span></div>
+    <div class="inf"><span class="rar o3" style="color:#e66161">Immortal</span><span class="nm o" style="color:#e66161">Blood Crown</span><div class="ms"><span class="k">Health</span><span class="o3">24.8K</span></div></div>
+   </div>
+   <div class="subs r3"><div><span class="k">+Block Chance</span><span class="o3">3%</span></div><div><span class="k">+Lifesteal</span><span class="o3">2.5%</span></div><div><span class="k">+Melee Damage</span><span class="o3">9%</span></div></div>
+  </div>
+  <div class="cmp" style="margin-top:6px">
+   <div class="lbl newlbl" style="left:-10px;top:-14px"><span class="o3">NEW</span></div>
+   <div class="icard">
+    <div class="slot big" style="background-image:url(1_UIKit/Rarity/tier_10_background.png)"><img src="3_Equipment/02_Helmet/Helmet_10_2.png"><span class="lv o3">Lv.1</span></div>
+    <div class="inf"><span class="rar o3" style="color:#ffb236">Divine</span><span class="nm o" style="color:#ffb236">Sun Crown</span><div class="ms"><span class="k">Health</span><span class="o3" style="color:#62d34a">31.2K</span><img src="1_UIKit/Common/stat_arrow_up.png"></div></div>
+   </div>
+   <div class="subs r3"><div><span class="k">+Critical Damage</span><span class="o3">8%</span></div><div><span class="k">+Double Hit Chance</span><span class="o3">5%</span></div><div><span class="k">+Companion Damage</span><span class="o3">12%</span></div></div>
+  </div>
+  <div style="display:flex;gap:30px;margin-top:4px"><div class="b rd" style="width:170px"><span class="o">Sell</span></div><div class="b g" style="width:170px"><span class="o">Equip</span></div></div>
+ </div>
+</div></div></div>
+
+<!-- C2. so sánh ít dòng -->
+<div class="col"><div class="cap"><b>UINewForgePopup — ít dòng nhất</b>: 2 món Common, không substat → thẻ giữ nguyên chiều cao, chữ mờ "No bonus stats"; món yếu hơn = số đỏ + mũi tên xuống.</div>
+<div class="scr"><div class="pp w968">
+ <div class="hd"><span class="o">New Item!</span></div>
+ <div class="bd" style="gap:12px">
+  <div class="cmp">
+   <div class="eq"><img src="1_UIKit/Gameplay/tag_equipped.png" style="width:96px"><span class="o3">Equipped</span></div>
+   <div class="icard">
+    <div class="slot big" style="background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="3_Equipment/02_Helmet/Helmet_1_2.png"><span class="lv o3">Lv.4</span></div>
+    <div class="inf"><span class="rar o3" style="color:#cacaca">Common</span><span class="nm o" style="color:#cacaca">Wooden Helm</span><div class="ms"><span class="k">Health</span><span class="o3">72</span></div></div>
+   </div>
+   <div class="subs r3"><div class="none">No bonus stats</div></div>
+  </div>
+  <div class="cmp" style="margin-top:6px">
+   <div class="lbl newlbl" style="left:-10px;top:-14px"><span class="o3">NEW</span></div>
+   <div class="icard">
+    <div class="slot big" style="background-image:url(1_UIKit/Rarity/tier_01_background.png)"><img src="3_Equipment/02_Helmet/Helmet_1_1.png"><span class="lv o3">Lv.1</span></div>
+    <div class="inf"><span class="rar o3" style="color:#cacaca">Common</span><span class="nm o" style="color:#cacaca">Wooden Helm</span><div class="ms"><span class="k">Health</span><span class="o3" style="color:#ff5a5a">50</span><img src="1_UIKit/Common/stat_arrow_down.png"></div></div>
+   </div>
+   <div class="subs r3"><div class="none">No bonus stats</div></div>
+  </div>
+  <div style="display:flex;gap:30px;margin-top:4px"><div class="b rd" style="width:170px"><span class="o">Sell</span></div><div class="b g" style="width:170px"><span class="o">Equip</span></div></div>
+ </div>
+</div></div></div>
+
+<!-- D. Xác nhận bán -->
+<div class="col"><div class="cap"><b>UINewForgePopup — hỏi bán món mạnh hơn</b>: popup nhỏ 680 chồng lên, nền tối. Tím = Huỷ, đỏ = Bán.</div>
+<div class="scr" style="height:560px;padding:0"><div class="dim"><div class="pp w680">
+ <div class="hd"><span class="o">Sell Item?</span></div>
+ <div class="bd" style="gap:18px">
+  <span class="brown" style="font-size:20px;text-align:center">The item you are selling is stronger than your equipped item. Sell anyway?</span>
+  <div style="display:flex;gap:20px"><div class="b vi" style="width:140px"><span class="o">No</span></div><div class="b rd" style="width:140px"><span class="o">Sell</span></div></div>
+ </div>
+</div></div></div></div>
+
+<!-- E. Auto loot -->
+<div class="col"><div class="cap"><b>UIAutoForgePopup — nhiều dòng nhất</b> (lớn 968): tối đa <b>10</b> dòng rarity + bật lọc = <b>13</b> ô substat. Phần giữa là vùng cuộn (prefab đã có ScrollRect), "Boxes per loot" + Start ghim đáy.</div>
+<div class="scr"><div class="pp w968">
+ <div class="hd"><span class="o">Auto Loot</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px">
+  <div class="scroll"><div class="sbar"><i></i></div>
+  <div class="sect"><span>Keep rarity</span><span class="mute" style="font-size:15px">Chance</span></div>
+  <div class="rows">
+   <div class="rr"><div class="cb"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_common.png)"><span class="o3">Common</span><span class="o3">12.40%</span></div></div>
+   <div class="rr"><div class="cb"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_uncommon.png)"><span class="o3">Uncommon</span><span class="o3">18.00%</span></div></div>
+   <div class="rr"><div class="cb"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_rare.png)"><span class="o3">Rare</span><span class="o3">22.50%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_epic.png)"><span class="o3">Epic</span><span class="o3">17.40%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_legendary.png)"><span class="o3">Legendary</span><span class="o3">11.00%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_mythic.png)"><span class="o3">Mythic</span><span class="o3">8.20%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_artifact.png)"><span class="o3">Artifact</span><span class="o3">5.30%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_ancient.png)"><span class="o3">Ancient</span><span class="o3">3.10%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_immortal.png)"><span class="o3">Immortal</span><span class="o3">1.60%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_divine.png)"><span class="o3">Divine</span><span class="o3">0.50%</span></div></div>
+  </div>
+  <div class="sect" style="margin-top:4px"><span>Substat filter</span><div class="tog" style="transform:scale(.8)"><div class="fl"></div><img src="1_UIKit/Setting/knob_on.png" style="right:0"></div></div>
+  <div class="chips">
+   <div class="chip"><div class="cb"></div>Attack Speed</div>
+   <div class="chip"><div class="cb"></div>Block Chance</div>
+   <div class="chip"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div>Critical Chance</div>
+   <div class="chip"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div>Critical Damage</div>
+   <div class="chip"><div class="cb"></div>Damage</div>
+   <div class="chip"><div class="cb"></div>Double Hit Chance</div>
+   <div class="chip"><div class="cb"></div>Health</div>
+   <div class="chip"><div class="cb"></div>Health Regen</div>
+   <div class="chip"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div>Lifesteal</div>
+   <div class="chip"><div class="cb"></div>Melee Damage</div>
+   <div class="chip"><div class="cb"></div>Ranged Damage</div>
+   <div class="chip"><div class="cb"></div>Companion Cooldown</div>
+   <div class="chip"><div class="cb"></div>Companion Damage</div>
+  </div>
+  </div>
+  <div class="sect" style="margin-top:2px"><span>Boxes per loot</span><div class="hsel"><img src="2_Icons/Currency/box_icon.png"><span class="o3">x2</span></div></div>
+  <div class="b or" style="width:200px;margin-top:4px"><span class="o">Start</span></div>
+ </div>
+</div></div></div>
+
+<!-- E2. Auto loot cuộn đáy -->
+<div class="col"><div class="cap"><b>UIAutoForgePopup — đã cuộn xuống đáy</b>: đủ 13 ô substat, 2 cột; tên dài nhất (ES "Probabilidad de Doble Golpe") tự co chữ.</div>
+<div class="scr"><div class="pp w968">
+ <div class="hd"><span class="o">Auto Loot</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px">
+  <div class="scroll e2"><div class="sbar"><i style="top:38%"></i></div><div style="display:flex;flex-direction:column;gap:8px;margin-top:-196px">
+  <div class="sect"><span>Keep rarity</span><span class="mute" style="font-size:15px">Chance</span></div>
+  <div class="rows">
+   <div class="rr"><div class="cb"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_common.png)"><span class="o3">Common</span><span class="o3">12.40%</span></div></div>
+   <div class="rr"><div class="cb"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_uncommon.png)"><span class="o3">Uncommon</span><span class="o3">18.00%</span></div></div>
+   <div class="rr"><div class="cb"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_rare.png)"><span class="o3">Rare</span><span class="o3">22.50%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_epic.png)"><span class="o3">Epic</span><span class="o3">17.40%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_legendary.png)"><span class="o3">Legendary</span><span class="o3">11.00%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_mythic.png)"><span class="o3">Mythic</span><span class="o3">8.20%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_artifact.png)"><span class="o3">Artifact</span><span class="o3">5.30%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_ancient.png)"><span class="o3">Ancient</span><span class="o3">3.10%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_immortal.png)"><span class="o3">Immortal</span><span class="o3">1.60%</span></div></div>
+   <div class="rr"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div><div class="bar2" style="border-image-source:url(1_UIKit/RarityTable/bar_divine.png)"><span class="o3">Divine</span><span class="o3">0.50%</span></div></div>
+  </div>
+  <div class="sect" style="margin-top:4px"><span>Substat filter</span><div class="tog" style="transform:scale(.8)"><div class="fl"></div><img src="1_UIKit/Setting/knob_on.png" style="right:0"></div></div>
+  <div class="chips">
+   <div class="chip"><div class="cb"></div>Attack Speed</div>
+   <div class="chip"><div class="cb"></div>Block Chance</div>
+   <div class="chip"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div>Critical Chance</div>
+   <div class="chip"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div>Critical Damage</div>
+   <div class="chip"><div class="cb"></div>Damage</div>
+   <div class="chip"><div class="cb"></div>Double Hit Chance</div>
+   <div class="chip"><div class="cb"></div>Health</div>
+   <div class="chip"><div class="cb"></div>Health Regen</div>
+   <div class="chip"><div class="cb"><img src="1_UIKit/ClanSearch/check_green.png"></div>Lifesteal</div>
+   <div class="chip"><div class="cb"></div>Melee Damage</div>
+   <div class="chip"><div class="cb"></div>Ranged Damage</div>
+   <div class="chip"><div class="cb"></div>Companion Cooldown</div>
+   <div class="chip"><div class="cb"></div>Companion Damage</div>
+  </div>
+  </div></div>
+  <div class="sect" style="margin-top:2px"><span>Boxes per loot</span><div class="hsel"><img src="2_Icons/Currency/box_icon.png"><span class="o3">x2</span></div></div>
+  <div class="b or" style="width:200px;margin-top:4px"><span class="o">Start</span></div>
+ </div>
+</div></div></div>
+
+<!-- F. Auto loot: khoá lọc + bảng chọn số hộp -->
+<div class="col"><div class="cap"><b>UIAutoForgePopup — trạng thái khác</b>: lọc substat chưa mở (ổ khoá + "Unlocks at Lv 7"); bảng chọn số hộp 1..8, ô vượt Mastery bị khoá xám.</div>
+<div class="scr" style="flex-direction:column;align-items:center;gap:20px">
+ <div class="pp w968"><div class="bd" style="margin-top:0;gap:8px">
+  <div class="sect"><span>Substat filter</span><div class="lockrow"><img src="1_UIKit/BattlePass/icon_lock.png">Unlocks at Lv 7</div></div>
+ </div></div>
+ <div class="pp w817">
+  <div class="hd"><span class="o">Boxes per loot</span><div class="x"></div></div>
+  <div class="bd" style="gap:14px">
+   <div class="hgrid">
+    <div class="hc of"><span class="o3">1</span></div><div class="hc on"><span class="o3">2</span></div><div class="hc of"><span class="o3">3</span></div><div class="hc lk"><span class="o3">4</span><img src="1_UIKit/BattlePass/icon_lock.png"></div>
+    <div class="hc lk"><span class="o3">5</span><img src="1_UIKit/BattlePass/icon_lock.png"></div><div class="hc lk"><span class="o3">6</span><img src="1_UIKit/BattlePass/icon_lock.png"></div><div class="hc lk"><span class="o3">7</span><img src="1_UIKit/BattlePass/icon_lock.png"></div><div class="hc lk"><span class="o3">8</span><img src="1_UIKit/BattlePass/icon_lock.png"></div>
+   </div>
+   <span class="mute" style="font-size:15px">Upgrade Auto Loot in Mastery to unlock more</span>
+  </div>
+ </div>
+</div></div>
+
+<!-- G. Rarity table -->
+<div class="col"><div class="cap"><b>UILevelPopup</b> (lớn 968): tiêu đề "Level N", bảng % Lv hiện tại → Lv sau (tăng = xanh), thưởng gem, thanh exp.</div>
+<div class="scr"><div class="pp w968">
+ <div class="hd"><span class="o">Level 5</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px">
+  <span class="brown" style="font-size:18px">Rarity Table</span>
+  <div class="thd"><span>Tier</span><span>Lv 5</span><span>Lv 6</span></div>
+  <div style="width:100%">
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_common.png)"><span class="o3">Common</span><span class="o3">42.10%</span><span class="o3">40.00%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_uncommon.png)"><span class="o3">Uncommon</span><span class="o3">30.00%</span><span class="o3">29.50%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_rare.png)"><span class="o3">Rare</span><span class="o3">18.50%</span><span class="o3 up">19.00%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_epic.png)"><span class="o3">Epic</span><span class="o3">7.40%</span><span class="o3 up">8.40%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_legendary.png)"><span class="o3">Legendary</span><span class="o3">2.00%</span><span class="o3 up">2.60%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_mythic.png)"><span class="o3">Mythic</span><span class="o3">0%</span><span class="o3 up">0.50%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_artifact.png)"><span class="o3">Artifact</span><span class="o3">0%</span><span class="o3">0%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_ancient.png)"><span class="o3">Ancient</span><span class="o3">0%</span><span class="o3">0%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_immortal.png)"><span class="o3">Immortal</span><span class="o3">0%</span><span class="o3">0%</span></div>
+   <div class="trow" style="border-image-source:url(1_UIKit/RarityTable/bar_divine.png)"><span class="o3">Divine</span><span class="o3">0%</span><span class="o3">0%</span></div>
+  </div>
+  <div class="rew"><span class="brown" style="font-size:18px">Level up reward</span><div class="stat" style="width:130px;height:50px;justify-content:center"><img src="2_Icons/Currency/gem.png" style="width:30px;height:30px"><span class="o" style="font-size:24px">200</span></div></div>
+  <div class="bar" style="width:100%;margin-top:4px"><div class="fill" style="width:53%"></div><span class="o3">53%</span></div>
+ </div>
+</div></div></div>
+
+<!-- H. Rarity table: đầy exp / max -->
+<div class="col"><div class="cap"><b>UILevelPopup — đầy exp</b>: ẩn thanh exp, hiện nút xanh "Complete!" (tay chỉ FTUE). <b>Max level</b>: nút xám "MAXED".</div>
+<div class="scr" style="flex-direction:column;align-items:center;gap:20px">
+ <div class="pp w968"><div class="bd" style="margin-top:0;gap:10px">
+  <div class="rew"><span class="brown" style="font-size:18px">Level up reward</span><div class="stat" style="width:130px;height:50px;justify-content:center"><img src="2_Icons/Currency/gem.png" style="width:30px;height:30px"><span class="o" style="font-size:24px">200</span></div></div>
+  <div class="b g" style="width:220px"><span class="o">Complete!</span></div>
+ </div></div>
+ <div class="pp w968"><div class="bd" style="margin-top:0;gap:10px">
+  <div class="b gr" style="width:220px"><span class="o">MAXED</span></div>
+ </div></div>
+</div></div>
+
+<!-- I. Offline earning -->
+<div class="col"><div class="cap"><b>UIOfflineEarningPopup</b> (vừa 817): 2 ô thưởng lớn (exp + hộp loot), tốc độ /h dưới mỗi ô, trần thời gian ở panel tối. Đề xuất thêm nút tím "Collect" (= X, nhận ×1) cạnh nút hồng "x2" xem quảng cáo.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Combat Summary</span><div class="x"></div></div>
+ <div class="bd" style="gap:14px">
+  <div class="away">While you were away for <span class="o3">2h 38m</span>,<br>your hero defeated <span class="o3">1.2K</span> enemies</div>
+  <div class="pair">
+   <div class="rbox"><div class="t"><img src="2_Icons/Currency/exp-shard.png"><span class="o">110.2K</span></div><span class="r">3600 / h</span></div>
+   <div class="rbox"><div class="t"><img src="2_Icons/Currency/box_icon.png"><span class="o">120</span></div><span class="r">60 / h</span></div>
+  </div>
+  <div class="dk"><img src="2_Icons/Mastery/mastery_MaxOfflineTime.png" style="height:26px;margin:-22px 0"><span>Max reward <b>4h</b></span></div>
+  <div style="display:flex;gap:24px;margin-top:4px"><div class="b vi" style="width:160px"><span class="o">Collect</span></div><div class="b pk" style="width:160px"><img src="1_UIKit/Companion/icon_ad.png"><span class="o">x2</span></div></div>
+ </div>
+</div></div></div>
+
+</body></html>

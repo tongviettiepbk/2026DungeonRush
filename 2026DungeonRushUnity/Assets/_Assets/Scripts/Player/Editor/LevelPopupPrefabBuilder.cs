@@ -61,6 +61,7 @@ public static class LevelPopupPrefabBuilder
         PrefabUtility.SaveAsPrefabAsset(root, OUT, out bool ok);
         Object.DestroyImmediate(root);
         AssetDatabase.SaveAssets();
+        Batch1Reskin.ApplyLevel();   // reskin concept batch1
         string result = "UILevelPopup" + (ok ? " saved" : " FAILED");
         Debug.Log("[LevelPopupPrefabBuilder] " + result);
         return result;

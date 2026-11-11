@@ -1,5 +1,4 @@
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +8,7 @@ using UnityEngine.UI;
 public class UINewItemPopup : BaseUI
 {
     public ItemElementView itemElement;
-    public TMP_Text txtName;
-    public TMP_Text txtRarity;
-    public TMP_Text txtBaseStat;
-    public TMP_Text txtSubStats;
+    public ItemStatsView stats;
     public Button btEquip;
     public Button btBackground;
 
@@ -35,13 +31,7 @@ public class UINewItemPopup : BaseUI
         isHandled = false;
 
         itemElement.SetItem(item);
-        txtName.text = ItemTextUtil.Name(item);
-        txtRarity.text = ItemTextUtil.RarityLine(item.rarity);
-        txtBaseStat.text = ItemTextUtil.MainStat(item);
-
-        string subStats = ItemTextUtil.SubStats(item.subStats);
-        txtSubStats.gameObject.SetActive(subStats.Length > 0);
-        txtSubStats.text = subStats;
+        stats.Set(item);
     }
 
     private void OnClickBackground()

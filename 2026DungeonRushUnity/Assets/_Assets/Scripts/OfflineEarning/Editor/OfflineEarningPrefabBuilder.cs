@@ -40,6 +40,7 @@ public static class OfflineEarningPrefabBuilder
         PrefabUtility.SaveAsPrefabAsset(root, OUT, out bool ok);
         Object.DestroyImmediate(root);
         AssetDatabase.SaveAssets();
+        Batch1Reskin.ApplyOfflineEarning();   // reskin concept batch1
         string result = "UIOfflineEarningPopup" + (ok ? " saved" : " FAILED");
         Debug.Log("[OfflineEarningPrefabBuilder] " + result);
         return result;

@@ -9,15 +9,18 @@ using UnityEngine.UI;
 // Chuỗi hiển thị lấy từ localization gốc: Popup.OfflineEarnings.*.
 public class UIOfflineEarningPopup : BaseUI
 {
-    private const string HIGHLIGHT = "<color=#E5F36B>";
+    private const string HIGHLIGHT = "<color=#E07B1F>";   // số nhấn trên chữ nâu nền kem (concept batch1)
+    private const string HIGHLIGHT_DARK = "<color=#FFD35A>"; // số nhấn trên panel tối
     private const string END_COLOR = "</color>";
 
     public TMP_Text txtSummary;
-    public TMP_Text txtExperience;
+    public TMP_Text txtExperience;        // số exp nhận trong ô thưởng trái
+    public TMP_Text txtLootBox;           // số hộp loot nhận trong ô thưởng phải
     public TMP_Text txtExpPerHour;
     public TMP_Text txtLootBoxPerHour;
     public TMP_Text txtMaxReward;
     public Button btClose;
+    public Button btCollect;              // nút tím nhận ×1 (= nút X)
     public Button btDouble;
 
     private OfflineEarningResult result;
@@ -28,6 +31,8 @@ public class UIOfflineEarningPopup : BaseUI
     {
         base.Awake();
         btClose.onClick.AddListener(OnClickCollect);
+        if (btCollect != null)
+            btCollect.onClick.AddListener(OnClickCollect);
         btDouble.onClick.AddListener(OnClickDouble);
     }
 
@@ -40,13 +45,12 @@ public class UIOfflineEarningPopup : BaseUI
 
         string duration = HIGHLIGHT + ShopUIUtil.FormatDuration(result.duration) + END_COLOR;
         string enemies = HIGHLIGHT + ShopUIUtil.FormatAmount(result.enemies) + END_COLOR;
-        string lootBox = "<sprite=0>" + HIGHLIGHT + ShopUIUtil.FormatAmount(result.lootBox) + END_COLOR;
-        txtSummary.text = "While you were away for " + duration + "\nyour hero continued fighting\n\nDefeated " + enemies
-            + " enemies\nFound " + lootBox + " loot boxes";
-        txtExperience.text = "Earned <sprite=0>" + HIGHLIGHT + ShopUIUtil.FormatAmount(result.exp) + END_COLOR + " experience";
-        txtExpPerHour.text = ShopUIUtil.FormatAmount(result.expPerHour) + "/h";
-        txtLootBoxPerHour.text = ShopUIUtil.FormatAmount(result.lootBoxPerHour) + "/h";
-        txtMaxReward.text = "Max Reward - " + ShopUIUtil.FormatDuration(result.maxSeconds);
+        txtSummary.text = "While you were away for " + duration + ",\nyour hero defeated " + enemies + " enemies";
+        txtExperience.text = ShopUIUtil.FormatAmount(result.exp);
+        txtLootBox.text = ShopUIUtil.FormatAmount(result.lootBox);
+        txtExpPerHour.text = ShopUIUtil.FormatAmount(result.expPerHour) + " / h";
+        txtLootBoxPerHour.text = ShopUIUtil.FormatAmount(result.lootBoxPerHour) + " / h";
+        txtMaxReward.text = "Max reward " + HIGHLIGHT_DARK + ShopUIUtil.FormatDuration(result.maxSeconds) + END_COLOR;
     }
 
     private void OnClickCollect()

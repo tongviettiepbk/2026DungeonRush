@@ -74,18 +74,14 @@ public static class ForgePrefabBuilder
         ui.isPopup = true;
         const string CARD = "ContentTransform/Equipped/";
         ui.itemElement = WireItemElement(Find(popup, CARD + "ItemElementUI"));
-        ui.txtName = Text(popup, CARD + "Stats/NameText");
-        ui.txtRarity = Text(popup, CARD + "RarityText");
-        ui.txtBaseStat = Text(popup, CARD + "Stats/BaseStatText");
-        ui.txtSubStats = Text(popup, CARD + "Stats/SubStatText");
-        ui.txtName.richText = true;
-        ui.txtRarity.richText = true;
         ui.btEquip = Find(popup, "ContentTransform/EquipButton").GetComponent<Button>();
         // Chạm nền = bỏ qua món (CloseOnClickDark gốc).
         ui.btBackground = btBackground;
         HideAll(popup, "TutorialUI");
         HideAll(popup, "NotificationUI");
-        return Save(root, OUT + "UINewItemPopup.prefab");
+        string result = Save(root, OUT + "UINewItemPopup.prefab");
+        Batch1Reskin.ApplyNewItem();   // reskin concept batch1 (dựng ItemStatsView, kit mới)
+        return result;
     }
 
     [MenuItem("Tools/DungeonRush/Build Forge UI/New Forge Popup")]
@@ -99,20 +95,12 @@ public static class ForgePrefabBuilder
 
         const string EQ = "ContentTransform/Equipped/";
         ui.equippedElement = WireItemElement(Find(popup, EQ + "EquippedElementUI"));
-        ui.txtEquippedName = RichText(popup, EQ + "Stats/NameText");
-        ui.txtEquippedRarity = RichText(popup, EQ + "RarityText");
-        ui.txtEquippedBaseStat = Text(popup, EQ + "Stats/BaseStatText");
-        ui.txtEquippedSubStats = Text(popup, EQ + "Stats/SubStatText");
         ui.objEquippedNew = Find(popup, EQ + "NewTextEquipped").gameObject;
 
         const string NEW = "ContentTransform/NewItem/";
         ui.newElement = WireItemElement(Find(popup, NEW + "NewElementUI"));
-        ui.txtNewName = RichText(popup, NEW + "Stats/NameText");
-        ui.txtNewRarity = RichText(popup, NEW + "RarityText_1");
-        ui.txtNewBaseStat = Text(popup, NEW + "Stats/BaseStatText");
-        ui.txtNewSubStats = Text(popup, NEW + "Stats/SubStatText");
         ui.objNewNew = Find(popup, NEW + "NewTextNewItem").gameObject;
-        ui.imgCompareArrow = AddCompareArrow(ui.txtNewBaseStat.transform);
+        ui.imgCompareArrow = AddCompareArrow(Find(popup, NEW + "Stats/BaseStatText"));
         ui.sprStatUp = AssetDatabase.LoadAssetAtPath<Sprite>(STAT_ARROW_UP);
         ui.sprStatDown = AssetDatabase.LoadAssetAtPath<Sprite>(STAT_ARROW_DOWN);
 
@@ -126,7 +114,9 @@ public static class ForgePrefabBuilder
         ui.btConfirmNo = Find(confirm, "NewForgeNoButton").GetComponent<Button>();
         HideAll(popup, "TutorialUI");
         HideAll(popup, "NotificationUI");
-        return Save(root, OUT + "UINewForgePopup.prefab");
+        string result = Save(root, OUT + "UINewForgePopup.prefab");
+        Batch1Reskin.ApplyNewForge();   // reskin concept batch1 (dựng ItemStatsView, kit mới)
+        return result;
     }
 
     // Prefab gốc không có node so sánh → thêm Image con của BaseStatText, neo góc trên-trái (popup tự dời ra sau chữ).
@@ -155,14 +145,11 @@ public static class ForgePrefabBuilder
         ui.btClose = Find(popup, "Content/ItemInfoCloseButton").GetComponent<Button>();
         ui.btBackground = btBackground;
         ui.itemElement = WireItemElement(Find(popup, "Content/ItemElementUI"));
-        ui.txtRarity = Text(popup, "Content/RarityText");
-        ui.txtInfo = Text(popup, "Content/InfoText");
-        ui.txtRarity.richText = true;
-        ui.txtInfo.richText = true;
-        ui.txtInfo.color = Color.white;   // bản rip để đỏ mặc định; màu từng phần do rich text quyết định
         HideAll(popup, "TutorialUI");
         HideAll(popup, "NotificationUI");
-        return Save(root, OUT + "UIItemInfoPopup.prefab");
+        string result = Save(root, OUT + "UIItemInfoPopup.prefab");
+        Batch1Reskin.ApplyItemInfo();   // reskin concept batch1 (dựng ItemStatsView, kit mới)
+        return result;
     }
 
     [MenuItem("Tools/DungeonRush/Build Forge UI/Auto Forge Popup")]
@@ -234,7 +221,9 @@ public static class ForgePrefabBuilder
         ui.startAutoForgeTutorial = TutorialUIBuilderUtil.Setup(Find(popup, BOTTOM + "StartAutoForgeButton/Content/TutorialUI"));
         ui.hammerCountTutorial = TutorialUIBuilderUtil.Setup(Find(popup, BOTTOM + "HammerCountButton/TutorialUI"));
         ui.hammerOptionTutorial = TutorialUIBuilderUtil.Setup(Find(popup, BOTTOM + "HammerOptionPanel/TutorialUI"));
-        return Save(root, OUT + "UIAutoForgePopup.prefab");
+        string result = Save(root, OUT + "UIAutoForgePopup.prefab");
+        Batch1Reskin.ApplyAutoForge();   // reskin concept batch1 (dựng ItemStatsView, kit mới)
+        return result;
     }
 
     [MenuItem("Tools/DungeonRush/Build Forge UI/Wire Lobby ForgeUI")]

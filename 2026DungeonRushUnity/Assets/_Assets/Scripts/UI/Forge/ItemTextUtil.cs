@@ -47,6 +47,40 @@ public static class ItemTextUtil
         return label + " " + (item.mainStat * multiplier).ToLetter();
     }
 
+    // Tách MainStat thành 2 cột cho ItemStatsView: nhãn nâu + giá trị chữ viền.
+    public static string MainStatLabel(LootResult item)
+    {
+        return item.mainStatKind == GearMainStatKind.Health ? Loc.L("Items.SubStat.Health") : Loc.L("Items.SubStat.Damage");
+    }
+
+    public static string MainStatValue(LootResult item, float multiplier = 1f)
+    {
+        return (item.mainStat * multiplier).ToLetter();
+    }
+
+    // Cột tên substat "+Tên" (mỗi dòng 1 món) — cùng số dòng với SubStatValues.
+    public static string SubStatNames(List<GearSubStat> subStats)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; subStats != null && i < subStats.Count; i++)
+        {
+            if (i > 0) sb.Append('\n');
+            sb.Append('+').Append(SubStatName(subStats[i].type));
+        }
+        return sb.ToString();
+    }
+
+    public static string SubStatValues(List<GearSubStat> subStats)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; subStats != null && i < subStats.Count; i++)
+        {
+            if (i > 0) sb.Append('\n');
+            sb.Append(subStats[i].value.ToString("0.##")).Append('%');
+        }
+        return sb.ToString();
+    }
+
     // Mỗi substat 1 dòng "+Tên x%"; không có thì chuỗi rỗng.
     public static string SubStats(List<GearSubStat> subStats)
     {

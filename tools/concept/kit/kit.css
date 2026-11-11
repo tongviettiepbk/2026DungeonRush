@@ -1,0 +1,104 @@
+/* Kit popup dùng chung (Đợt 0 đã chốt 2026-11-11). Concept các đợt link file này. 1 px CSS = 2 đơn vị canvas. */
+
+@font-face{font-family:Asap;src:url(../../../2026DungeonRushUnity/Assets/_Assets/Fonts/Asap/Asap-SemiBold.ttf)}
+*{box-sizing:border-box;margin:0}
+body{background:#15141c;font-family:Asap,sans-serif;width:1700px;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.sec{background:#3e3d4d;border-radius:18px;padding:18px 20px 22px}
+.sec.full{grid-column:span 2}
+.st{color:#fff;font-size:22px;margin-bottom:4px}
+.sd{color:#b9b6cf;font-size:14px;font-family:sans-serif;margin-bottom:16px;line-height:1.45}
+.row{display:flex;gap:18px;align-items:flex-end;flex-wrap:wrap}
+.it{display:flex;flex-direction:column;align-items:center;gap:6px}
+.nt{color:#b9b6cf;font-size:12px;font-family:sans-serif;text-align:center;line-height:1.35}
+.nt b{color:#fff;font-weight:600}
+.o{color:#fff;-webkit-text-stroke:4px #000;paint-order:stroke fill}
+.o3{color:#fff;-webkit-text-stroke:3px #000;paint-order:stroke fill}
+.brown{color:#7a5c3c}
+.mute{color:#a68b67}
+/* khung popup */
+.pp{position:relative}
+.hd{height:69px;border-style:solid;border-width:0 8px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/popup_header.png) 0 16 0 16 fill stretch;display:flex;align-items:center;justify-content:center;position:relative;z-index:2}
+.hd .o{font-size:30px}
+.x{position:absolute;right:17px;top:50%;transform:translateY(-50%);width:52px;height:52px;background:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/btn_close.png) center/contain no-repeat}
+.bd{margin-top:-6px;border-style:solid;border-width:7px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/popup_frame.png) 14 fill;padding:18px 20px 22px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.ph{width:100%;border:2px dashed #c9ad86;border-radius:8px;color:#b0946e;font-size:15px;font-family:sans-serif;display:flex;align-items:center;justify-content:center}
+/* nút */
+.b{height:75px;min-width:140px;padding:0 18px;display:flex;align-items:center;justify-content:center;gap:6px;border-style:solid}
+.b .o{font-size:26px}
+.b img{height:30px}
+.g{border-width:9px 9px 15px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Lobby/btn_green.png) 18 18 30 18 fill}
+.bl{border-width:9px 9px 15px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Lobby/btn_blue.png) 18 18 30 18 fill}
+.gr{border-width:9px 9px 15px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Lobby/btn_gray.png) 18 18 30 18 fill}
+.rd{border-width:9px 9px 15px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Lobby/btn_red.png) 18 18 30 18 fill}
+.or{border-width:15px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/btn_orange.png) 30 fill}
+.vi{border-width:15px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Common/btn_violet.png) 30 fill}
+.pk{border-width:15px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Common/btn_pink.png) 30 fill}
+.sm{height:56px;min-width:100px;padding:0 12px}
+.sm .o{font-size:20px}
+.sm img{height:24px}
+/* ô thưởng */
+.cell{width:92px;height:100px;border-style:solid;border-width:15px;border-image-slice:30 fill;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.cell img.ic{width:46px;height:46px;object-fit:contain;margin-top:-6px}
+.cell .q{font-size:20px;margin-bottom:-10px}
+.cg{border-image-source:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/cell_green.png)}
+.cb{border-image-source:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/cell_blue.png)}
+.cb img.ic,.cb .q{opacity:.5}
+.cy{border-image-source:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/cell_gray.png)}
+.chk{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:54px}
+.alert{position:absolute;right:-14px;top:-14px;width:28px}
+.lock{position:absolute;right:-10px;top:-12px;width:26px}
+/* ô đồ theo rarity */
+.slot{width:74px;height:74px;background-size:100% 100%;position:relative;display:flex;align-items:center;justify-content:center}
+.slot img{width:52px;height:52px;object-fit:contain}
+.slot .lv{position:absolute;left:4px;bottom:0;font-size:14px}
+.slot .cnt{position:absolute;right:4px;bottom:0;font-size:15px}
+.tag{position:absolute;left:-8px;top:-10px;width:44px}
+/* ô chỉ số */
+.stat{width:360px;height:52px;border-style:solid;border-width:6px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/box_tan.png) 12 fill;display:flex;align-items:center;padding:0 10px;gap:8px}
+.stat img{width:30px;height:30px;object-fit:contain}
+.stat .n{flex:1;font-size:18px}
+.stat .v{font-size:21px}
+.stat .up{color:#62d34a}
+.stat .dn{color:#ff5a5a}
+.stat .ar{width:16px;height:16px}
+/* tiến độ */
+/* thanh tiến độ: track 52 (viền đen), fill 44 thụt đều 4 đơn vị (2 css) mỗi phía; % tính trên phần trong */
+.bar{height:26px;padding:2px;border:0;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Lobby/xp_track.png) 6 12 fill / 3px 6px;position:relative;display:flex}
+.fill{height:100%;min-width:12px;border:0;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Lobby/xp_fill.png) 0 12 fill / 0 6px}
+.bar .o3{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-size:16px}
+/* tab */
+.tabs{display:flex;height:44px;border-style:solid;border-width:0 22px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/tab_track.png) 0 44 fill;padding:0;margin:0 -18px}
+.tb{flex:1;display:flex;align-items:center;justify-content:center;font-size:19px;color:#9b98b5}
+.tb.on{border-style:solid;border-width:0 22px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/tab_selected.png) 0 44 fill}
+.tb.on:first-child{margin-left:-22px}
+.tb.on:last-child{margin-right:-22px}
+/* dòng danh sách */
+.li{width:373px;height:61px;border-style:solid;border-width:13px 12px 10px;border-image-slice:26 24 20 24 fill;display:flex;align-items:center;gap:10px;padding:0 4px}
+.lb{border-image-source:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/PvP/row_blue.png)}
+.lg{border-image-source:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/PvP/row_gray.png)}
+.li .rk{width:30px;font-size:20px;text-align:center}
+.li img{width:40px;height:40px;border-radius:8px;background:#e8cfa6;margin:-6px 0}
+.li .nm{flex:1;font-size:17px}
+.li .vl{font-size:17px;display:flex;align-items:center;gap:4px}
+.li .vl img{width:22px;height:22px;background:none;margin:0}
+/* ô nhập, panel tối, ruy băng */
+.inp{width:340px;height:52px;border-style:solid;border-width:10px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/ClanSearch/input_tan.png) 20 fill;display:flex;align-items:center;padding:0 6px;font-size:18px}
+.dk{height:46px;border-style:solid;border-width:22px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/mastery_panel.png) 45 fill;display:flex;align-items:center;gap:6px}
+.dk span{color:#fff;font-size:18px;margin:-22px 0;white-space:nowrap}
+.dk b{color:#ffd35a;font-weight:normal}
+.rib{width:240px;height:56px;background:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Gameplay/ribbon_offer.png) center/100% 100% no-repeat;display:flex;align-items:center;justify-content:center;padding-bottom:6px}
+.rib .o{font-size:22px}
+.lbl{height:40px;border-style:solid;border-width:0 26px 0 10px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Events/ribbon_red.png) 0 52 0 20 fill;display:flex;align-items:center}
+.lbl .o3{font-size:16px}
+.tog{width:90px;height:44px;position:relative}
+.tog .tr{position:absolute;inset:6px 0;border-style:solid;border-width:0 13px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Setting/track_dark.png) 0 26 fill}
+.tog .fl{position:absolute;inset:6px 0;border-style:solid;border-width:0 11px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Setting/fill_green.png) 0 22 fill}
+.tog img{position:absolute;top:0;height:44px}
+.badge{width:62px;height:62px;background:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mining/badge_discount.png) center/contain no-repeat;display:flex;align-items:center;justify-content:center;transform:rotate(-10deg)}
+.badge .o3{font-size:16px}
+/* bảng màu */
+.sw{display:flex;gap:10px;flex-wrap:wrap}
+.sw div{width:112px;border-radius:8px;overflow:hidden;font:12px sans-serif;color:#ddd}
+.sw i{display:block;height:40px;box-shadow:inset 0 0 0 2px #8a87a3}
+.sw span{display:block;padding:4px 6px;background:#2c2b38}
+.screen{background:#26252f;border-radius:14px;padding:22px 0;display:flex;justify-content:center}

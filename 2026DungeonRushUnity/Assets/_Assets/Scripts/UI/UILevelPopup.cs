@@ -33,9 +33,11 @@ public class UILevelPopup : BaseUI
     public TMP_Text GemCountText;
     public TutorialUI LevelUpTutorialUI;
 
-    // Giá trị serialized của prefab gốc / GameResources.
-    public Color DisabledButtonColor = new Color(0.6706f, 0.6706f, 0.6706f, 1f);
-    public Color DefaultButtonColor = new Color(0.2078f, 0.6f, 0.8667f, 1f);
+    // Nút đổi sprite (concept batch1): Complete = xanh lá, MAXED = xám.
+    public Sprite CompleteButtonSprite;
+    public Sprite MaxedButtonSprite;
+    // Ô % level sau cao hơn level hiện tại → chữ xanh.
+    public Color RateUpColor = new Color32(157, 255, 122, 255);   // #9DFF7A
     public float RowScaleDuration = 0.2f;
     public float RowScaleTarget = 1.07f;
     public float RowOutshoot = 0.1f;
@@ -107,7 +109,7 @@ public class UILevelPopup : BaseUI
             CompleteButton.gameObject.SetActive(true);
             CompleteButton.interactable = false;
             CompleteButtonText.text = Loc.L("Popup.Level.Maxed");
-            CompleteButtonImage.color = DisabledButtonColor;
+            CompleteButtonImage.sprite = MaxedButtonSprite;
             ExperienceSlider.gameObject.SetActive(false);
             return;
         }
@@ -122,7 +124,7 @@ public class UILevelPopup : BaseUI
         if (isReady)
         {
             CompleteButtonText.text = Loc.L("Popup.Level.Complete");
-            CompleteButtonImage.color = DefaultButtonColor;
+            CompleteButtonImage.sprite = CompleteButtonSprite;
             CompleteButton.interactable = !isAnimating;
             return;
         }
@@ -137,8 +139,20 @@ public class UILevelPopup : BaseUI
     {
         CurrentLevelText.text = "Lv " + currentLevel;
         NextLevelText.text = "Lv " + nextLevel;
-        SetRates(CurrentLevelRarityProbabilityTexts, GetProbabilities(currentLevel));
-        SetRates(NextLevelRarityProbabilityTexts, GetProbabilities(nextLevel));
+        List<float> currentRates = GetProbabilities(currentLevel);
+        List<float> nextRates = GetProbabilities(nextLevel);
+        SetRates(CurrentLevelRarityProbabilityTexts, currentRates);
+        SetRates(NextLevelRarityProbabilityTexts, nextRates);
+        for (int i = 0; i < NextLevelRarityProbabilityTexts.Count; i++)
+            SetNextRateColor(i, currentRates, nextRates);
+    }
+
+    // Tỉ lệ level sau tăng so với level hiện tại → xanh, còn lại trắng.
+    private void SetNextRateColor(int index, List<float> currentRates, List<float> nextRates)
+    {
+        TMP_Text text = index < NextLevelRarityProbabilityTexts.Count ? NextLevelRarityProbabilityTexts[index] : null;
+        if (text == null || index >= currentRates.Count || index >= nextRates.Count) return;
+        text.color = nextRates[index] > currentRates[index] ? RateUpColor : Color.white;
     }
 
     private static void SetRates(List<TMP_Text> texts, List<float> rates)
@@ -232,6 +246,7 @@ public class UILevelPopup : BaseUI
                     SetRate(CurrentLevelRarityProbabilityTexts[index], currentRates[index]);
                 if (index < NextLevelRarityProbabilityTexts.Count && index < nextRates.Count)
                     SetRate(NextLevelRarityProbabilityTexts[index], nextRates[index]);
+                SetNextRateColor(index, currentRates, nextRates);
             });
         }
 

@@ -49,3 +49,10 @@ User duyệt cách làm này ngày 2026-11-11, dặn CHỈ lưu trong bộ nhớ
 **Why:** user sẽ reskin lại cả bộ UI theo style mới; concept trước → duyệt → áp để khỏi làm lại prefab nhiều lần.
 
 **How to apply:** màn mới → làm theo các bước trên, chờ user duyệt concept rồi mới viết tool reskin. Liên quan [[dungonrush-reskin-ui-howto]], [[dungonrush-reskin-plan]], [[dungonrush-growth-p0]].
+
+## Kế hoạch toàn bộ popup (2026-11-11)
+User yêu cầu concept lại MỌI popup còn lại, chia đợt: concept xong user chốt mới ghép vào game. Kế hoạch + bảng tiến độ ở `tools/concept/PLAN.md` (đợt 0 kit chung + 9 đợt, 67 popup). Đọc file đó khi user nói "làm đợt tiếp", cập nhật bảng tiến độ sau mỗi bước.
+- Concept các đợt link `tools/concept/kit/kit.css` (CSS kit chung); C# kit = `Scripts/Art/Editor/PopupStyle.cs` (Shell/Title/CloseButton/Button màu chức năng/Outline/Plain/PlaceTop đo từ mép trên).
+- User đòi: TRƯỚC khi concept popup có chỉ số phải đếm số dòng tối đa từ data thật (gear 1+3 substat, Wing 2+5, Cape 2+2, Auto Loot 10 rarity + 13 lọc) → ô cao cố định theo max, rỗng hiện "No bonus stats".
+- Đợt 1 (2026-11-11) đã áp: `Batch1Reskin` (menu Tools/DungeonRush/Reskin/Batch 1), `ItemStatsView` dùng chung cho ItemInfo/NewItem/NewForge, builder cũ Forge/Level/Offline gọi tool cuối; thêm nút Claim tím ở Combat Summary (user chốt concept). CHƯA test Play, CHƯA commit.
+- Bẫy chụp: Auto Loot có ContentSizeFitter lồng → ép LayoutRebuilder từng list rồi Content; TMP sprite asset cần UpdateLookupTables trước khi chụp.

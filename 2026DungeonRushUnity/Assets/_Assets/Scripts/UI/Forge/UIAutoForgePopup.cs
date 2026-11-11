@@ -23,7 +23,9 @@ public class UIAutoForgePopup : BaseUI
     [Header("Substat filter")]
     public Button btFilterToggle;
     public GameObject objFilterOn;
+    public GameObject objFilterOff;     // núm xám bên trái công tắc khi tắt (concept batch1)
     public GameObject objFilterLock;
+    public TMP_Text txtFilterLock;      // "Lv 7" cạnh ổ khoá (con của objFilterLock)
     public GameObject objFilterList;
     public RectTransform layoutRoot;
     public List<SubStatType> subStatTypes;
@@ -40,8 +42,10 @@ public class UIAutoForgePopup : BaseUI
     public List<Button> hammerOptions;
     public List<TMP_Text> hammerOptionTexts;
     public List<GameObject> hammerOptionLocks;
-    public Color hammerOptionHighlight = new Color(0.435f, 0.435f, 0.435f, 1f);   // HammerOptionElementUI.HighlightColor
-    public Color hammerOptionDefault = new Color(0.141f, 0.141f, 0.141f, 1f);     // HammerOptionElementUI.DefaultColor
+    // Ô chọn số hộp đổi sprite (concept batch1): đang chọn = cam, mở = xanh lơ, vượt Mastery = xám + ổ khoá.
+    public Sprite sprOptionSelected;
+    public Sprite sprOptionDefault;
+    public Sprite sprOptionLocked;
 
     [Header("Bottom")]
     public Button btStart;
@@ -132,7 +136,11 @@ public class UIAutoForgePopup : BaseUI
         bool filterUnlocked = ForgeService.IsSubStatFilterUnlocked();
         bool filterOn = filterUnlocked && User.subStatFilterEnabled;
         objFilterLock.SetActive(filterUnlocked == false);
+        if (txtFilterLock != null)
+            txtFilterLock.text = "Lv " + ForgeService.SUBSTAT_FILTER_UNLOCK_LEVEL;
         objFilterOn.SetActive(filterOn);
+        if (objFilterOff != null)
+            objFilterOff.SetActive(filterOn == false);
         objFilterList.SetActive(filterOn);
         for (int i = 0; i < subStatTypes.Count; i++)
             subStatChecks[i].SetActive(User.IsSubStatEnabled(subStatTypes[i]));
@@ -146,9 +154,9 @@ public class UIAutoForgePopup : BaseUI
         {
             int count = i + 1;
             hammerOptionTexts[i].text = count + "<sprite=0>";
-            hammerOptionLocks[i].SetActive(count > max);
-            hammerOptionTexts[i].gameObject.SetActive(count <= max);
-            hammerOptions[i].image.color = count == selected ? hammerOptionHighlight : hammerOptionDefault;
+            bool isLocked = count > max;
+            hammerOptionLocks[i].SetActive(isLocked);
+            hammerOptions[i].image.sprite = isLocked ? sprOptionLocked : count == selected ? sprOptionSelected : sprOptionDefault;
         }
 
         if (layoutRoot != null)

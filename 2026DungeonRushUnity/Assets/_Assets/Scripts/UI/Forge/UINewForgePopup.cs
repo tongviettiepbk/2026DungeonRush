@@ -10,22 +10,17 @@ using UnityEngine.UI;
 //  - Chạm nền tối khi chưa chọn gì (CloseOnClickDark gốc) = BỎ QUA: món quay lại bục, bấm món đó để mở lại.
 public class UINewForgePopup : BaseUI
 {
-    private const string SELL_CONFIRM = "The item you are selling is stronger than your character are you sure?";
+    private static readonly Color STAT_UP_COLOR = new Color32(98, 211, 74, 255);     // #62D34A (kit concept)
+    private static readonly Color STAT_DOWN_COLOR = new Color32(255, 90, 90, 255);   // #FF5A5A
 
     [Header("Đồ đang mặc")]
     public ItemElementView equippedElement;
-    public TMP_Text txtEquippedName;
-    public TMP_Text txtEquippedRarity;
-    public TMP_Text txtEquippedBaseStat;
-    public TMP_Text txtEquippedSubStats;
+    public ItemStatsView equippedStats;
     public GameObject objEquippedNew;    // nhãn "NEW" trên thẻ trái: món vừa được mặc trong popup này
 
     [Header("Món còn lại")]
     public ItemElementView newElement;
-    public TMP_Text txtNewName;
-    public TMP_Text txtNewRarity;
-    public TMP_Text txtNewBaseStat;
-    public TMP_Text txtNewSubStats;
+    public ItemStatsView newStats;
     public GameObject objNewNew;         // nhãn "NEW" trên thẻ phải: món vừa loot
     public Image imgCompareArrow;        // cạnh chỉ số chính thẻ phải: xanh lên = mạnh hơn đồ đang mặc, đỏ xuống = yếu hơn
     public Sprite sprStatUp;
@@ -79,14 +74,17 @@ public class UINewForgePopup : BaseUI
 
     private void Refresh()
     {
-        Fill(equipped, equippedElement, txtEquippedName, txtEquippedRarity, txtEquippedBaseStat, txtEquippedSubStats);
-        Fill(other, newElement, txtNewName, txtNewRarity, txtNewBaseStat, txtNewSubStats);
+        equippedElement.SetItem(equipped);
+        equippedStats.Set(equipped);
+        newElement.SetItem(other);
+        newStats.Set(other);
         objEquippedNew.SetActive(equipped == looted);
         objNewNew.SetActive(other == looted);
         RefreshCompareArrow();
     }
 
-    // So chỉ số chính (cùng slot nên cùng loại Damage/Health); bằng nhau thì ẩn. Mũi tên đặt ngay sau chữ.
+    // So chỉ số chính (cùng slot nên cùng loại Damage/Health): mạnh hơn = số xanh + mũi tên lên, yếu hơn = số đỏ +
+    // mũi tên xuống, bằng nhau thì ẩn. Mũi tên đặt ngay sau số (mũi tên là con của ô giá trị).
     private void RefreshCompareArrow()
     {
         bool isEqual = other.mainStat == equipped.mainStat;
@@ -94,19 +92,13 @@ public class UINewForgePopup : BaseUI
         if (isEqual)
             return;
 
-        imgCompareArrow.sprite = other.mainStat > equipped.mainStat ? sprStatUp : sprStatDown;
-        txtNewBaseStat.ForceMeshUpdate(true);
-        Bounds bounds = txtNewBaseStat.textBounds;
-        imgCompareArrow.rectTransform.anchoredPosition = new Vector2(bounds.max.x + 10f, bounds.center.y);
-    }
-
-    private static void Fill(LootResult item, ItemElementView element, TMP_Text name, TMP_Text rarity, TMP_Text baseStat, TMP_Text subStats)
-    {
-        element.SetItem(item);
-        name.text = ItemTextUtil.Name(item);
-        rarity.text = ItemTextUtil.RarityLine(item.rarity);
-        baseStat.text = ItemTextUtil.MainStat(item);
-        subStats.text = ItemTextUtil.SubStats(item.subStats);
+        bool isUp = other.mainStat > equipped.mainStat;
+        imgCompareArrow.sprite = isUp ? sprStatUp : sprStatDown;
+        TMP_Text value = newStats.txtMainValues;
+        value.color = isUp ? STAT_UP_COLOR : STAT_DOWN_COLOR;
+        value.ForceMeshUpdate(true);
+        Bounds bounds = value.textBounds;
+        imgCompareArrow.rectTransform.anchoredPosition = new Vector2(bounds.max.x + 22f, bounds.center.y);
     }
 
     // ihn gốc: mặc món thẻ phải rồi đổi chỗ 2 thẻ.
@@ -125,7 +117,7 @@ public class UINewForgePopup : BaseUI
     {
         if (other.rarity > equipped.rarity)
         {
-            txtConfirm.text = SELL_CONFIRM;
+            txtConfirm.text = Loc.L("Popup.NewForge.SellConfirm");
             SetConfirmVisible(true);
             return;
         }
