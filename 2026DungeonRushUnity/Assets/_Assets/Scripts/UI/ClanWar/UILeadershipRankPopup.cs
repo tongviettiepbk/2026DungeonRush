@@ -15,6 +15,7 @@ public class UILeadershipRankPopup : BaseUI
     public TMP_Text DescriptionText;
     public TMP_Text UpdateInfoText;
     public TMP_Text NoRankingsText;
+    public GameObject NoRankingsRoot;     // ô tan bọc chữ "chưa có war" (reskin Đợt 7)
 
     private readonly List<ClanWarClanRowCard> rows = new List<ClanWarClanRowCard>();
 
@@ -42,7 +43,7 @@ public class UILeadershipRankPopup : BaseUI
             if (rows[i] != null) Destroy(rows[i].gameObject);
         }
         rows.Clear();
-        ClanUIUtil.SetActive(NoRankingsText, false);
+        ClanUIUtil.SetActive(NoRankingsRoot != null ? NoRankingsRoot : NoRankingsText.gameObject, false);
         if (LoadingView != null) LoadingView.ShowLoading();
         ClanWarController.Instance.GetLeadershipRanking(res =>
         {
@@ -61,7 +62,7 @@ public class UILeadershipRankPopup : BaseUI
     private void Draw(ClanWarLeadershipRankingResponseDTO res)
     {
         bool empty = res.rows == null || res.rows.Count == 0;
-        ClanUIUtil.SetActive(NoRankingsText, empty);
+        ClanUIUtil.SetActive(NoRankingsRoot != null ? NoRankingsRoot : NoRankingsText.gameObject, empty);
         if (empty) return;
         for (int i = 0; i < res.rows.Count; i++)
         {

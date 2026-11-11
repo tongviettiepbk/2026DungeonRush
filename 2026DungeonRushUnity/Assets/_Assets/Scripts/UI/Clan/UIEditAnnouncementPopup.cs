@@ -43,7 +43,7 @@ public class UIEditAnnouncementPopup : BaseUI
     // fyg gốc.
     private void UpdateCounter(string text)
     {
-        ClanUIUtil.SetText(CharCounter, string.Format("{0}/{1}", (text ?? string.Empty).Length, StaticClanData.ANNOUNCEMENT_MAX));
+        ClanUIUtil.SetCounter(CharCounter, (text ?? string.Empty).Length, StaticClanData.ANNOUNCEMENT_MAX);
     }
 
     // fyh gốc.

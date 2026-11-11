@@ -24,6 +24,14 @@ public static class ClanUIUtil
         if (text != null) text.text = value;
     }
 
+    // Bộ đếm ký tự "n/max" dưới ô nhập: nâu nhạt, đủ max → đỏ.
+    public static void SetCounter(TMPro.TMP_Text text, int count, int max)
+    {
+        if (text == null) return;
+        text.text = count + "/" + max;
+        text.color = count >= max ? new Color32(255, 90, 90, 255) : new Color32(166, 139, 103, 255);
+    }
+
     public static void Toast(string message)
     {
         if (!string.IsNullOrEmpty(message)) UIManager.Instance.ShowToastMessage(message, isLocalize: false);

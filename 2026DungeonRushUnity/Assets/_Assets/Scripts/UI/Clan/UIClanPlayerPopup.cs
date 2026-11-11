@@ -20,6 +20,15 @@ public class UIClanPlayerPopup : BaseUI
     public ClanLoadingView LoadingView;
     public TMP_Text KickButtonText;
     public TMP_Text LeaveButtonText;
+    // Reskin Đợt 7: icon chức vụ cạnh RoleText, Promote cam / Demote tím (đổi sprite), popup thấp lại khi không có nút.
+    public Image RoleIcon;
+    public Sprite LeaderIconSprite;
+    public Sprite CaptainIconSprite;
+    public Sprite PromoteSprite;
+    public Sprite DemoteSprite;
+    public RectTransform PanelRect;
+    public float FullHeight;
+    public float CompactHeight;
 
     private ClanMemberModel member;
     private ClanModel clan;
@@ -54,9 +63,25 @@ public class UIClanPlayerPopup : BaseUI
         ClanUIUtil.SetText(NameText, member.PlayerName);
         ClanUIUtil.SetText(PowerText, ClanUIUtil.PowerText(member.Power));
         ClanUIUtil.SetText(RoleText, ClanRoleExt.RoleName(member.Role));
+        if (RoleIcon != null)
+        {
+            Sprite icon = member.Role == ClanRole.Leader ? LeaderIconSprite : member.Role == ClanRole.Captain ? CaptainIconSprite : null;
+            RoleIcon.sprite = icon;
+            RoleIcon.gameObject.SetActive(icon != null);
+        }
         bool isMe = member.UserId == ClanController.Instance.MyUserId;
         if (isMe) DrawSelf();
         else DrawOther(clan != null ? clan.MyRole : ClanController.Instance.MyRole);
+        RefreshHeight();
+    }
+
+    private void RefreshHeight()
+    {
+        if (PanelRect == null || FullHeight <= 0f) return;
+        bool anyButton = (PromoteDemoteButton != null && PromoteDemoteButton.gameObject.activeSelf)
+                         || (KickButton != null && KickButton.gameObject.activeSelf)
+                         || (LeaveButton != null && LeaveButton.gameObject.activeSelf);
+        PanelRect.sizeDelta = new Vector2(PanelRect.sizeDelta.x, anyButton ? FullHeight : CompactHeight);
     }
 
     // fvg gốc.
@@ -73,7 +98,10 @@ public class UIClanPlayerPopup : BaseUI
         ClanUIUtil.SetActive(LeaveButton, false);
         bool canPromote = myRole == ClanRole.Leader && member.Role != ClanRole.Leader;
         ClanUIUtil.SetActive(PromoteDemoteButton, canPromote);
-        ClanUIUtil.SetText(PromoteDemoteLabel, member.Role == ClanRole.Member ? Loc.L("Clan.Promote") : Loc.L("Clan.Demote"));
+        bool promote = member.Role == ClanRole.Member;
+        ClanUIUtil.SetText(PromoteDemoteLabel, promote ? Loc.L("Clan.Promote") : Loc.L("Clan.Demote"));
+        if (PromoteDemoteButton != null && PromoteSprite != null && DemoteSprite != null)
+            PromoteDemoteButton.image.sprite = promote ? PromoteSprite : DemoteSprite;
         ClanUIUtil.SetActive(KickButton, ClanRoleExt.CanActOn(myRole, member.Role));
     }
 

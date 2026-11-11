@@ -16,6 +16,8 @@ public class ClanWarClanRowCard : MonoBehaviour
     public Image BackgroundImage;
     public Color NormalColor = Color.white;
     public Color HighlightColor = new Color(1f, 0.93f, 0.6f, 1f);
+    public Sprite NormalSprite;       // Clan/card_gray
+    public Sprite HighlightSprite;    // Clan/card_blue
 
     // gbl gốc: (row, isMine, isChampion, onClick).
     public void Set(ClanWarClanRowDTO row, bool isMine, bool isChampion = false, Action onClick = null)
@@ -30,7 +32,12 @@ public class ClanWarClanRowCard : MonoBehaviour
         if (TierText != null) TierText.text = (Loc.L("Clan.Common.Tier") + " ") + ClanRoleExt.TierText(row.tier);
         if (TotalPowerText != null) TotalPowerText.text = ClanUIUtil.PowerText(row.totalPower);
         if (ServerText != null) ServerText.text = row.server;
-        if (BackgroundImage != null) BackgroundImage.color = isMine ? HighlightColor : NormalColor;
+        if (BackgroundImage != null)
+        {
+            // Reskin Đợt 7: clan của mình = thẻ xanh (đổi sprite), không tô màu đè.
+            if (NormalSprite != null && HighlightSprite != null) BackgroundImage.sprite = isMine ? HighlightSprite : NormalSprite;
+            else BackgroundImage.color = isMine ? HighlightColor : NormalColor;
+        }
         if (CardButton != null)
         {
             CardButton.onClick.RemoveAllListeners();

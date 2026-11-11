@@ -1,0 +1,297 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Đợt 7 – Clan. Kit chung tools/concept/kit/kit.css, sprite thật trong Art/, 1 px CSS = 2 đơn vị canvas.
+     Giữ kit Clan đã reskin (1_UIKit/Clan, 1_UIKit/ClanSearch, banner ghép 6_Features/Clan); chỉ đồng bộ khung/nhãn/nút/dòng.
+     Chụp: tools/concept/render_concept.sh tools/concept/batch7/concept.html tools/concept/batch7/concept.png 1700 <cao> -->
+<base href="../../../2026DungeonRushUnity/Assets/_Assets/Art/">
+<link rel="stylesheet" href="../../../../tools/concept/kit/kit.css">
+<style>
+body{display:flex;flex-wrap:wrap;gap:22px;width:1700px;align-items:flex-start}
+.stack{display:flex;flex-direction:column;gap:26px;width:530px}
+.col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.cap{color:#cfcde0;font-size:17px;font-family:sans-serif;max-width:520px;text-align:center;line-height:1.35}
+.cap b{color:#fff}
+.cap i{color:#ffd35a;font-style:normal}
+.scr{width:530px;background:#3e3d4d;border-radius:18px;padding:30px 0;display:flex;flex-direction:column;align-items:center;gap:14px;position:relative}
+.w408{width:408px}
+.states{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+.red{color:#ff5a5a}.grn{color:#62d34a}.yel{color:#ffd35a}
+.ic{height:1em;vertical-align:-0.15em}
+/* hàng nhãn + điều khiển */
+.fr{width:100%;display:flex;align-items:center;gap:12px;min-height:54px}
+.fr .lb{width:118px;font-size:19px;line-height:1.1;flex:none}
+.inp2{flex:1;height:53px;border-style:solid;border-width:10px;border-image:url(1_UIKit/ClanSearch/input_tan.png) 20 fill;display:flex;align-items:center;padding:0 6px;font-size:19px}
+.inp2 .hint{color:#9a7752}
+.inp2 .tx{color:#5a3f22}
+.area{width:100%;border-style:solid;border-width:10px;border-image:url(1_UIKit/ClanSearch/input_tan.png) 20 fill;padding:2px 6px;font-size:16px;line-height:1.25;color:#5a3f22;position:relative}
+.chk2{width:43px;height:43px;border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;position:relative;flex:none}
+.chk2 img{position:absolute;left:-4px;top:-8px;width:44px}
+.num{width:58px;height:46px;border-style:solid;border-width:8px;border-image:url(1_UIKit/ClanSearch/input_tan.png) 20 fill;display:flex;align-items:center;justify-content:center;font-size:21px}
+.pm{width:49px;height:54px}
+/* banner ghép: khung + lớp màu (mask) + icon tô màu */
+.ban{position:relative;flex:none}
+.ban>*{position:absolute;inset:0}
+.ban .f{background:center/contain no-repeat}
+.ban .c{-webkit-mask:center/contain no-repeat}
+.ban .cm{background:center/contain no-repeat;mix-blend-mode:multiply}
+.ban .i{-webkit-mask:center/contain no-repeat}
+.ban .im{background:center/contain no-repeat;mix-blend-mode:multiply}
+/* dòng thẻ clan (card_gray 746x122 / card_blue) */
+.cd{width:100%;border-style:solid;border-width:11px;border-image:url(1_UIKit/Clan/card_gray.png) 22 fill;display:flex;align-items:center;gap:8px;padding:0 2px}
+.cd.me{border-image-source:url(1_UIKit/Clan/card_blue.png)}
+.av{width:43px;height:43px;border-style:solid;border-width:6px;border-image:url(1_UIKit/PvP/slot_dark.png) 12 fill;display:flex;align-items:center;justify-content:center;flex:none;margin:-6px 0}
+.av img{width:36px;height:36px;margin:-6px}
+.nm{flex:1;display:flex;flex-direction:column;min-width:0}
+.nm .o3{font-size:17px;line-height:1.2;white-space:nowrap}
+.pw{display:flex;align-items:center;gap:3px}
+.pw img{width:17px;height:17px}
+.list{width:100%;display:flex;flex-direction:column;gap:5px;position:relative;overflow:hidden}
+.fade{position:absolute;left:0;right:0;bottom:0;height:22px;background:linear-gradient(transparent,#f4e6c9)}
+.cd .b{height:40px;min-width:0;padding:0 8px;border-width:7px 7px 11px;margin:-4px 0}
+.cd .b .o3{font-size:15px}
+.cd .b.or{border-width:11px}
+/* ô tan */
+.tan{border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill}
+.kv{display:grid;grid-template-columns:auto auto;gap:2px 10px;font-size:16px;width:100%}
+.kv .v{text-align:right}
+.lab{color:#7a5c3c;font-size:17px;text-align:center;line-height:1.25}
+/* lưới chọn banner */
+.og{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:6px 0 4px;margin:0 auto}
+.op{width:44px;height:44px;flex:none;border-style:solid;border-width:6px;border-image:url(1_UIKit/PvP/slot_dark.png) 12 fill;position:relative;display:flex;align-items:center;justify-content:center}
+.op .sw2{width:30px;height:30px;border-radius:6px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.45)}
+.op img.s{width:36px;height:36px;object-fit:contain;margin:-6px}
+.op.on{border-image-source:url(1_UIKit/Lobby/btn_orange_slot.png)}
+.op .ck{position:absolute;right:-12px;bottom:-12px;width:24px}
+.op.sel{outline:3px solid #ffd35a;outline-offset:1px;border-radius:6px}
+.sec2{width:100%;display:flex;flex-direction:column;align-items:center;gap:2px}
+.sec2 .lab{font-size:18px}
+.spin{width:38px;opacity:.8;filter:brightness(.55) sepia(1) saturate(1.3)}
+.note{color:#ffd35a;font-size:14px;font-family:sans-serif;text-align:center;max-width:500px;line-height:1.35}
+</style></head><body>
+
+<!-- ========== CỘT 1 ========== -->
+<div class="stack">
+
+<!-- 1. Create clan -->
+<div class="col"><div class="cap"><b>UICreateClanPopup</b> (vừa 816): nhãn <b>chữ nâu không viền</b> cột trái (tự co khi dài, vd "Nombre del clan"). Ô nhập tan, chữ nhập nâu đậm. Browse <b>tím</b> (phụ). Create <b>xanh lá</b> + 💎100 — chữ lấy key có sẵn <i>Clan.Create.Button</i> (đang ghi cứng). Thiếu gem: số <b>đỏ</b> thay chữ mờ.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o" style="font-size:26px">Enter Clan Name</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px;padding-top:22px">
+  <div class="fr"><span class="lb brown">Clan Name</span><div class="inp2"><span class="hint">Clan Name...</span></div></div>
+  <div class="fr"><span class="lb brown">Public</span><div class="chk2"><img src="1_UIKit/ClanSearch/check_green.png"></div></div>
+  <div class="fr" style="min-height:76px"><span class="lb brown">Banner</span>
+   <div class="ban" style="width:60px;height:70px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_01.png)"></div><div class="c" style="background:#F3EEE6;-webkit-mask-image:url(6_Features/Clan/clan_flag_01_color.png)"></div><div class="i" style="background:#383838;-webkit-mask-image:url(6_Features/Clan/clan_icon_axe.png)"></div></div>
+   <div class="b vi sm" style="margin-left:auto;min-width:118px"><span class="o">Browse</span></div></div>
+  <div class="b g" style="width:170px;height:84px;margin-top:10px;flex-direction:column;gap:0;line-height:1.05"><span class="o" style="font-size:24px">Create</span><span class="o" style="font-size:22px"><img class="ic" src="2_Icons/Currency/gem.png"> 100</span></div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="b g sm" style="height:66px;min-width:120px;flex-direction:column;gap:0;line-height:1.05"><span class="o" style="font-size:19px">Create</span><span class="o" style="font-size:18px"><img class="ic" src="2_Icons/Currency/gem.png"> <span class="red">100</span></span></div><span class="nt">thiếu gem (bấm → popup thiếu gem)</span></div>
+ <div class="it"><img class="spin" src="1_UIKit/Common/Loading_Frame2.png"><span class="nt">đang gửi (icon xoay tông nâu)</span></div>
+ <div class="it"><span class="o3 red" style="font-size:17px">Connection error</span><div class="b or sm" style="min-width:110px"><span class="o">Retry</span></div><span class="nt">lỗi mạng: Retry <b>cam</b></span></div>
+</div>
+</div></div>
+
+<!-- 2. Clan settings -->
+<div class="col"><div class="cap"><b>UIClanSettingsPopup</b> (vừa 816): tên clan = chữ viền to (không sửa được). Ô mô tả <b>tan</b> (đang đen) cao đủ <b>200 ký tự ≈ 6 dòng</b>, thêm bộ đếm "n/200" như Edit Announcement. Save <b>xanh lá</b>, chỉ Leader thấy.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o" style="font-size:26px">Clan Settings</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px;padding-top:18px">
+  <div class="fr" style="min-height:44px"><span class="lb brown">Clan Name</span><span class="o" style="font-size:24px">DuckLords</span></div>
+  <span class="lab" style="align-self:flex-start;font-size:19px">Description</span>
+  <div class="area" style="height:142px">Welcome ducks! Active daily, war every week. Donate before war day, use all attacks. Be nice in chat and help new members level up. Inactive 7 days = kick. Have fun and quack hard!!</div>
+  <span class="mute" style="align-self:flex-end;font-size:15px;margin-top:-4px">200/200</span>
+  <div class="fr"><span class="lb brown">Public</span><div class="chk2"><img src="1_UIKit/ClanSearch/check_green.png"></div></div>
+  <div class="fr" style="min-height:76px"><span class="lb brown">Banner</span>
+   <div class="ban" style="width:60px;height:70px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_03.png)"></div><div class="c" style="background:#2D5BB5;-webkit-mask-image:url(6_Features/Clan/clan_flag_03_color.png)"></div><div class="i" style="background:#FFC038;-webkit-mask-image:url(6_Features/Clan/clan_icon_dragon.png)"></div></div>
+   <div class="b vi sm" style="margin-left:auto;min-width:118px"><span class="o">Browse</span></div></div>
+  <div class="b g" style="width:150px;margin-top:6px"><span class="o">Save</span></div>
+ </div>
+</div>
+<div class="states"><div class="it"><span class="nt" style="max-width:420px">Captain / Member mở: ô mô tả + tick + Browse <b>không bấm được</b> (Browse xám), <b>ẩn Save</b> — như hiện tại.</span></div></div>
+</div></div>
+
+<!-- 3. Edit announcement -->
+<div class="col"><div class="cap"><b>UIEditAnnouncementPopup</b> (vừa 816): ô tan cao đủ <b>300 ký tự ≈ 8 dòng</b>, bộ đếm chữ nâu nhạt dưới phải (đủ 300 → đỏ). Save <b>xanh lá</b>.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o" style="font-size:26px">Edit Announcement</span><div class="x"></div></div>
+ <div class="bd" style="gap:6px;padding-top:18px">
+  <div class="area" style="height:190px">⚔️ WAR THIS WEEK ⚔️ Everyone please use all 3 attacks before Saturday reset. Leader will promote the top 3 contributors to Captain. Boss Rush: join the clan team at 20:00 UTC. Remember to claim the weekly chest and donate bones. New members: read the rules in chat. Quack on, ducks!! See you there.</div>
+  <span class="red" style="align-self:flex-end;font-size:15px">300/300</span>
+  <div class="b g" style="width:150px;margin-top:6px"><span class="o">Save</span></div>
+ </div>
+</div>
+<div class="states"><div class="it"><div class="area" style="width:200px;height:60px"><span style="color:#9a7752">Announcement...</span></div><span class="nt">trống: gợi ý chữ nâu nhạt</span></div></div>
+</div></div>
+</div>
+
+<!-- ========== CỘT 2 ========== -->
+<div class="stack">
+
+<!-- 4. Banner editor -->
+<div class="col"><div class="cap"><b>UIClanBannerEditorPopup</b> (vừa 816): <i>Đề xuất</i> bỏ 4 dải cuộn ngang (đang bị cắt mép, phải vuốt) → <b>lưới thấy hết</b>: Shape 8 (1 hàng), Background Color 10 (5×2), Emblem Shape 20 (7·7·6), Emblem Color 8 (1 hàng). Ô = ô tối, ô đang chọn <b>viền vàng + tick</b>. Banner xem trước trong ô tan. Apply <b>xanh lá</b>.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o" style="font-size:24px">Clan Banner Editor</span><div class="x"></div></div>
+ <div class="bd" style="gap:6px;padding-top:16px">
+  <div class="tan" style="width:110px;height:104px;display:flex;align-items:center;justify-content:center"><div class="ban" style="width:80px;height:92px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_03.png)"></div><div class="c" style="background:#2D5BB5;-webkit-mask-image:url(6_Features/Clan/clan_flag_03_color.png)"></div><div class="i" style="background:#FFC038;-webkit-mask-image:url(6_Features/Clan/clan_icon_dragon.png)"></div></div></div>
+  <div class="sec2"><span class="lab">Shape</span><div class="og" id="g1"></div></div>
+  <div class="sec2"><span class="lab">Background Color</span><div class="og" id="g2"></div></div>
+  <div class="sec2"><span class="lab">Emblem Shape</span><div class="og" id="g3"></div></div>
+  <div class="sec2"><span class="lab">Emblem Color</span><div class="og" id="g4"></div></div>
+  <div class="b g" style="width:150px;margin-top:6px"><span class="o">Apply</span></div>
+ </div>
+</div>
+<div class="note">Cao popup ≈ 1520 (Clan Info 1688) — vừa màn 2160. Chữ dài nhất: tiêu đề ES 29 ký tự, "Couleur de l'emblème" → tự co.</div>
+</div></div>
+
+<!-- 5. Requests -->
+<div class="col"><div class="cap"><b>UIClanRequestsPopup</b> (vừa 816): tiêu đề "Requests" (prefab đang ghi nhầm "Clan Settings", lúc chạy key đè đúng — sửa luôn chữ prefab). Dòng <b>thẻ xám</b> (như thành viên Clan Info): avatar ô tối, tên + power, Deny <b>đỏ</b> / Accept <b>xanh lá</b>. Cuộn, thấy 5 dòng.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Requests</span><div class="x"></div></div>
+ <div class="bd" style="gap:6px;padding-top:16px">
+  <div class="list" style="height:318px">
+   <div class="cd"><div class="av"><img src="2_Icons/Avatar/viking.png"></div><div class="nm"><span class="o3">Featherfist</span><span class="o3 pw"><img src="1_UIKit/BossRush/icon_fist.png">19.5M</span></div><div class="b rd"><span class="o3">Deny</span></div><div class="b g"><span class="o3">Accept</span></div></div>
+   <div class="cd"><div class="av"><img src="2_Icons/Avatar/angel.png"></div><div class="nm"><span class="o3">PondKing</span><span class="o3 pw"><img src="1_UIKit/BossRush/icon_fist.png">1.25B</span></div><div class="b rd"><span class="o3">Deny</span></div><div class="b g"><span class="o3">Accept</span></div></div>
+   <div class="cd"><div class="av"><img src="2_Icons/Avatar/orc.png"></div><div class="nm"><span class="o3">Babacan</span><span class="o3 pw"><img src="1_UIKit/BossRush/icon_fist.png">3.42M</span></div><div class="b rd"><span class="o3">Deny</span></div><div class="b g"><span class="o3">Accept</span></div></div>
+   <div class="cd"><div class="av"><img src="2_Icons/Avatar/kitty.png"></div><div class="nm"><span class="o3">Voiddroid</span><span class="o3 pw"><img src="1_UIKit/BossRush/icon_fist.png">115.4M</span></div><div class="b rd"><span class="o3">Deny</span></div><div class="b g"><span class="o3">Accept</span></div></div>
+   <div class="cd"><div class="av"><img src="2_Icons/Avatar/devil.png"></div><div class="nm"><span class="o3">QuackQuackQuac</span><span class="o3 pw"><img src="1_UIKit/BossRush/icon_fist.png">647.1M</span></div><div class="b rd"><span class="o3">Deny</span></div><div class="b g"><span class="o3">Accept</span></div></div>
+   <div class="fade"></div>
+  </div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="tan" style="width:250px;height:80px;display:flex;align-items:center;justify-content:center"><span class="lab">No pending requests</span></div><span class="nt">trống: chữ nâu giữa ô</span></div>
+ <div class="it"><div class="cd" style="width:200px;height:56px;opacity:.6"><div class="nm"><span class="o3">…</span></div><div class="b gr"><span class="o3">Deny</span></div><div class="b gr"><span class="o3">Accept</span></div></div><span class="nt">đang gửi: 2 nút xám</span></div>
+</div>
+</div></div>
+</div>
+
+<!-- ========== CỘT 3 ========== -->
+<div class="stack">
+
+<!-- 6. Clan info -->
+<div class="col"><div class="cap"><b>UIClanInfoPopup</b> (816×1688, giữ bố cục mockup BallIdle): header đang <b>trống</b> → <i>đề xuất</i> đưa <b>tên clan lên header</b>, ô tan còn banner + mô tả (chữ nâu, đủ 200 ký tự) + 4 chỉ số <b>nhãn nâu / số viền</b> 2 cột. Dòng thành viên thẻ xám giữ nguyên. Join / Request <b>xanh lá</b>; Requested + clan đầy = <b>xám</b>.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">DuckLords</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px;padding-top:16px">
+  <div class="tan" style="width:100%;padding:8px 10px;display:flex;flex-direction:column;gap:8px">
+   <div style="display:flex;gap:10px;align-items:flex-start">
+    <div class="ban" style="width:86px;height:100px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_03.png)"></div><div class="c" style="background:#2D5BB5;-webkit-mask-image:url(6_Features/Clan/clan_flag_03_color.png)"></div><div class="i" style="background:#FFC038;-webkit-mask-image:url(6_Features/Clan/clan_icon_dragon.png)"></div></div>
+    <span class="brown" style="font-size:14px;line-height:1.22">Welcome ducks! Active daily, war every week. Donate before war day, use all attacks. Be nice in chat and help new members level up. Inactive 7 days = kick. Have fun and quack hard!!</span>
+   </div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 18px;font-size:16px">
+    <div style="display:flex;justify-content:space-between"><span class="brown">Power</span><span class="o3"><img class="ic" src="1_UIKit/BossRush/icon_fist.png">1.25B</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="brown">Tier</span><span class="o3">Tier A</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="brown">Type</span><span class="o3 grn">Open</span></div>
+    <div style="display:flex;justify-content:space-between"><span class="brown">Members</span><span class="o3">48/50</span></div>
+   </div>
+  </div>
+  <div class="list" style="height:330px">
+   <div class="cd" style="height:65px"><div class="av"><img src="2_Icons/Avatar/king.png"></div><div class="nm"><span class="o3">PondKing</span><span class="o3 pw"><img src="1_UIKit/BossRush/icon_fist.png">1.25B</span></div><img src="6_Features/Clan/clan_leader_icon.png" style="width:26px"><span class="o3" style="font-size:16px;width:80px">Leader</span></div>
+   <div class="cd" style="height:65px"><div class="av"><img src="2_Icons/Avatar/viking.png"></div><div class="nm"><span class="o3">Ironbrute</span><span class="o3 pw"><img src="1_UIKit/BossRush/icon_fist.png">80.6M</span></div><img src="6_Features/Clan/clan_captain_icon.png" style="width:26px"><span class="o3" style="font-size:16px;width:80px">Captain</span></div>
+   <div class="cd" style="height:65px"><div class="av"><img src="2_Icons/Avatar/angel.png"></div><div class="nm"><span class="o3">Featherfist</span><span class="o3 pw"><img src="1_UIKit/BossRush/icon_fist.png">19.5M</span></div><span style="width:26px"></span><span class="o3" style="font-size:16px;width:80px">Member</span></div>
+   <div class="cd" style="height:65px"><div class="av"><img src="2_Icons/Avatar/orc.png"></div><div class="nm"><span class="o3">Babacan</span><span class="o3 pw"><img src="1_UIKit/BossRush/icon_fist.png">3.42M</span></div><span style="width:26px"></span><span class="o3" style="font-size:16px;width:80px">Member</span></div>
+   <div class="cd" style="height:65px"><div class="av"><img src="2_Icons/Avatar/kitty.png"></div><div class="nm"><span class="o3">Voiddroid</span><span class="o3 pw"><img src="1_UIKit/BossRush/icon_fist.png">1.2M</span></div><span style="width:26px"></span><span class="o3" style="font-size:16px;width:80px">Member</span></div>
+   <div class="fade"></div>
+  </div>
+  <div class="b g" style="width:150px;margin-top:4px"><span class="o">Join</span></div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="b g sm" style="min-width:110px"><span class="o">Request</span></div><span class="nt">clan duyệt</span></div>
+ <div class="it"><div class="b gr sm" style="min-width:110px"><span class="o">Requested</span></div><span class="nt">đã xin</span></div>
+ <div class="it"><div class="b gr sm" style="min-width:110px"><span class="o">Join</span></div><span class="nt">clan đầy 50/50</span></div>
+ <div class="it"><span class="nt" style="max-width:110px">đang có clan: ẩn nút (như cũ)</span></div>
+</div>
+</div></div>
+
+<!-- 7. Clan player -->
+<div class="col"><div class="cap"><b>UIClanPlayerPopup</b> (vừa 816): header đang <b>trống</b> → <i>đề xuất</i> đưa <b>tên người chơi lên header</b>. Thân: avatar ô tối to + chức vụ (icon Leader/Captain) + power. Nút: Kick / Leave <b>đỏ</b>, Promote <b>cam</b>, Demote <b>tím</b>. Chạm nền tối vẫn đóng.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Ironbrute</span><div class="x"></div></div>
+ <div class="bd" style="gap:12px;padding-top:18px">
+  <div style="display:flex;align-items:center;gap:16px;width:100%;padding-left:20px">
+   <div class="av" style="width:74px;height:74px;margin:0;border-width:8px"><img src="2_Icons/Avatar/viking.png" style="width:62px;height:62px;margin:-8px"></div>
+   <div style="display:flex;flex-direction:column;gap:4px">
+    <span class="o" style="font-size:22px;display:flex;align-items:center;gap:6px"><img src="6_Features/Clan/clan_captain_icon.png" style="width:28px">Captain</span>
+    <span class="o" style="font-size:22px;display:flex;align-items:center;gap:4px"><img src="1_UIKit/BossRush/icon_fist.png" style="width:24px">80.6M</span>
+   </div>
+  </div>
+  <div style="display:flex;gap:16px"><div class="b rd" style="width:150px"><span class="o">Kick</span></div><div class="b vi" style="width:150px"><span class="o">Demote</span></div></div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div style="display:flex;gap:8px"><div class="b rd sm" style="min-width:96px"><span class="o">Kick</span></div><div class="b or sm" style="min-width:96px"><span class="o">Promote</span></div></div><span class="nt">Leader xem Member</span></div>
+ <div class="it"><div class="b rd sm" style="min-width:110px"><span class="o">Leave</span></div><span class="nt">bấm vào chính mình</span></div>
+ <div class="it"><span class="nt" style="max-width:120px">Member xem người khác: không nút, popup thấp lại</span></div>
+</div>
+</div></div>
+</div>
+
+<!-- ========== HÀNG DƯỚI ========== -->
+<div class="stack">
+<!-- 8. Advanced search -->
+<div class="col"><div class="cap"><b>UIAdvancedSearchPopup</b> "Clan Search" (vừa 816, giữ nút −/+ art + tick xanh đã reskin): nhãn <b>chữ nâu</b>, số thành viên vào <b>ô tan</b> giữa −/+. Gốc có nút <b>Clear</b> (code đã có, prefab thiếu) → <i>đề xuất</i> thêm Clear <b>tím</b> cạnh Search <b>cam</b>.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Clan Search</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px;padding-top:18px">
+  <div class="fr"><span class="lb brown">Clan Name</span><div class="inp2"><span class="tx">Duck</span></div></div>
+  <div class="fr"><span class="lb brown" style="font-size:17px">Hide Approval Only</span><div class="chk2"><img src="1_UIKit/ClanSearch/check_green.png"></div></div>
+  <div class="fr"><span class="lb brown">Min Member</span><img class="pm" src="1_UIKit/ClanSearch/btn_minus.png"><div class="num"><span class="o3">10</span></div><img class="pm" src="1_UIKit/ClanSearch/btn_plus.png"></div>
+  <div class="fr"><span class="lb brown">Max Member</span><img class="pm" src="1_UIKit/ClanSearch/btn_minus.png"><div class="num"><span class="o3">50</span></div><img class="pm" src="1_UIKit/ClanSearch/btn_plus.png"></div>
+  <div style="display:flex;gap:16px;margin-top:10px"><div class="b vi" style="width:140px"><span class="o">Clear</span></div><div class="b or" style="width:150px"><span class="o">Search</span></div></div>
+ </div>
+</div>
+<div class="note">Nhãn dài nhất FR "Masquer les clans sur approbation" (33) → 2 dòng, tự co.</div>
+</div></div>
+</div>
+
+<div class="stack" style="width:1082px">
+<!-- 9. Leadership rank -->
+<div class="col"><div class="cap"><b>UILeadershipRankPopup</b> "Championship Ranking" (816×1372): mô tả <b>chữ nâu</b> (FR 249 ký tự ≈ 6 dòng). Dòng clan = <b>thẻ xám</b>, clan của mình = <b>thẻ xanh</b> (đổi sprite, bỏ tô màu đè đang ra xanh đậm). Hạng to, banner, tên + Tier, power, server. "Updates every 10 minutes" nâu nhạt dưới đáy. Dòng này dùng chung với Clan War Leaderboard (Đợt 8).</div>
+<div style="display:flex;gap:22px;align-items:flex-start">
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o" style="font-size:21px;margin-right:30px">Championship Ranking</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px;padding-top:14px">
+  <span class="brown" style="font-size:15px;text-align:center;line-height:1.25">Earn Contribution Points to reach the top! The highest-contributing clan earns the right to challenge the Champion Clan in next week's war. If there is no Champion Clan, the top two clans will fight each other.</span>
+  <div class="list" style="height:390px">
+   <div class="cd" style="height:80px"><span class="o" style="font-size:24px;width:36px;text-align:center">#1</span><div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_02.png)"></div><div class="c" style="background:#CC1B35;-webkit-mask-image:url(6_Features/Clan/clan_flag_02_color.png)"></div><div class="i" style="background:#FFC038;-webkit-mask-image:url(6_Features/Clan/clan_icon_lion.png)"></div></div><div class="nm"><span class="o3" style="font-size:19px">IronBeaks</span><span class="o3" style="font-size:14px">Tier S · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">12.5B</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server1</span></div>
+   <div class="cd" style="height:80px"><span class="o" style="font-size:24px;width:36px;text-align:center">#2</span><div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_05.png)"></div><div class="c" style="background:#47A871;-webkit-mask-image:url(6_Features/Clan/clan_flag_05_color.png)"></div><div class="i" style="background:#F3EEE6;-webkit-mask-image:url(6_Features/Clan/clan_icon_swords.png)"></div></div><div class="nm"><span class="o3" style="font-size:19px">PondGuard</span><span class="o3" style="font-size:14px">Tier A · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">8.1B</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server1</span></div>
+   <div class="cd me" style="height:80px"><span class="o" style="font-size:24px;width:36px;text-align:center">#3</span><div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_03.png)"></div><div class="c" style="background:#2D5BB5;-webkit-mask-image:url(6_Features/Clan/clan_flag_03_color.png)"></div><div class="i" style="background:#FFC038;-webkit-mask-image:url(6_Features/Clan/clan_icon_dragon.png)"></div></div><div class="nm"><span class="o3" style="font-size:19px">DuckLords</span><span class="o3" style="font-size:14px">Tier A · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">1.25B</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server1</span></div>
+   <div class="cd" style="height:80px"><span class="o" style="font-size:24px;width:36px;text-align:center">#4</span><div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_07.png)"></div><div class="c" style="background:#9839C4;-webkit-mask-image:url(6_Features/Clan/clan_flag_07_color.png)"></div><div class="i" style="background:#DAD1E7;-webkit-mask-image:url(6_Features/Clan/clan_icon_wizard_hat.png)"></div></div><div class="nm"><span class="o3" style="font-size:19px">Featherstorm</span><span class="o3" style="font-size:14px">Tier B · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">640M</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server2</span></div>
+   <div class="cd" style="height:80px"><span class="o" style="font-size:24px;width:36px;text-align:center">#5</span><div class="ban" style="width:52px;height:62px"><div class="f" style="background-image:url(6_Features/Clan/clan_flag_08.png)"></div><div class="c" style="background:#FF8E2B;-webkit-mask-image:url(6_Features/Clan/clan_flag_08_color.png)"></div><div class="i" style="background:#383838;-webkit-mask-image:url(6_Features/Clan/clan_icon_torch.png)"></div></div><div class="nm"><span class="o3" style="font-size:19px">Quackers</span><span class="o3" style="font-size:14px">Tier B · <img class="ic" src="1_UIKit/BossRush/icon_fist.png"><span class="yel">95M</span></span></div><span class="o3" style="font-size:15px;align-self:flex-end;margin-bottom:4px">server1</span></div>
+   <div class="fade"></div>
+  </div>
+  <span class="mute" style="font-size:17px">Updates every 10 minutes</span>
+ </div>
+</div></div>
+<div class="col" style="width:520px;gap:14px;padding-top:20px">
+ <div class="tan" style="width:340px;height:110px;display:flex;align-items:center;justify-content:center;padding:0 16px"><span class="lab">Rankings will be displayed when war is active.</span></div>
+ <span class="nt">chưa có war: chữ nâu trong ô tan (PT 63 ký tự → 2–3 dòng)</span>
+ <div class="sec" style="width:500px;margin-top:20px">
+  <div class="st">Chung cho cả đợt</div>
+  <div class="sd" style="margin-bottom:0">• X đỏ trong header (như mọi popup). • Nhãn trên nền kem = <b style="color:#fff">nâu không viền</b>; số/tên = trắng viền. • Lớp tải: icon xoay tông nâu, lỗi = chữ đỏ + Retry <b style="color:#fff">cam</b>. • Ô nhập/ô mô tả = <b style="color:#fff">tan</b>, chữ nhập nâu đậm, gợi ý nâu nhạt. • Không thêm ảnh art mới — chỉ dùng kit có sẵn.</div>
+ </div>
+</div>
+</div>
+</div></div>
+
+<script>
+// sinh lưới banner editor
+const B='6_Features/Clan/';
+const shapes=[1,2,3,4,5,6,7,8], bg=['F3EEE6','CC1B35','FF8E2B','FFDD61','BBE85A','57C9FF','47A871','2D5BB5','9839C4','383838'],
+icons=['axe','book','bow','castle','crown','dragon','helmet','horse','jester_hat','knight','lion','mace','scroll','shield','swords','symbol','torch','trophy','viking_hat','wizard_hat'], ic=['F3EEE6','D98D64','FFC038','DAD1E7','A3A3A3','BEDDEB','6C8EA3','383838'];
+const ck='<img class="ck" src="1_UIKit/ClanSearch/check_green.png">';
+function cell(inner,sel){return '<div class="op'+(sel?' sel':'')+'">'+inner+(sel?ck:'')+'</div>'}
+document.getElementById('g1').innerHTML=shapes.map(i=>cell('<img class="s" src="'+B+'clan_flag_0'+i+'.png">',i==3)).join('');
+document.getElementById('g2').innerHTML=bg.map(c=>cell('<div class="sw2" style="background:#'+c+'"></div>',c=='2D5BB5')).join('');
+document.getElementById('g3').innerHTML=icons.map(n=>cell('<img class="s" src="'+B+'clan_icon_'+n+'.png">',n=='dragon')).join('');
+document.getElementById('g4').innerHTML=ic.map(c=>cell('<div class="sw2" style="background:#'+c+'"></div>',c=='FFC038')).join('');
+// số ô mỗi hàng: Shape 7+1 xấu → 8 (thu ô 40), màu nền 5×2, biểu tượng 7/7/6, màu biểu tượng 8
+[['g1',8],['g2',5],['g3',7],['g4',8]].forEach(([id,n])=>{const g=document.getElementById(id);const w=n==8?40:44;g.querySelectorAll('.op').forEach(o=>{o.style.width=o.style.height=w+'px'});g.style.width=(n*w+(n-1)*6)+'px';});
+// banner: lớp màu + icon = mask màu rồi nhân (multiply) chính ảnh xám lên để giữ nét/bóng như code tô màu
+document.querySelectorAll('.ban').forEach(b=>{
+ b.querySelectorAll('.c,.i').forEach(d=>{const u=d.style.webkitMaskImage;const m=document.createElement('div');m.className=d.className=='c'?'cm':'im';m.style.backgroundImage=u;d.after(m);});
+});
+</script>
+</body></html>

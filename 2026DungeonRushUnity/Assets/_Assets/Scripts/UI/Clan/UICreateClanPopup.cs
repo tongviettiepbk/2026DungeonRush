@@ -33,7 +33,6 @@ public class UICreateClanPopup : BaseUI
         ClanUIUtil.SetText(BannerLabel, Loc.L("Clan.Common.Banner"));
         ClanUIUtil.SetText(BrowseButtonText, Loc.L("Clan.Common.Browse"));
         ClanUIUtil.SetText(PublicLabel, Loc.L("Clan.Common.Public"));
-        ClanUIUtil.SetText(CreateButtonText, "Create \n<sprite=0>" + StaticClanData.CREATE_COST_GEM);
         if (NameInput != null)
         {
             NameInput.characterLimit = StaticClanData.NAME_MAX;
@@ -57,14 +56,13 @@ public class UICreateClanPopup : BaseUI
         RefreshCreateButton();
     }
 
-    // fxv gốc: chữ nút mờ khi gem ≤ 99.
+    // fxv gốc báo thiếu gem (gem ≤ 99); reskin Đợt 7: số giá đỏ thay chữ mờ. Chữ theo key Clan.Create.Button.
     private void RefreshCreateButton()
     {
         if (CreateButtonText == null) return;
         bool enough = GameData.userData.items.IsEnough(ItemType.GEM, StaticClanData.CREATE_COST_GEM);
-        Color c = CreateButtonText.color;
-        c.a = enough ? 1f : 0.5f;
-        CreateButtonText.color = c;
+        string cost = enough ? StaticClanData.CREATE_COST_GEM.ToString() : "<color=#FF5A5A>" + StaticClanData.CREATE_COST_GEM + "</color>";
+        CreateButtonText.text = Loc.L("Clan.Create.Button", cost);
     }
 
     private void OnBannerClicked()

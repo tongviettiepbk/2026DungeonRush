@@ -20,6 +20,7 @@ public class UIClanSettingsPopup : BaseUI
     public TMP_Text BrowseButtonText;
     public TMP_Text PublicLabel;
     public TMP_Text SaveButtonText;
+    public TMP_Text CharCounter;          // "n/200" dưới ô mô tả (reskin Đợt 7)
 
     private ClanModel clan;
     private ClanBannerData banner;
@@ -40,6 +41,7 @@ public class UIClanSettingsPopup : BaseUI
         {
             DescriptionInput.characterLimit = StaticClanData.DESCRIPTION_MAX;
             DescriptionInput.lineType = TMP_InputField.LineType.MultiLineNewline;
+            DescriptionInput.onValueChanged.AddListener(t => ClanUIUtil.SetCounter(CharCounter, (t ?? string.Empty).Length, StaticClanData.DESCRIPTION_MAX));
             if (DescriptionInput.placeholder is TMP_Text ph) ph.text = Loc.L("Clan.Description.Placeholder");
         }
         if (SaveButton != null) SaveButton.onClick.AddListener(OnSaveClicked);
@@ -58,6 +60,7 @@ public class UIClanSettingsPopup : BaseUI
         banner = clan.Banner.Clone();
         ClanUIUtil.SetText(ClanNameLabel, clan.ClanName);
         if (DescriptionInput != null) DescriptionInput.text = clan.Description;
+        ClanUIUtil.SetCounter(CharCounter, (clan.Description ?? string.Empty).Length, StaticClanData.DESCRIPTION_MAX);
         if (ApprovalOnlyToggle != null) ApprovalOnlyToggle.SetChecked(clan.JoinSetting == ClanJoinSetting.Open);
         if (BannerPreview != null) BannerPreview.SetBanner(banner);
         RefreshEditable();
