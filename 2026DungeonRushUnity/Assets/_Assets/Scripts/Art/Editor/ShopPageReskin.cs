@@ -301,9 +301,10 @@ public static class ShopPageReskin
             Batch7Reskin.PutBehind(glow.transform, icon.transform);
 
             RectTransform panel = InfoPanel(root.transform, card, TextAlignmentOptions.Center);
-            panel.anchorMin = panel.anchorMax = new Vector2(0.5f, 1f);
-            panel.pivot = new Vector2(0.5f, 0.5f);
-            panel.anchoredPosition = new Vector2(0f, -430f);
+            // Neo mép DƯỚI cách đỉnh nút mua 12 → panel cao lên khi có dòng pity, không đè nút.
+            panel.anchorMin = panel.anchorMax = new Vector2(0.5f, 0f);
+            panel.pivot = new Vector2(0.5f, 0f);
+            panel.anchoredPosition = new Vector2(0f, TILE_BUTTON_BOTTOM + TILE_BUTTON_H / 2f + 12f);
             panel.sizeDelta = new Vector2(450f, panel.sizeDelta.y);
 
             TileButton(card.BuyButton.transform, 326f);

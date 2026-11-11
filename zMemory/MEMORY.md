@@ -77,7 +77,7 @@
 - [Cách reskin 1 màn UI](dungonrush-reskin-ui-howto.md) — quy trình lobby: nhóm A ghi đè/B ảnh mới+prefab, pha màu thay ChatGPT cho hình học, ChatGPT cho icon, bẫy TMP sprite/Slider/Game view nhỏ; script tools/reskin/
 - [Quy trình concept → reskin UI](dungonrush-ui-concept-workflow.md) — reskin MỌI popup theo đợt (concept → user chốt → PopupStyle/Batch<N>Reskin); quy trình + tiến độ ở tools/concept/PLAN.md; XONG cả 10 đợt 0..9, còn test Play Đợt 2..9
 - [Reskin gameplay](dungonrush-reskin-gameplay.md) — map tường/sàn vẽ code, quái vịt đen ChatGPT trên rig hero, 3 popup đồ/offer kit Mastery; 2026-10-18 CHƯA commit
-- [Reskin Shop](dungonrush-reskin-shop.md) — StoreTabPage + 5 popup Shop (kit Mastery, ribbon_tint tô rarity) 2026-10-18: khung art + 19 icon ChatGPT ghi đè giữ size cũ + 6 gói gem; bẫy tách nền tím; đã commit
+- [Reskin Shop](dungonrush-reskin-shop.md) — StoreTabPage + 5 popup Shop (kit Mastery, ribbon_tint tô rarity) 2026-10-18: khung art + 19 icon ChatGPT ghi đè giữ size cũ + 6 gói gem; bẫy tách nền tím; đã commit; 2026-11-12 reskin lần 2 theo kit popup (ShopPageReskin)
 - [Reskin Mining](dungonrush-reskin-mining.md) — 2026-10-19 đã commit: kit Mastery + art 1_UIKit/Mining, ChatGPT 7 icon quặng (diamond=thạch anh tím), nút dụng cụ đổi sprite; CẤM chạy lại Build Mining
 - [Reskin Wing](dungonrush-reskin-wing.md) — PageWing + popup Craft/Reroll kit Mastery/BattlePass, wing→kính; đã commit
 - [Reskin Setting](dungonrush-reskin-setting.md) — 2026-10-19 đã commit: trang Settings phóng ×1.21 theo mockup, 4 ảnh art slider/núm ở 1_UIKit/Setting, núm đổi sprite (ToggleButton.OnSprite/OnFill)
