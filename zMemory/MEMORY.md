@@ -96,7 +96,7 @@
 - [Reskin Clan Search](dungonrush-reskin-clan-search.md) — 2026-10-27 popup Clan Search + Enter Clan Name theo mockup, kit 1_UIKit/ClanSearch (nút −/+ art, ô nhập tan, tick xanh ChatGPT); đã commit 90d7c08
 - [Reskin Enchantment](dungonrush-reskin-enchantment.md) — 2026-10-27 xong, commit 5d155b4; KHÔNG Apply Reskin toàn bộ
 - [Reskin lobby đợt 3](dungonrush-reskin-lobby2.md) — 2026-10-28 mockup "lobby demo 4", commit 3b12c24; hộp avatar/gem chờ art
-- [Reskin Dungeon](dungonrush-reskin-dungeon.md) — trang + 2 popup, tên Boss Raid/Zombie Horde/Dark Ritual; đã commit; popup kết quả theo concept 2026-11-11 + sửa glyph icon trứng (chưa commit)
+- [Reskin Dungeon](dungonrush-reskin-dungeon.md) — trang + 2 popup, tên Boss Raid/Zombie Horde/Dark Ritual; đã commit; popup kết quả theo concept 2026-11-11 + sửa glyph icon trứng (commit 37505a04)
 - [Reskin popup art cũ còn sót](dungonrush-reskin-old-popups.md) — 2026-10-28 Combat Summary + 16 popup (Cape/PvP/Account/ItemInfo/AutoLoot/Language) sang kit Mastery bằng PopupKitReskin; đã commit, chưa test Play
 - [Pet nhún idle như hero](dungonrush-pet-idle-bob.md) — PetAnimationController nhún node Icon theo UnitIdle hero, PetUnit tự gắn; 3 prefab tách sprite ra Icon; commit ce03204 (2026-10-28)
 - [FX impact cận chiến](dungonrush-melee-impact-fx.md) — hero_impact_101 của StickIdle cho mọi đòn đánh gần, FxController.fxImpactMelee (Resources), hiện ở pivot (giữa thân) nạn nhân; 2026-10-28
@@ -123,4 +123,4 @@
 - [Glow nút trái/phải lobby](dungonrush-lobby-button-glow.md) — Coffee UIParticle + glow1_ADD giữ guid gốc + rương bay; commit d8bdad9e
 - [Icon app Android](dungonrush-app-icon.md) — vịt cầm búa mẫu 4, Art/AppIcon, adaptive chỉ lớp nền thu 72/108; commit 30239c1c 2026-11-10; iOS chưa gán
 - [Build Android Product/Dev](dungonrush-android-release-build.md) — BuildRelease APK+AAB không cheat; BuildDev APK define DEV_BUILD: cheat + mua/ads luôn thành công; tool mới bọc `UNITY_EDITOR || DEV_BUILD`
-- [Nút bị nuốt click lúc chuyển màn](dungonrush-ui-click-blocked-shield.md) — ShieldUI Overlay 1000 bật khi campaign fade vùng map → Sell/Equip không ăn; đã sửa 2026-11-11 (chưa commit) + cách dò raycast
+- [Nút bị nuốt click lúc chuyển màn](dungonrush-ui-click-blocked-shield.md) — ShieldUI Overlay 1000 bật khi campaign fade vùng map → Sell/Equip không ăn; đã sửa 2026-11-11 (commit d9bec3d1) + cách dò raycast
