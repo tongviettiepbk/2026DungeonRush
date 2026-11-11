@@ -61,8 +61,8 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 | 0 | ✅ tools/concept/kit/ (kit.css dùng chung) | ✅ 2026-11-11 | ✅ Scripts/Art/Editor/PopupStyle.cs | ✅ 812200d0 |
 | 1 | ✅ tools/concept/batch1/ | ✅ 2026-11-11 | ✅ Batch1Reskin (chụp edit mode: batch1/unity.png); user test Play Auto Loot → sửa viền bị mask cắt; các popup khác CHƯA test Play | ✅ 812200d0 + sửa viền |
 | 2 | ✅ tools/concept/batch2/ (khảo sát: before/); user sửa: ô mốc Battle Pass ghi tên màn "Normal 3-5" (StaticCampaignData.GetLevelText, tên Tier dịch Items.Tier.Name.TierN) thay số level | ✅ 2026-11-11 | ✅ Batch2Reskin (chụp edit mode: batch2/unity.png, 14 ảnh); CHƯA test Play | ✅ |
-| 3 | ✅ tools/concept/batch3/ (khảo sát: before/; max: mô tả pet DE 126 ký tự = 4 dòng, tên mastery DE 33 ký tự → 2 dòng, summon tới 1055 ô) | ✅ 2026-11-11 (duyệt cả 4 đề xuất: Summon Rates, Unequip, key ads summon, mô tả pet/mastery dùng key dịch) | ✅ Batch3Reskin (chụp edit mode: batch3/unity.png, 7 ảnh); CHƯA test Play | ✅ |
-| 4 | ✅ tools/concept/batch4/ (khảo sát: before/; max: Wing 5 substat, Cape 2 substat, relic tier 11, kho cuộn) | ✅ 2026-11-11 (duyệt: header "Relic +N", "Relic Merge", "Summon Rates" tẩu, 10 key mới) | ✅ Batch4Reskin (chụp edit mode: batch4/unity.png, 11 ảnh); CHƯA test Play | ✅ |
+| 3 | ✅ tools/concept/batch3/ (khảo sát: before/; max: mô tả pet DE 126 ký tự = 4 dòng, tên mastery DE 33 ký tự → 2 dòng, summon tới 1055 ô) | ✅ 2026-11-11 (duyệt cả 4 đề xuất: Summon Rates, Unequip, key ads summon, mô tả pet/mastery dùng key dịch) | ✅ Batch3Reskin (chụp edit mode: batch3/unity.png, 7 ảnh); CHƯA test Play | ✅ 51f7ba11 |
+| 4 | ✅ tools/concept/batch4/ (khảo sát: before/; max: Wing 5 substat, Cape 2 substat, relic tier 11, kho cuộn) | ✅ 2026-11-11 (duyệt: header "Relic +N", "Relic Merge", "Summon Rates" tẩu, 10 key mới) | ✅ Batch4Reskin (chụp edit mode: batch4/unity.png, 11 ảnh); CHƯA test Play | ✅ bf958a49 + căn giữa Lvl ô relic/tẩu (4dbe2152, 4779b9cc) |
 | 5 | | | | |
 | 6 | | | | |
 | 7 | | | | |

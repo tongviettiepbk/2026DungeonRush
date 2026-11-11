@@ -1,11 +1,11 @@
 ---
 name: dungonrush-ui-concept-workflow
-description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..3 xong 2026-11-11, tiếp Đợt 4"
+description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..4 xong 2026-11-11, tiếp Đợt 5"
 metadata:
   node_type: memory
   type: project
   originSessionId: 3164be48-a1fc-4de0-a1a9-4dd4a3175277
-  modified: 2026-11-11T23:30:00.000Z
+  modified: 2026-11-12T02:00:00.000Z
 ---
 
 User duyệt cách làm này ngày 2026-11-11, dặn CHỈ lưu trong bộ nhớ, KHÔNG viết tài liệu vào GDD/.
@@ -40,6 +40,7 @@ PLAN.md giữ: danh sách 67 popup chia Đợt 0..9, quy trình tối ưu 3 phas
 - Thanh tiến độ: fill phải thụt đều trong viền (user báo lỗi bản đầu).
 - Viền đen bị mask vùng cuộn cắt (user báo "viền đứt") → mask không sprite + lề 8.
 - Chốt concept rồi mới đụng Unity; commit thẳng main khi user bảo (user đã bảo commit sau mỗi đợt).
+- Chữ "Lvl N" ở ô relic + ô tẩu căn GIỮA đáy ô (user sửa 2026-11-12, Batch4Reskin.BottomLevel); ô kính/Item Info/Pet Info vẫn góc trái.
 - Thông tin màn/map phải ghi TÊN rõ ràng, không chỉ số level/id (user sửa ô mốc Battle Pass → "Normal 3-5" theo StaticCampaignData.GetLevelTextTwoLines, tên Tier dịch Items.Tier.Name.TierN).
 
 ## Đã làm
@@ -49,6 +50,9 @@ PLAN.md giữ: danh sách 67 popup chia Đợt 0..9, quy trình tối ưu 3 phas
 
 - Đợt 3 Pet & Mastery (UIPetInfo, uiUpgradePet, UiSumonPet, UICompanionAdSummonPopup, MateryPopupUpgrade trong UIMainGame2) — 2026-11-11, tool `Batch3Reskin`, chụp batch3/unity.png khớp concept, CHƯA test Play. User duyệt: tiêu đề "Summon Rates", "Remove"→Common.Unequip, 7 key mới (Popup.Companion.OwnEffect/SummonToUnlock, Popup.CompanionAdSummon.*), mô tả pet (descriptionKey) + tên/mô tả mastery (Items.Mastery.Name/Desc.<type>) dùng key dịch. Số trong mô tả pet đổi xanh #2F8F1F (vàng gốc không đọc được trên kem). Pet info chạm nền tối để đóng.
 - Bẫy Đợt 3: chữ cũ để fontStyle Bold → PopupStyle.Outline không reset, phải đặt Normal; chữ viền đen trên panel tối (mastery_panel) trông như không viền — đúng như concept, không phải lỗi; SaveAsPrefabAsset UIMainGame2 sắp lại thứ tự component (diff to nhưng đủ 8 UIParticle).
+
+- Đợt 4 Enchantment/Kính/Tẩu (10 popup + ô con CapeElementUI, SubstatUIElementPrefab) — tool `Batch4Reskin`, chụp batch4/unity.png, CHƯA test Play. User duyệt: header relic "Relic +N" (bỏ "Enchantment"), "Relic Merge", Summon Rates tẩu, 10 key mới (Popup.Enchantment.PowerLabel/PowerDesc/RelicMerge/Inventory/TapToAdd, Popup.WingReroll.LockedHint, Popup.CapeDetail.Title, Popup.CapeSalvage.Title/Select, Popup.Cape.NewPipe). Cape Detail/Salvage + Wing Reroll tách cột nhãn nâu/số viền (UICapePopup.SetStatLabels, UIWingRerollPopup.SetBaseStats); Show Pipe = công tắc kit Setting (sprKnobOn/Off + objShowCloakFill).
+- Bẫy Đợt 4: prefab rip hay có HLG TẮT + phần tử đặt tay / LayoutElement.ignoreLayout (Merge) → bật lại; panel mới chèn trong trang có nền toàn màn phải đặt sibling SAU nền; input_tan trùng màu thân popup → dùng box_tan; ClaimPage/CapeShowOffPanel là con của popup nên toạ độ tính theo tâm popup (= tâm màn).
 
 **Why:** user sẽ reskin lại cả bộ UI theo style mới; concept trước → duyệt → áp để khỏi làm lại prefab nhiều lần.
 
