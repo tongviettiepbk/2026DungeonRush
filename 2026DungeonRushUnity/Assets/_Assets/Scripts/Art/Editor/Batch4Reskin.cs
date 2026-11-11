@@ -288,7 +288,7 @@ public static class Batch4Reskin
             Transform t = FindOrNull(cell.transform, name);
             if (t != null) t.gameObject.SetActive(false);
         }
-        if (cell.textLvl != null) CornerLevel(cell.textLvl, size >= 128f ? 28f : 24f);
+        if (cell.textLvl != null) BottomLevel(cell.textLvl, size >= 128f ? 28f : 24f);
     }
     #endregion
 
@@ -1011,6 +1011,22 @@ public static class Batch4Reskin
         rt.localScale = Vector3.one;
         PopupStyle.Outline(text, size, size * 0.7f);
         text.alignment = TextAlignmentOptions.BottomLeft;
+        text.enableWordWrapping = false;
+        text.transform.SetAsLastSibling();
+    }
+
+    // "Lvl N" chữ viền căn giữa đáy ô (ô relic — user chốt 2026-11-12).
+    private static void BottomLevel(TMP_Text text, float size)
+    {
+        RectTransform rt = text.rectTransform;
+        rt.anchorMin = new Vector2(0f, 0f);
+        rt.anchorMax = new Vector2(1f, 0f);
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.sizeDelta = new Vector2(0f, size + 10f);
+        rt.anchoredPosition = new Vector2(0f, 2f);
+        rt.localScale = Vector3.one;
+        PopupStyle.Outline(text, size, size * 0.7f);
+        text.alignment = TextAlignmentOptions.Bottom;
         text.enableWordWrapping = false;
         text.transform.SetAsLastSibling();
     }
