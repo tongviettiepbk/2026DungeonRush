@@ -404,8 +404,11 @@ public class UIManager : Singleton<UIManager>
     public void FadeOut(FadeColor color, float duration, UnityAction doneCallback = null, Image target = null)
     {
         isFading = true;
-        ActiveShield(true);
         imgFadeHalf = target != null ? target : imgFade;
+        // Chỉ chặn bấm khi phủ toàn màn hình. Tấm phủ riêng (chỉ vùng map lúc chuyển màn campaign) mà bật
+        // ShieldUI (Overlay 1000, toàn màn) thì nuốt mọi click lobby/popup suốt lúc chuyển màn — VD Sell/Equip.
+        if (imgFadeHalf == imgFade)
+            ActiveShield(true);
         imgFadeHalf.color = color == FadeColor.White ? Color.white : Color.black;
         fadeOutRoutine = StartCoroutine(CoroutineFadeAlpha(imgFadeHalf, 0f, 1f, duration, false, doneCallback));
     }
@@ -450,7 +453,8 @@ public class UIManager : Singleton<UIManager>
         if (isEnd)
         {
             isFading = false;
-            ActiveShield(false);
+            if (img == imgFade)
+                ActiveShield(false);
             img.gameObject.SetActive(false);
         }
 
