@@ -1,6 +1,6 @@
 ---
 name: dungonrush-ui-concept-workflow
-description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..5 xong 2026-11-11, tiếp Đợt 6"
+description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..6 xong 2026-11-11, tiếp Đợt 7"
 metadata:
   node_type: memory
   type: project
@@ -56,6 +56,7 @@ PLAN.md giữ: danh sách 67 popup chia Đợt 0..9, quy trình tối ưu 3 phas
 
 - Đợt 5 Dungeon & Mining (UIDungeonPopup, UIMiningPopup, UIMiningRarityPopup, UIMiningOfferPopup) — 2026-11-11, tool `Batch5Reskin` (chạy lại ra y hệt), chụp batch5/unity.png khớp concept, CHƯA test Play. User duyệt: Dungeon thêm nhãn "Keys" (key mới Popup.Dungeon.Keys) + dòng mô tả UI.Dungeon.Description; Sweep tím / Enter cam / Ads hồng / khoá xám (UIDungeonPopupStart.sprSweep/sprEnter/sprDisabled); nút dụng cụ Mining: chọn cam / còn hàng tím / hết còn ads hồng / hết cả ads xám (UIMiningPopup.sprToolAd/sprToolEmpty); cột level kế bảng quặng tăng xanh/giảm đỏ. Sửa kèm: "Next in" + "Increase Maximum Pickaxe Storage" dùng key dịch, gỡ key nhầm trên tiêu đề Offer. OfferShell/TapToClose của Batch2Reskin đổi sang `internal` để dùng lại.
 - Bẫy Đợt 5: UnityMCP rớt vì server 8080 không chạy (không phải bridge) → script tạm gọi `MCPServiceLocator.Server.StartLocalHttpServer(true)` rồi `Bridge.StartAsync()`; RawImage mỏ chụp edit mode ra trắng (chỉ có hình khi Play).
+- Đợt 6 PvP & Boss Rush (5 popup PvP + 4 Boss Rush + RewardsPanel trong UIBossRushPopup + UIPlayerPopup) — 2026-11-11, tool `Batch6Reskin`, chụp batch6/unity.png khớp concept, CHƯA test Play. GIỮ art mockup cũ (dòng xám/xanh, vạch PROMOTION, thanh máu boss, đầu boss + khiên nhô trên header); chỉ đồng bộ khung/X/nút/chữ. User duyệt: PvP thua Continue tím (sprContinueWin/Lose), Fight Boss Rush cam/hồng vé ads (chữ "<sprite=0>" IsAd)/xám (sprFight*), UIPlayerPopup giữ bố cục user chỉnh tay — chỉ X + tách cột chỉ số (txtSubStatValues). Thêm StatusPanel tối cho dòng "No fights remaining" (trước đó StatusText tắt sẵn nên không bao giờ hiện). Chữ cứng → key: Boss #, FightCount, NoFightsRemaining/NextIn, YourPlacement, Placement, TeamDamage/DamageDealt; key mới Popup.BossRushRewards.BossesKilled.
 
 **Why:** user sẽ reskin lại cả bộ UI theo style mới; concept trước → duyệt → áp để khỏi làm lại prefab nhiều lần.
 

@@ -32,6 +32,7 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 - Chụp concept: Chrome headless phải có `--virtual-time-budget` (đã thêm vào render_concept.sh), không thì chụp trước khi font nạp → mất hết chữ.
 - Ảnh mờ mềm (glow FX) nén ASTC 6x6 → vệt khối mờ quanh rìa khi phóng to; ảnh nhỏ thì đặt Uncompressed (đã làm cho 7_FX/Glow_Circle02).
 - UnityMCP rớt do server 8080 KHÔNG chạy (lsof trống): script tạm gọi MCPServiceLocator.Server.StartLocalHttpServer(true) rồi Bridge.StartAsync(); RawImage (mỏ) chụp edit mode ra trắng — bình thường.
+- Popup đã reskin theo mockup cũ (PvP/Boss Rush): GIỮ art dòng/thanh máu/đầu boss, chỉ đồng bộ khung/X/nút/chữ. Thu hẹp vùng cuộn thì chỉnh padding VLG (dòng 744 trong vùng 760 → padding 8), không thì chữ hạng lấn mép dòng.
 - Popup có bảng ẩn/hiện dòng (Chest Info): VerticalLayoutGroup + ContentSizeFitter trên panel, Background/Header/Title/X gắn LayoutElement.ignoreLayout — bỏ code tính chiều cao tay.
 
 ## Các đợt (thứ tự theo mức người chơi gặp sớm)
@@ -55,7 +56,7 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 - Đổi trạng thái bằng đổi sprite / ẩn hiện trong script, không tô màu đè.
 
 ## Tiến độ
-**Đang ở:** Đợt 5 xong (áp + chụp kiểm batch5/unity.png + commit). **Tiếp theo:** Đợt 6 PvP & Boss Rush — bắt đầu từ bước A. Đợt 2 + 3 + 4 + 5 CHƯA test Play.
+**Đang ở:** Đợt 6 xong (áp + chụp kiểm batch6/unity.png + commit). **Tiếp theo:** Đợt 7 Clan — bắt đầu từ bước A (CẤM chạy lại Build Clan UI Prefabs). Đợt 2 → 6 CHƯA test Play.
 
 | Đợt | Concept | Chốt | Áp vào game | Commit |
 |---|---|---|---|---|
@@ -65,7 +66,7 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 | 3 | ✅ tools/concept/batch3/ (khảo sát: before/; max: mô tả pet DE 126 ký tự = 4 dòng, tên mastery DE 33 ký tự → 2 dòng, summon tới 1055 ô) | ✅ 2026-11-11 (duyệt cả 4 đề xuất: Summon Rates, Unequip, key ads summon, mô tả pet/mastery dùng key dịch) | ✅ Batch3Reskin (chụp edit mode: batch3/unity.png, 7 ảnh); CHƯA test Play | ✅ 51f7ba11 |
 | 4 | ✅ tools/concept/batch4/ (khảo sát: before/; max: Wing 5 substat, Cape 2 substat, relic tier 11, kho cuộn) | ✅ 2026-11-11 (duyệt: header "Relic +N", "Relic Merge", "Summon Rates" tẩu, 10 key mới) | ✅ Batch4Reskin (chụp edit mode: batch4/unity.png, 11 ảnh); CHƯA test Play | ✅ bf958a49 + căn giữa Lvl ô relic/tẩu (4dbe2152, 4779b9cc) |
 | 5 | ✅ tools/concept/batch5/ (khảo sát: before/; max: tiêu đề dungeon 17 ký tự ES, offer x3200 gem, tỉ lệ quặng thật lv1→2 / lv60) | ✅ 2026-11-11 (duyệt: nhãn "Keys" key mới Popup.Dungeon.Keys, dòng mô tả UI.Dungeon.Description, màu nút dụng cụ theo trạng thái) | ✅ Batch5Reskin (chụp edit mode: batch5/unity.png, 8 ảnh); CHƯA test Play | ✅ |
-| 6 | | | | |
+| 6 | ✅ tools/concept/batch6/ (khảo sát: before/; giữ art dòng/thanh máu mockup PvP + Boss Rush; UIPlayerPopup giữ bố cục user chỉnh tay) | ✅ 2026-11-11 (duyệt: Continue thua tím, Fight vé ads hồng + icon IsAd, hồ sơ chỉ X + tách cột chỉ số; key mới Popup.BossRushRewards.BossesKilled) | ✅ Batch6Reskin (chụp edit mode: batch6/unity.png, 14 ảnh); CHƯA test Play | ✅ |
 | 7 | | | | |
 | 8 | | | | |
 | 9 | | | | |

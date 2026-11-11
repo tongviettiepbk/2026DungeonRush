@@ -23,6 +23,9 @@ public class UIPvPPopup : BaseUI
     public Transform leaderboardContent;
     public ScrollRect leaderboardScroll;
     public ElementPvPLeaderboardUI stickyRow;
+    // Reskin Đợt 6: Challenge cam, ngoài mùa xám.
+    public Sprite sprBattle;
+    public Sprite sprBattleDisabled;
     public Color promotionColor = new Color(0.27f, 0.85f, 0.45f, 1f);
     public Color demotionColor = new Color(0.9f, 0.27f, 0.25f, 1f);
 
@@ -114,6 +117,7 @@ public class UIPvPPopup : BaseUI
 
         btBattle.gameObject.SetActive(true);
         btBattle.interactable = IsSeasonActive;
+        if (sprBattle != null && sprBattleDisabled != null) btBattle.image.sprite = IsSeasonActive ? sprBattle : sprBattleDisabled;
         if (txtBattle != null) txtBattle.text = Loc.L("Popup.PvP.Challenge");
         DrawLeaderboard();
     }

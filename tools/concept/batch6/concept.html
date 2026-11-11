@@ -1,0 +1,270 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Đợt 6 – PvP & Boss Rush. Kit chung tools/concept/kit/kit.css, sprite thật trong Art/, 1 px CSS = 2 đơn vị canvas.
+     Giữ art dòng/thanh máu của mockup PvP + Boss Rush (1_UIKit/PvP, 1_UIKit/BossRush); chỉ đồng bộ kit.
+     Chụp: tools/concept/render_concept.sh tools/concept/batch6/concept.html tools/concept/batch6/concept.png 1700 <cao> -->
+<base href="../../../2026DungeonRushUnity/Assets/_Assets/Art/">
+<link rel="stylesheet" href="../../../../tools/concept/kit/kit.css">
+<style>
+body{display:flex;flex-wrap:wrap;gap:22px;width:1700px;align-items:flex-start}
+.stack{display:flex;flex-direction:column;gap:26px;width:530px}
+.col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.cap{color:#cfcde0;font-size:17px;font-family:sans-serif;max-width:520px;text-align:center;line-height:1.35}
+.cap b{color:#fff}
+.scr{width:530px;background:#3e3d4d;border-radius:18px;padding:30px 0;display:flex;flex-direction:column;align-items:center;gap:14px;position:relative}
+.w817{width:408px}
+.states{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+.lab{color:#7a5c3c;font-size:18px;text-align:center;line-height:1.25}
+.red{color:#ff5a5a}.grn{color:#62d34a}.yel{color:#ffd35a}
+.ic{height:1em;vertical-align:-0.15em}
+/* trang trí nhô trên header */
+.deco{position:absolute;left:50%;transform:translateX(-50%);z-index:4}
+.boss{top:-62px;width:76px}
+.shield{top:-56px;width:84px}
+/* nút vuông xanh trái header */
+.sqb{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:52px;height:52px;border-style:solid;border-width:6px 6px 10px;border-image:url(1_UIKit/Lobby/btn_blue.png) 18 18 30 18 fill;display:flex;align-items:center;justify-content:center;z-index:3}
+.sqb img{width:32px;height:32px;margin-top:-2px}
+.hd2{flex-direction:column;line-height:1.05}
+.hd2 .o{font-size:24px}
+/* dòng danh sách (row PvP 746x122) */
+.li{width:100%;height:61px}
+.li .rk{width:44px;font-size:20px}
+.li .av{width:43px;height:43px;border-style:solid;border-width:6px;border-image:url(1_UIKit/PvP/slot_dark.png) 12 fill;margin:-6px 0;display:flex;align-items:center;justify-content:center;flex:none}
+.li .av img{width:36px;height:36px;margin:-6px;background:none;border-radius:0}
+.li .nm2{flex:1;display:flex;flex-direction:column;gap:0;min-width:0}
+.li .nm2 .o3{font-size:16px;line-height:1.2;white-space:nowrap}
+.li .nm2 .p{display:flex;align-items:center;gap:3px}
+.li .nm2 .p img{width:18px;height:18px;margin:0;background:none}
+.li .box{width:91px;height:37px;border-style:solid;border-width:6px;border-image:url(1_UIKit/PvP/slot_dark.png) 12 fill;display:flex;align-items:center;justify-content:center;gap:4px;margin:-6px 0}
+.li .box img{width:18px;height:18px;margin:0;background:none}
+.li .box .o3{font-size:16px;margin:-6px 0}
+.list{width:100%;display:flex;flex-direction:column;gap:4px;position:relative}
+.sep{height:30px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sep img{width:101px}
+.sep .o3{font-size:15px;color:#62d34a}
+.sticky{box-shadow:0 -8px 10px -6px rgba(0,0,0,.35)}
+/* đối thủ */
+.opp{height:77px}
+.opp .act{display:flex;flex-direction:column;align-items:center;gap:0;width:108px}
+.opp .act .o3{font-size:15px}
+.opp .act .b{height:44px;min-width:0;width:106px;padding:0 4px;border-width:10px}
+.opp .act .b .o3{font-size:14px;line-height:1.05;text-align:center}
+.opp .act img{width:17px;height:17px;margin:0;background:none;border-radius:0;vertical-align:-3px}
+/* ô tan */
+.tan{border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill;display:flex;align-items:center;justify-content:center;gap:8px}
+.big{font-size:30px}
+/* thưởng mùa */
+.band{height:50px}
+.band .rk{width:62px;font-size:16px}
+.band .rw{flex:1;display:grid;grid-template-columns:repeat(4,1fr);align-items:center}
+.band .rw span{display:flex;align-items:center;gap:3px;font-size:15px}
+.band .rw img{width:20px;height:20px;margin:0;background:none;border-radius:0}
+.nav{display:flex;align-items:center;gap:14px}
+.arw{width:46px;height:46px;border-style:solid;border-width:6px 6px 10px;border-image:url(1_UIKit/Lobby/btn_blue.png) 18 18 30 18 fill;display:flex;align-items:center;justify-content:center}
+.arw img{width:20px}
+.grid{display:grid;grid-template-columns:repeat(3,auto);gap:4px 22px;justify-content:center}
+.grid span{display:flex;align-items:center;gap:4px;font-size:19px}
+.grid img{width:24px;height:24px;object-fit:contain}
+/* Boss Rush */
+.hp{width:300px;height:27px;background:url(1_UIKit/BossRush/hp_track.png) center/100% 100%;position:relative;padding:3px}
+.hp i{display:block;height:100%;width:45%;border-style:solid;border-width:0 8px;border-image:url(1_UIKit/BossRush/hp_fill.png) 0 16 fill}
+.hp .o3{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px}
+.brow .dmg{width:88px;height:34px;background:rgba(0,0,0,.5);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.brow .dmg .o3{font-size:16px}
+.prow{width:100%;height:46px;padding:0 12px;justify-content:space-between}
+.prow .o3{font-size:16px}
+.prow .r{display:flex;gap:10px}
+.prow .r span{display:flex;align-items:center;gap:3px}
+.prow img{width:20px;height:20px;object-fit:contain}
+.slot2{width:50px;height:50px;background-size:100% 100%;position:relative;display:flex;align-items:center;justify-content:center}
+.slot2 img{width:36px;height:36px;object-fit:contain}
+.slot2 .lv{position:absolute;left:3px;bottom:0;font-size:11px}
+</style></head><body>
+
+<div class="stack">
+<!-- 1. PvP lobby -->
+<div class="col"><div class="cap"><b>UIPvPPopup</b> (vừa 817): nút Rewards xanh lơ (thông tin) ở góc trái header, tên league giữ màu league. Thời gian mùa <b>chữ nâu</b> (đang vàng nhạt khó đọc trên kem). Giữ dòng xám/xanh + vạch PROMOTION/DEMOTION của mockup, dòng của mình <b>ghim đáy</b>. Nút Challenge <b>cam</b> (khoá = xám).</div>
+<div class="scr" style="padding-top:40px"><div class="pp w817">
+ <div class="hd"><div class="sqb"><img src="1_UIKit/Common/star-medal.png"></div><span class="o">Iron League</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px">
+  <img src="1_UIKit/PvP/icon_shield.png" style="width:96px">
+  <span class="lab">Season ends<br>in: 3d 15h</span>
+  <div class="list" style="height:338px;overflow:hidden">
+   <div class="li lg"><span class="rk o">#1</span><div class="av"><img src="2_Icons/Avatar/king.png"></div><div class="nm2"><span class="o3">PondKing</span><span class="o3 p"><img src="1_UIKit/BossRush/icon_fist.png">1.25B</span></div><div class="box"><img src="2_Icons/Currency/trophy.png"><span class="o3">11</span></div></div>
+   <div class="li lg"><span class="rk o">#2</span><div class="av"><img src="2_Icons/Avatar/angel.png"></div><div class="nm2"><span class="o3">Featherfist</span><span class="o3 p"><img src="1_UIKit/BossRush/icon_fist.png">19.5M</span></div><div class="box"><img src="2_Icons/Currency/trophy.png"><span class="o3">11</span></div></div>
+   <div class="li lg"><span class="rk o">#3</span><div class="av"><img src="2_Icons/Avatar/viking.png"></div><div class="nm2"><span class="o3">Ironbrute</span><span class="o3 p"><img src="1_UIKit/BossRush/icon_fist.png">80.6M</span></div><div class="box"><img src="2_Icons/Currency/trophy.png"><span class="o3">10</span></div></div>
+   <div class="sep"><img src="1_UIKit/PvP/line_left_white.png" style="filter:none"><span class="o3">PROMOTION AREA</span><img src="1_UIKit/PvP/line_right_white.png"></div>
+   <div class="li lg"><span class="rk o">#4</span><div class="av"><img src="2_Icons/Avatar/orc.png"></div><div class="nm2"><span class="o3">Babacan</span><span class="o3 p"><img src="1_UIKit/BossRush/icon_fist.png">3.42M</span></div><div class="box"><img src="2_Icons/Currency/trophy.png"><span class="o3">8</span></div></div>
+   <div class="li lg"><span class="rk o">#5</span><div class="av"><img src="2_Icons/Avatar/kitty.png"></div><div class="nm2"><span class="o3">Voiddroid</span><span class="o3 p"><img src="1_UIKit/BossRush/icon_fist.png">115.4M</span></div><div class="box"><img src="2_Icons/Currency/trophy.png"><span class="o3">7</span></div></div>
+  </div>
+  <div class="li lb sticky" style="margin-top:-4px"><span class="rk o">#65</span><div class="av"><img src="2_Icons/Avatar/knight.png"></div><div class="nm2"><span class="o3">tieuphong (You)</span><span class="o3 p"><img src="1_UIKit/BossRush/icon_fist.png">1.25M</span></div><div class="box"><img src="2_Icons/Currency/trophy.png"><span class="o3">0</span></div></div>
+  <div class="b or" style="width:160px;margin-top:6px"><span class="o">Challenge</span></div>
+ </div>
+</div>
+<div class="states"><div class="it"><div class="b gr sm" style="min-width:130px"><span class="o">Challenge</span></div><span class="nt">ngoài mùa (Thứ Hai)</span></div></div>
+</div></div>
+
+<!-- 2. Find opponent -->
+<div class="col"><div class="cap"><b>UIPvPFindOpponentPopup</b> (vừa 817): tiêu đề "Choose an Opponent". Dòng giờ hồi vé <b>chữ nâu</b>, ô vé tan. Mỗi dòng: "+N 🏆" trên nút <b>cam</b> "Challenge 🎟1" (đang xanh dương). Lỗi "No opponents found" chữ đỏ.</div>
+<div class="scr" style="padding-top:40px"><div class="pp w817">
+ <div class="hd"><span class="o" style="font-size:24px">Choose an Opponent</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px">
+  <img src="1_UIKit/PvP/icon_shield.png" style="width:90px">
+  <span class="lab">Challenge tickets are replenished in 5h 10m!</span>
+  <div class="tan" style="width:106px;height:36px"><img class="ic" src="2_Icons/Currency/ticket.png" style="height:22px"><span class="o3" style="font-size:19px">4/5</span></div>
+  <div class="list" style="gap:6px">
+   <div class="li lg opp"><div class="av"><img src="2_Icons/Avatar/devil.png"></div><div class="nm2"><span class="o3">bury zenek</span><span class="o3 p"><img src="1_UIKit/BossRush/icon_fist.png">192.6M</span></div><div class="act"><span class="o3">+5 <img class="ic" src="2_Icons/Currency/trophy.png"></span><div class="b or"><span class="o3">Challenge<br><img class="ic" src="2_Icons/Currency/ticket.png">1</span></div></div></div>
+   <div class="li lg opp"><div class="av"><img src="2_Icons/Avatar/viking.png"></div><div class="nm2"><span class="o3">Ironbrute</span><span class="o3 p"><img src="1_UIKit/BossRush/icon_fist.png">647.1M</span></div><div class="act"><span class="o3">+4 <img class="ic" src="2_Icons/Currency/trophy.png"></span><div class="b or"><span class="o3">Challenge<br><img class="ic" src="2_Icons/Currency/ticket.png">1</span></div></div></div>
+   <div class="li lg opp"><div class="av"><img src="2_Icons/Avatar/orc.png"></div><div class="nm2"><span class="o3">Babacan</span><span class="o3 p"><img src="1_UIKit/BossRush/icon_fist.png">3.42M</span></div><div class="act"><span class="o3">+3 <img class="ic" src="2_Icons/Currency/trophy.png"></span><div class="b or"><span class="o3">Challenge<br><img class="ic" src="2_Icons/Currency/ticket.png">1</span></div></div></div>
+  </div>
+ </div>
+</div>
+<div class="states"><div class="it"><span class="o3 red" style="font-size:20px;text-align:center">No opponents found.<br>Try again later.</span><span class="nt">không có đối thủ</span></div></div>
+</div></div>
+</div>
+
+<div class="stack">
+<!-- 3. PvP end -->
+<div class="col"><div class="cap"><b>UIPvPEndPopup</b> (vừa 817): "Victory!" / "Defeated" (đỏ) trên header. Cúp to + phần cộng vàng. Thắng: Continue <b>xanh lá</b>; thua: <b>tím</b> (như popup kết quả Dungeon). Lỗi mạng: chữ đỏ + Retry <b>cam</b>.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Victory!</span></div>
+ <div class="bd" style="gap:16px">
+  <span class="o big"><img class="ic" src="2_Icons/Currency/trophy.png"> 1205 <span class="yel">(+5)</span></span>
+  <div class="b g" style="width:160px"><span class="o">Continue</span></div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="pp" style="width:200px"><div class="hd" style="height:44px"><span class="o red" style="font-size:22px">Defeated</span></div></div><div class="b vi sm" style="min-width:120px"><span class="o">Continue</span></div><span class="nt">thua (+0)</span></div>
+ <div class="it"><span class="o3 red" style="font-size:18px">Connection error</span><div class="b or sm" style="min-width:120px"><span class="o">Retry</span></div><span class="nt">lỗi gửi kết quả</span></div>
+</div></div></div>
+
+<!-- 4. PvP season rewards -->
+<div class="col"><div class="cap"><b>UIPvPRewardsPopup</b> (vừa 817): header "Season Rewards" + X. Chọn league bằng 2 nút mũi tên xanh lơ. 7 khung hạng trên dòng xám, 4 cột thưởng có icon (gem / rương / xương / vương miện). Số thật Iron.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Season Rewards</span><div class="x"></div></div>
+ <div class="bd" style="gap:12px">
+  <div class="nav"><div class="arw"><img src="1_UIKit/Common/Icon_WhiteIcon_Arrow_Continue.png" style="transform:scaleX(-1)"></div><span class="o" style="font-size:24px;width:200px;text-align:center">Iron League</span><div class="arw"><img src="1_UIKit/Common/Icon_WhiteIcon_Arrow_Continue.png"></div></div>
+  <div class="list">
+   <div class="li lg band"><span class="rk o3">1</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/gem.png">179</span><span class="o3"><img src="2_Icons/Currency/box_icon.png">716</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">1074</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">537</span></div></div>
+   <div class="li lg band"><span class="rk o3">2</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/gem.png">149</span><span class="o3"><img src="2_Icons/Currency/box_icon.png">596</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">894</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">447</span></div></div>
+   <div class="li lg band"><span class="rk o3">3</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/gem.png">124</span><span class="o3"><img src="2_Icons/Currency/box_icon.png">496</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">744</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">372</span></div></div>
+   <div class="li lg band"><span class="rk o3">4-10</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/gem.png">86</span><span class="o3"><img src="2_Icons/Currency/box_icon.png">344</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">516</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">258</span></div></div>
+   <div class="li lg band"><span class="rk o3">11-25</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/gem.png">72</span><span class="o3"><img src="2_Icons/Currency/box_icon.png">288</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">432</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">216</span></div></div>
+   <div class="li lg band"><span class="rk o3">26-50</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/gem.png">60</span><span class="o3"><img src="2_Icons/Currency/box_icon.png">240</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">360</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">180</span></div></div>
+   <div class="li lg band"><span class="rk o3">51-100</span><div class="rw"><span class="o3"><img src="2_Icons/Currency/gem.png">50</span><span class="o3"><img src="2_Icons/Currency/box_icon.png">200</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">300</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">150</span></div></div>
+  </div>
+ </div>
+</div></div></div>
+
+<!-- 5. PvP season claim -->
+<div class="col"><div class="cap"><b>UIPvPSeasonClaimPopup</b> (vừa 817): giữ khiên nhô trên header. "Final rank: #22" trong ô tan. Ô thưởng: lên league <b>xanh lá</b> / xuống <b>đỏ</b>, cúp, 4 món. Claim <b>xanh lá</b>.</div>
+<div class="scr" style="padding-top:70px"><div class="pp w817">
+ <img class="deco shield" src="1_UIKit/PvP/icon_shield.png">
+ <div class="hd"><span class="o">Season Complete!</span></div>
+ <div class="bd" style="gap:12px">
+  <div class="tan" style="width:220px;height:46px"><span class="o3" style="font-size:20px">Final rank: #22</span></div>
+  <div class="tan" style="width:100%;flex-direction:column;gap:6px;padding:10px 0">
+   <span class="o3 grn" style="font-size:19px">Promoted to Platinum League!</span>
+   <span class="o3" style="font-size:19px"><img class="ic" src="2_Icons/Currency/trophy.png"> 55</span>
+   <div class="grid" style="grid-template-columns:repeat(4,auto)"><span class="o3"><img src="2_Icons/Currency/gem.png">124</span><span class="o3"><img src="2_Icons/Currency/box_icon.png">496</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">744</span><span class="o3"><img src="1_UIKit/Common/crown_icon.png">372</span></div>
+  </div>
+  <div class="b g" style="width:160px"><span class="o">Claim</span></div>
+ </div>
+</div>
+<div class="states"><div class="it"><span class="o3 red" style="font-size:18px">Demoted to Silver League</span><span class="nt">xuống league</span></div></div>
+</div></div>
+</div>
+
+<div class="stack">
+<!-- 6. Boss Rush join -->
+<div class="col"><div class="cap"><b>UIBossRushJoinPopup</b> (vừa 817): giữ đầu boss nhô trên header. Giờ còn lại + mô tả <b>chữ nâu</b>, tên league ô tan. Join <b>cam</b>.</div>
+<div class="scr" style="padding-top:76px"><div class="pp w817">
+ <img class="deco boss" src="4_Characters/Enemies/Dragon/dragon_without_wings.png">
+ <div class="hd"><span class="o">Boss Rush</span><div class="x"></div></div>
+ <div class="bd" style="gap:12px">
+  <span class="lab">Ends in: 4d 9h</span>
+  <div class="tan" style="width:188px;height:44px"><span class="o3" style="font-size:19px">Iron League</span></div>
+  <span class="lab" style="max-width:300px">Fight with an 8-player team and challenge bosses.</span>
+  <div class="b or" style="width:150px"><span class="o">Join</span></div>
+ </div>
+</div></div></div>
+
+<!-- 7. Boss Rush lobby -->
+<div class="col"><div class="cap"><b>UIBossRushPopup</b> (vừa 817): header 2 dòng "Boss Rush / Iron League", nút Rewards xanh lơ trái. Ô giờ + ô boss tan, thanh máu art Boss Rush. Dòng người chơi giữ art. Fight <b>cam</b> "5/5 Fight"; hết vé free → <b>hồng</b> có icon ads; hết cả → xám + dòng nâu "No fights remaining today!".</div>
+<div class="scr" style="padding-top:76px"><div class="pp w817">
+ <img class="deco boss" src="4_Characters/Enemies/Dragon/dragon_without_wings.png">
+ <div class="hd hd2"><div class="sqb"><img src="1_UIKit/Common/reward.png"></div><span class="o">Boss Rush</span><span class="o">Iron League</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px">
+  <div class="tan" style="width:137px;height:40px"><img src="1_UIKit/Common/clock.png" style="height:28px;margin:-4px 0"><span class="o3" style="font-size:18px">4d 9h</span></div>
+  <div class="tan" style="width:100%;height:88px;flex-direction:column;gap:6px"><span class="o3" style="font-size:17px">Boss #1: Dark Lich</span><div class="hp"><i></i><span class="o3">226M / 500M</span></div></div>
+  <div class="list" style="gap:5px">
+   <div class="li lg brow"><span class="rk o3" style="font-size:18px">41</span><div class="av"><img src="2_Icons/Avatar/viking.png"></div><div class="nm2"><span class="o3">Urga</span><span class="o3 p grn"><img src="1_UIKit/BossRush/icon_fist.png">2.1C</span></div><div class="dmg"><span class="o3">3.8K</span></div></div>
+   <div class="li lb brow"><span class="rk o3" style="font-size:18px">42</span><div class="av"><img src="2_Icons/Avatar/knight.png"></div><div class="nm2"><span class="o3">Me</span><span class="o3 p grn"><img src="1_UIKit/BossRush/icon_fist.png">2.1C</span></div><div class="dmg"><span class="o3">3.3K</span></div></div>
+   <div class="li lg brow"><span class="rk o3" style="font-size:18px">43</span><div class="av"><img src="2_Icons/Avatar/princess.png"></div><div class="nm2"><span class="o3">Lia</span><span class="o3 p grn"><img src="1_UIKit/BossRush/icon_fist.png">41M</span></div><div class="dmg"><span class="o3">3.3K</span></div></div>
+  </div>
+  <div class="b or" style="width:150px"><span class="o" style="font-size:22px;text-align:center;line-height:1.05">5/5<br>Fight</span></div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="b pk" style="width:150px"><span class="o" style="font-size:22px;text-align:center;line-height:1.05"><img class="ic" src="1_UIKit/Common/rewarded.png" style="height:18px"> 3/3<br>Fight</span></div><span class="nt">hết vé free, còn vé ads</span></div>
+ <div class="it"><div class="b gr" style="width:150px"><span class="o" style="font-size:22px;text-align:center;line-height:1.05">0/5<br>Fight</span></div><span class="lab" style="font-size:13px;color:#cfcde0">No fights remaining today!<br>Next in 5h 10m</span></div>
+</div></div></div>
+</div>
+
+<div class="stack" style="width:100%;flex-direction:row;gap:22px;align-items:flex-start">
+<!-- 8. Rewards panel -->
+<div class="col" style="width:530px"><div class="cap"><b>RewardsPanel</b> (trong UIBossRushPopup): header "Rewards" + X. Nhãn mục <b>chữ nâu</b>, ô thưởng đảm bảo tan, mỗi mốc hạng 1 dòng tan, "Your placement" nâu.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Rewards</span><div class="x"></div></div>
+ <div class="bd" style="gap:8px">
+  <span class="lab">Guaranteed Rewards</span>
+  <div class="tan" style="width:100%;flex-direction:column;gap:4px;padding:8px 0"><span class="o3" style="font-size:16px">Bosses killed: 7</span><div class="grid"><span class="o3"><img src="1_UIKit/Common/crown_icon.png">260</span><span class="o3"><img src="2_Icons/Currency/box_icon.png">780</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">780</span><span class="o3"><img src="2_Icons/Currency/red_key.png">2</span><span class="o3"><img src="2_Icons/Currency/green_key.png">2</span></div></div>
+  <span class="lab" style="margin-top:6px">Placement Rewards</span>
+  <div class="tan prow"><span class="o3">#1</span><div class="r"><span class="o3"><img src="1_UIKit/Common/crown_icon.png">100</span><span class="o3"><img src="2_Icons/Currency/gem.png">100</span></div></div>
+  <div class="tan prow"><span class="o3">#2</span><div class="r"><span class="o3"><img src="1_UIKit/Common/crown_icon.png">80</span><span class="o3"><img src="2_Icons/Currency/gem.png">80</span></div></div>
+  <div class="tan prow"><span class="o3">#4-10</span><div class="r"><span class="o3"><img src="1_UIKit/Common/crown_icon.png">30</span><span class="o3"><img src="2_Icons/Currency/gem.png">30</span></div></div>
+  <span class="lab">Your placement: 42</span>
+ </div>
+</div></div></div>
+
+<!-- 9. Boss Rush end + 10. claim -->
+<div class="col" style="width:530px"><div class="cap"><b>UIBossRushEndPopup</b> (vừa 817): "Fight Complete!", damage đội / của mình trong ô tan. Continue <b>xanh lá</b>; lỗi → Retry <b>cam</b>.</div>
+<div class="scr"><div class="pp w817">
+ <div class="hd"><span class="o">Fight Complete!</span></div>
+ <div class="bd" style="gap:14px">
+  <div class="tan" style="width:300px;flex-direction:column;gap:2px;padding:10px 0"><span class="o3" style="font-size:20px">Team Damage: 1.25B</span><span class="o3" style="font-size:20px">Damage Dealt: 312M</span></div>
+  <div class="b g" style="width:160px"><span class="o">Continue</span></div>
+ </div>
+</div></div>
+<div class="cap" style="margin-top:14px"><b>UIBossRushClaimPopup</b> (vừa 817): giữ đầu boss + hiệu ứng trượt tên league. "Placement: 71" + lưới thưởng trong ô tan. Claim <b>xanh lá</b>.</div>
+<div class="scr" style="padding-top:76px"><div class="pp w817">
+ <img class="deco boss" src="4_Characters/Enemies/Dragon/dragon_without_wings.png">
+ <div class="hd"><span class="o">Boss Rush Results</span><div class="x"></div></div>
+ <div class="bd" style="gap:12px">
+  <div class="tan" style="width:188px;height:44px"><span class="o3" style="font-size:19px">Iron League</span></div>
+  <div class="tan" style="width:100%;flex-direction:column;gap:6px;padding:10px 0"><span class="o3" style="font-size:18px">Placement: 71</span><div class="grid"><span class="o3"><img src="1_UIKit/Common/crown_icon.png">185</span><span class="o3"><img src="2_Icons/Currency/box_icon.png">540</span><span class="o3"><img src="2_Icons/Currency/bone_icon.png">540</span><span class="o3"><img src="2_Icons/Currency/red_key.png">2</span><span class="o3"><img src="2_Icons/Currency/green_key.png">2</span><span class="o3"><img src="2_Icons/Currency/gem.png">5</span></div></div>
+  <div class="b g" style="width:160px"><span class="o">Claim</span></div>
+ </div>
+</div></div></div>
+
+<!-- 11. Player popup -->
+<div class="col" style="width:530px"><div class="cap"><b>UIPlayerPopup</b> (hồ sơ người khác): bố cục bạn đã chỉnh tay → <b>giữ nguyên</b>, chỉ đưa nút X vào trong header (cỡ 104 như mọi popup) và đổi chữ chỉ số sang <b>nhãn nâu / số viền</b>. Không chạy lại builder.</div>
+<div class="scr"><div class="pp" style="width:450px">
+ <div class="hd"><div class="sqb" style="border-image-source:url(1_UIKit/Mastery/box_tan.png);border-width:6px;border-image-slice:12 fill"><img src="2_Icons/Avatar/knight.png" style="width:40px;height:40px"></div><span class="o">Drakkon</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px">
+  <div class="tan" style="width:225px;height:125px"><span class="mute" style="font-size:13px">(nhân vật + 3 pet)</span></div>
+  <span class="o" style="font-size:25px"><img class="ic" src="1_UIKit/BossRush/icon_fist.png"> 22.58M</span>
+  <div style="display:grid;grid-template-columns:repeat(4,50px);gap:8px">
+   <div class="slot2" style="background-image:url(1_UIKit/Rarity/tier_05_background.png)"><span class="lv o3">Lv 1</span></div><div class="slot2" style="background-image:url(1_UIKit/Rarity/tier_03_background.png)"><span class="lv o3">Lv 4</span></div><div class="slot2" style="background-image:url(1_UIKit/Rarity/tier_05_background.png)"><span class="lv o3">Lv 1</span></div><div class="slot2" style="background-image:url(1_UIKit/Rarity/tier_04_background.png)"><span class="lv o3">Lv 43</span></div>
+   <div class="slot2" style="background-image:url(1_UIKit/Rarity/tier_05_background.png)"><span class="lv o3">Lv 1</span></div><div class="slot2" style="background-image:url(1_UIKit/Rarity/tier_05_background.png)"><span class="lv o3">Lv 1</span></div><div class="slot2" style="background-image:url(1_UIKit/Rarity/tier_05_background.png)"><span class="lv o3">Lv 1</span></div><div class="slot2" style="background-image:url(1_UIKit/Rarity/tier_02_background.png)"><span class="lv o3">Lv 15</span></div>
+  </div>
+  <div class="tan" style="width:100%;flex-direction:column;align-items:stretch;gap:2px;padding:8px 14px">
+   <div style="display:flex;justify-content:space-between;font-size:16px"><span class="brown">Block Chance</span><span class="o3">3%</span></div>
+   <div style="display:flex;justify-content:space-between;font-size:16px"><span class="brown">Attack Speed</span><span class="o3">22.5%</span></div>
+   <div style="display:flex;justify-content:space-between;font-size:16px"><span class="brown">Critical Chance</span><span class="o3">8%</span></div>
+  </div>
+ </div>
+</div></div></div>
+</div>
+
+</body></html>

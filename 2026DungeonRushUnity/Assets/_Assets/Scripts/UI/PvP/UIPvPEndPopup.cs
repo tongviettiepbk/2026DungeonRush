@@ -20,6 +20,9 @@ public class UIPvPEndPopup : BaseUI
     // Reskin (mockup): tiêu đề Defeat màu đỏ.
     public Color victoryTitleColor = Color.white;
     public Color defeatTitleColor = new Color(1f, 0.29f, 0.25f, 1f);
+    // Reskin Đợt 6: Continue xanh lá khi thắng, tím khi thua (như popup kết quả Dungeon).
+    public Sprite sprContinueWin;
+    public Sprite sprContinueLose;
 
     private Action onClose;
     private bool won;
@@ -64,6 +67,8 @@ public class UIPvPEndPopup : BaseUI
         btClaim.gameObject.SetActive(true);
         btClaim.interactable = true;
         if (txtClaim != null) txtClaim.text = Loc.L("Common.Continue");
+        Sprite claimSprite = s.Won ? sprContinueWin : sprContinueLose;
+        if (claimSprite != null) btClaim.image.sprite = claimSprite;
         if (btRetry != null) btRetry.gameObject.SetActive(false);
         if (btClose != null) btClose.gameObject.SetActive(false);
     }

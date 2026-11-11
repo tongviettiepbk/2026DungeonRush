@@ -30,7 +30,7 @@ public class UIBossRushEndPopup : BaseUI
     {
         this.onClose = onClose;
         if (txtTitle != null) txtTitle.text = Loc.L("Popup.BossRushEnd.Title");
-        txtInfo.text = "Team Damage: " + teamDamage.ToLetter() + "\nDamage Dealt: " + ownDamage.ToLetter();
+        txtInfo.text = Loc.L("Popup.BossRushEnd.TeamDamage", teamDamage.ToLetter()) + "\n" + Loc.L("Popup.BossRushEnd.DamageDealt", ownDamage.ToLetter());
         if (txtContinue != null) txtContinue.text = Loc.L("Popup.BossRushEnd.Continue");
         SetError(!reported);
         if (objLoading != null) objLoading.SetActive(false);

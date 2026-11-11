@@ -64,7 +64,7 @@ public class UIBossRushClaimPopup : BaseUI
 
             SetState(loading: false, error: false);
             StaticBossRushData data = GameData.staticData.bossRush;
-            if (txtRank != null) txtRank.text = "Placement: " + res.rank;
+            if (txtRank != null) txtRank.text = Loc.L("Popup.BossRushClaim.Placement", res.rank);
             ShowTier(data.GetTierName(res.tier), data.GetTierName(res.newTier), res.newTier != res.tier);
             UIPvPRewardsPopup.FillRewards(res.rewards, rewardsContent, rewardTextPrefab, rewardIcons, spawned);
             for (int i = 0; i < spawned.Count; i++)

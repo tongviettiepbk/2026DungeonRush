@@ -21,6 +21,7 @@ public class UIPlayerPopup : BaseUI
     public List<ElementPlayerItemUI> listItem;
     public List<ElementPlayerItemUI> listCompanion;
     public TMP_Text txtSubStats;
+    public TMP_Text txtSubStatValues;   // Reskin Đợt 6: cột số (viền) cạnh cột nhãn nâu txtSubStats
     public RectTransform rectContent;   // khung nền, cao theo nội dung
     public RectTransform rectLayout;    // cột nội dung (tự co giãn theo số pet / số dòng chỉ số phụ)
     public Button btBlock;
@@ -84,7 +85,23 @@ public class UIPlayerPopup : BaseUI
 
         DrawItems(player);
         List<CompanionData> pets = DrawCompanions(player.Companions);
-        txtSubStats.text = GetSubStatsText(player.Items);
+        List<GearSubStat> subStats = GetSubStats(player.Items);
+        if (txtSubStatValues != null)
+        {
+            List<string> names = new List<string>();
+            List<string> values = new List<string>();
+            for (int i = 0; i < subStats.Count; i++)
+            {
+                names.Add(UIMainLobby.SubStatName(subStats[i].type));
+                values.Add("+" + subStats[i].value.ToString("0.##") + "%");
+            }
+            txtSubStats.text = string.Join("\n", names);
+            txtSubStatValues.text = string.Join("\n", values);
+        }
+        else
+        {
+            txtSubStats.text = UITabWing.GetSubStatsText(subStats);
+        }
         preview.Show(equipment, player.ShowCloak, pets);
         FitContentHeight();
     }
@@ -291,7 +308,7 @@ public class UIPlayerPopup : BaseUI
     }
 
     // Cộng dồn chỉ số phụ của mọi món theo loại, mỗi loại 1 dòng theo thứ tự enum SubStatType.
-    private static string GetSubStatsText(List<BossRushItemModel> items)
+    private static List<GearSubStat> GetSubStats(List<BossRushItemModel> items)
     {
         SortedDictionary<SubStatType, float> totals = new SortedDictionary<SubStatType, float>();
         for (int i = 0; items != null && i < items.Count; i++)
@@ -309,6 +326,6 @@ public class UIPlayerPopup : BaseUI
         {
             lines.Add(new GearSubStat(pair.Key, pair.Value));
         }
-        return UITabWing.GetSubStatsText(lines);
+        return lines;
     }
 }

@@ -14,12 +14,17 @@ public class UIBossRushPopup : BaseUI
     public TMP_Text txtTier;
     public TMP_Text txtTimer;
     public TMP_Text txtStatus;
+    public GameObject objStatusPanel;   // Reskin Đợt 6: panel tối sau dòng trạng thái, chỉ hiện khi có chữ
     public TMP_Text txtBossTitle;
     public Slider sliderBossHp;
     public TMP_Text txtBossHp;
     public Transform playerListContent;
     public ElementBossRushPlayerUI playerElementPrefab;
     public Button btFight;
+    // Reskin Đợt 6: nút Fight theo vé (cam free / hồng ads / xám hết vé).
+    public Sprite sprFight;
+    public Sprite sprFightAd;
+    public Sprite sprFightDisabled;
     public TMP_Text txtFightButton;
     public Button btRewards;
     public Button btClose;
@@ -163,7 +168,7 @@ public class UIBossRushPopup : BaseUI
         txtTier.text = data.GetTierName(pool.Tier);
 
         string bossName = data.GetBoss(pool.CurrentBossNumber).bossName;
-        txtBossTitle.text = "Boss #" + pool.CurrentBossNumber + ": " + bossName;
+        txtBossTitle.text = Loc.L("Popup.BossRush.Boss", pool.CurrentBossNumber, bossName);
         sliderBossHp.value = pool.MaxBossHP > 0d ? (float)(pool.CurrentBossHP / pool.MaxBossHP) : 0f;
         txtBossHp.text = pool.CurrentBossHP.ToLetter() + " / " + pool.MaxBossHP.ToLetter();
 
@@ -213,10 +218,14 @@ public class UIBossRushPopup : BaseUI
         int remaining = tickets.freeRemaining + tickets.adRemaining;
         int daily = tickets.dailyFreeTickets > 0 ? tickets.dailyFreeTickets : GameData.staticData.events.GetData(EventModeType.BossRush).dailyFreeTickets;
         // "{0}/{1}\nFight": vé free còn lại / vé free mỗi ngày; hết free thì đánh bằng vé ads (xem ads trước).
-        txtFightButton.text = tickets.freeRemaining > 0 || tickets.adRemaining <= 0
-            ? tickets.freeRemaining + "/" + daily + "\nFight"
-            : "Ad " + tickets.adRemaining + "/" + GameData.staticData.events.GetData(EventModeType.BossRush).maxAdTicketsPerDay + "\nFight";
+        bool useAd = tickets.freeRemaining <= 0 && tickets.adRemaining > 0;
+        txtFightButton.text = useAd
+            ? "<sprite=0>" + Loc.L("Popup.BossRush.FightCount", tickets.adRemaining, GameData.staticData.events.GetData(EventModeType.BossRush).maxAdTicketsPerDay)
+            : Loc.L("Popup.BossRush.FightCount", tickets.freeRemaining, daily);
         btFight.interactable = !ended && remaining > 0 && !Controller.IsBusy;
+        // Reskin Đợt 6: vé free = cam, vé ads = hồng (chữ có icon ads IsAd), khoá = xám.
+        if (sprFight != null && sprFightAd != null && sprFightDisabled != null)
+            btFight.image.sprite = !btFight.interactable ? sprFightDisabled : useAd ? sprFightAd : sprFight;
 
         if (txtStatus != null)
         {
@@ -226,12 +235,13 @@ public class UIBossRushPopup : BaseUI
             }
             else if (remaining <= 0)
             {
-                txtStatus.text = "No fights remaining today!\nNext in\n" + BossRushSchedule.FormatRemain(now.Date.AddDays(1) - now);
+                txtStatus.text = Loc.L("Popup.BossRush.NoFightsRemaining") + "\n" + Loc.L("Popup.BossRush.NextIn", BossRushSchedule.FormatRemain(now.Date.AddDays(1) - now));
             }
             else
             {
                 txtStatus.text = string.Empty;
             }
+            if (objStatusPanel != null) objStatusPanel.SetActive(!string.IsNullOrEmpty(txtStatus.text));
         }
     }
 

@@ -27,7 +27,7 @@ public class UIBossRushRewardsPanel : MonoBehaviour
     public void Show(int currentPosition, int bossesKilled, BossRushRewardTableDTO table)
     {
         (panel != null ? panel : gameObject).SetActive(true);
-        if (txtPlacement != null) txtPlacement.text = "Your placement: " + currentPosition;
+        if (txtPlacement != null) txtPlacement.text = Loc.L("Popup.BossRushRewards.YourPlacement", currentPosition);
 
         string guaranteed = "-";
         if (table != null && table.guaranteedRewardsByBossesKilled != null && table.guaranteedRewardsByBossesKilled.Count > 0)
@@ -35,8 +35,9 @@ public class UIBossRushRewardsPanel : MonoBehaviour
             int index = Mathf.Clamp(bossesKilled, 0, table.guaranteedRewardsByBossesKilled.Count - 1);
             guaranteed = FormatRewards(table.guaranteedRewardsByBossesKilled[index]);
         }
-        if (txtGuaranteedRewards != null) txtGuaranteedRewards.text = "Bosses killed: " + bossesKilled + "\n" + guaranteed;
-        else if (txtGuaranteed != null) txtGuaranteed.text = "Guaranteed Rewards\nBosses killed: " + bossesKilled + "\n" + guaranteed;
+        string killed = Loc.L("Popup.BossRushRewards.BossesKilled", bossesKilled);
+        if (txtGuaranteedRewards != null) txtGuaranteedRewards.text = killed + "\n" + guaranteed;
+        else if (txtGuaranteed != null) txtGuaranteed.text = Loc.L("Popup.BossRushRewards.GuarenteedRewardsTitle") + "\n" + killed + "\n" + guaranteed;
 
         if (placementRowTemplate != null)
         {
