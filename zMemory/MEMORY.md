@@ -110,7 +110,7 @@
 - [Reskin Red Dragon → cáo cầu lửa](dungonrush-reskin-boss-dragon.md) — 2026-11-03 khuôn BlackDragon, test Play ô thật OK, đã commit; BossRushDragon.prefab thừa đã xoá
 
 - [Reskin boss Dark Lich → gấu búa](dungonrush-reskin-boss-dark-lich.md) — 2026-11-03 chép khuôn Crimson, Slam giữ Idle + FX ô 0; test Play ô thật OK, đã commit
-- [Reskin 6 boss cuối (đủ 10 boss)](dungonrush-reskin-boss-rest.md) — 2026-11-03 Elder/Green Dragon/2 Ogre/2 Hag, bảng số rig + công thức đo, đã dọn art cũ; test Play ô thật OK, đã commit
+- [Reskin 6 boss cuối (đủ 10 boss)](dungonrush-reskin-boss-rest.md) — 2026-11-03 Elder/Green Dragon/2 Ogre/2 Hag, bảng số rig + công thức đo, đã dọn art cũ; test Play ô thật OK, đã commit; 2026-11-11 thân 10 boss vẽ lại "đáng sợ hơn" (fit_boss_scary.py)
 - [Reskin DragonEnemy → cáo cầu lửa](dungonrush-reskin-dragon-enemy.md) — dùng chung art Red Dragon; đã commit
 - [Commit thẳng main](git-commit-direct-main.md) — không tách nhánh rồi merge; vẫn chỉ commit khi user bảo, không tự push
 - [PvP mùa + nhóm league](dungonrush-pvp-update-requests.md) — đã code + test Play emulator 2026-11-04, đã commit, đã deploy; cúp +1..+5 theo cúp đối thủ, thua không mất, 5 vé không ads, thưởng mùa ×1.2; GD ở GDD/PVP_DESIGN.md
