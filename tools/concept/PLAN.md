@@ -63,7 +63,7 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 - Đổi trạng thái bằng đổi sprite / ẩn hiện trong script, không tô màu đè.
 
 ## Tiến độ
-**Đang ở:** Đợt 8 xong (áp + chụp kiểm batch8/unity.png + commit). **Tiếp theo:** Đợt 9 Hồ sơ & tài khoản — bắt đầu từ bước A. Đợt 2 → 8 CHƯA test Play.
+**Đang ở:** Đợt 9 concept đã CHỐT 2026-11-12 (batch9/concept.png). **Tiếp theo:** bước C — viết Batch9Reskin (gọi helper Batch7Reskin/Batch8Reskin), KHÔNG chạy ProfilePrefabBuilder/Account builder; sửa script UIRateUsPopup (sprite xám thay tô màu), UIAccountSelectPopup (tên màn GetLevelText dịch), gắn key tiêu đề Choose Save. Đợt 2 → 8 CHƯA test Play.
 
 | Đợt | Concept | Chốt | Áp vào game | Commit |
 |---|---|---|---|---|
@@ -76,4 +76,4 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 | 6 | ✅ tools/concept/batch6/ (khảo sát: before/; giữ art dòng/thanh máu mockup PvP + Boss Rush; UIPlayerPopup giữ bố cục user chỉnh tay; icon boss đổi sang đầu cáo đỏ — batch6/boss_icon.png) | ✅ 2026-11-11 (duyệt: Continue thua tím, Fight vé ads hồng + icon IsAd, hồ sơ chỉ X + tách cột chỉ số; key mới Popup.BossRushRewards.BossesKilled) | ✅ Batch6Reskin (chụp edit mode: batch6/unity.png, 14 ảnh); CHƯA test Play | ✅ |
 | 7 | ✅ tools/concept/batch7/ (khảo sát: before/ + *_filled; max: mô tả 200 ≈ 6 dòng, thông báo 300 ≈ 8 dòng, catalog banner 8/10/20/8, tiêu đề ES 29 ký tự, nhãn FR 33) | ✅ 2026-11-12 (duyệt: lưới banner thấy hết, tên clan/tên người chơi lên header, nút Clear + key Popup.ClanSearch.Clear) | ✅ Batch7Reskin (chụp edit mode: batch7/unity.png, 16 ảnh); CHƯA test Play | ✅ d8faf732 |
 | 8 | ✅ tools/concept/batch8/ (khảo sát: before/; max: 50 thành viên/50 clan, 6 ngày, 18 mốc, gói cá nhân 5 loại, tên 15 ký tự, dòng phụ ES 44 ký tự) | ✅ 2026-11-12 (duyệt: tên clan lên header bảng đóng góp, thẻ ngày xanh/xám/tối + 2 key Popup.ClanWarResults.Day/.Points, nút ? Champion, mốc Claim + ! / tick, cooldown ẩn Win/Lose, Report nút đỏ + key) | ✅ Batch8Reskin (chụp edit mode: batch8/unity.png, 9 ảnh); CHƯA test Play | ✅ |
-| 9 | | | | |
+| 9 | ✅ tools/concept/batch9/ (khảo sát: before/ + *_filled; giữ bố cục/art mockup Profile/Settings/Avatar/Rate Us; max: 22 avatar = 5 hàng, 10 ngôn ngữ, mô tả Cloud FR 108, nút tài khoản ES 28, link ES 32) | ✅ 2026-11-12 (duyệt: khung 816 cả 9 popup, nút cam/tím theo chức năng, nhãn nâu; Avatar cao 916 không cuộn, Language thấp 600, gợi ý tên 3-15 ký tự, Sign In sắp lại + link xanh gạch chân, bỏ dòng phụ Sign Up, Choose Save chữ nâu + tên màn + key tiêu đề, Rate Us Submit cam/sprite xám, giữ "SUBMIT" cứng) | | |

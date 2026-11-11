@@ -1,11 +1,11 @@
 ---
 name: dungonrush-ui-concept-workflow
-description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..8 xong (Đợt 8 Clan War & Chat 2026-11-12), tiếp Đợt 9"
+description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0..8 xong; Đợt 9 concept ĐÃ CHỐT 2026-11-12, chưa áp (bước C)"
 metadata:
   node_type: memory
   type: project
   originSessionId: 3164be48-a1fc-4de0-a1a9-4dd4a3175277
-  modified: 2026-11-12T16:00:00.000Z
+  modified: 2026-11-12T18:00:00.000Z
 ---
 
 User duyệt cách làm này ngày 2026-11-11, dặn CHỈ lưu trong bộ nhớ, KHÔNG viết tài liệu vào GDD/.
@@ -62,6 +62,8 @@ PLAN.md giữ: danh sách 67 popup chia Đợt 0..9, quy trình tối ưu 3 phas
 - Bẫy Đợt 7: `PvP/slot_dark` đen trong 55% → trên nền kem ra xám nhạt, dùng `Clan/box_dark`; UI `Outline` nhân màu sprite (viền vàng trên sprite tối ra tối) → lớp trắng tô vàng to hơn + đè ô trong; chụp edit mode ô nhập phải gán `input.text`. Lưu prefab Clan qua Unity chỉ đổi PressYValue → PressScale/PressDuration (vô hại), sprite asset TMP không mất.
 
 - Đợt 8 Clan War & Chat (Contribution Leaderboard, War Results, Clan Leaderboard, War Rewards, Report + ô con ClanWarContributionCard/ClanWarDayCard/ClanWarMilestoneCard) — 2026-11-12, tool `Batch8Reskin` (gọi lại helper Batch7Reskin đã để `internal`), chụp batch8/unity.png 9 ảnh, CHƯA test Play. User duyệt: tên clan lên header bảng đóng góp (banner nhỏ cạnh "Day n Leaderboard"); thẻ ngày đổi sprite mình thắng card_blue / địch thắng card_gray / chưa chốt card_dark (ClanWarDayCard.StatusImage + StateLabelText "Not Concluded" phủ cột Winner+MVP); 2 key mới Popup.ClanWarResults.Day/.Points; nút ? (Common/question) thay nút "i" Champion; mốc thưởng có ClaimTag (nút xanh + chấm !) / CollectedTag (tick) — ClanWarMilestoneCard; cooldown ẩn Win/Lose (UIClanWarRewardsPopup.TierSummaryRoot), nút Collect → "Claim", đã nhận thì thưởng mờ; Report nút đỏ, lý do/tiêu đề dùng key Popup.Report.* (trước ghi cứng sai chính tả), UIReportPopup.SubmitText ẩn khi gửi. Chữ ghép cứng → key: DailySubheader, Clan.War.Points, Clan.War.Day, TierHeader, MyScore; tỉ số bên mình xanh #5EC8FF.
+
+- Đợt 9 Hồ sơ & tài khoản (Profile 2 tab, Avatar, Language, Nickname, Sign In, Sign Up, Choose Save, Cloud Backup, Rate Us) — concept tools/concept/batch9/concept.png CHỐT 2026-11-12, CHƯA áp vào game (commit concept + tiến trình trước theo yêu cầu user). Giữ bố cục/art mockup Profile/Settings/Avatar/Rate Us, chỉ đồng bộ khung 816/X/nút/chữ. User duyệt: nút cam = chính (Sign In/Up, Enter, Save, Submit, Use Cloud), tím = phụ (Redeem, Sync Now, Report Bug, Use Local), Sign Out đỏ, Discord/Country/Language/Power/bút giữ xanh dương; nhãn Settings nâu không viền; Avatar khung cao 916 (22 avatar = 5 hàng, không cuộn); Language rộng 816 cao 600; Nickname thêm gợi ý nâu (key Popup.Nickname.Error.Length); Sign In sắp lại Email → Password → Forgot (phải) → Sign In → link Sign up ở đáy, link xanh #2F7FC1 gạch chân không viền; Sign Up bỏ dòng "Create an account" (trùng key tiêu đề); Choose Save không X, tiêu đề key Popup.AccountSelect.Title, tên trắng viền + 3 dòng nâu, dòng màn = tên Tier dịch + c-m (thay "Stage x-y"); Rate Us Submit cam, chưa chọn sao = sprite xám (bỏ tô 0.7 + đổi màu chữ), "SUBMIT" giữ cứng như gốc. CẤM chạy ProfilePrefabBuilder / Account popups builder.
 
 **Why:** user sẽ reskin lại cả bộ UI theo style mới; concept trước → duyệt → áp để khỏi làm lại prefab nhiều lần.
 

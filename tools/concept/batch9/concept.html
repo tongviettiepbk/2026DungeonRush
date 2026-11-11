@@ -1,0 +1,234 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Đợt 9 – Hồ sơ & tài khoản. Kit chung tools/concept/kit/kit.css, sprite thật trong Art/, 1 px CSS = 2 đơn vị canvas.
+     Profile/Settings/Avatar/Rate Us đã reskin theo mockup BallIdle → GIỮ bố cục + art mockup, chỉ đồng bộ khung/X/nút/chữ (như Đợt 6).
+     Chụp: tools/concept/render_concept.sh tools/concept/batch9/concept.html tools/concept/batch9/concept.png 1700 <cao> -->
+<base href="../../../2026DungeonRushUnity/Assets/_Assets/Art/">
+<link rel="stylesheet" href="../../../../tools/concept/kit/kit.css">
+<style>
+body{display:flex;flex-wrap:wrap;gap:22px;width:1700px;align-items:flex-start}
+.stack{display:flex;flex-direction:column;gap:26px;width:530px}
+.col{display:flex;flex-direction:column;align-items:center;gap:8px}
+.cap{color:#cfcde0;font-size:17px;font-family:sans-serif;max-width:520px;text-align:center;line-height:1.35}
+.cap b{color:#fff}
+.cap i{color:#ffd35a;font-style:normal}
+.scr{width:530px;background:#3e3d4d;border-radius:18px;padding:30px 0;display:flex;flex-direction:column;align-items:center;gap:14px;position:relative}
+.w408{width:408px}
+.states{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+.note{color:#ffd35a;font-size:14px;font-family:sans-serif;text-align:center;max-width:500px;line-height:1.35}
+.red{color:#ff5a5a}.grn{color:#62d34a}
+/* trang đặt tuyệt đối (Profile/Settings giữ bố cục mockup) */
+.abs{position:relative;width:100%}
+.abs>*{position:absolute;transform:translate(-50%,-50%)}
+.lbl2{color:#7a5c3c;font-size:19px;transform:translate(0,-50%)!important;white-space:nowrap}
+.btn2{height:52px;display:flex;align-items:center;justify-content:center;gap:6px;border-style:solid;padding:0 8px}
+.btn2 .o{font-size:18px}
+.bb{border-width:9px 9px 15px;border-image:url(1_UIKit/Lobby/btn_blue.png) 18 18 30 18 fill}
+.pen{width:54px;height:58px;display:flex;align-items:center;justify-content:center;padding-bottom:5px}
+.pen img{width:30px}
+.abs>.track{width:170px;height:26px;border-style:solid;border-width:0 13px;border-image:url(1_UIKit/Setting/track_dark.png) 0 26 fill;position:absolute}
+.track .fl{position:absolute;left:-12px;top:2px;bottom:2px;border-style:solid;border-width:0 11px;border-image:url(1_UIKit/Setting/fill_green.png) 0 22 fill}
+.track .kn{position:absolute;top:-12px;width:41px;height:47px;background:center/contain no-repeat;display:flex;align-items:center;justify-content:center;padding-bottom:4px}
+.track .kn .o3{font-size:14px}
+.ptabs{width:250px;height:44px;border-style:solid;border-width:0 22px;border-image:url(1_UIKit/Profile/tab_track_gray.png) 0 44 fill;display:flex}
+.ptabs .tb{color:#fff;-webkit-text-stroke:3px #000;paint-order:stroke fill;font-size:18px}
+.ptabs .tb.on{border-image-source:url(1_UIKit/Mastery/tab_selected.png)}
+/* ô nhập tan */
+.inp3{width:100%;height:54px;border-style:solid;border-width:10px;border-image:url(1_UIKit/ClanSearch/input_tan.png) 20 fill;display:flex;align-items:center;padding:0 8px;font-size:20px}
+.inp3 .hint{color:#9a7752}.inp3 .tx{color:#5a3f22}
+.link{color:#2f7fc1;font-size:18px;text-decoration:underline;text-underline-offset:3px}
+.lab{color:#7a5c3c;font-size:17px;text-align:center;line-height:1.3}
+/* lưới avatar / ngôn ngữ */
+.grid{display:grid;gap:7px 8px;justify-content:center}
+.av2{width:60px;height:60px;background:url(1_UIKit/Profile/avatar_slot.png) center/100% 100%;position:relative;display:flex;align-items:center;justify-content:center}
+.av2 img.a{width:52px;height:56px;object-fit:contain}
+.av2 img.c{position:absolute;right:-6px;bottom:-6px;width:26px}
+.lg{width:70px;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+.lg img.f{width:54px;height:54px;object-fit:contain}
+.lg img.c{position:absolute;right:2px;top:30px;width:28px}
+.lg .o3{font-size:15px;white-space:nowrap}
+.tan{border-style:solid;border-width:6px;border-image:url(1_UIKit/Mastery/box_tan.png) 12 fill}
+.sv{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 6px 12px}
+.sv .brown{font-size:15px;line-height:1.25;text-align:center}
+.star{width:57px}
+</style></head><body>
+
+<!-- ========== HÀNG 1 ========== -->
+<div class="stack">
+<!-- 1a. Profile tab -->
+<div class="col"><div class="cap"><b>UIProfilePopup</b> tab Profile (giữ bố cục mockup, 816×1692): chỉ đồng bộ khung rộng <b>816</b> (đang 822), tiêu đề cỡ kit, X kit. Power + nút bút giữ <b>xanh dương</b> (thông tin/sửa). Redeem Code (coming soon) → <b>tím</b> (nút phụ). Tab Profile | Settings dưới đáy giữ như mockup.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Profile</span><div class="x"></div></div>
+ <div class="bd" style="height:783px;padding:0">
+  <div class="abs" style="height:770px">
+   <div class="btn2 bb" style="left:50%;top:112px;width:141px;height:69px"><span class="o" style="font-size:24px;display:flex;align-items:center;gap:4px"><img src="1_UIKit/BossRush/icon_fist.png" style="width:26px">1.25B</span></div>
+   <div class="tan" style="left:50%;top:205px;width:97px;height:97px;display:flex;align-items:center;justify-content:center"><img src="2_Icons/Avatar/viking.png" style="width:80px"></div>
+   <div class="btn2 bb pen" style="left:calc(50% + 132px);top:213px"><img src="1_UIKit/Common/pencil.png"></div>
+   <div class="tan" style="left:calc(50% - 5px);top:300px;width:290px;height:41px;display:flex;align-items:center;padding-left:12px"><span class="o" style="font-size:20px">Featherfist1234</span></div>
+   <div class="btn2 bb pen" style="left:calc(50% + 137px);top:300px"><img src="1_UIKit/Common/pencil.png"></div>
+   <div class="btn2 vi" style="left:50%;top:495px;width:141px;height:69px;border-width:15px"><span class="o" style="font-size:17px;white-space:nowrap">Redeem Code</span></div>
+   <div class="ptabs" style="left:50%;top:740px"><div class="tb on"><span>Profile</span></div><div class="tb">Settings</div></div>
+  </div>
+ </div>
+</div></div>
+<div class="note">Trang Profile để trống phía dưới vì khung cao theo trang Settings (2 tab dùng chung 1 khung) — giữ như mockup.</div>
+</div></div>
+</div>
+
+<div class="stack">
+<!-- 1b. Settings tab -->
+<div class="col"><div class="cap"><b>UIProfilePopup</b> tab Settings (giữ bố cục ×1.21 + art công tắc mockup): nhãn hàng đổi <b>chữ nâu không viền</b> (đang trắng viền trên nền kem). Discord / Country / Language giữ <b>xanh dương</b> (mở trang/popup). Nút tài khoản Sign In / Up → <b>cam</b> (hành động chính), Sync Now + Report Bug → <b>tím</b> (phụ); Sign Out → <b>đỏ</b>. Dòng email · Last sync, User ID, Version = <b>nâu</b> / nâu nhạt.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Settings</span><div class="x"></div></div>
+ <div class="bd" style="height:783px;padding:0">
+  <div class="abs" style="height:770px">
+   <span class="lbl2" style="left:22px;top:56px">Sound FX</span>
+   <div class="track" style="left:calc(50% + 80px);top:56px"><div class="fl" style="width:130px"></div><div class="kn" style="left:104px;background-image:url(1_UIKit/Setting/knob_on.png)"><span class="o3">On</span></div></div>
+   <span class="lbl2" style="left:22px;top:111px">Music</span>
+   <div class="track" style="left:calc(50% + 80px);top:111px"><div class="kn" style="left:-12px;background-image:url(1_UIKit/Setting/knob_off.png)"><span class="o3">Off</span></div></div>
+   <span class="lbl2" style="left:22px;top:167px">Vibration</span>
+   <div class="track" style="left:calc(50% + 105px);top:167px;width:111px"><div class="fl" style="width:105px"></div><div class="kn" style="left:62px;background-image:url(1_UIKit/Setting/knob_on.png)"><span class="o3">On</span></div></div>
+   <span class="lbl2" style="left:22px;top:223px">Discord</span>
+   <div class="btn2 bb" style="left:calc(50% + 105px);top:223px;width:111px"><img src="1_UIKit/Common/discord (2).png" style="width:28px;margin-top:-6px"></div>
+   <span class="lbl2" style="left:22px;top:278px">Country</span>
+   <div class="btn2 bb" style="left:calc(50% + 105px);top:278px;width:111px"><img src="2_Icons/Flags/TR.png" style="width:30px;margin-top:-6px"></div>
+   <span class="lbl2" style="left:22px;top:335px">Language</span>
+   <div class="btn2 bb" style="left:calc(50% + 105px);top:335px;width:111px"><img src="2_Icons/Flags/Language/GB.png" style="width:30px;margin-top:-6px"><span class="o" style="font-size:16px;margin-top:-6px">English</span></div>
+   <span class="lbl2" style="left:22px;top:440px">Account</span>
+   <div class="btn2 vi" style="left:50%;top:440px;width:84px;border-width:13px;padding:0 4px"><span class="o" style="font-size:14px;line-height:1">Sync Now</span></div>
+   <div class="btn2 or" style="left:calc(50% + 105px);top:440px;width:111px;border-width:13px"><span class="o" style="font-size:15px">Sign In / Up</span></div>
+   <span class="brown" style="left:50%;top:484px;font-size:15px;white-space:nowrap">duck.lord@gmail.com · Last sync: 5m ago</span>
+   <span class="lbl2" style="left:22px;top:540px">Report Bug</span>
+   <div class="btn2 vi" style="left:calc(50% + 105px);top:540px;width:111px;border-width:13px"><span class="o" style="font-size:14px;white-space:nowrap">Report Bug</span></div>
+   <span class="brown" style="left:calc(50% - 10px);top:590px;font-size:15px;white-space:nowrap;display:flex;align-items:center;gap:6px">User ID: dkbtL3iCKDOH5GK0dObIM44NiVS2 <img src="1_UIKit/Common/PictoIcon_Copy.png" style="width:22px;filter:brightness(.5) sepia(1)"></span>
+   <span class="mute" style="left:calc(100% - 50px);top:622px;font-size:15px">v1.0.3</span>
+   <div class="ptabs" style="left:50%;top:740px"><div class="tb">Profile</div><div class="tb on"><span>Settings</span></div></div>
+  </div>
+ </div>
+</div>
+<div class="states">
+ <div class="it"><div class="btn2 rd" style="width:111px;border-width:9px 9px 15px"><span class="o" style="font-size:16px">Sign Out</span></div><span class="nt">đã gắn email</span></div>
+ <div class="it"><img src="1_UIKit/Common/Loading_Frame2.png" style="width:30px;filter:brightness(.55) sepia(1) saturate(1.3)"><span class="nt">đang Sync: icon xoay nâu</span></div>
+</div>
+</div>
+<div class="note">Nhãn dài nhất ES "Efectos de sonido" 17 ký tự → tự co. Nút tài khoản ES "Iniciar sesión / Registrarse" 28 ký tự → tự co 2 dòng.</div>
+</div></div>
+</div>
+
+<div class="stack">
+<!-- 2. Avatar -->
+<div class="col"><div class="cap"><b>UIAvatarSelectPopup</b> (giữ lưới mockup 5 cột, ô avatar_slot + tick xanh): khung <b>816</b>, X kit. Gốc có <b>22 avatar</b> = 5 hàng — vừa khít ô tan, không cần cuộn → <i>đề xuất</i> <b>thu khung cao 1181 → 916</b> (bỏ khoảng trống dưới).</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Select Avatar</span><div class="x"></div></div>
+ <div class="bd" style="padding-top:14px">
+  <div class="tan" style="width:360px;padding:9px 0"><div class="grid" id="avg" style="grid-template-columns:repeat(5,60px)"></div></div>
+ </div>
+</div></div>
+</div>
+
+<!-- 3. Rate us -->
+<div class="col"><div class="cap"><b>UIRateUsPopup</b> (giữ mockup đã chốt: 5 sao art, X = Later): X kit. Submit → <b>cam</b> (hành động chính); chưa chọn sao = <b>sprite xám</b> (thay tô xám 0.7 + đổi màu chữ). Chữ "SUBMIT" giữ cứng như gốc.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Rate Us</span><div class="x"></div></div>
+ <div class="bd" style="padding-top:34px;gap:30px">
+  <div style="display:flex;gap:11px"><img class="star" src="1_UIKit/RateUs/star_filled.png"><img class="star" src="1_UIKit/RateUs/star_filled.png"><img class="star" src="1_UIKit/RateUs/star_filled.png"><img class="star" src="1_UIKit/RateUs/star_filled.png"><img class="star" src="1_UIKit/RateUs/star_empty.png"></div>
+  <div class="b or" style="width:150px"><span class="o">SUBMIT</span></div>
+ </div>
+</div>
+<div class="states"><div class="it"><div class="b gr sm" style="min-width:120px"><span class="o">SUBMIT</span></div><span class="nt">chưa chọn sao</span></div></div>
+</div></div>
+</div>
+
+<!-- ========== HÀNG 2 ========== -->
+<div class="stack">
+<!-- 4. Language -->
+<div class="col"><div class="cap"><b>UILanguageSelectPopup</b> (đang rộng 679, tên chữ dính nhau "Français Deutsch"): khung <b>816</b> → ô rộng hơn, tên trắng viền tự co. Lưới 5×2 cờ + tick xanh giữ như cũ. Ô tan ôm vừa 2 hàng → khung thấp lại (924 → 600).</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Select Language</span><div class="x"></div></div>
+ <div class="bd" style="padding-top:14px">
+  <div class="tan" style="width:100%;padding:12px 0 10px"><div class="grid" id="lgg" style="grid-template-columns:repeat(5,66px);gap:14px 4px"></div></div>
+ </div>
+</div></div>
+<div class="note">Dài nhất: "Português" 9 ký tự, "Français" — ô 132 vừa ở cỡ 30. Tiếng Ả Rập hiện không nối chữ (như gốc).</div>
+</div>
+
+<!-- 8. Cloud save -->
+<div class="col"><div class="cap"><b>UICloudSavePopup</b> (đang 679): khung <b>816</b>, mô tả <b>nâu</b> (FR 108 ký tự ≈ 3 dòng), Save → <b>cam</b>.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Cloud Backup</span><div class="x"></div></div>
+ <div class="bd" style="gap:18px;padding-top:22px">
+  <span class="lab" style="font-size:18px">Save your progress to the cloud so you never lose it even if you change devices.</span>
+  <div class="b or" style="width:150px"><span class="o">Save</span></div>
+ </div>
+</div></div>
+</div>
+</div>
+
+<div class="stack">
+<!-- 5. Nickname -->
+<div class="col"><div class="cap"><b>UINicknamePopup</b> (816): ô nhập <b>input_tan</b>, chữ nhập nâu đậm, gợi ý nâu nhạt (đang trắng viền trên ô tan). <i>Đề xuất</i> thêm dòng gợi ý <b>nâu</b> "Name must be 3-15 characters" (key có sẵn Popup.Nickname.Error.Length). Enter → <b>cam</b>.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Enter Nickname</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px;padding-top:22px">
+  <div class="inp3"><span class="hint">Enter Nickname...</span></div>
+  <span class="mute" style="font-size:16px">Name must be 3-15 characters</span>
+  <div class="b or" style="width:150px;margin-top:8px"><span class="o">Enter</span></div>
+ </div>
+</div>
+<div class="states"><div class="inp3" style="width:300px"><span class="tx">Featherfist1234</span></div></div>
+</div></div>
+
+<!-- 7. Account select -->
+<div class="col"><div class="cap"><b>UIAccountSelectPopup</b> "Choose Save" (đang 743, không X — bắt buộc chọn, giữ): khung <b>816</b>, tiêu đề gắn key <b>Popup.AccountSelect.Title</b> (đang cứng). 2 ô tan: tên <b>trắng viền</b>, 3 dòng thông tin <b>nâu</b> (đang trắng viền to, "Saved 3 hours ago" vỡ dòng). Dòng màn ghi <b>tên màn</b> "Normal 3-5" (đang "Stage 12-5"). Use Local <b>tím</b> / Use Cloud <b>cam</b> (đang đỏ / xanh).</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Choose Save</span></div>
+ <div class="bd" style="padding-top:14px">
+  <div style="display:flex;gap:12px;width:100%">
+   <div class="tan sv"><span class="o3" style="font-size:19px">Featherfist1234</span><span class="brown">Player Lv. 42</span><span class="brown"><span style="color:#e0a100">Hard</span> 6-5</span><span class="brown">Saved 3h ago</span><div class="b vi sm" style="min-width:140px;margin-top:8px"><span class="o">Use Local</span></div></div>
+   <div class="tan sv"><span class="o3" style="font-size:19px">Guest</span><span class="brown">Player Lv. 7</span><span class="brown">New adventurer</span><span class="brown">Saved just now</span><div class="b or sm" style="min-width:140px;margin-top:8px"><span class="o">Use Cloud</span></div></div>
+  </div>
+ </div>
+</div></div>
+<div class="note">Dài nhất: "Ultimo salvataggio: sconosciuto" PT 31 ký tự → tự co 1 dòng; "Use Local" DE 15 ký tự.</div>
+</div></div>
+</div>
+
+<div class="stack">
+<!-- 6a. Sign in -->
+<div class="col"><div class="cap"><b>UISignInPopup</b> (đang 679, ô nhập nằm lệch ngoài khung): khung <b>816</b>, ô <b>input_tan</b>. <i>Đề xuất</i> sắp lại: ô Email, Password → "Forgot password?" → nút Sign In <b>cam</b> → dòng "Don't have an account? Sign up" ở <b>đáy</b> (đang ở trên cùng). Link = <b>xanh dương gạch chân, không viền</b>.</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Sign In</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px;padding-top:22px">
+  <div class="inp3"><span class="hint">Enter Email</span></div>
+  <div class="inp3"><span class="hint">Enter Password</span></div>
+  <span class="link" style="align-self:flex-end;font-size:16px">Forgot password?</span>
+  <div class="b or" style="width:170px;margin-top:4px"><span class="o">Sign In</span></div>
+  <span class="link">Don't have an account? Sign up</span>
+ </div>
+</div></div>
+</div>
+
+<!-- 6b. Sign up -->
+<div class="col"><div class="cap"><b>UISignUpPopup</b> "Create Account": dòng phụ "Create an account" đang dùng <b>trùng key tiêu đề</b> → <i>đề xuất</i> <b>bỏ</b>. Ô input_tan, Sign Up <b>cam</b>, link "Already have an account? Sign in" ở đáy. Đang xử lý: icon xoay thay nút (như cũ).</div>
+<div class="scr"><div class="pp w408">
+ <div class="hd"><span class="o">Create Account</span><div class="x"></div></div>
+ <div class="bd" style="gap:10px;padding-top:22px">
+  <div class="inp3"><span class="tx">duck.lord@gmail.com</span></div>
+  <div class="inp3"><span class="tx">••••••••</span></div>
+  <div class="b or" style="width:170px;margin-top:10px"><span class="o">Sign Up</span></div>
+  <span class="link">Already have an account? Sign in</span>
+ </div>
+</div></div>
+<div class="note">Dài nhất: link ES "¿Ya tienes una cuenta? Inicia sesión" 32 ký tự, "¿Olvidaste tu contraseña?" 25 → vừa 1 dòng, tự co.</div>
+</div></div>
+</div>
+
+<script>
+const AV=['knight','hunting','princess','gladiator','viking','king','kitty','devil','military','orc','angel','knight2','princess1'];
+const avs=[];
+for(let i=0;i<22;i++){avs.push('<div class="av2"><img class="a" src="2_Icons/Avatar/'+AV[i%AV.length]+'.png">'+(i==6?'<img class="c" src="1_UIKit/Profile/icon_check.png">':'')+'</div>')}
+document.getElementById('avg').innerHTML=avs.join('');
+const L=[['GB','English'],['TR','Türkçe'],['SA','عربي'],['FR','Français'],['DE','Deutsch'],['IT','Italiano'],['JP','日本語'],['KR','한국인'],['ES','Español'],['BR','Português']];
+document.getElementById('lgg').innerHTML=L.map((l,i)=>'<div class="lg"><img class="f" src="2_Icons/Flags/Language/'+l[0]+'.png">'+(i==0?'<img class="c" src="1_UIKit/Profile/icon_check.png">':'')+'<span class="o3">'+l[1]+'</span></div>').join('');
+</script>
+</body></html>
