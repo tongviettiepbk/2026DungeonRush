@@ -74,7 +74,7 @@ public static class Batch4Reskin
         PopupStyle.Stretch(item);
         PopupStyle.Stretch(cell.imgBackground.transform);
         Icon72(cell.imgIcon);
-        CornerLevel(cell.txtLevel, 26f);
+        BottomLevel(cell.txtLevel, 26f);
 
         RectTransform equipped = (RectTransform)cell.objEquipped.transform;
         equipped.anchorMin = new Vector2(0f, 1f);
@@ -737,7 +737,7 @@ public static class Batch4Reskin
         Reparent(cell.transform, panel);
         PopupStyle.PlaceTop(cell.transform, LEFT_EDGE + SLOT / 2f, TOP + SLOT / 2f, SLOT, SLOT);
         StyleCapeCell(cell);
-        CornerLevel(cell.txtLevel, 32f);
+        BottomLevel(cell.txtLevel, 32f);
         cell.txtLevel.enableWordWrapping = false;
 
         float nameTop = TOP + 30f;
@@ -1015,7 +1015,7 @@ public static class Batch4Reskin
         text.transform.SetAsLastSibling();
     }
 
-    // "Lvl N" chữ viền căn giữa đáy ô (ô relic — user chốt 2026-11-12).
+    // "Lvl N" chữ viền căn giữa đáy ô (ô relic + ô tẩu — user chốt 2026-11-12).
     private static void BottomLevel(TMP_Text text, float size)
     {
         RectTransform rt = text.rectTransform;
