@@ -1,0 +1,82 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Concept popup kết quả dungeon (UIDungeonEndPopup): dùng thẳng sprite trong Art/, 1 px CSS = 2 đơn vị canvas 1080×2160. Chụp: tools/concept/render_concept.sh -->
+<style>
+@font-face{font-family:Asap;src:url(../../../2026DungeonRushUnity/Assets/_Assets/Fonts/Asap/Asap-SemiBold.ttf)}
+*{box-sizing:border-box;margin:0}
+body{background:#15141c;font-family:Asap,sans-serif;display:flex;flex-wrap:wrap;gap:28px;padding:26px;width:1560px}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.cap{color:#cfcde0;font-size:19px;font-family:sans-serif}
+.screen{width:480px;height:500px;background:#3e3d4d;border-radius:20px;display:flex;align-items:center;justify-content:center}
+.o{color:#fff;-webkit-text-stroke:4px #000;paint-order:stroke fill}
+/* popup 817×631 canvas → 408×316 css */
+.pp{width:408px}
+.hd{height:69px;border-style:solid;border-width:0 8px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/popup_header.png) 0 16 0 16 fill stretch;display:flex;align-items:center;justify-content:center;position:relative;z-index:2}
+.hd .o{font-size:27px}
+.bd{margin-top:-6px;border-style:solid;border-width:7px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/popup_frame.png) 14 fill;padding:18px 20px 22px;display:flex;flex-direction:column;align-items:center}
+.lbl{color:#7a5c3c;font-size:20px;margin-bottom:8px}
+/* ô thưởng: box_tan 9-slice 12, rộng 196 cao 68 css (393×135 canvas như cũ) */
+.box{width:196px;height:68px;border-style:solid;border-width:6px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/box_tan.png) 12 fill;display:flex;align-items:center;justify-content:center;gap:10px}
+/* icon CỐ ĐỊNH 48 css = 96 canvas, chừa lề trên dưới */
+.box img{width:48px;height:48px;object-fit:contain}
+.box .o{font-size:30px}
+.msg{color:#7a5c3c;font-size:22px;height:76px;display:flex;align-items:center}
+.btn{margin-top:22px;width:137px;height:75px;border-style:solid;border-width:9px 9px 15px 9px;display:flex;align-items:center;justify-content:center;padding-top:2px}
+.btn .o{font-size:25px}
+.green{border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Lobby/btn_green.png) 18 18 30 18 fill}
+.violet{border-width:15px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Common/btn_violet.png) 30 fill}
+/* so sánh icon trứng trước / sau */
+.cmp{display:flex;gap:40px;align-items:flex-end}
+.cmp .it{display:flex;flex-direction:column;align-items:center;gap:8px;color:#cfcde0;font-family:sans-serif;font-size:16px}
+.crop{width:90px;height:90px;overflow:hidden;position:relative;outline:1px dashed #777}
+/* glyph cũ 200×200 trên ảnh 229×235: lấy góc DƯỚI-trái, mất 35 px trên + 29 px phải */
+.crop img{position:absolute;left:0;bottom:0;width:103px;height:106px}
+.full{width:88px;height:90px;object-fit:contain;outline:1px dashed #777}
+</style></head><body>
+
+<div class="col"><div class="cap">Zombie Horde – thắng (trứng)</div>
+<div class="screen"><div class="pp">
+ <div class="hd"><span class="o">Completed</span></div>
+ <div class="bd">
+  <div class="lbl">Reward</div>
+  <div class="box"><img src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/bone_icon.png"><span class="o">104</span></div>
+  <div class="btn green"><span class="o">Okay</span></div>
+ </div>
+</div></div></div>
+
+<div class="col"><div class="cap">Boss Raid – thắng (búa Loot)</div>
+<div class="screen"><div class="pp">
+ <div class="hd"><span class="o">Completed</span></div>
+ <div class="bd">
+  <div class="lbl">Reward</div>
+  <div class="box"><img src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/box_icon.png"><span class="o">150</span></div>
+  <div class="btn green"><span class="o">Okay</span></div>
+ </div>
+</div></div></div>
+
+<div class="col"><div class="cap">Dark Ritual – thắng (lọ Vial)</div>
+<div class="screen"><div class="pp">
+ <div class="hd"><span class="o">Completed</span></div>
+ <div class="bd">
+  <div class="lbl">Reward</div>
+  <div class="box"><img src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/vial_icon.png"><span class="o">12</span></div>
+  <div class="btn green"><span class="o">Okay</span></div>
+ </div>
+</div></div></div>
+
+<div class="col"><div class="cap">Thua</div>
+<div class="screen"><div class="pp">
+ <div class="hd"><span class="o">Defeat</span></div>
+ <div class="bd">
+  <div class="msg">Better luck next time!</div>
+  <div class="btn violet"><span class="o">Okay</span></div>
+ </div>
+</div></div></div>
+
+<div class="col"><div class="cap">Icon trứng: trước (khung cắt 200×200) → sau (đủ 229×235)</div>
+<div class="screen" style="height:220px"><div class="cmp">
+ <div class="it"><div class="crop"><img src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/bone_icon.png"></div>Trước: mất đỉnh + mép phải</div>
+ <div class="it"><img class="full" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/bone_icon.png">Sau: đủ hình</div>
+</div></div></div>
+
+</body></html>

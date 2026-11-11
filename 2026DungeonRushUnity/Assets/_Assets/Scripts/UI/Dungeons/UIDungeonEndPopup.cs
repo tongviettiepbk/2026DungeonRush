@@ -12,6 +12,11 @@ public class UIDungeonEndPopup : BaseUI
     public TMP_Text txtInfo;
     public Button btOk;
     public GameObject objRewardLabel;   // chữ "Reward" trên ô thưởng (reskin): ẩn khi thua
+    public GameObject objRewardBox;     // ô nền thưởng: ẩn khi thua
+    public TMP_Text txtDefeat;          // chữ nâu "Better luck next time!" khi thua (concept dungeon_end)
+    public Image imgButton;             // nền nút Okay: xanh lá khi thắng (nhận), tím khi thua
+    public Sprite sprButtonWin;
+    public Sprite sprButtonLose;
 
     [Space(20)]
     // Sprite asset icon thưởng theo DungeonType (index 0 DragonBoss, 1 ZombieHorde, 2 Cultist). Trống → chỉ hiện số.
@@ -30,6 +35,15 @@ public class UIDungeonEndPopup : BaseUI
         this.onClose = onClose;
         if (objRewardLabel != null)
             objRewardLabel.SetActive(isWin);
+        if (objRewardBox != null)
+            objRewardBox.SetActive(isWin);
+        if (txtDefeat != null)
+        {
+            txtDefeat.gameObject.SetActive(!isWin);
+            txtInfo.gameObject.SetActive(isWin);
+        }
+        if (imgButton != null)
+            imgButton.sprite = isWin ? sprButtonWin : sprButtonLose;
 
         if (isWin)
         {
@@ -38,7 +52,7 @@ public class UIDungeonEndPopup : BaseUI
             if (spriteAsset != null)
             {
                 txtInfo.spriteAsset = spriteAsset;
-                txtInfo.text = "<sprite=0><space=40>" + reward;
+                txtInfo.text = "<sprite=0><space=10>" + reward;
             }
             else
             {
@@ -48,7 +62,8 @@ public class UIDungeonEndPopup : BaseUI
         else
         {
             txtTitle.text = Loc.L("Popup.DungeonEnd.DefeatTitle");
-            txtInfo.text = Loc.L("Popup.DungeonEnd.DefeatDescription");
+            TMP_Text defeatText = txtDefeat != null ? txtDefeat : txtInfo;
+            defeatText.text = Loc.L("Popup.DungeonEnd.DefeatDescription");
         }
     }
 

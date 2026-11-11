@@ -180,6 +180,7 @@ public static class RetentionUIBuilder
         popup.sprHammer = hammer;
         popup.sprBone = AssetDatabase.LoadAssetAtPath<Sprite>(SPR_BONE);
         End(root, "UISevenDayPopup");
+        SevenDayPopupReskin.Apply();
     }
 
     // Dòng "Tap anywhere to close" dưới khung; bấm cả lên khung cũng rơi xuống nút nền để đóng (trừ nút Claim).

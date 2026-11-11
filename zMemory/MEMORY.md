@@ -16,7 +16,7 @@
 - [MainMap gameplay spec](dungonrush-mainmap-gameplay-spec.md) — cách chơi: map 9x12+wall, 3 unit Hero/Enemy/Pet trên BaseUnit, AI từng loại; đối chiếu code (nhiều phần chưa làm)
 - [Hệ mặc đồ Hero](dungonrush-equipment-system.md) — bước 1 xong; slot enum GỘP về GearSlotType (WEAPON=8), UserEquipmentData + HeroVisual resolve node; Cape/stats/UI hoãn
 - [Nguồn chỉ số item mặc](dungonrush-item-stats-source.md) — buff item lấy từ SAVE (PlayerPrefs current_user) trên emulator, KHÔNG phải APK/Firebase; substat lưu sẵn, Health tính runtime; kèm enum SubStatType 0-12 + ItemType slot
-- [BaseUnit rig: HP bar/damage XONG](dungonrush-baseunit-rig-mismatch.md) — rig Soldier thiếu FlipPoints/health-bar; HP bar + show damage + FlipPoints ĐÃ làm (chọn hướng A runtime) & BAKE health-bar vào prefab Hero/Enemy (2026-09-01); còn lại Spine anim/rig thật + Pet chưa bake
+- [BaseUnit rig: HP bar/damage XONG](dungonrush-baseunit-rig-mismatch.md) — HP bar + damage + FlipPoints xong, bake vào prefab Hero/Enemy; còn Spine anim/rig thật + Pet
 - [Trạng thái data Gears](dungonrush-gears-data-status.md) — base stat per-slot ở GearStatConfig (KHÔNG per-item, user chốt), Weapons gộp vào Gears/, Cape/Wing nhúng riêng, substat roll reverse xong
 - [Reverse native il2cpp](dungonrush-reverse-native-il2cpp.md) — pipeline lấy THÂN HÀM (công thức) từ libil2cpp.so khi AssetRipper stub rỗng: xapk→Il2CppDumper→capstone disasm ARM64; đồ nghề đã chạy được
 - [Thiết kế Loot/Forge](dungonrush-loot-forge-design.md) — tỉ lệ rarity = ForgeData 100-level (đã có, chưa nối vào LootService); trigger = tiêu item quantityLoop, KHÔNG phải giết quái; chốt 2026-08-07
@@ -42,7 +42,7 @@
 - [MediationAds](dungonrush-mediation-ads.md) — lớp ads base copy StickIdle; chỗ gọi dùng MediationAds.Instance, SDK sau viết class kế thừa; base chỉ callback trong Editor
 - [Hệ Dungeon](dungonrush-dungeon-system.md) — 3 dungeon: 2 key/ngày reset 0h UTC, ads +1 key x3, thắng mới tiêu key; cả 3 dungeon có trận (Dragon/Zombie/CultistDungeonMode)
 - [Tab Events PvP/BossRush](dungonrush-events-tab.md) — vé reset 0h UTC (PvP 5 không ads, BossRush), mở lv15, icon IsTicket/IsBossTicket; cả 2 mode đã có
-- [Boss Rush online](dungonrush-boss-rush-model.md) — trận đánh đã theo v59 (skill 4 loại boss + chỗ đứng quanh boss, 2026-10-21 đã commit, UI v59 chưa làm); ĐÃ code theo GDD/BOSS_RUSH_DESIGN.md (sảnh 100, bot hàm thuần, league, thưởng Iron gốc; test pass, chưa commit); popup hồ sơ người chơi + avatar (22 hình thứ tự gốc) + xem chi tiết đồ/pet XONG (user tự chỉnh layout UIPlayerPopup — đừng chạy lại builder); ĐỦ 10 prefab boss + animation đánh theo Animator gốc (2026-10-12); đấu trường 12×12 + dời chỗ boss theo gốc (2026-10-17); FX skill = 10 prefab particle gốc v59 (2026-10-22, đã commit); còn deploy
+- [Boss Rush online](dungonrush-boss-rush-model.md) — trận theo v59 + GDD/BOSS_RUSH_DESIGN.md, 10 boss + FX gốc; đừng chạy lại builder UIPlayerPopup; còn UI v59 + deploy
 - [Hệ Enchantment (Relic)](dungonrush-enchantment-system.md) — tier 1..11 ×(1+tier²/100) main stat slot; summon Vial 50 lv; merge 3→1; code+UI+scene đã dựng, CHƯA test Unity
 - [Power người chơi](dungonrush-power-model.md) — rm.iqm/iqr reverse + PlayerPower.cs; HeroUnit đã sửa: đồ thay nền PlayerBase slot + có Wing/Cape
 - [Wing/Cape trạng thái](dungonrush-wing-cape-todo.md) — Wing + Cape đã có UI/logic theo native (chưa test Unity); quặng có Mining, Cloak chưa có nguồn thật (cheat K)
@@ -58,7 +58,7 @@
 - [Profile popup (hồ sơ + Settings)](dungonrush-profile-popup.md) — UIProfilePopup mở từ ô avatar lobby, dựng 2026-10-12; slider âm lượng/rung/User ID/đổi tên/Account chạy, 5 nút còn "coming soon" (redeem, ngôn ngữ...)
 - [Thưởng offline (Combat Summary)](dungonrush-offline-earning.md) — dựng 2026-10-13 theo gốc: trần 4h × Mastery, exp/phút = exp 1 màn, 1 rương/phút, X = nhận ×1, ads ×2; nút lobby + QuickEarnings chưa làm
 - [Tài khoản + cloud save](dungonrush-account-system.md) — khách mặc định, Sign Up gắn email, Sign In/Forgot/Sign Out, Choose Save; dựng + test Play 2026-10-13, chưa commit; cách test không làm mất save Editor
-- [Reskin đồ hero (art)](dungonrush-hero-equipment-reskin.md) — ảnh gốc 8 slot ở Art/3_Equipment/; Necklace (fe2ed55) + Ring (đã commit) + Melee (đã commit) + Ranged (đã commit) + Wing→kính (đã commit) + Cape→tẩu (đã commit) + Gloves→áo (đã commit) + Helmet→mũ (đã commit) + Backpack→balo (đã commit) reskin XONG; đạn vũ khí xa đồng bộ art mới 2026-11-09 2026-10-21 theo màu rarity; ĐÃ BẬT hiển thị đồ lên hero (bỏ skipLoadVisual); trống áo→tắt, trống vũ khí→dao ZDefaultWeapon (2026-10-22); brief GDD/ART_HERO_EQUIPMENT.md
+- [Reskin đồ hero (art)](dungonrush-hero-equipment-reskin.md) — 8 slot reskin XONG + commit, đồ đã hiện lên hero; brief GDD/ART_HERO_EQUIPMENT.md
 - [Anim hero = unit_all](dungonrush-hero-anim-unit-all.md) — 00Hero+00Enemy dùng unit_all.controller (10 state, clip ở Animations/HeroesNew); show→idle, run, đánh gần strike_atk / xa gun_atk; chưa test Play
 - [UI lobby = UIMainGame2](dungonrush-main-ui-uimaingame2.md) — 2026-10-15 đã xoá UiMainGame tự dựng; UIMainGame2 gốc gắn UIMainLobby + 7 page ở Pages; XP/máu boss dùng Slider; LevelText = Tier campaign + icon dungeon theo gốc (2026-10-16)
 - [Loot + Auto Loot theo gốc](dungonrush-forge-auto-loot.md) — người mới +240 búa (gốc); 2026-10-15: ForgeUIController + popup gốc, bán đồ = EXP, UserForgeData; builder Tools/DungeonRush/Build Forge UI; chữ popup tiếng Anh (font thiếu dấu)
@@ -73,15 +73,16 @@
 - [Di chuyển theo gốc](dungonrush-movement-original.md) — A* 8 hướng, lái lực Rigidbody động, Idle/Move/Patrol, quái phát hiện 4, pet chỉ đi theo; CHƯA test Play
 - [Map dungeon hình ảnh gốc](dungonrush-dungeon-map-visual.md) — Zombie/Dragon/Cultist dựng theo prefab rip, không cửa, sprite ở Art/5_Maps/Dungeon*; CHƯA test Play (2026-10-17)
 - [Gốc KHÔNG rơi Bone từ quái](dungonrush-no-combat-bone-drop.md) — combat_drop Bone/rương là code chết (BoneDropPrefab null); đừng port; doc LOOT_DROP_MODEL.md
-- [Reskin toàn game](dungonrush-reskin-plan.md) — CHỈ thay hình; đợt 0 XONG (Art/<1_UIKit..7_FX>, ArtIncoming/ gương, Apply Reskin); lobby UIMainGame2 reskin XONG + commit 2026-10-18 (2fe6b79, 453853f); Companion/Mastery/Rarity/Profile/Gameplay/Battle Pass reskin XONG + commit
+- [Reskin toàn game](dungonrush-reskin-plan.md) — CHỈ thay hình; Art/<1_UIKit..7_FX> + ArtIncoming gương + Apply Reskin; các màn đã reskin + commit
 - [Cách reskin 1 màn UI](dungonrush-reskin-ui-howto.md) — quy trình lobby: nhóm A ghi đè/B ảnh mới+prefab, pha màu thay ChatGPT cho hình học, ChatGPT cho icon, bẫy TMP sprite/Slider/Game view nhỏ; script tools/reskin/
+- [Quy trình concept → reskin UI](dungonrush-ui-concept-workflow.md) — style chuẩn, kit theo vai trò, concept HTML bằng sprite thật, tool sửa prefab tại chỗ; chỉ lưu ở memory, không ghi GDD
 - [Reskin gameplay](dungonrush-reskin-gameplay.md) — map tường/sàn vẽ code, quái vịt đen ChatGPT trên rig hero, 3 popup đồ/offer kit Mastery; 2026-10-18 CHƯA commit
 - [Reskin Shop](dungonrush-reskin-shop.md) — StoreTabPage + 5 popup Shop (kit Mastery, ribbon_tint tô rarity) 2026-10-18: khung art + 19 icon ChatGPT ghi đè giữ size cũ + 6 gói gem; bẫy tách nền tím; đã commit
 - [Reskin Mining](dungonrush-reskin-mining.md) — 2026-10-19 đã commit: kit Mastery + art 1_UIKit/Mining, ChatGPT 7 icon quặng (diamond=thạch anh tím), nút dụng cụ đổi sprite; CẤM chạy lại Build Mining
-- [Reskin Wing](dungonrush-reskin-wing.md) — 2026-10-19 đã commit: PageWing + popup Craft/Reroll kit Mastery/BattlePass, 2 mũi tên art giao, icon wing lúc đó giữ, 2026-10-21 đã thay bằng kính, nút đổi sprite bật/tắt
+- [Reskin Wing](dungonrush-reskin-wing.md) — PageWing + popup Craft/Reroll kit Mastery/BattlePass, wing→kính; đã commit
 - [Reskin Setting](dungonrush-reskin-setting.md) — 2026-10-19 đã commit: trang Settings phóng ×1.21 theo mockup, 4 ảnh art slider/núm ở 1_UIKit/Setting, núm đổi sprite (ToggleButton.OnSprite/OnFill)
 - [Rate Us](dungonrush-rate-us.md) — dựng + reskin 2026-10-19 theo gốc: trigger đồ Rare/Epic lần đầu, max 3 lần, Submit ≥4 sao mở store; doc RATE_US_MODEL.md; đã commit
-- [Reskin Clan](dungonrush-reskin-clan.md) — 2026-10-20 ClanTabPage 3 tab + 13 popup theo mockup BallIdle; banner ghép giữ hệ (khung vẽ code + 20 icon ChatGPT xám để tô); kit 1_UIKit/Clan; đã commit "Reskin Clan theo mockup BallIdle"; CẤM chạy lại Build Clan UI Prefabs
+- [Reskin Clan](dungonrush-reskin-clan.md) — 2026-10-20 xong + commit theo mockup BallIdle; CẤM chạy lại Build Clan UI Prefabs
 - [World sorting dưới UI lobby](dungonrush-world-sorting-under-ui.md) — lobby canvas Default 100 → HP bar/FX/line world phải Default order < 100 (sửa 2026-10-20)
 - [Bảng damage trận Boss Rush](dungonrush-boss-rush-damage-board.md) — EventBlocker hiện 8 dòng damage tự sắp, thanh = phần trong tổng đội; dựng + test Play 2026-10-21, đã commit
 - [Hệ âm thanh theo gốc](dungonrush-audio-system.md) — AudioManager 2 source + AudioConfig.asset (UI/vũ khí/pet), PressButtonUI click + lún nút theo gốc (266 nút); dựng + test Play 2026-10-21; doc AUDIO_MODEL.md
@@ -89,37 +90,37 @@
 - [Vũ khí quái campaign](dungonrush-campaign-enemy-weapon.md) — quái campaign cầm vũ khí NGƯỜI CHƠI theo seed+tier (jha gốc), L1-4 melee tay không; EnemyGearPicker 2026-10-21, chưa test Play
 - [Cận chiến chỉ đánh ngang hàng](dungonrush-melee-same-row.md) — Campaign/Zombie/Cultist: melee hero/quái phải đứng cùng hàng sát trái/phải mới đánh; LỆCH GỐC có chủ ý (user yêu cầu 2026-10-22), đừng gỡ
 - [Công cụ test chọn đồ hero](dungonrush-equipment-tester.md) — EquipmentTester ở scene Root, nút "Đồ" ở MainGame, < > lướt từng món 8 slot; dựng 2026-10-22
-- [Firebase server THẬT](dungonrush-firebase-prod-deploy.md) — đã deploy dungeon-duck-quack-slash (us-central1, Node 22), lần cuối 2026-11-04 (53 hàm + RTDB); Editor cũng dùng server thật từ 2026-11-09 (USE_EMULATOR=false); emulator giữ demo-dungeonrush; ServerId/EMULATOR_PROJECT_ID ở FirebaseSettings
+- [Firebase server THẬT](dungonrush-firebase-prod-deploy.md) — dungeon-duck-quack-slash, deploy cuối 2026-11-04; Editor dùng server thật từ 2026-11-09
 - [Tool test boss Boss Rush](dungonrush-boss-rush-tester.md) — BossRushTester nút "Boss" ở MainGame: chọn boss/tier/đồng đội bot, đánh offline không cần server
 - [Reskin Boss Rush](dungonrush-reskin-boss-rush.md) — 2026-10-27 5 popup + HUD trận (UIMainGame2) theo mockup, kit 1_UIKit/BossRush, icon nắm đấm ChatGPT; đã commit 45f3816, chưa test Play
 - [Reskin Clan Search](dungonrush-reskin-clan-search.md) — 2026-10-27 popup Clan Search + Enter Clan Name theo mockup, kit 1_UIKit/ClanSearch (nút −/+ art, ô nhập tan, tick xanh ChatGPT); đã commit 90d7c08
-- [Reskin Enchantment](dungonrush-reskin-enchantment.md) — 2026-10-27 trang (trong UIMainGame2) + 4 popup theo mockup, kit 1_UIKit/Enchantment, 3 hình ô trống kính/tẩu/áo ChatGPT; đã commit 5d155b4; KHÔNG Apply Reskin toàn bộ (ArtIncoming lệch)
-- [Reskin lobby đợt 3](dungonrush-reskin-lobby2.md) — 2026-10-28 mockup "lobby demo 4": giữ map nén phần dưới, rarity mới, thanh rương, tab chữ + ô vàng; hộp avatar/gem cắt từ mockup chờ art; đã commit 3b12c24
-- [Reskin Dungeon](dungonrush-reskin-dungeon.md) — 2026-10-28 trang + 2 popup + tấm trong trận theo mockup, kit 1_UIKit/Dungeon, tên EN Boss Raid/Zombie Horde/Dark Ritual (đổi 2026-11-09); test Play OK, đã commit daaf59f; đợt 2 2026-11-07 đổi art 3 thẻ, chưa test Play, đã commit
+- [Reskin Enchantment](dungonrush-reskin-enchantment.md) — 2026-10-27 xong, commit 5d155b4; KHÔNG Apply Reskin toàn bộ
+- [Reskin lobby đợt 3](dungonrush-reskin-lobby2.md) — 2026-10-28 mockup "lobby demo 4", commit 3b12c24; hộp avatar/gem chờ art
+- [Reskin Dungeon](dungonrush-reskin-dungeon.md) — trang + 2 popup, tên Boss Raid/Zombie Horde/Dark Ritual; đã commit; popup kết quả theo concept 2026-11-11 + sửa glyph icon trứng (chưa commit)
 - [Reskin popup art cũ còn sót](dungonrush-reskin-old-popups.md) — 2026-10-28 Combat Summary + 16 popup (Cape/PvP/Account/ItemInfo/AutoLoot/Language) sang kit Mastery bằng PopupKitReskin; đã commit, chưa test Play
 - [Pet nhún idle như hero](dungonrush-pet-idle-bob.md) — PetAnimationController nhún node Icon theo UnitIdle hero, PetUnit tự gắn; 3 prefab tách sprite ra Icon; commit ce03204 (2026-10-28)
 - [FX impact cận chiến](dungonrush-melee-impact-fx.md) — hero_impact_101 của StickIdle cho mọi đòn đánh gần, FxController.fxImpactMelee (Resources), hiện ở pivot (giữa thân) nạn nhân; 2026-10-28
 - [MainMap bám ô](dungonrush-map-cell-snap.md) — lưới nền căn theo PointStart (MapController.AlignGridBackground), tường = vòng ô dày 1 ô, chướng ngại 1x1; sprite PPU 256 scale 1 (2026-10-28)
-- [Reskin Events](dungonrush-reskin-events.md) — 2026-10-28 EventPage theo mockup, 2 thẻ PvP/Boss Rush (Co-op giữ tắt — user chốt), kit 1_UIKit/Events; đợt 2 2026-11-07 art thẻ mới + Boss Rush ruy băng xanh dương, chưa test Play, đợt 2 đã commit
-- [Reskin PvP](dungonrush-reskin-pvp.md) — 2026-10-28 sảnh (danh sách world trong sảnh, bỏ Season/Promotion — bám gốc), chọn đối thủ (ô vé + avatar), Victory/Defeat, top bar "PvP"; kit 1_UIKit/PvP + IsFist; CHƯA test Play, đã commit eb26bba
+- [Reskin Events](dungonrush-reskin-events.md) — EventPage 2 thẻ PvP/Boss Rush (Co-op giữ tắt — user chốt); đã commit
+- [Reskin PvP](dungonrush-reskin-pvp.md) — sảnh/chọn đối thủ/Victory/Defeat, bỏ Season/Promotion (bám gốc); commit eb26bba, chưa test Play
 - [Giờ server cho reset Dungeon/Events](dungonrush-server-time.md) — getservertime + ServerTime.cs, sync ở Login, offline dùng giờ máy; đã deploy 2026-11-04
-- [Chat Thế giới + Clan](dungonrush-chat-system.md) — RTDB chat/ww qua REST SSE, 5 endpoint gốc, lọc tục/chặn/báo cáo/cấm; test emulator+Play đạt 2026-11-02, đã commit, function + RTDB đã deploy, chưa thử gửi tin trên prod; GD ở GDD/CHAT_DESIGN.md
-- [Reskin boss Black Dragon → cáo](dungonrush-reskin-boss-black-dragon.md) — 2026-11-02 rig Main ở chân + anim BossNew/BlackDragon (idle/move nhún, attack cầu phình), FireBreath cầu bay vòng; test Play OK, đã commit
-- [Reskin boss Crimson Lich → heo chùy](dungonrush-reskin-boss-crimson-lich.md) — 2026-11-03 khuôn boss cầm vũ khí: WeaponRoot + weaponMirror lật gương, clip gõ chùy đạn bay ra, skill giữ idle + FX; test Play OK, đã commit
+- [Chat Thế giới + Clan](dungonrush-chat-system.md) — RTDB qua REST SSE, đã deploy + commit, chưa thử prod; GD ở GDD/CHAT_DESIGN.md
+- [Reskin boss Black Dragon → cáo](dungonrush-reskin-boss-black-dragon.md) — rig Main ở chân + anim BossNew; đã commit
+- [Reskin boss Crimson Lich → heo chùy](dungonrush-reskin-boss-crimson-lich.md) — khuôn boss cầm vũ khí (WeaponRoot + weaponMirror); đã commit
 - [Reskin Red Dragon → cáo cầu lửa](dungonrush-reskin-boss-dragon.md) — 2026-11-03 khuôn BlackDragon, test Play ô thật OK, đã commit; BossRushDragon.prefab thừa đã xoá
 
 - [Reskin boss Dark Lich → gấu búa](dungonrush-reskin-boss-dark-lich.md) — 2026-11-03 chép khuôn Crimson, Slam giữ Idle + FX ô 0; test Play ô thật OK, đã commit
 - [Reskin 6 boss cuối (đủ 10 boss)](dungonrush-reskin-boss-rest.md) — 2026-11-03 Elder/Green Dragon/2 Ogre/2 Hag, bảng số rig + công thức đo, đã dọn art cũ; test Play ô thật OK, đã commit
-- [Reskin DragonEnemy → cáo cầu lửa](dungonrush-reskin-dragon-enemy.md) — 2026-11-03 rồng dungeon dùng chung art Red Dragon, chỉ Idle nhún + đánh thường, thêm lật mặt ở OriginalAnimatorController; test Play OK, đã commit
+- [Reskin DragonEnemy → cáo cầu lửa](dungonrush-reskin-dragon-enemy.md) — dùng chung art Red Dragon; đã commit
 - [Commit thẳng main](git-commit-direct-main.md) — không tách nhánh rồi merge; vẫn chỉ commit khi user bảo, không tự push
 - [PvP mùa + nhóm league](dungonrush-pvp-update-requests.md) — đã code + test Play emulator 2026-11-04, đã commit, đã deploy; cúp +1..+5 theo cúp đối thủ, thua không mất, 5 vé không ads, thưởng mùa ×1.2; GD ở GDD/PVP_DESIGN.md
-- [SDK kiếm tiền](dungonrush-monetization-sdk.md) — IAP, MAX, AppsFlyer, Analytics/Crashlytics theo RaceManager 2026-11-04; test Play qua batch đạt trên fake store, chưa chạy máy thật, đã commit; đã có key Android + adapter, build APK batch đạt, thiếu keystore, link chính sách đang tạm mượn Racing, chưa chạy máy thật; mã sản phẩm tnt.*, verifypurchase đã deploy nhưng chưa nối Play Console; không dùng Remote Config (user chốt)
+- [SDK kiếm tiền](dungonrush-monetization-sdk.md) — IAP/MAX/AppsFlyer/Crashlytics theo RaceManager, đã commit; thiếu keystore, chưa máy thật; mã tnt.*; không Remote Config
 - [Firebase Analytics theo Racing](dungonrush-analytics.md) — 2026-11-05 Scripts/Analytics + 46 event, test Play batch đạt, chưa máy thật, đã commit; doc + query + phương án ở GDD/analytics; không bắn `purchase`, dùng `iap_success`
 - [Nhóm P0 tăng trưởng](dungonrush-growth-p0.md) — 2026-11-05 No Ads, Starter Pack, popup thiếu gem, AutoOfferGate, vào thẳng game, thưởng 7 ngày, thông báo đẩy; LỆCH GỐC có chủ ý, đừng gỡ; builder RetentionUIBuilder
-- [Reskin 3 map dungeon](dungonrush-reskin-dungeon-maps.md) — 2026-11-07 Boss Raid/Zombie Horde/Dark Ritual sang art liền tấm (sàn+tường 1 ảnh, nền 1 ảnh, Codex outpaint rìa, chướng ngại cắt từ cột tường), test Play OK, đã commit 8bc97939; 20 asset cũ Zombie/Cultist chưa xoá
+- [Reskin 3 map dungeon](dungonrush-reskin-dungeon-maps.md) — art liền tấm, commit 8bc97939; 20 asset cũ Zombie/Cultist chưa xoá
 - [Vũ khí quái Dark Ritual](dungonrush-reskin-cultist-weapons.md) — 2026-11-09 liềm đen + cung nến + đạn mũi tên ngôi sao thay đồ cũ, ghi đè giữ GUID; vũ khí + đạn đã commit; chưa test Play
 - [Mining = vịt nhìn ngang](dungonrush-mining-duck-character.md) — LỆCH GỐC có chủ ý 2026-11-09: rig 00Hero + unit_all, lật trái/phải, menu Build Mining/Duck Character; test Play OK, đã commit
-- [Glow nút trái/phải lobby](dungonrush-lobby-button-glow.md) — Coffee UIParticle v4 + PowerupGlow1_1, material glow1_ADD 1 giữ guid gốc; + rương bay (UI/Additive viết lại); test Play OK 2026-11-09, đã commit d8bdad9e; rương bay đã hiện (bật GameUI)
+- [Glow nút trái/phải lobby](dungonrush-lobby-button-glow.md) — Coffee UIParticle + glow1_ADD giữ guid gốc + rương bay; commit d8bdad9e
 - [Icon app Android](dungonrush-app-icon.md) — vịt cầm búa mẫu 4, Art/AppIcon, adaptive chỉ lớp nền thu 72/108; commit 30239c1c 2026-11-10; iOS chưa gán
 - [Build Android Product/Dev](dungonrush-android-release-build.md) — BuildRelease APK+AAB không cheat; BuildDev APK define DEV_BUILD: cheat + mua/ads luôn thành công; tool mới bọc `UNITY_EDITOR || DEV_BUILD`
 - [Nút bị nuốt click lúc chuyển màn](dungonrush-ui-click-blocked-shield.md) — ShieldUI Overlay 1000 bật khi campaign fade vùng map → Sell/Equip không ăn; đã sửa 2026-11-11 (chưa commit) + cách dò raycast

@@ -1,0 +1,87 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Concept popup 7 ngày: dùng thẳng sprite trong Art/, 1 px CSS = 2 đơn vị canvas 1080×2160. Chụp: tools/concept/render_concept.sh -->
+<style>
+@font-face{font-family:Asap;src:url(../../../2026DungeonRushUnity/Assets/_Assets/Fonts/Asap/Asap-SemiBold.ttf)}
+*{box-sizing:border-box;margin:0}
+body{background:#15141c;font-family:Asap,sans-serif;display:flex;gap:40px;padding:30px 30px 20px}
+.col{display:flex;flex-direction:column;align-items:center;gap:12px}
+.cap{color:#cfcde0;font-size:20px;font-family:sans-serif}
+.screen{width:540px;height:1080px;background:#26252f;border-radius:24px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.o{color:#fff;-webkit-text-stroke:4px #000;paint-order:stroke fill}
+.pp{width:484px;position:relative}
+.hd{height:69px;border-style:solid;border-width:0 8px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/popup_header.png) 0 16 0 16 fill stretch;display:flex;align-items:center;justify-content:center;position:relative;z-index:2}
+.hd .o{font-size:34px}
+.cls{position:absolute;right:-14px;top:-18px;width:52px;height:52px;background:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/btn_close.png) center/contain no-repeat}
+.bd{margin-top:-6px;border-style:solid;border-width:7px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/popup_frame.png) 14 fill;padding:18px 16px 22px}
+.sub{text-align:center;color:#7a5c3c;font-size:19px;margin-bottom:14px}
+.g{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.c{height:150px;border-style:solid;border-width:15px;border-image-slice:30 fill;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:0}
+.c .d{font-size:21px;margin-top:-6px}
+.c .ic{width:62px;height:62px;object-fit:contain}
+.c .q{font-size:26px;margin-bottom:-6px}
+.claim{border-image-source:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/cell_green.png);transform:scale(1.06);z-index:1}
+.done{border-image-source:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/cell_blue.png)}
+.done .ic,.done .q{opacity:.5}
+.wait{border-image-source:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/cell_gray.png)}
+.chk{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:66px}
+.alert{position:absolute;right:-14px;top:-14px;width:30px}
+.grand{grid-column:span 3;height:168px;background:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/SevenDay/day7_bg.png) 0 0/100% 100% no-repeat;padding:15px;position:relative;margin-top:14px}
+.rib{position:absolute;left:50%;top:-20px;transform:translateX(-50%);width:230px;height:54px;background:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Gameplay/ribbon_offer.png) center/100% 100% no-repeat;display:flex;align-items:center;justify-content:center;padding-bottom:6px}
+.rib .o{font-size:23px}
+.tag{position:absolute;left:-8px;top:56px;height:40px;border-style:solid;border-width:0 26px 0 10px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Events/ribbon_red.png) 0 52 0 20 fill;display:flex;align-items:center;transform:rotate(-8deg)}
+.tag .o{font-size:16px;-webkit-text-stroke:3px #000}
+.slots{position:relative;display:flex;justify-content:flex-end;align-items:center;gap:12px;height:100%;padding:16px 26px 0 0}
+.slot{width:100px;height:100px;border-style:solid;border-width:12px 12px 16px 12px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/btn_orange.png) 30 fill;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.slot img{width:56px;height:56px;object-fit:contain}
+.slot .o{font-size:21px;margin-top:-4px}
+.plus{font-size:34px}
+.ft{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:22px}
+.btn{width:240px;height:82px;border-style:solid;border-width:9px 9px 15px 9px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Lobby/btn_green.png) 18 18 30 18 fill;display:flex;align-items:center;justify-content:center;padding-top:4px}
+.btn .o{font-size:34px}
+.off{filter:grayscale(1) brightness(.85)}
+.tm{height:48px;border-style:solid;border-width:22px;border-image:url(../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/Mastery/mastery_panel.png) 45 fill;display:flex;align-items:center;gap:8px;padding:0 6px}
+.tm span{color:#fff;font-size:19px;margin:-22px 0;white-space:nowrap}
+.tm b{color:#ffd35a;font-weight:normal}
+.tap{color:#cfcde0;font-size:19px;margin-top:22px}
+</style></head><body>
+
+<div class="col"><div class="cap">Có quà hôm nay (ngày 3)</div>
+<div class="screen"><div class="pp">
+ <div class="hd"><span class="o">7-Day Rewards</span><div class="cls"></div></div>
+ <div class="bd">
+  <div class="sub">Log in every day to claim a gift</div>
+  <div class="g">
+   <div class="c done"><span class="d o">Day 1</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/gem.png"><span class="q o">20</span><img class="chk" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/icon_check.png"></div>
+   <div class="c done"><span class="d o">Day 2</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/box_icon.png"><span class="q o">100</span><img class="chk" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/icon_check.png"></div>
+   <div class="c claim"><span class="d o">Day 3</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/gem.png"><span class="q o">30</span><img class="alert" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/icon_alert.png"></div>
+   <div class="c wait"><span class="d o">Day 4</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/bone_icon.png"><span class="q o">200</span></div>
+   <div class="c wait"><span class="d o">Day 5</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/box_icon.png"><span class="q o">150</span></div>
+   <div class="c wait"><span class="d o">Day 6</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/gem.png"><span class="q o">50</span></div>
+   <div class="grand"><div class="rib"><span class="o">Day 7</span></div><div class="tag"><span class="o">BIG REWARD</span></div>
+    <div class="slots"><div class="slot"><img src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/gem.png"><span class="o">x150</span></div><span class="o plus">+</span><div class="slot"><img src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/bone_icon.png"><span class="o">x500</span></div></div></div>
+  </div>
+  <div class="ft"><div class="btn"><span class="o">Claim</span></div></div>
+ </div>
+</div><div class="tap">Tap anywhere to close</div></div></div>
+
+<div class="col"><div class="cap">Đã nhận hôm nay</div>
+<div class="screen"><div class="pp">
+ <div class="hd"><span class="o">7-Day Rewards</span><div class="cls"></div></div>
+ <div class="bd">
+  <div class="sub">Log in every day to claim a gift</div>
+  <div class="g">
+   <div class="c done"><span class="d o">Day 1</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/gem.png"><span class="q o">20</span><img class="chk" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/icon_check.png"></div>
+   <div class="c done"><span class="d o">Day 2</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/box_icon.png"><span class="q o">100</span><img class="chk" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/icon_check.png"></div>
+   <div class="c done"><span class="d o">Day 3</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/gem.png"><span class="q o">30</span><img class="chk" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/1_UIKit/BattlePass/icon_check.png"></div>
+   <div class="c wait"><span class="d o">Day 4</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/bone_icon.png"><span class="q o">200</span></div>
+   <div class="c wait"><span class="d o">Day 5</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/box_icon.png"><span class="q o">150</span></div>
+   <div class="c wait"><span class="d o">Day 6</span><img class="ic" src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/gem.png"><span class="q o">50</span></div>
+   <div class="grand"><div class="rib"><span class="o">Day 7</span></div><div class="tag"><span class="o">BIG REWARD</span></div>
+    <div class="slots"><div class="slot"><img src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/gem.png"><span class="o">x150</span></div><span class="o plus">+</span><div class="slot"><img src="../../../2026DungeonRushUnity/Assets/_Assets/Art/2_Icons/Currency/bone_icon.png"><span class="o">x500</span></div></div></div>
+  </div>
+  <div class="ft"><div class="tm"><span>Next gift in <b>16h 3m</b></span></div><div class="btn off"><span class="o">Claimed</span></div></div>
+ </div>
+</div><div class="tap">Tap anywhere to close</div></div></div>
+
+</body></html>

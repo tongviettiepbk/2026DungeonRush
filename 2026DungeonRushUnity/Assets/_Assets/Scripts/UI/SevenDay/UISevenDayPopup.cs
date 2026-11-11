@@ -4,7 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Popup thưởng 7 ngày, dựng từ khung UIMiningOfferPopup (RetentionUIBuilder).
+// Popup thưởng 7 ngày, dựng từ khung UIMiningOfferPopup (RetentionUIBuilder) rồi reskin theo concept
+// tools/concept/seven_day/concept.png (SevenDayPopupReskin).
 public class UISevenDayPopup : BaseUI
 {
     public TMP_Text txtTitle;
@@ -16,6 +17,16 @@ public class UISevenDayPopup : BaseUI
     public Sprite sprGem;
     public Sprite sprHammer;
     public Sprite sprBone;
+
+    // Reskin: dòng phụ dưới tiêu đề, nhãn ô ngày 7, ô đếm giờ trên nút, nút đóng; nút Claim đổi sprite xanh/xám.
+    public TMP_Text txtSubtitle;
+    public TMP_Text txtBigReward;
+    public GameObject objTimer;
+    public TMP_Text txtTimer;
+    public Button btClose;
+    public Image imgClaim;
+    public Sprite sprClaimOn;
+    public Sprite sprClaimOff;
 
     private Action onClosed;
     private float nextTextRefreshAt;
@@ -38,6 +49,7 @@ public class UISevenDayPopup : BaseUI
         base.Awake();
         btClaim.onClick.AddListener(OnClickClaim);
         if (btBackground != null) btBackground.onClick.AddListener(Close);
+        if (btClose != null) btClose.onClick.AddListener(Close);
     }
 
     private void Update()
@@ -53,6 +65,8 @@ public class UISevenDayPopup : BaseUI
     {
         txtTitle.text = Loc.L("Popup.SevenDay.Title");
         if (txtTapToClose != null) txtTapToClose.text = Loc.L("Common.TapToClose");
+        if (txtSubtitle != null) txtSubtitle.text = Loc.L("Popup.SevenDay.Subtitle");
+        if (txtBigReward != null) txtBigReward.text = Loc.L("Popup.SevenDay.BigReward");
         int claimed = SevenDayService.ClaimedCount;
         bool canClaim = SevenDayService.CanClaim;
 
@@ -68,14 +82,17 @@ public class UISevenDayPopup : BaseUI
     private void RefreshButton()
     {
         bool canClaim = SevenDayService.CanClaim;
+        bool isWaiting = canClaim == false && SevenDayService.ClaimedCount < SevenDayService.DAY_COUNT;
         btClaim.interactable = canClaim;
+        if (imgClaim != null) imgClaim.sprite = canClaim ? sprClaimOn : sprClaimOff;
+        txtClaim.text = canClaim ? Loc.L("Common.Claim") : Loc.L("Clan.War.RewardCard.Claimed");
 
-        if (canClaim)
-            txtClaim.text = Loc.L("Common.Claim");
-        else if (SevenDayService.ClaimedCount < SevenDayService.DAY_COUNT)
-            txtClaim.text = ShopUIUtil.FormatDuration((long)SevenDayService.GetTimeToNextClaim().TotalSeconds);
-        else
-            txtClaim.text = Loc.L("Clan.War.RewardCard.Claimed");
+        if (objTimer != null) objTimer.SetActive(isWaiting);
+        if (isWaiting && txtTimer != null)
+        {
+            string time = ShopUIUtil.FormatDuration((long)SevenDayService.GetTimeToNextClaim().TotalSeconds);
+            txtTimer.text = Loc.L("Popup.SevenDay.NextGift", "<color=#FFD35A>" + time + "</color>");
+        }
     }
 
     private Sprite GetIcon(ShopReward reward)
