@@ -104,7 +104,7 @@ public class BaseMode : MonoBehaviour
 
     protected virtual void Update()
     {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
         // Cheat phím tắt như StickIdle: W = thắng, L = thua (chỉ trong Editor).
         if (Input.GetKeyUp(KeyCode.W))
         {

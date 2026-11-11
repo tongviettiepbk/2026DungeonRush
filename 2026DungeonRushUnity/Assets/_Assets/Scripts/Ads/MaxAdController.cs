@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 // Lớp SDK của MediationAds: quảng cáo có thưởng qua AppLovin MAX. Mọi chỗ gọi trong game chỉ dùng rewarded nên
-// interstitial/banner chưa làm. Editor không gọi SDK: giữ nguyên hành vi base (trả Finished ngay) để test.
+// interstitial/banner chưa làm. Editor + bản Dev (DevBuild) không gọi SDK: giữ nguyên hành vi base (trả Finished ngay) để test.
 public class MaxAdController : MediationAds
 {
     private const string MSG_AD_NOT_READY = "Ad is not ready. Please try again later.";
@@ -26,7 +26,7 @@ public class MaxAdController : MediationAds
 
     public override void Init()
     {
-        if (Application.isEditor)
+        if (DevBuild.IsEnabled)
         {
             return;
         }
@@ -66,7 +66,7 @@ public class MaxAdController : MediationAds
             callback?.Invoke(result);
         };
 
-        if (Application.isEditor)
+        if (DevBuild.IsEnabled)
         {
             Analytics.LogAdRequest(placement, true);
             base.ShowRewardedVideoAd(placement, tracked);

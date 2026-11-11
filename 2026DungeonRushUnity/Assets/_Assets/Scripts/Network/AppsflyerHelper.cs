@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
-// Bọc AppsFlyer: nuốt lỗi SDK, không chạy trong Editor hoặc khi chưa điền dev key (MonetizationSettings).
+// Bọc AppsFlyer: nuốt lỗi SDK, không chạy trong Editor/bản Dev (DevBuild) hoặc khi chưa điền dev key (MonetizationSettings).
 // Tên event là bộ ad-monetization chuẩn của AppsFlyer, đặt sai thì dashboard không gom được.
 public static class AppsflyerHelper
 {
@@ -19,7 +19,7 @@ public static class AppsflyerHelper
 
     public static void Init()
     {
-        if (Application.isEditor || string.IsNullOrEmpty(MonetizationSettings.APPSFLYER_DEV_KEY))
+        if (DevBuild.IsEnabled || string.IsNullOrEmpty(MonetizationSettings.APPSFLYER_DEV_KEY))
         {
             return;
         }

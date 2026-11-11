@@ -4,7 +4,7 @@ using System.Collections.Generic;
 // Lớp mua hàng bằng tiền thật (PurchaseController gốc). Đây là lớp BASE chưa gắn SDK — cùng kiểu MediationAds:
 // mọi chỗ gọi PurchaseController.Instance.Purchase(id); khi có SDK (Unity IAP…) viết class kế thừa, override
 // Purchase / GetPriceText rồi gọi OnPurchased(id) lúc store xác nhận thanh toán.
-// Base: trong Editor coi như thanh toán thành công ngay để test; trên máy thật thì báo store chưa sẵn sàng.
+// Base: trong Editor + bản Dev (DevBuild) coi như thanh toán thành công ngay để test; bản Product thì báo store chưa sẵn sàng.
 public class PurchaseController : Singleton<PurchaseController>
 {
     public const string STORE_ID_NO_ADS = "tnt.noads";
@@ -52,7 +52,7 @@ public class PurchaseController : Singleton<PurchaseController>
     public virtual void Purchase(string productId)
     {
         Analytics.LogIapClick(productId);
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
         OnPurchased(productId);
 #else
         Analytics.LogIapFail(productId, "not_available");

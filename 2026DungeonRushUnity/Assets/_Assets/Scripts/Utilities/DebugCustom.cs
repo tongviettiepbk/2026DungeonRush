@@ -19,7 +19,7 @@ public class DebugCustom
 
     private static bool IsEnableLog()
     {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
         return true;
 #endif
 #pragma warning disable CS0162

@@ -39,7 +39,7 @@ public class BossRushTester : MonoBehaviour
 
     private List<BotChain> botBank;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Create()
     {

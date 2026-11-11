@@ -425,50 +425,59 @@ public class UIMainLobby : BaseUI
         UpdatePetCooldowns();
         UpdateOfflineHeartbeat();
 
-#if UNITY_EDITOR
-        // add more loot ticket for test
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            GameData.userData.items.Receive(ItemType.LOOT_TICKET, 100);
-            UpdateLootTicketText();
-        }
-
-        // test: +2000 Vial để thử summon Enchantment
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            GameData.userData.items.Receive(ItemType.VIAL, 2000);
-            this.PostEvent(EventID.EnchantmentChanged);
-        }
-
-        // test: +1000 mỗi loại quặng để thử Wing craft / reroll / upgrade
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            foreach (MineOreType ore in System.Enum.GetValues(typeof(MineOreType)))
-                GameData.userData.items.Receive(WingService.ToItemType(ore), 1000);
-            this.PostEvent(EventID.WingChanged);
-        }
-
-        // test: +1000 Cloak để thử summon Cape
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            GameData.userData.items.Receive(ItemType.CLOAK, 1000);
-            this.PostEvent(EventID.CapeChanged);
-        }
-
-        // test: giả vắng 2 giờ rồi bật popup thưởng offline
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            GameData.userData.offlineEarning.collectTime = ShopService.Now() - 7200;
-            ShowOfflineEarning();
-        }
-
-        // test: mở tất cả pet (sở hữu đủ 16 con, level 1)
-        if (Input.GetKeyDown(KeyCode.P))
-            CheatUnlockAllPets();
-
+#if UNITY_EDITOR || DEV_BUILD
+        // Phím tắt cheat trong Editor; trên máy (bản Dev) bấm qua bảng DevCheatPanel.
+        if (Input.GetKeyDown(KeyCode.L)) CheatAddLootTicket();
+        if (Input.GetKeyDown(KeyCode.V)) CheatAddVial();
+        if (Input.GetKeyDown(KeyCode.O)) CheatAddOres();
+        if (Input.GetKeyDown(KeyCode.K)) CheatAddCloak();
+        if (Input.GetKeyDown(KeyCode.F)) CheatOfflineEarning();
+        if (Input.GetKeyDown(KeyCode.P)) CheatUnlockAllPets();
 #endif
 
     }
+
+#if UNITY_EDITOR || DEV_BUILD
+    #region Cheat (Editor + bản Dev)
+
+    // test: +100 hộp loot
+    public void CheatAddLootTicket()
+    {
+        GameData.userData.items.Receive(ItemType.LOOT_TICKET, 100);
+        UpdateLootTicketText();
+    }
+
+    // test: +2000 Vial để thử summon Enchantment
+    public void CheatAddVial()
+    {
+        GameData.userData.items.Receive(ItemType.VIAL, 2000);
+        this.PostEvent(EventID.EnchantmentChanged);
+    }
+
+    // test: +1000 mỗi loại quặng để thử Wing craft / reroll / upgrade
+    public void CheatAddOres()
+    {
+        foreach (MineOreType ore in System.Enum.GetValues(typeof(MineOreType)))
+            GameData.userData.items.Receive(WingService.ToItemType(ore), 1000);
+        this.PostEvent(EventID.WingChanged);
+    }
+
+    // test: +1000 Cloak để thử summon Cape
+    public void CheatAddCloak()
+    {
+        GameData.userData.items.Receive(ItemType.CLOAK, 1000);
+        this.PostEvent(EventID.CapeChanged);
+    }
+
+    // test: giả vắng 2 giờ rồi bật popup thưởng offline
+    public void CheatOfflineEarning()
+    {
+        GameData.userData.offlineEarning.collectTime = ShopService.Now() - 7200;
+        ShowOfflineEarning();
+    }
+
+    #endregion
+#endif
 
     public void UpdateLootTicketText()
     {
@@ -478,9 +487,9 @@ public class UIMainLobby : BaseUI
 
     #region Pet
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
     // Test: sở hữu toàn bộ companion + đẩy playerLevel lên mốc mở hệ pet (nếu chưa đủ) để ô pet lobby mở.
-    private void CheatUnlockAllPets()
+    public void CheatUnlockAllPets()
     {
         List<CompanionData> all = GameData.staticData.companions.companions;
         for (int i = 0; i < all.Count; i++)

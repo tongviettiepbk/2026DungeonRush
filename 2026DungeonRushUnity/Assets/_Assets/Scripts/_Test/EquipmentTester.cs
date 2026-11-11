@@ -30,7 +30,7 @@ public class EquipmentTester : MonoBehaviour
 
     private Dictionary<GearSlotType, List<Option>> options;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
     private void Awake()
     {
         if (instance != null)

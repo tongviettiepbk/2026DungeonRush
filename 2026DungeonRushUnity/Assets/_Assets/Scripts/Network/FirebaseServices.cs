@@ -41,6 +41,9 @@ public static class FirebaseServices
             }
 
             Crashlytics.ReportUncaughtExceptionsAsFatal = true;
+            // Bản Dev mua/ads giả + cheat: event gửi lên là lẫn số liệu thật, nên tắt Analytics (Crashlytics vẫn chạy).
+            // Cờ này SDK lưu qua các lần mở app → bản Product phải bật lại, phòng máy cài đè từ bản Dev.
+            FirebaseAnalytics.SetAnalyticsCollectionEnabled(DevBuild.IsEnabled == false);
             isReady = true;
 
             if (string.IsNullOrEmpty(pendingUserId) == false)

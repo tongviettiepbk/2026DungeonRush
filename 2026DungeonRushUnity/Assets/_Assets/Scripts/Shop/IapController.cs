@@ -269,13 +269,13 @@ public class IapController : PurchaseController, IAppsFlyerValidateAndLog
     #region Mua
     public override string GetPriceText(string productId)
     {
-        Product product = Application.isEditor ? null : GetProduct(productId);
+        Product product = DevBuild.IsEnabled ? null : GetProduct(productId);
         return product != null ? product.metadata.localizedPriceString : base.GetPriceText(productId);
     }
 
     public override void Purchase(string productId)
     {
-        if (Application.isEditor)
+        if (DevBuild.IsEnabled)
         {
             base.Purchase(productId);
             return;

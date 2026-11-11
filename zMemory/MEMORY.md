@@ -121,5 +121,5 @@
 - [Mining = vịt nhìn ngang](dungonrush-mining-duck-character.md) — LỆCH GỐC có chủ ý 2026-11-09: rig 00Hero + unit_all, lật trái/phải, menu Build Mining/Duck Character; test Play OK, đã commit
 - [Glow nút trái/phải lobby](dungonrush-lobby-button-glow.md) — Coffee UIParticle v4 + PowerupGlow1_1, material glow1_ADD 1 giữ guid gốc; + rương bay (UI/Additive viết lại); test Play OK 2026-11-09, đã commit d8bdad9e; rương bay đã hiện (bật GameUI)
 - [Icon app Android](dungonrush-app-icon.md) — vịt cầm búa mẫu 4, Art/AppIcon, adaptive chỉ lớp nền thu 72/108; commit 30239c1c 2026-11-10; iOS chưa gán
-- [Build Android phát hành](dungonrush-android-release-build.md) — AndroidBuilder.BuildRelease batch ra APK+AAB ký duckDungeon.keystore (pass qua env); tool test tự loại vì #if UNITY_EDITOR; nhớ tăng versionCode
+- [Build Android Product/Dev](dungonrush-android-release-build.md) — BuildRelease APK+AAB không cheat; BuildDev APK define DEV_BUILD: cheat + mua/ads luôn thành công; tool mới bọc `UNITY_EDITOR || DEV_BUILD`
 - [Nút bị nuốt click lúc chuyển màn](dungonrush-ui-click-blocked-shield.md) — ShieldUI Overlay 1000 bật khi campaign fade vùng map → Sell/Equip không ăn; đã sửa 2026-11-11 (chưa commit) + cách dò raycast

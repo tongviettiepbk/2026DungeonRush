@@ -74,7 +74,7 @@ public class ForgeUIController : MonoBehaviour
     private const float GLOW_ALPHA = 0.24f;
     private const float COIN_PARTICLE_COOLDOWN = 0.1f;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
     [Header("DEBUG - chỉ dùng test")]
     // Nhập level để test bảng rarity. -1 = dùng giá trị thật (playerLevel).
     [SerializeField] private int debugForgeLevel = -1;
@@ -140,7 +140,7 @@ public class ForgeUIController : MonoBehaviour
             objAutoRunning.transform.Rotate(0f, 0f, -autoRotateSpeed * Time.deltaTime);
         RefreshHomeScreen();
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
         // chỉnh nhanh debugForgeLevel khi đang chơi: mũi tên lên/xuống
         if (Input.GetKeyDown(KeyCode.UpArrow))
             DebugCustom.Log($"[Forge] debugForgeLevel = {++debugForgeLevel}");
@@ -348,7 +348,7 @@ public class ForgeUIController : MonoBehaviour
         }
 
         int forgeLevel = GameData.userData.player.playerLevel - 1;
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
         if (debugForgeLevel >= 0)
             forgeLevel = debugForgeLevel;
 #endif

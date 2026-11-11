@@ -42,7 +42,7 @@ public class MediationAds : Singleton<MediationAds>
 
     public virtual void ShowInterstitialAd(string placement, UnityAction<ShowResultADS> callback = null)
     {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
         if (callback != null)
             callback(ShowResultADS.Finished);
         return;
@@ -51,7 +51,7 @@ public class MediationAds : Singleton<MediationAds>
 
     public virtual void ShowRewardedVideoAd(string placement, UnityAction<ShowResultADS> callback = null)
     {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
         if (callback != null)
             callback(ShowResultADS.Finished);
         return;
@@ -60,7 +60,7 @@ public class MediationAds : Singleton<MediationAds>
 
     public virtual void LoadBannerAd(UnityAction<ShowResultADS> callback = null)
     {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEV_BUILD
         if (callback != null)
             callback(ShowResultADS.Finished);
         return;
