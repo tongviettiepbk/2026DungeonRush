@@ -45,6 +45,16 @@ public class StaticCampaignData
             + Loc.L("Items.Tier.Name.Tier" + (tier + 1)) + "</color></size>\n" + (inTier / 10 + 1) + "-" + (inTier % 10 + 1);
     }
 
+    // Như GetLevelText nhưng tên Tier đã dịch, 1 dòng: "TênTier chương-màn" (Choose Save — concept batch9).
+    public static string GetLevelTextLocalized(int level)
+    {
+        int index = level - 1;
+        int tier = Mathf.Clamp(index / LEVELS_PER_TIER, 0, TIER_NAMES.Length - 1);
+        int inTier = index % LEVELS_PER_TIER;
+        return "<color=#" + ColorUtility.ToHtmlStringRGB(TIER_COLORS[tier]) + ">" + Loc.L("Items.Tier.Name.Tier" + (tier + 1)) + "</color> "
+            + (inTier / 10 + 1) + "-" + (inTier % 10 + 1);
+    }
+
     public int GetChapter(int stageId)
     {
         return stageId / 100;

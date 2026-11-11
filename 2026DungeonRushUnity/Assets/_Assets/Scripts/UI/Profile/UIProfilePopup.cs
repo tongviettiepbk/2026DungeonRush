@@ -45,6 +45,9 @@ public class UIProfilePopup : BaseUI
 
     [Header("Account")]
     public Button btAccount;
+    // Reskin Đợt 9: khách = nút cam "Sign In / Up", đã gắn email = nút đỏ "Sign Out" (đổi sprite).
+    public Sprite sprAccountSignIn;
+    public Sprite sprAccountSignOut;
     public TMP_Text txtAccountButton;
     public TMP_Text txtAccountInfo;
     public Button btSyncNow;
@@ -226,6 +229,8 @@ public class UIProfilePopup : BaseUI
         AccountController account = AccountController.Instance;
         bool isLinked = account.IsLinked;
         txtAccountButton.text = L(isLinked ? "Popup.Profile.SignOut" : "Popup.Profile.SignInUp");
+        if (sprAccountSignIn != null && sprAccountSignOut != null)
+            btAccount.image.sprite = isLinked ? sprAccountSignOut : sprAccountSignIn;
         txtAccountInfo.gameObject.SetActive(isLinked);
         if (isLinked)
         {

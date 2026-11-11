@@ -18,6 +18,9 @@ public class UIRateUsPopup : BaseUI
     public TMP_Text SubmitButtonText;
     public Color SubmitTextGrayColor = new Color(0.75f, 0.75f, 0.75f, 1f);
     public Color SubmitTextBlueColor = Color.white;
+    // Reskin Đợt 9: có sprite thì đổi SPRITE nút (cam bật / xám tắt), chữ giữ trắng — thay tô màu.
+    public Sprite SubmitOnSprite;
+    public Sprite SubmitOffSprite;
     public string iosAppId;
 
     private int selectedStars;   // uig
@@ -62,8 +65,14 @@ public class UIRateUsPopup : BaseUI
     // ejc gốc.
     private void RefreshSubmit()
     {
-        SubmitButtonText.color = selectedStars >= 1 ? SubmitTextBlueColor : SubmitTextGrayColor;
         SubmitButton.interactable = selectedStars > 0;
+        if (SubmitOnSprite != null && SubmitOffSprite != null)
+        {
+            SubmitButton.image.sprite = selectedStars >= 1 ? SubmitOnSprite : SubmitOffSprite;
+            SubmitButtonText.color = Color.white;
+            return;
+        }
+        SubmitButtonText.color = selectedStars >= 1 ? SubmitTextBlueColor : SubmitTextGrayColor;
     }
 
     // ejd gốc.

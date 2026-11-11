@@ -58,8 +58,8 @@ public class UIAccountSelectPopup : BaseUI
         {
             return Loc.L("Popup.AccountSelect.NewAdventurer");
         }
-        StaticCampaignData campaign = GameData.staticData.campaign;
-        return "Stage " + campaign.GetChapter(stageId) + "-" + campaign.GetStageIndex(stageId);
+        // Reskin Đợt 9: ghi tên màn (Tier dịch + chương-màn) thay "Stage x-y".
+        return StaticCampaignData.GetLevelTextLocalized(GameData.staticData.campaign.GetLevel(stageId));
     }
 
     // jtg gốc.
