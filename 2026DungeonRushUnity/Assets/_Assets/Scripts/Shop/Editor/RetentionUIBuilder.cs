@@ -36,6 +36,7 @@ public static class RetentionUIBuilder
         BuildLobby();
         Batch2Reskin.ApplyStarterPack();   // reskin concept batch2
         Batch2Reskin.ApplyMissingGems();
+        ShopPageReskin.ApplyAll();         // reskin trang Shop (BuildStore chép nền Lifetime sang NoAds/Starter → áp lại)
         AssetDatabase.SaveAssets();
         Debug.Log("[Retention UI] done");
     }

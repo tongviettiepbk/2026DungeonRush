@@ -1,0 +1,265 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Concept trang Shop (StoreTabPage). Kit chung tools/concept/kit/kit.css, sprite thật trong Art/ + nền thẻ mới ở
+     tools/concept/shop/art (sinh bằng tools/reskin/gen_shop_cards.py). 1 px CSS = 2 đơn vị canvas.
+     Chụp: tools/concept/render_concept.sh tools/concept/shop/concept.html tools/concept/shop/concept.png 1800 <cao> -->
+<base href="../../../2026DungeonRushUnity/Assets/_Assets/Art/">
+<link rel="stylesheet" href="../../../../tools/concept/kit/kit.css">
+<style>
+body{display:flex;flex-wrap:wrap;gap:22px;width:1800px;align-items:flex-start}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px;width:560px}
+.cap{color:#cfcde0;font-size:16px;font-family:sans-serif;width:540px;line-height:1.4}
+.cap b{color:#fff}
+.notes{width:1756px;background:#3e3d4d;border-radius:18px;padding:18px 24px;color:#cfcde0;font:16px/1.55 sans-serif}
+.notes b{color:#fff}
+.notes ol{padding-left:22px}
+/* điện thoại 1080x2160 → 540x1080 */
+.phone{width:540px;height:1080px;background:#3e3d4d;border-radius:18px;position:relative;overflow:hidden}
+.hud{position:absolute;left:0;right:0;top:0;height:46px;background:#2c2b38;color:#8b89a3;font:13px sans-serif;display:flex;align-items:center;justify-content:center;z-index:3}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:62px;background:#2c2b38;color:#8b89a3;font:13px sans-serif;display:flex;align-items:center;justify-content:center;z-index:3}
+.page{position:absolute;left:0;right:0;top:46px;bottom:62px;overflow:hidden}
+.pin{position:absolute;left:18.5px;right:18.5px;display:flex;flex-direction:column;gap:12px}
+/* tiêu đề mục */
+.sh{height:50px;border-style:solid;border-width:0 8px;border-image:url(1_UIKit/Mastery/popup_header.png) 0 16 0 16 fill stretch;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px}
+.sh img{height:32px}
+.sh .o{font-size:25px}
+.sub{text-align:center;font-size:16px;margin:-4px 0 0}
+/* thẻ ưu đãi (nền sinh mới) */
+.oc{position:relative;width:503px;height:104px;background-size:100% 100%;flex:none}
+.oc .tt{position:absolute;left:18px;top:12px;font-size:26px;white-space:nowrap}
+.oc .ds{position:absolute;left:18px;top:52px;font-size:17px}
+.oc .b{position:absolute;right:16px;top:50%;transform:translateY(-54%);width:117px;height:65px;min-width:0;padding:0}
+.oc .b .o{font-size:22px}
+.chips{position:absolute;left:16px;display:grid;gap:5px}
+.chip{height:29px;border-style:solid;border-width:6px;border-image:url(1_UIKit/Shop/reward_slot.png) 12 fill;display:flex;align-items:center;gap:4px;padding:0 0;margin:0}
+.chip img{width:24px;height:24px;object-fit:contain;margin:-6px 0 -6px -2px}
+.chip .o3{font-size:17px;margin:-6px 0}
+.deal{height:151px}
+.deal .chips{top:56px}
+.c2{grid-template-columns:150px 150px}
+.c3{grid-template-columns:98px 98px 98px}
+.boost .tt{left:78px;top:50%;transform:translateY(-58%);font-size:27px}
+.boost .ic{position:absolute;left:18px;top:50%;transform:translateY(-58%);width:52px}
+/* rương nổi bật */
+.feat{height:151px}
+.feat .ch{position:absolute;left:24px;top:24px;width:96px}
+.feat .pet{position:absolute;width:40px}
+.feat .tt{left:150px;top:12px}
+.feat .dkp{position:absolute;left:146px;top:52px;width:200px;border-style:solid;border-width:12px;border-image:url(1_UIKit/Mastery/mastery_panel.png) 45 fill;display:flex;flex-direction:column;gap:2px}
+.feat .dkp span{color:#fff;font-size:13px;line-height:1.2;margin:-6px -4px}
+.feat .dkp span+span{margin-top:2px}
+.ib{position:absolute;width:40px;height:40px;border-style:solid;border-width:9px 9px 13px;border-image:url(1_UIKit/Lobby/btn_blue.png) 18 18 30 18 fill;display:flex;align-items:center;justify-content:center}
+.ib .o3{font-size:19px;margin:-6px 0}
+/* thẻ kem (ô sản phẩm nhỏ) */
+.tile{position:relative;display:flex;flex-direction:column;align-items:center}
+.tile .th{width:100%;height:40px;border-style:solid;border-width:0 8px;border-image:url(1_UIKit/Mastery/popup_header.png) 0 16 0 16 fill stretch;display:flex;align-items:center;justify-content:center;gap:5px;z-index:2}
+.tile .th .o{font-size:19px;white-space:nowrap}
+.tile .th img{height:22px}
+.tile .tb{width:100%;flex:1;margin-top:-5px;border-style:solid;border-width:7px;border-image:url(1_UIKit/Mastery/popup_frame.png) 14 fill;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:8px 8px 10px;position:relative}
+.glowbg{position:absolute;left:50%;transform:translate(-50%,-50%);opacity:.5;pointer-events:none}
+.tile .b{height:58px;min-width:0;width:100%;padding:0}
+.tile .b .o{font-size:21px}
+.tile .b img{height:24px}
+.row2{display:flex;gap:13px;justify-content:center}
+.row3{display:flex;gap:13.5px;justify-content:center}
+.bt{width:245px;height:196px}
+.bt .mid{display:flex;align-items:center;gap:10px;z-index:1}
+.bt .mid img{width:64px;height:64px;object-fit:contain}
+.bt .mid .v{display:flex;flex-direction:column;align-items:flex-start}
+.bt .mid .k{color:#7a5c3c;font-size:15px}
+.bt .mid .o{font-size:26px}
+.timer{width:100%;height:58px;border-style:solid;border-width:20px;border-image:url(1_UIKit/Mastery/mastery_panel.png) 45 fill;display:flex;align-items:center;justify-content:center;gap:6px}
+.timer img{width:26px;margin:-10px 0}
+.timer .o3{font-size:21px;color:#ffd35a;margin:-10px 0}
+.gt{width:158px;height:190px}
+.gt .gpk{width:84px;height:70px;object-fit:contain;z-index:1}
+.cv{width:245px;height:304px}
+.cv .cimg{width:104px;z-index:1;margin-top:2px}
+.cv .dkp{width:100%;border-style:solid;border-width:12px;border-image:url(1_UIKit/Mastery/mastery_panel.png) 45 fill;display:flex;flex-direction:column;gap:2px;text-align:center}
+.cv .dkp span{color:#fff;font-size:13px;line-height:1.2;margin:-6px -4px}
+.cv .dkp span+span{margin-top:2px}
+.cv .brow{display:flex;gap:6px;width:100%;align-items:center}
+.cv .brow .b{flex:1}
+.cv .brow .ib{position:static;width:46px;height:52px}
+.gem{height:18px!important;vertical-align:-3px}
+.tag{position:absolute;right:-8px;top:-14px;height:34px;border-style:solid;border-width:0 22px 0 9px;border-image:url(1_UIKit/Events/ribbon_red.png) 0 52 0 20 fill;display:flex;align-items:center;transform:rotate(4deg);z-index:4}
+.tag .o3{font-size:14px;white-space:nowrap}
+.mark{position:absolute;border:2px dashed #ffd35a;border-radius:10px;pointer-events:none;z-index:5}
+.mk{position:absolute;background:#ffd35a;color:#222;font:bold 13px sans-serif;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:6}
+</style></head><body>
+
+<!-- ===== MÀN 1: đầu trang ===== -->
+<div class="col">
+<div class="cap"><b>1 · Đầu trang</b> — 3 thẻ ưu đãi lớn vẽ lại theo style kit (viền tối dày + gờ đáy + tia sáng + chấm halftone, như thẻ Ngày 7). Mỗi gói 1 màu riêng: <b>Starter đỏ cam</b>, <b>No Ads xanh dương</b>, <b>Boost tím</b>. Chip thưởng giữ ô tối trong suốt, số trắng viền. Nút mua <b>xanh lá</b> (quy ước kit: mua).</div>
+<div class="phone">
+ <div class="hud">HUD lobby (giữ nguyên)</div>
+ <div class="page"><div class="pin" style="top:12px">
+  <div class="oc" style="background-image:url(../../../../tools/concept/shop/art/offer_red.png)">
+   <span class="tt o">Starter Pack</span>
+   <div class="chips c2" style="top:56px;grid-template-columns:120px 120px">
+    <div class="chip"><img src="2_Icons/Currency/box_icon.png"><span class="o3">300</span></div>
+    <div class="chip"><img src="2_Icons/Currency/gem.png"><span class="o3">500</span></div>
+   </div>
+   <div class="b g"><span class="o">$1.99</span></div>
+  </div>
+  <div class="oc" style="background-image:url(../../../../tools/concept/shop/art/offer_blue.png)">
+   <span class="tt o">NO ADS</span>
+   <span class="ds o3">Get ad rewards instantly</span>
+   <div class="b g"><span class="o">$4.99</span></div>
+  </div>
+  <div class="oc boost" style="background-image:url(../../../../tools/concept/shop/art/offer_purple.png)">
+   <img class="ic" src="1_UIKit/Lobby/icon_boost.png">
+   <span class="tt o">Boost Exp x2 Forever</span>
+   <div class="b g"><span class="o">$4.99</span></div>
+  </div>
+
+  <div class="sh"><img src="1_UIKit/Common/chest.png"><span class="o">Chests</span></div>
+  <div class="oc feat" style="background-image:url(../../../../tools/concept/shop/art/chest_gold.png)">
+   <img class="glowbg" src="7_FX/Glow_Circle02.png" style="left:72px;top:76px;width:190px;transform:translate(-50%,-50%)">
+   <img class="ch" src="2_Icons/Chest/legendary_chest.png">
+   <img class="pet" src="2_Icons/Companion/tier_05_pet_01_icon.png" style="left:8px;top:8px">
+   <img class="pet" src="2_Icons/Companion/tier_05_pet_02_icon.png" style="left:104px;top:84px">
+   <span class="tt o">Legendary Chest</span>
+   <div class="dkp"><span>Contains <b style="color:#CACACA">Common</b>, <b style="color:#E0C69D">Uncommon</b>, <b style="color:#B5E05C">Rare</b>, <b style="color:#45C4FF">Epic</b>, <b style="color:#FFDD61">Legendary</b></span><span>Get <b style="color:#FFDD61">Legendary</b> in <b style="color:#FFD35A">20</b> opens</span></div>
+   <div class="b g" style="top:62%"><img src="2_Icons/Currency/gem.png"><span class="o">120</span></div>
+   <div class="ib" style="right:14px;top:10px"><span class="o3">i</span></div>
+  </div>
+  <div class="row2">
+   <div class="tile cv">
+    <div class="th"><span class="o">Standard Chest</span></div>
+    <div class="tb">
+     <img class="glowbg" src="7_FX/Glow_Circle02.png" style="top:70px;width:170px">
+     <img class="cimg" src="2_Icons/Chest/standart_chest.png">
+     <div class="dkp"><span>Contains <b style="color:#CACACA">Common</b>, <b style="color:#E0C69D">Uncommon</b>, <b style="color:#B5E05C">Rare</b></span></div>
+     <div class="brow"><div class="b g"><img src="2_Icons/Currency/gem.png"><span class="o">40</span></div><div class="ib"><span class="o3">i</span></div></div>
+    </div>
+   </div>
+   <div class="tile cv">
+    <div class="th"><span class="o">Epic Chest</span></div>
+    <div class="tb">
+     <img class="glowbg" src="7_FX/Glow_Circle02.png" style="top:70px;width:170px">
+     <img class="cimg" src="2_Icons/Chest/epic_chest.png">
+     <div class="dkp"><span>Contains <b style="color:#CACACA">Common</b>, <b style="color:#E0C69D">Uncommon</b>, <b style="color:#B5E05C">Rare</b>, <b style="color:#45C4FF">Epic</b></span><span>Get <b style="color:#45C4FF">Epic</b> in <b style="color:#FFD35A">20</b> opens</span></div>
+     <div class="brow"><div class="b g"><img src="2_Icons/Currency/gem.png"><span class="o">80</span></div><div class="ib"><span class="o3">i</span></div></div>
+    </div>
+   </div>
+  </div>
+ </div></div>
+ <div class="tabbar">Thanh tab lobby (giữ nguyên)</div>
+</div>
+<div class="cap"><b>Mục Chests</b> (chỉ hiện khi đã mở tính năng Cape — như gốc): rương Legendary+ = thẻ ngang vàng cam, chữ "Contains…" + pity nằm trong <b>panel tối</b> (tên rarity tô màu đọc được), nút <b>i</b> xanh lơ góc trên phải. Rương thường = <b>thẻ kem có header</b> giống popup mini, nút mua gem + nút i cạnh nhau.</div>
+</div>
+
+<!-- ===== MÀN 2: Daily Deals ===== -->
+<div class="col">
+<div class="cap"><b>2 · Daily Deals</b> — tiêu đề mục đổi từ thanh phẳng sang <b>dải header tím xám</b> của kit (viền dày) + icon. Thẻ deal: ô đầu <b>cam</b>, ô 2–3 <b>tím</b> (như gốc), tia sáng toả từ sau nút mua.</div>
+<div class="phone">
+ <div class="hud">HUD lobby (giữ nguyên)</div>
+ <div class="page"><div class="pin" style="top:6px">
+  <div class="sh"><img src="1_UIKit/Common/clock.png"><span class="o">Daily Deals</span></div>
+  <div class="sub o3">Buy all three daily deals to get three new ones!</div>
+  <div class="oc deal" style="background-image:url(../../../../tools/concept/shop/art/deal_orange.png)">
+   <span class="tt o">Mining Deal</span>
+   <div class="chips c3">
+    <div class="chip"><img src="5_Maps/Mining/pickaxe.png"><span class="o3">10</span></div>
+    <div class="chip"><img src="5_Maps/Mining/gold_pickaxe.png"><span class="o3">1</span></div>
+    <div class="chip"><img src="5_Maps/Mining/drill.png"><span class="o3">1</span></div>
+    <div class="chip"><img src="2_Icons/Currency/box_icon.png"><span class="o3">100</span></div>
+    <div class="chip"><img src="2_Icons/Currency/gem.png"><span class="o3">50</span></div>
+   </div>
+   <div class="b g"><span class="o">$0.99</span></div>
+  </div>
+  <div class="oc deal" style="background-image:url(../../../../tools/concept/shop/art/deal_purple.png)">
+   <span class="tt o">Dungeon Deal</span>
+   <div class="chips c2">
+    <div class="chip"><img src="2_Icons/Currency/red_key.png"><span class="o3">3</span></div>
+    <div class="chip"><img src="2_Icons/Currency/box_icon.png"><span class="o3">1.5K</span></div>
+    <div class="chip"><img src="2_Icons/Currency/green_key.png"><span class="o3">3</span></div>
+    <div class="chip"><img src="2_Icons/Currency/gem.png"><span class="o3">750</span></div>
+   </div>
+   <div class="b g"><span class="o">$9.99</span></div>
+  </div>
+  <div class="oc deal" style="background-image:url(../../../../tools/concept/shop/art/deal_purple.png)">
+   <span class="tt o">Oferta de Companheiro</span>
+   <div class="chips c2">
+    <div class="chip"><img src="2_Icons/Currency/bone_icon.png"><span class="o3">500</span></div>
+    <div class="chip"><img src="2_Icons/Currency/box_icon.png"><span class="o3">3K</span></div>
+    <div class="chip"><img src="2_Icons/Currency/gem.png"><span class="o3">1.5K</span></div>
+   </div>
+   <div class="b g"><span class="o">$24.99</span></div>
+  </div>
+  <div class="sh"><img src="1_UIKit/Lobby/icon_boost.png"><span class="o">Boosters</span></div>
+  <div class="sub o3">Boosters stack multiplicatively</div>
+ </div></div>
+ <div class="tabbar">Thanh tab lobby (giữ nguyên)</div>
+</div>
+<div class="cap"><b>Nhiều thưởng nhất</b> = Mining Deal 5 món (3 cuốc/khoan + búa + gem thưởng) → lưới <b>3 cột × 2 hàng</b>; deal ≤ 4 món = lưới 2 cột × 2 hàng. Cả hai đều 2 hàng → <b>thẻ cao cố định 302</b>, không nhảy cao như hiện tại (370). Tên dài nhất: PT "Oferta de Companheiro" (21 ký tự) vẫn vừa trước nút.</div>
+</div>
+
+<!-- ===== MÀN 3: Boosters, Resources, Gems ===== -->
+<div class="col">
+<div class="cap"><b>3 · Boosters / Resources / Gems</b> — ô sản phẩm nhỏ đổi từ thẻ tím đầu vàng sang <b>thẻ kem + header</b> (cùng bộ với popup). Booster + Resources rộng 490, 2 ô lấp kín hàng; nhãn phụ chữ <b>nâu</b>, số trắng viền.</div>
+<div class="phone">
+ <div class="hud">HUD lobby (giữ nguyên)</div>
+ <div class="page"><div class="pin" style="top:-4px">
+  <div class="row2">
+   <div class="tile bt">
+    <div class="th"><span class="o">x1.5 Exp Boost</span></div>
+    <div class="tb">
+     <div class="mid"><img src="1_UIKit/Lobby/icon_boost.png"><div class="v"><span class="k">Duration</span><span class="o">20m</span></div></div>
+     <div class="b g"><img src="2_Icons/Currency/gem.png"><span class="o">45</span></div>
+    </div>
+   </div>
+   <div class="tile bt">
+    <div class="th"><span class="o">x2 Exp Boost</span></div>
+    <div class="tb">
+     <div class="mid"><img src="1_UIKit/Lobby/icon_boost.png"><div class="v"><span class="k">Duration</span><span class="o">5m</span></div></div>
+     <div class="timer"><img src="1_UIKit/Common/clock.png"><span class="o3">4m 23s</span></div>
+    </div>
+   </div>
+  </div>
+  <div class="sh"><img src="5_Maps/Mining/pickaxe.png"><span class="o">Resources</span></div>
+  <div class="row2">
+   <div class="tile bt">
+    <div class="th"><span class="o">Picareta de Ouro</span></div>
+    <div class="tb">
+     <div class="mid"><img src="5_Maps/Mining/gold_pickaxe.png"><div class="v"><span class="k">Owned 2</span><span class="o">x3</span></div></div>
+     <div class="b g"><img src="2_Icons/Currency/gem.png"><span class="o">45</span></div>
+    </div>
+   </div>
+   <div class="tile bt">
+    <div class="th"><span class="o">Drill</span></div>
+    <div class="tb">
+     <div class="mid"><img src="5_Maps/Mining/drill.png"><div class="v"><span class="k">Owned 0</span><span class="o">x3</span></div></div>
+     <div class="b g"><img src="2_Icons/Currency/gem.png"><span class="o">45</span></div>
+    </div>
+   </div>
+  </div>
+  <div class="sh"><img src="2_Icons/Currency/gem.png"><span class="o">Gems</span></div>
+  <div class="row3">
+   <div class="tile gt"><div class="th"><img src="2_Icons/Currency/gem.png"><span class="o">100</span></div><div class="tb"><img class="glowbg" src="7_FX/Glow_Circle02.png" style="top:50px;width:140px"><img class="gpk" src="1_UIKit/Shop/gem_pack_1.png"><div class="b g"><span class="o">$0.99</span></div></div></div>
+   <div class="tile gt"><div class="th"><img src="2_Icons/Currency/gem.png"><span class="o">255</span></div><div class="tb"><img class="glowbg" src="7_FX/Glow_Circle02.png" style="top:50px;width:140px"><img class="gpk" src="1_UIKit/Shop/gem_pack_2.png"><div class="b g"><span class="o">$2.49</span></div></div></div>
+   <div class="tile gt"><div class="th"><img src="2_Icons/Currency/gem.png"><span class="o">520</span></div><div class="tb"><img class="glowbg" src="7_FX/Glow_Circle02.png" style="top:50px;width:140px"><img class="gpk" src="1_UIKit/Shop/gem_pack_3.png"><div class="b g"><span class="o">$4.99</span></div></div></div>
+  </div>
+  <div class="row3">
+   <div class="tile gt"><div class="th"><img src="2_Icons/Currency/gem.png"><span class="o">1.1K</span></div><div class="tb"><img class="glowbg" src="7_FX/Glow_Circle02.png" style="top:50px;width:140px"><img class="gpk" src="1_UIKit/Shop/gem_pack_4.png"><div class="b g"><span class="o">$9.99</span></div></div></div>
+   <div class="tile gt"><div class="th"><img src="2_Icons/Currency/gem.png"><span class="o">2.7K</span></div><div class="tb"><img class="glowbg" src="7_FX/Glow_Circle02.png" style="top:50px;width:140px"><img class="gpk" src="1_UIKit/Shop/gem_pack_5.png"><div class="b g"><span class="o">$24.99</span></div></div></div>
+   <div class="tile gt"><div class="th"><img src="2_Icons/Currency/gem.png"><span class="o">5.5K</span></div><div class="tb"><img class="glowbg" src="7_FX/Glow_Circle02.png" style="top:50px;width:140px"><img class="gpk" src="1_UIKit/Shop/gem_pack_6.png"><div class="b g"><span class="o">$49.99</span></div></div></div>
+  </div>
+ </div></div>
+ <div class="tabbar">Thanh tab lobby (giữ nguyên)</div>
+</div>
+<div class="cap"><b>Boost đang chạy</b> (ô phải): nút mua ẩn → <b>panel tối + đồng hồ</b>, giờ còn lại vàng (gốc chỉ hiện chữ trơn). Tên dài nhất PT "Picareta de Ouro" 16 ký tự vừa header 245. Gói gem 6 ô 3×2, mỗi ô 316 (lấp kín hàng thay vì 268 cách xa).</div>
+</div>
+
+<div class="notes"><b>Cần anh duyệt</b> (chỗ đổi so với Shop hiện tại — bố cục/thứ tự mục GIỮ nguyên, chỉ đổi hình + vài chỗ nhỏ):
+<ol>
+<li><b>Nền thẻ ưu đãi mới</b> (6 ảnh sinh bằng code, style thẻ Ngày 7): Starter đỏ cam · No Ads xanh dương · Boost tím · Deal 1 cam / Deal 2-3 tím · rương nổi bật vàng cam. Thay card_boost / deal_orange / deal_purple phẳng hiện tại.</li>
+<li><b>Tiêu đề mục</b> (Chests, Daily Deals, Boosters, Resources, Gems): thanh tối phẳng → dải header tím xám của popup + icon trước chữ.</li>
+<li><b>Ô sản phẩm nhỏ</b> (rương thường, Booster, Resources, gói Gem): thẻ tím đầu vàng → thẻ kem + header (cùng bộ popup). Booster/Resources rộng ra 490 lấp kín hàng; thêm nhãn nâu "Duration" / "Owned n" (hiện có số đang có nhưng không ghi nhãn).</li>
+<li><b>Daily Deal cao cố định</b>: 5 món = lưới 3 cột, ≤ 4 món = 2 cột, cả hai 2 hàng → bỏ chiều cao 370 cho deal 5 món.</li>
+<li><b>Sửa kèm</b>: tên deal hiện ghi cứng tiếng Anh ("Mining", "Dungeon"…) → dùng key dịch Common.DealType.* (đủ 10 ngôn ngữ, đã có sẵn).</li>
+<li><b>Boost đang chạy</b>: panel tối + icon đồng hồ + giờ vàng thay chữ trơn.</li>
+<li>Giữ nguyên: HUD trên, thanh tab dưới, nút xanh lá cho mọi nút mua, chip thưởng ô tối, icon gói gem / rương / cuốc hiện có.</li>
+</ol></div>
+</body></html>

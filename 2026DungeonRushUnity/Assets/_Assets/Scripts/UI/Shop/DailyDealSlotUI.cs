@@ -18,13 +18,16 @@ public class DailyDealSlotUI : MonoBehaviour
     public float ContentHeightFor5Rewards;
     public int DefaultConstraintCount;
     public int ConstraintCountForMoreThan4Rewards;
+    // Reskin Shop 2026-11-12: lưới luôn 2 hàng, chỉ đổi bề rộng ô (≤ 4 món = 2 cột rộng, 5 món = 3 cột hẹp) → thẻ cao cố định.
+    public float CellWidthForLessThan5Rewards;
+    public float CellWidthFor5Rewards;
     public TMP_SpriteAsset CompanionSpriteAssetOverride;
 
     // Icon từng loại thưởng, index = (int)ShopRewardType (GameResources gốc giữ các sprite asset này).
     public TMP_SpriteAsset[] RewardSpriteAssets;
 
-    // Tên loại deal (strings_en "Common.DealType.*").
-    private static readonly string[] TYPE_NAMES = { "Dungeon", "Gem", "Pipe", "Mining", "Companion" };
+    // Key tên loại deal theo thứ tự enum DealType (strings_en "Common.DealType.*").
+    private static readonly string[] TYPE_KEYS = { "Common.DealType.DungeonKey", "Common.DealType.Gem", "Common.DealType.Cloak", "Common.DealType.Mining", "Common.DealType.Companion" };
 
     private void Awake()
     {
@@ -40,7 +43,7 @@ public class DailyDealSlotUI : MonoBehaviour
         }
 
         if (RootContainer != null) RootContainer.SetActive(true);
-        ShopUIUtil.SetText(TitleText, string.Format(Loc.L("UI.Store.DailyDeal.Title"), TYPE_NAMES[(int)type]));
+        ShopUIUtil.SetText(TitleText, string.Format(Loc.L("UI.Store.DailyDeal.Title"), Loc.L(TYPE_KEYS[(int)type])));
         int count = FillRewards(size, type);
         ApplyLayout(count);
         ShopUIUtil.SetText(PriceText, PurchaseController.Instance.GetPriceText(DailyDealService.GetProductId(size)) ?? "N/A");
@@ -80,6 +83,8 @@ public class DailyDealSlotUI : MonoBehaviour
         if (RewardGrid != null)
         {
             RewardGrid.constraintCount = isMany ? ConstraintCountForMoreThan4Rewards : DefaultConstraintCount;
+            float cellWidth = isMany ? CellWidthFor5Rewards : CellWidthForLessThan5Rewards;
+            if (cellWidth > 0f) RewardGrid.cellSize = new Vector2(cellWidth, RewardGrid.cellSize.y);
         }
         if (ExpandableContentRect != null)
         {

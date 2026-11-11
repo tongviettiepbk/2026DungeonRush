@@ -34,6 +34,9 @@ public class StoreTabPage : MonoBehaviour
     public TextMeshProUGUI X5ExpBoostRemainingTimeText;
     public TextMeshProUGUI X2ExpBoostDurationText;
     public TextMeshProUGUI X5ExpBoostDurationText;
+    // Panel tối chứa đồng hồ + giờ còn lại (reskin Shop 2026-11-12); null thì chỉ bật/tắt chữ như gốc.
+    public GameObject X2ExpBoostTimerPanel;
+    public GameObject X5ExpBoostTimerPanel;
     public DailyDealSlotUI[] DailyDealSlots;
     public ChestStoreSection ChestStoreSection;
 
@@ -133,8 +136,8 @@ public class StoreTabPage : MonoBehaviour
         UserItemData items = GameData.userData.items;
         ShopUIUtil.SetText(DrillCostText, StaticShopData.DRILL_GEM_COST.ToString());
         ShopUIUtil.SetText(GoldenPickaxeCostText, StaticShopData.GOLDEN_PICKAXE_GEM_COST.ToString());
-        ShopUIUtil.SetText(DrillOwnedCountText, items.GetQuantityHave(ItemType.DRILL).ToString("0"));
-        ShopUIUtil.SetText(GoldenPickaxeOwnedCountText, items.GetQuantityHave(ItemType.GOLDEN_PICKAXE).ToString("0"));
+        ShopUIUtil.SetText(DrillOwnedCountText, Loc.L("UI.Store.Owned", items.GetQuantityHave(ItemType.DRILL).ToString("0")));
+        ShopUIUtil.SetText(GoldenPickaxeOwnedCountText, Loc.L("UI.Store.Owned", items.GetQuantityHave(ItemType.GOLDEN_PICKAXE).ToString("0")));
     }
 
     // kuf gốc: đang chạy boost → ẩn nút mua, hiện thời gian còn lại.
@@ -146,6 +149,8 @@ public class StoreTabPage : MonoBehaviour
         ShopUIUtil.SetActive(X2ExpBoostRemainingTimeText, isX2);
         ShopUIUtil.SetActive(BuyX5ExpBoostButton, !isX5);
         ShopUIUtil.SetActive(X5ExpBoostRemainingTimeText, isX5);
+        if (X2ExpBoostTimerPanel != null) X2ExpBoostTimerPanel.SetActive(isX2);
+        if (X5ExpBoostTimerPanel != null) X5ExpBoostTimerPanel.SetActive(isX5);
         if (isX2) ShopUIUtil.SetText(X2ExpBoostRemainingTimeText, ShopUIUtil.FormatDuration(ShopService.GetX2BoostRemaining()));
         if (isX5) ShopUIUtil.SetText(X5ExpBoostRemainingTimeText, ShopUIUtil.FormatDuration(ShopService.GetX5BoostRemaining()));
         ShopUIUtil.SetText(X2ExpBoostDurationText, ShopUIUtil.FormatDuration(StaticShopData.X2_BOOST_DURATION));
