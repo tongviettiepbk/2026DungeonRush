@@ -49,7 +49,7 @@ public static class Batch1Reskin
     }
 
     #region Khối chữ 1 món (ItemStatsView)
-    private struct StatsLayout
+    internal struct StatsLayout
     {
         public float slotX;
         public float slotTop;        // từ mép trên card tới tâm ô đồ
@@ -62,7 +62,7 @@ public static class Batch1Reskin
         public bool subBox;          // có ô nâu box_tan (NewForge thì card đã là ô nâu)
     }
 
-    private static ItemStatsView BuildStats(Transform card, Transform element, TMP_Text rarity, TMP_Text name,
+    internal static ItemStatsView BuildStats(Transform card, Transform element, TMP_Text rarity, TMP_Text name,
         TMP_Text mainValues, TMP_Text subNames, StatsLayout l)
     {
         PopupStyle.PlaceTop(element, l.slotX, l.slotTop, SLOT, SLOT);
@@ -159,7 +159,7 @@ public static class Batch1Reskin
     }
 
     // Nhãn đỏ "NEW" nghiêng ở góc trên-trái ô đồ; chữ NEW cũ thành con của nhãn. Trả về nhãn (để script bật/tắt).
-    private static GameObject NewTag(Transform card, TMP_Text newText, float slotX, float slotTop)
+    internal static GameObject NewTag(Transform card, TMP_Text newText, float slotX, float slotTop)
     {
         Image tag = PopupStyle.NewImage(card, "NewTag", PopupStyle.Kit("Events/ribbon_red"));
         PopupStyle.PlaceTop(tag.transform, slotX - SLOT / 2f + 30f, slotTop - SLOT / 2f + 10f, 132f, 56f);

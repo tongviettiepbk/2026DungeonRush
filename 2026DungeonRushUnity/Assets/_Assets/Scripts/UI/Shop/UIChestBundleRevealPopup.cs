@@ -13,6 +13,7 @@ public class UIChestBundleRevealPopup : BaseUI
     public float ScrollFollowAnchor;
     public float ScrollSmoothTime;
     public float RevealInterval;
+    public GameObject TapToCloseHint;    // reskin batch2: hiện khi đã hiện hết món
 
     private List<ChestOutcome> outcomes;
     private Coroutine revealRoutine;
@@ -29,6 +30,7 @@ public class UIChestBundleRevealPopup : BaseUI
             Destroy(content.GetChild(i).gameObject);
         }
 
+        if (TapToCloseHint != null) TapToCloseHint.SetActive(false);
         if (revealRoutine != null) StopCoroutine(revealRoutine);
         revealRoutine = StartCoroutine(Reveal());
     }
@@ -44,6 +46,7 @@ public class UIChestBundleRevealPopup : BaseUI
             yield return wait;
         }
         revealRoutine = null;
+        if (TapToCloseHint != null) TapToCloseHint.SetActive(true);
     }
 
     private void AddNext()
@@ -61,6 +64,7 @@ public class UIChestBundleRevealPopup : BaseUI
             StopCoroutine(revealRoutine);
             revealRoutine = null;
             while (revealedCount < outcomes.Count) AddNext();
+            if (TapToCloseHint != null) TapToCloseHint.SetActive(true);
             return;
         }
         // Đang kéo danh sách thì không tính là chạm để đóng.

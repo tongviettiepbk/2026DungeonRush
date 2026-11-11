@@ -27,6 +27,7 @@ public class UIBattlePassPopup : BaseUI
     public RectTransform FillBarRectTransform;
     public RectTransform FillBarParentRectTransform;
     public GameObject BuyBattlePassButton;
+    public GameObject PremiumBoughtMark;           // reskin batch2: tick xanh dưới nhãn PREMIUM khi đã mua
     public Button btBuy;
     public TMP_Text BattlePassPriceText;
     public BattlePassRewardCellView FreeRewardPrefab;
@@ -158,6 +159,7 @@ public class UIBattlePassPopup : BaseUI
     {
         bool isBought = BattlePassService.IsPremiumBought();
         if (BuyBattlePassButton != null) BuyBattlePassButton.SetActive(isBought == false);
+        if (PremiumBoughtMark != null) PremiumBoughtMark.SetActive(isBought);
         if (BattlePassPriceText != null)
             BattlePassPriceText.text = PurchaseController.Instance.GetPriceText(PurchaseController.STORE_ID_BATTLE_PASS) ?? "N/A";
         if (btBuy != null) btBuy.interactable = isBuying == false;

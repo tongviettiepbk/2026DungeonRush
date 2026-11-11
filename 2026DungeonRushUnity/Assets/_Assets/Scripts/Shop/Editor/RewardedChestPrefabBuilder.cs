@@ -38,6 +38,7 @@ public static class RewardedChestPrefabBuilder
         AssetDatabase.SaveAssets();
         string result = "UIRewardedChestPopup" + (ok ? " saved" : " FAILED");
         Debug.Log("[RewardedChestPrefabBuilder] " + result);
+        Batch2Reskin.ApplyRewardedChest();   // reskin concept batch2
         return result;
     }
 

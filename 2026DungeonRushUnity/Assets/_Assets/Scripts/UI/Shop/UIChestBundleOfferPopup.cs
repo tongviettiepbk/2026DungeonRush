@@ -10,9 +10,9 @@ using UnityEngine.UI;
 public class UIChestBundleOfferPopup : BaseUI
 {
     public Image ChestIcon;
-    public Image RibbonImage;
     public TextMeshProUGUI TitleText;
     public TextMeshProUGUI CloakUnlockText;
+    public GameObject CloakUnlockPanel;      // reskin batch2: panel tối chứa CloakUnlockText (ẩn/hiện cùng chữ)
     public ChestBundleOfferContentIcon ContentIconPrefab;
     public Transform ContentContainer;
     public Sprite GemIcon;
@@ -53,12 +53,11 @@ public class UIChestBundleOfferPopup : BaseUI
         bundle = data;
         ChestData top = GetTopChest(bundle);
         if (ChestIcon != null) ChestIcon.sprite = bundle.Icon;
+        // Reskin batch2: ruy băng vàng cố định, không tô màu theo rarity nữa.
         if (top != null)
-        {
             ShopUIUtil.SetText(TitleText, string.Format(Loc.L("UI.Chest.BundleOfferTitle"), top.Rarity));
-            if (RibbonImage != null) RibbonImage.color = UITabWing.GetRarityColor(top.Rarity);
-        }
         ShopUIUtil.SetActive(CloakUnlockText, !CapeService.IsUnlocked());
+        if (CloakUnlockPanel != null) CloakUnlockPanel.SetActive(!CapeService.IsUnlocked());
         ShopUIUtil.SetText(CloakUnlockText, Loc.L("UI.Chest.UnlocksCloak"));
         ShopUIUtil.SetText(BuyButtonPriceText, PurchaseController.Instance.GetPriceText(bundle.StoreId) ?? "N/A");
         if (LoadingImage != null) LoadingImage.gameObject.SetActive(false);

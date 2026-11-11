@@ -1,11 +1,11 @@
 ---
 name: dungonrush-ui-concept-workflow
-description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0+1 xong 2026-11-11, tiếp Đợt 2"
+description: "Reskin lại MỌI popup theo đợt: concept HTML sprite thật → user chốt → tool PopupStyle/Batch<N>Reskin sửa prefab tại chỗ; quy trình + tiến độ ở tools/concept/PLAN.md; Đợt 0+1+2 xong 2026-11-11, tiếp Đợt 3"
 metadata:
   node_type: memory
   type: project
   originSessionId: 3164be48-a1fc-4de0-a1a9-4dd4a3175277
-  modified: 2026-11-11T17:00:00.000Z
+  modified: 2026-11-11T22:00:00.000Z
 ---
 
 User duyệt cách làm này ngày 2026-11-11, dặn CHỈ lưu trong bộ nhớ, KHÔNG viết tài liệu vào GDD/.
@@ -31,7 +31,7 @@ PLAN.md giữ: danh sách 67 popup chia Đợt 0..9, quy trình tối ưu 3 phas
 ## Code dùng chung đã có
 - `tools/concept/kit/kit.css` (CSS kit, concept các đợt link vào) + `tools/concept/render_concept.sh` (Chrome headless ×2).
 - `Scripts/Art/Editor/PopupStyle.cs` (Shell/Title/CloseButton/Button màu chức năng/Outline/Plain/PlaceTop đo từ mép trên).
-- `Scripts/Art/Editor/Batch1Reskin.cs` = mẫu tool 1 đợt; `UICaptureTool.Capture` chụp edit mode.
+- `Scripts/Art/Editor/Batch1Reskin.cs` = mẫu tool 1 đợt (BuildStats/StatsLayout/NewTag để `internal` cho đợt sau dùng); `Batch2Reskin.cs` có thêm helper OfferShell (popup ưu đãi ruy băng vàng, không header), RewardBox, TapToClose; `UICaptureTool.Capture` chụp edit mode.
 - `Scripts/UI/Forge/ItemStatsView.cs` = khối chữ món đồ (dùng lại cho Wing/Cape/Enchantment info ở đợt sau).
 
 ## Điều user đã dặn / sửa (đừng lặp lỗi)
@@ -40,10 +40,12 @@ PLAN.md giữ: danh sách 67 popup chia Đợt 0..9, quy trình tối ưu 3 phas
 - Thanh tiến độ: fill phải thụt đều trong viền (user báo lỗi bản đầu).
 - Viền đen bị mask vùng cuộn cắt (user báo "viền đứt") → mask không sprite + lề 8.
 - Chốt concept rồi mới đụng Unity; commit thẳng main khi user bảo (user đã bảo commit sau mỗi đợt).
+- Thông tin màn/map phải ghi TÊN rõ ràng, không chỉ số level/id (user sửa ô mốc Battle Pass → "Normal 3-5" theo StaticCampaignData.GetLevelTextTwoLines, tên Tier dịch Items.Tier.Name.TierN).
 
 ## Đã làm
 - Mẫu đầu: popup 7 ngày (`SevenDayPopupReskin`) + kết quả dungeon (`DungeonEndPopupReskin`) — commit 37505a04.
 - Đợt 0 kit + Đợt 1 Trang bị & Loot (6 popup) — commit 812200d0, sửa viền Auto Loot sau đó. Thêm nút Claim tím ở Combat Summary (user chốt concept). Popup Đợt 1 khác Auto Loot CHƯA test Play.
+- Đợt 2 Shop & ưu đãi (9 popup + ô con ChestRewardElementUI/ChestContentUI ở Prefabs/UINew/Shop) — 2026-11-11, chụp edit mode batch2/unity.png khớp concept, CHƯA test Play. Lệch gốc user duyệt: X Battle Pass lên header + nút mua xanh lá, X cho Missing Gems, tiêu đề "Rewards" + "Tap anywhere to close" ở 2 màn mở rương. Glow_Circle02 đã bỏ nén (ASTC làm vệt khối).
 
 **Why:** user sẽ reskin lại cả bộ UI theo style mới; concept trước → duyệt → áp để khỏi làm lại prefab nhiều lần.
 

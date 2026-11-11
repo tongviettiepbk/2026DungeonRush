@@ -28,6 +28,10 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 - Ô chữ 2 cột (nhãn + số): cột số đặt theo `GetPreferredValues` của nhãn lúc chạy (nhãn đổi theo ngôn ngữ).
 - Mũi tên đặt theo `textBounds` → neo = pivot của ô chữ.
 - CSS: border-image dùng `/ width` + padding, đừng để `position:absolute` tính từ mép trong viền (lệch fill).
+- CSS: border-image `slice` phải < nửa cạnh ảnh (track 32 → 14, fill 24 → 10), bằng nửa thì lõi giữa rỗng → thanh không hiện.
+- Chụp concept: Chrome headless phải có `--virtual-time-budget` (đã thêm vào render_concept.sh), không thì chụp trước khi font nạp → mất hết chữ.
+- Ảnh mờ mềm (glow FX) nén ASTC 6x6 → vệt khối mờ quanh rìa khi phóng to; ảnh nhỏ thì đặt Uncompressed (đã làm cho 7_FX/Glow_Circle02).
+- Popup có bảng ẩn/hiện dòng (Chest Info): VerticalLayoutGroup + ContentSizeFitter trên panel, Background/Header/Title/X gắn LayoutElement.ignoreLayout — bỏ code tính chiều cao tay.
 
 ## Các đợt (thứ tự theo mức người chơi gặp sớm)
 
@@ -50,13 +54,13 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 - Đổi trạng thái bằng đổi sprite / ẩn hiện trong script, không tô màu đè.
 
 ## Tiến độ
-**Đang ở:** Đợt 1 xong (áp + commit). **Tiếp theo:** Đợt 2 Shop & ưu đãi — bắt đầu từ bước A.
+**Đang ở:** Đợt 2 xong (áp + chụp kiểm batch2/unity.png + commit). **Tiếp theo:** Đợt 3 Pet & Mastery — bắt đầu từ bước A. Đợt 2 CHƯA test Play.
 
 | Đợt | Concept | Chốt | Áp vào game | Commit |
 |---|---|---|---|---|
 | 0 | ✅ tools/concept/kit/ (kit.css dùng chung) | ✅ 2026-11-11 | ✅ Scripts/Art/Editor/PopupStyle.cs | ✅ 812200d0 |
 | 1 | ✅ tools/concept/batch1/ | ✅ 2026-11-11 | ✅ Batch1Reskin (chụp edit mode: batch1/unity.png); user test Play Auto Loot → sửa viền bị mask cắt; các popup khác CHƯA test Play | ✅ 812200d0 + sửa viền |
-| 2 | | | | |
+| 2 | ✅ tools/concept/batch2/ (khảo sát: before/); user sửa: ô mốc Battle Pass ghi tên màn "Normal 3-5" (StaticCampaignData.GetLevelText, tên Tier dịch Items.Tier.Name.TierN) thay số level | ✅ 2026-11-11 | ✅ Batch2Reskin (chụp edit mode: batch2/unity.png, 14 ảnh); CHƯA test Play | ✅ |
 | 3 | | | | |
 | 4 | | | | |
 | 5 | | | | |

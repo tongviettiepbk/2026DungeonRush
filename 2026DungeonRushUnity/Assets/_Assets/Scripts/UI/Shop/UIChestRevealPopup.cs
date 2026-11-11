@@ -14,6 +14,8 @@ public class UIChestRevealPopup : BaseUI
     public Image ChestIcon;
     public TextMeshProUGUI ChestNameText;
     public GameObject TapToOpenHint;
+    public GameObject TapToCloseHint;    // reskin batch2: hiện ở bảng tổng kết rương cuối (chạm nữa là đóng)
+    public GameObject ItemCounterCard;   // thẻ đếm số món còn lại, ẩn ở bảng tổng kết
     public ChestRewardElementUI CellPrefab;
     public Transform CellContainer;
     public GridLayoutGroup CellGrid;
@@ -77,6 +79,7 @@ public class UIChestRevealPopup : BaseUI
         if (ChestIcon != null) ChestIcon.sprite = chest.Icon;
         ShopUIUtil.SetText(ChestNameText, StaticShopData.GetChestName(chest));
         if (TapToOpenHint != null) TapToOpenHint.SetActive(true);
+        SetSummaryHints(false);
         ShopUIUtil.SetActive(SkipAllButton, groups.Count > 1 || groups[groupIndex].Count > 1);
         ClearCells();
         RefreshCounters();
@@ -127,7 +130,11 @@ public class UIChestRevealPopup : BaseUI
         itemIndex++;
         RefreshCounters();
         // Rương chỉ có 1 món thì món đó cũng là bảng tổng kết.
-        if (group.Count == 1) step = Step.Summary;
+        if (group.Count == 1)
+        {
+            step = Step.Summary;
+            SetSummaryHints(true);
+        }
     }
 
     private void ShowSummary(List<ChestOutcome> outcomes)
@@ -137,6 +144,14 @@ public class UIChestRevealPopup : BaseUI
         if (CellGrid != null) CellGrid.cellSize = SummaryCellSize;
         for (int i = 0; i < outcomes.Count; i++) AddCell(outcomes[i]);
         ShopUIUtil.SetActive(SkipAllButton, false);
+        SetSummaryHints(true);
+    }
+
+    // Bảng tổng kết: ẩn thẻ đếm; "Tap anywhere to close" chỉ khi là rương cuối (chạm nữa là đóng popup).
+    private void SetSummaryHints(bool isSummary)
+    {
+        if (ItemCounterCard != null) ItemCounterCard.SetActive(isSummary == false);
+        if (TapToCloseHint != null) TapToCloseHint.SetActive(isSummary && groupIndex >= groups.Count - 1);
     }
 
     // "Open all": hiện toàn bộ món của mọi rương còn lại.

@@ -8,6 +8,7 @@ public class ChestBundleOfferContentIcon : MonoBehaviour
     public Image Icon;
     public TextMeshProUGUI CountText;
     public Button Button;
+    public GameObject InfoBadge;     // reskin batch2: dấu "?" ở ô rương = bấm xem tỉ lệ (ô gem không có)
 
     private ChestData chest;
 
@@ -17,6 +18,7 @@ public class ChestBundleOfferContentIcon : MonoBehaviour
         chest = chestData;
         if (Icon != null) Icon.sprite = icon;
         ShopUIUtil.SetText(CountText, countText);
+        if (InfoBadge != null) InfoBadge.SetActive(chestData != null);
         if (Button != null)
         {
             Button.onClick.RemoveAllListeners();

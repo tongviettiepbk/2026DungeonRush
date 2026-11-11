@@ -92,6 +92,12 @@ public static class ShopPrefabBuilder
         foreach (string card in CARDS) BuildCard(card);
         BuildPage("StoreTabPage");
         foreach (string popup in POPUPS) BuildPopup(popup);
+        // Reskin concept batch2 (sửa tại chỗ prefab vừa dựng + 2 ô con).
+        Batch2Reskin.ApplyChestCells();
+        Batch2Reskin.ApplyChestInfo();
+        Batch2Reskin.ApplyChestReveal();
+        Batch2Reskin.ApplyBundleReveal();
+        Batch2Reskin.ApplyBundleOffer();
 
         AssetDatabase.SaveAssets();
         string result = string.Join("\n", log.ToArray());

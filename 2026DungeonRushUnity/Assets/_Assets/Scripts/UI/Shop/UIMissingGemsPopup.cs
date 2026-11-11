@@ -12,6 +12,7 @@ public class UIMissingGemsPopup : BaseUI
     public Button btBuy;
     public TMP_Text txtPrice;
     public Button btBackground;
+    public Button btClose;           // reskin batch2: X trong header (trước chỉ chạm nền mới đóng)
 
     private string productId;
 
@@ -34,6 +35,7 @@ public class UIMissingGemsPopup : BaseUI
         base.Awake();
         btBuy.onClick.AddListener(OnClickBuy);
         if (btBackground != null) btBackground.onClick.AddListener(Close);
+        if (btClose != null) btClose.onClick.AddListener(Close);
     }
 
     protected override void OnEnable()

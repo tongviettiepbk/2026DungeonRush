@@ -34,6 +34,17 @@ public class StaticCampaignData
         return tierText + " " + (inTier / 10 + 1) + "-" + (inTier % 10 + 1);
     }
 
+    // Như GetLevelText nhưng tên Tier đã dịch (Items.Tier.Name.TierN), tách 2 dòng: "Tên Tier (nhỏ hơn)\nchương-màn".
+    // Dùng cho ô mốc Battle Pass (concept batch2).
+    public static string GetLevelTextTwoLines(int level, int tierSizePercent)
+    {
+        int index = level - 1;
+        int tier = Mathf.Clamp(index / LEVELS_PER_TIER, 0, TIER_NAMES.Length - 1);
+        int inTier = index % LEVELS_PER_TIER;
+        return "<size=" + tierSizePercent + "%><color=#" + ColorUtility.ToHtmlStringRGB(TIER_COLORS[tier]) + ">"
+            + Loc.L("Items.Tier.Name.Tier" + (tier + 1)) + "</color></size>\n" + (inTier / 10 + 1) + "-" + (inTier % 10 + 1);
+    }
+
     public int GetChapter(int stageId)
     {
         return stageId / 100;

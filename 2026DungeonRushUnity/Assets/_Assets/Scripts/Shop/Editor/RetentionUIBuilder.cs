@@ -34,6 +34,8 @@ public static class RetentionUIBuilder
         BuildSevenDay(hammer);
         BuildStore();
         BuildLobby();
+        Batch2Reskin.ApplyStarterPack();   // reskin concept batch2
+        Batch2Reskin.ApplyMissingGems();
         AssetDatabase.SaveAssets();
         Debug.Log("[Retention UI] done");
     }

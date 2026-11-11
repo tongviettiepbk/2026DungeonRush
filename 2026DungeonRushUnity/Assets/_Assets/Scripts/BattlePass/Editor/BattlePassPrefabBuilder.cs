@@ -56,6 +56,7 @@ public static class BattlePassPrefabBuilder
         AssetDatabase.SaveAssets();
         string result = "UIBattlePassPopup" + (ok ? " saved" : " FAILED");
         Debug.Log("[BattlePassPrefabBuilder] " + result);
+        Batch2Reskin.ApplyBattlePass();   // reskin concept batch2
         return result;
     }
 

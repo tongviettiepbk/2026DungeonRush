@@ -3,18 +3,17 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Popup Weapon Offer (OfferPopup gốc, reverse il2cpp jkg..jkl): thẻ vũ khí level 1, tên + dải màu theo rarity,
+// Popup Weapon Offer (OfferPopup gốc, reverse il2cpp jkg..jkl): thẻ vũ khí level 1, tên tô màu rarity (ruy băng vàng cố định),
 // "<rarity>", chỉ số chính, các dòng substat cố định, nút mua (giá sản phẩm tnt.offer_XXX).
 // Gói hết hạn trong lúc mở → hiện lớp phủ hết hạn, khoá nút. Mua xong: vũ khí mặc thẳng vào hero.
 public class UIOfferPopup : BaseUI
 {
     public ItemElementView ItemElementUI;
-    public Image RibbonImage;
-    public TMP_Text WeaponNameText;
-    public TMP_Text RarityText;
-    public TMP_Text WeaponStatText;
-    public TMP_Text SubStatsText;
+    public ItemStatsView stats;              // reskin batch2: khối chữ món dùng chung (rarity, tên, chỉ số, substat cao cố định 3 dòng)
     public Button BuyButton;
+    public Image BuyButtonImage;
+    public Sprite BuySprite;                 // xanh = mua được
+    public Sprite DisabledSprite;            // xám = gói hết hạn / đang mua
     public TMP_Text BuyButtonPriceText;
     public GameObject ExpiredOverlay;
     public Button btBackground;
@@ -84,19 +83,13 @@ public class UIOfferPopup : BaseUI
         }
 
         if (txtTapToClose != null) txtTapToClose.text = Loc.L("Common.TapToClose");
-        Color color = UITabWing.GetRarityColor(item.rarity);
         ItemElementUI.SetItem(item);
-        WeaponNameText.text = ItemTextUtil.Name(item);
-        if (RibbonImage != null) RibbonImage.color = color;
-        RarityText.text = ItemTextUtil.RarityLine(item.rarity);
-        WeaponStatText.text = ItemTextUtil.MainStat(item);
-        string subStats = ItemTextUtil.SubStats(item.subStats);
-        SubStatsText.gameObject.SetActive(subStats.Length > 0);
-        SubStatsText.text = subStats;
+        stats.Set(item);
 
         bool isExpired = WeaponOfferService.IsExpired();
         if (ExpiredOverlay != null) ExpiredOverlay.SetActive(isExpired);
         BuyButton.interactable = isExpired == false && isBuying == false;
+        if (BuyButtonImage != null) BuyButtonImage.sprite = BuyButton.interactable ? BuySprite : DisabledSprite;
         BuyButtonPriceText.text = PurchaseController.Instance.GetPriceText(WeaponOfferService.GetProductId()) ?? "N/A";
     }
 
@@ -107,6 +100,7 @@ public class UIOfferPopup : BaseUI
             return;
         isBuying = true;
         BuyButton.interactable = false;
+        if (BuyButtonImage != null) BuyButtonImage.sprite = DisabledSprite;
         PurchaseController.Instance.Purchase(WeaponOfferService.GetProductId());
     }
 

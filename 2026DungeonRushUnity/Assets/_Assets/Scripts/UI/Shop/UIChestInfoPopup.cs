@@ -11,13 +11,9 @@ public class UIChestInfoPopup : BaseUI
     public Image ChestIcon;
     public TextMeshProUGUI DescriptionText;
     public List<ChestOddsRow> RarityRows;
-    public RectTransform ContentTransform;
-    public float RarityRowHeight;
     public GameObject PityParent;
     public TextMeshProUGUI PityCountText;
     public Color PityCountColor;
-
-    private float fullHeight = -1f;
 
     protected override void Awake()
     {
@@ -39,7 +35,6 @@ public class UIChestInfoPopup : BaseUI
         float total = 0f;
         for (int i = 0; i < chest.RarityOdds.Count; i++) total += Mathf.Max(chest.RarityOdds[i].Weight, 0f);
 
-        int hidden = 0;
         for (int i = 0; i < RarityRows.Count; i++)
         {
             ChestOddsRow row = RarityRows[i];
@@ -48,15 +43,8 @@ public class UIChestInfoPopup : BaseUI
             bool isShow = weight > 0f && total > 0f;
             row.gameObject.SetActive(isShow);
             if (isShow) ShopUIUtil.SetText(row.PercentText, (weight / total * 100f).ToString("0.##") + "%");
-            else hidden++;
         }
-
-        // fna gốc: bảng thấp đi theo số dòng bị ẩn.
-        if (ContentTransform != null)
-        {
-            if (fullHeight < 0f) fullHeight = ContentTransform.rect.height;
-            ContentTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, fullHeight - RarityRowHeight * hidden);
-        }
+        // fna gốc: bảng thấp đi theo số dòng bị ẩn — reskin batch2 để VerticalLayoutGroup + ContentSizeFitter tự co.
     }
 
     private static float GetWeight(ChestData chest, Rarity rarity)

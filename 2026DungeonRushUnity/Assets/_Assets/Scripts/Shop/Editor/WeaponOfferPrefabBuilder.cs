@@ -36,14 +36,8 @@ public static class WeaponOfferPrefabBuilder
             Find(element, hide).gameObject.SetActive(false);
         ui.ItemElementUI = view;
 
-        ui.RibbonImage = Find(popup, BG + "Ribbon").GetComponent<Image>();
-        ui.WeaponNameText = Text(popup, BG + "Stats/NameText");
-        ui.WeaponNameText.richText = true;
-        ui.RarityText = Text(popup, BG + "RarityText");
-        ui.RarityText.richText = true;
-        ui.WeaponStatText = Text(popup, BG + "Stats/BaseStatText");
+        // Rarity/tên/chỉ số: Batch2Reskin.ApplyOffer dựng ItemStatsView từ các node chữ cũ (gọi ở cuối).
         Find(popup, BG + "Stats/BaseStatText/EquippedItemDamageArrow").gameObject.SetActive(false);
-        ui.SubStatsText = Text(popup, BG + "Stats/SubStatText");
         ui.BuyButton = Find(popup, BG + "OfferPopupEquipButton").GetComponent<Button>();
         ui.BuyButtonPriceText = Text(popup, BG + "OfferPopupEquipButton/Content/Text");
         // ExpiredOverlay gốc trỏ cùng node LoadingImage.
@@ -58,6 +52,7 @@ public static class WeaponOfferPrefabBuilder
         AssetDatabase.SaveAssets();
         string result = "UIOfferPopup" + (ok ? " saved" : " FAILED");
         Debug.Log("[WeaponOfferPrefabBuilder] " + result);
+        Batch2Reskin.ApplyOffer();   // reskin concept batch2
         return result;
     }
 

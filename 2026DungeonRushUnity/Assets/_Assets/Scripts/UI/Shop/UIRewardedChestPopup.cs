@@ -19,6 +19,10 @@ public class UIRewardedChestPopup : BaseUI
     public Button AdButton;
     public Image AdButtonImage;
     public TMP_Text AdButtonText;
+    // Reskin batch2: trạng thái nút bằng sprite — hồng = xem quảng cáo, xanh = đã mua No Ads, xám = chờ/hết lượt.
+    public Sprite AdButtonSprite;
+    public Sprite ClaimButtonSprite;
+    public Sprite DisabledButtonSprite;
     public Button CloseButton;
     public Button btBackground;
 
@@ -67,15 +71,16 @@ public class UIRewardedChestPopup : BaseUI
         if (ShopService.GetRewardedChestRemaining() <= 0)
         {
             AdButton.interactable = false;
-            AdButtonImage.color = UITabWing.DISABLED_BUTTON_COLOR;
+            AdButtonImage.sprite = DisabledButtonSprite;
             TimeSpan left = DateTime.UtcNow.Date.AddDays(1) - DateTime.UtcNow;
             AdButtonText.text = ShopUIUtil.FormatDuration((long)left.TotalSeconds);
             return;
         }
 
+        bool isNoAds = GameData.userData.shop.isNoAdsBought;
         AdButton.interactable = isWaitingAd == false;
-        AdButtonImage.color = Color.white;   // ảnh nút đã có màu (btn_green), không tô thêm
-        AdButtonText.text = isWaitingAd ? Loc.L("Common.Loading") : (GameData.userData.shop.isNoAdsBought ? Loc.L("Common.Claim") : "<sprite=0>Claim");
+        AdButtonImage.sprite = isWaitingAd ? DisabledButtonSprite : (isNoAds ? ClaimButtonSprite : AdButtonSprite);
+        AdButtonText.text = isWaitingAd ? Loc.L("Common.Loading") : (isNoAds ? Loc.L("Common.Claim") : "<sprite=0>" + Loc.L("Common.Claim"));
     }
 
     // OnRewardedButtonClicked gốc.
