@@ -35,7 +35,7 @@ Không làm: trang tab (`StoreTabPage`, `ClanTabPage`, `UIChatTabPage`), `LevelP
 | Đợt | Concept | Chốt | Áp vào game | Commit |
 |---|---|---|---|---|
 | 0 | ✅ tools/concept/kit/ (kit.css dùng chung) | ✅ 2026-11-11 | ✅ Scripts/Art/Editor/PopupStyle.cs | |
-| 1 | ✅ tools/concept/batch1/ | ✅ 2026-11-11 | ✅ Batch1Reskin (chụp edit mode: batch1/unity.png), CHƯA test Play | |
+| 1 | ✅ tools/concept/batch1/ | ✅ 2026-11-11 | ✅ Batch1Reskin (chụp edit mode: batch1/unity.png), CHƯA test Play | ✅ 812200d0 |
 | 2 | | | | |
 | 3 | | | | |
 | 4 | | | | |
