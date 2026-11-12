@@ -165,6 +165,12 @@ public class CloudSaveController : Singleton<CloudSaveController>
             callback?.Invoke(false, "Already uploading");
             return;
         }
+        // Save chưa nạp (vd. Editor recompile giữa lúc Play) → profile đang là mặc định, đẩy lên sẽ xoá tên/tiến trình.
+        if (GameData.userData.IsLoaded == false)
+        {
+            callback?.Invoke(false, "User data not loaded");
+            return;
+        }
 
         // Ghi số phiên bản thẳng xuống máy (không qua UserData.Save) để việc đẩy không tự đánh dấu "có thay đổi" lần nữa.
         UserProfileData profile = GameData.userData.profile;

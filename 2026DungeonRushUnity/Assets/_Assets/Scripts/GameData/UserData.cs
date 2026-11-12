@@ -63,6 +63,10 @@ public class UserData
 
     [JsonIgnore] public bool isNewUser { get; private set; }
 
+    // Đã nạp save xong (LoadDone/ResetLocal dựng listData). Editor recompile giữa lúc Play sẽ reset static
+    // GameData.userData về object rỗng → chưa nạp thì KHÔNG được ghi/đẩy save, kẻo đè save thật bằng dữ liệu mặc định.
+    [JsonIgnore] public bool IsLoaded => listData != null;
+
     #region Load
     public void Load()
     {
@@ -200,7 +204,7 @@ public class UserData
 
     public void Save(bool isForceSave = false)
     {
-        if (isDisableSaveDataLocal)
+        if (isDisableSaveDataLocal || IsLoaded == false)
         {
             return;
         }
