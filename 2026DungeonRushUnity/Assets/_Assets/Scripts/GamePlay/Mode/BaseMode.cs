@@ -183,6 +183,8 @@ public class BaseMode : MonoBehaviour
 
         // 1 nguồn sự thật cho map: pathfinding A* + di chuyển né wall + chuyển đổi ô↔world (gốc = PointStart).
         map.SetMap(currentLevel.grid, transform.position, centerHorizontally);
+        if (FitCameraToMap) MapCameraFitter.Fit(map);
+        else MapCameraFitter.Release();
         isPause = false;
 
         SpawnObstacles(map, currentLevel.obstacles);
@@ -190,6 +192,9 @@ public class BaseMode : MonoBehaviour
 
     // Level đưa vào LevelLoader.itp gốc làm seed chướng ngại: campaign = level liên tục (1-1=1, 2-1=11...).
     // Dungeon override (layout theo level dungeon).
+    // Căn camera cho map nằm giữa vùng trống giữa thanh trên và cụm dưới (theo tỉ lệ màn). Mode tự lo camera → false.
+    protected virtual bool FitCameraToMap => true;
+
     protected virtual int GetLayoutLevel(int stageId)
     {
         return GameData.staticData.campaign.GetLevel(stageId);

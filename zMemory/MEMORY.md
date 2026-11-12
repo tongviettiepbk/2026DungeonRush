@@ -126,3 +126,4 @@
 - [Nút bị nuốt click lúc chuyển màn](dungonrush-ui-click-blocked-shield.md) — ShieldUI Overlay 1000 bật khi campaign fade vùng map → Sell/Equip không ăn; đã sửa 2026-11-11 (commit d9bec3d1) + cách dò raycast
 - [Nhạc nền AI](dungonrush-bgm-ai-music.md) — 2026-11-12 ACE-Step tạo DR_BGM_Mystic (user chọn, đang gán), Playful đã xoá; script ở /Volumes/Work/_AISound/music_dungeonrush; commit da141a52
 - [Recompile lúc Play xoá tên](dungonrush-editor-recompile-wipes-profile.md) — Editor recompile giữa Play reset GameData → CloudSave ghi profile rỗng; chặn bằng UserData.IsLoaded 2026-11-12
+- [Camera căn map theo tỉ lệ màn](dungonrush-map-camera-fit.md) — MapCameraFitter: map giữa TopBarUI và hàng AUTO, lề 120 canvas; Boss Rush giữ camera gốc; test 16:9/1:2/22:10 OK 2026-11-12

@@ -90,6 +90,11 @@ public class UIMainLobby : BaseUI
     public GameObject objPvpUI;
     public TMP_Text txtTimePvp;
 
+    [Space(20)]
+    // Mép trên/dưới vùng thấy map — MapCameraFitter căn camera để map nằm giữa 2 mép này.
+    public RectTransform rectTopBar;         // SafeArea/TopBarUI
+    public RectTransform rectBottomLayout;   // SafeArea/VerticalBottomLayout
+
     // CompanionTabPage gốc: UI.Companion.AutoOn / AutoOff.
     private const string PET_AUTO_KEY = "UI.Companion.AutoOn";
     private const string PET_OFF_KEY = "UI.Companion.AutoOff";

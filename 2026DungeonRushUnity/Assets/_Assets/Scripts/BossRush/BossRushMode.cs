@@ -100,6 +100,9 @@ public class BossRushMode : BaseMode
 
     protected override bool AllowPets => false;
 
+    // Camera bám hero (StartCameraFollow) → giữ cỡ camera gốc của scene, không căn theo map.
+    protected override bool FitCameraToMap => false;
+
     // SpawnController.hvj gốc: ô đội = ijq(1 + số ghost) — hero ô đầu (giữa đấu trường), ghost các ô sau.
     protected override Vector2Int GetHeroSpawnCell()
     {
