@@ -57,7 +57,7 @@
 - [Data test online + bộ test](dungonrush-online-test-data.md) — emulator: `npm run seed` (1000 người + 10 clan + war), `npm run test:seed` 45 ca; giả đồng hồ bằng handler.run + mock.timers để test logic theo ngày
 - [Profile popup (hồ sơ + Settings)](dungonrush-profile-popup.md) — UIProfilePopup mở từ ô avatar lobby, dựng 2026-10-12; slider âm lượng/rung/User ID/đổi tên/Account chạy, 5 nút còn "coming soon" (redeem, ngôn ngữ...)
 - [Thưởng offline (Combat Summary)](dungonrush-offline-earning.md) — dựng 2026-10-13 theo gốc: trần 4h × Mastery, exp/phút = exp 1 màn, 1 rương/phút, X = nhận ×1, ads ×2; nút lobby + QuickEarnings chưa làm
-- [Tài khoản + cloud save](dungonrush-account-system.md) — khách mặc định, Sign Up gắn email, Sign In/Forgot/Sign Out, Choose Save; dựng + test Play 2026-10-13, chưa commit; cách test không làm mất save Editor
+- [Tài khoản + cloud save](dungonrush-account-system.md) — khách mặc định, Sign Up gắn email (accounts:signUp+idToken, KHÔNG accounts:update — prod chặn), Sign In/Forgot/Sign Out, Choose Save; Sign Up chạy trên prod 2026-11-12
 - [Reskin đồ hero (art)](dungonrush-hero-equipment-reskin.md) — 8 slot reskin XONG + commit, đồ đã hiện lên hero; brief GDD/ART_HERO_EQUIPMENT.md
 - [Anim hero = unit_all](dungonrush-hero-anim-unit-all.md) — 00Hero+00Enemy dùng unit_all.controller (10 state, clip ở Animations/HeroesNew); show→idle, run, đánh gần strike_atk / xa gun_atk; chưa test Play
 - [UI lobby = UIMainGame2](dungonrush-main-ui-uimaingame2.md) — 2026-10-15 đã xoá UiMainGame tự dựng; UIMainGame2 gốc gắn UIMainLobby + 7 page ở Pages; XP/máu boss dùng Slider; LevelText = Tier campaign + icon dungeon theo gốc (2026-10-16)

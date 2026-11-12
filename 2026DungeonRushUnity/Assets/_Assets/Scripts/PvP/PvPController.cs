@@ -372,17 +372,12 @@ public class PvPController : Singleton<PvPController>
         return request;
     }
 
-    // Mã quốc gia 2 chữ (gốc lấy từ CountryFlagController).
+    // Mã quốc gia 2 chữ (gốc lấy từ CountryFlagController). Project ẩn chọn quốc gia trong Settings → mặc định Việt Nam.
+    public const string DEFAULT_COUNTRY_CODE = "VN";
+
     private static string GetCountryCode()
     {
-        try
-        {
-            return System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName;
-        }
-        catch
-        {
-            return string.Empty;
-        }
+        return DEFAULT_COUNTRY_CODE;
     }
 
     // ===== Nội bộ =====

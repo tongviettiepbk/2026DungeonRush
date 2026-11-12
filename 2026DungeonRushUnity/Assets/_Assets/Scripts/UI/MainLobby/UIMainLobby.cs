@@ -125,6 +125,7 @@ public class UIMainLobby : BaseUI
         EventDispatcher.Instance.RegisterListener(EventID.WingChanged, OnWingChanged);
         EventDispatcher.Instance.RegisterListener(EventID.CapeChanged, OnCapeChanged);
         EventDispatcher.Instance.RegisterListener(EventID.AvatarChanged, OnAvatarChanged);
+        EventDispatcher.Instance.RegisterListener(EventID.NicknameChanged, OnNicknameChanged);
         TutorialService.StepCompleted += OnTutorialStepCompleted;
         PurchaseController.PurchaseSuccessful += OnPurchaseSuccessful;
         if (btChestBundleLegendary != null)
@@ -137,6 +138,7 @@ public class UIMainLobby : BaseUI
             btProfile.onClick.AddListener(() => UIManager.Instance.LoadUI(UIKey.ProfilePopup));
         LoadPowerTxt();
         LoadAvatar();
+        LoadName();
 
         if (pageEnchantment != null)
             pageEnchantment.onNotEnoughVial = () => OpenTab(TypeMenuLobby.Dungeon);
@@ -874,6 +876,18 @@ public class UIMainLobby : BaseUI
             imgAvatar.sprite = AvatarConfig.Get(GameData.userData.profile.avatarId);
     }
 
+    // Tên ở ô avatar góc trên: vẽ lúc vào lobby + khi đổi tên (UINicknamePopup bắn NicknameChanged).
+    private void OnNicknameChanged(object param)
+    {
+        LoadName();
+    }
+
+    private void LoadName()
+    {
+        if (txtNamePlayer != null)
+            txtNamePlayer.text = GameData.userData.profile.userName;
+    }
+
     private void OnDestroy()
     {
         TutorialService.StepCompleted -= OnTutorialStepCompleted;
@@ -886,6 +900,7 @@ public class UIMainLobby : BaseUI
             EventDispatcher.Instance.RemoveListener(EventID.WingChanged, OnWingChanged);
             EventDispatcher.Instance.RemoveListener(EventID.CapeChanged, OnCapeChanged);
             EventDispatcher.Instance.RemoveListener(EventID.AvatarChanged, OnAvatarChanged);
+            EventDispatcher.Instance.RemoveListener(EventID.NicknameChanged, OnNicknameChanged);
         }
     }
 

@@ -458,7 +458,7 @@ public class ChatController : Singleton<ChatController>
         {
             playerName = profile.userName,
             avatarId = profile.avatarId,
-            countryCode = string.Empty,
+            countryCode = PvPController.DEFAULT_COUNTRY_CODE,
         };
         FirebaseManager.Instance.Call<ChatBaseResponseDTO>(FN_UPDATE_PROFILE, request, (ok, res, raw) =>
         {

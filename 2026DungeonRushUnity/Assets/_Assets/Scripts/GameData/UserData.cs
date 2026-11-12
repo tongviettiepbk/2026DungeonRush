@@ -78,6 +78,10 @@ public class UserData
         if (isFirstTime)
         {
             isNewUser = true;
+        }
+        // Save cũ / save cloud có tên rỗng (gặp 2026-11-12) → cấp tên sinh sẵn để lobby/chat không trống.
+        if (string.IsNullOrEmpty(profile.userName))
+        {
             profile.userName = GameUtils.GetNewUserName();
         }
 

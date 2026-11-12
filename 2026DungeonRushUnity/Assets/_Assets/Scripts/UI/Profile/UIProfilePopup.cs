@@ -8,6 +8,8 @@ using UnityEngine.UI;
 //  - Settings: âm lượng Sound FX / Music (slider, tay nắm ghi On/Off), rung, tài khoản (Sign In / Up ↔ Sign Out, Sync Now),
 //    User ID (nút chép), phiên bản.
 // Discord (kqz gốc): mở app Discord, 0.15s sau mà game chưa xuống nền thì mở link web.
+//  Link gốc là cộng đồng của game khác → để trắng + ẩn dòng Discord trong prefab cho tới khi có server riêng.
+// Dòng Country ẩn trong prefab, quốc gia mặc định VN (PvPController.GetCountryCode).
 // Nút Language → UILanguageSelectPopup; dòng nút hiện cờ + tên ngôn ngữ đang dùng (krj gốc).
 // Nút của tính năng project chưa có (redeem code, quốc gia, báo lỗi)
 // nằm trong listButtonComingSoon — bấm chỉ báo "coming soon".
@@ -61,9 +63,9 @@ public class UIProfilePopup : BaseUI
     public Button btDiscord;
     public List<Button> listButtonComingSoon;
 
-    // ProfilePopup .ctor gốc.
-    private const string DISCORD_APP_URL = "discord://discord.gg/ErRm7dkAs4";
-    private const string DISCORD_WEB_URL = "https://discord.gg/ErRm7dkAs4";
+    // ProfilePopup .ctor gốc có link Discord của game gốc → để trắng, điền link Discord của game mình khi có.
+    private const string DISCORD_APP_URL = "";
+    private const string DISCORD_WEB_URL = "";
     private const float DISCORD_FALLBACK_DELAY = 0.15f;
 
     private bool isSyncing;
@@ -332,6 +334,8 @@ public class UIProfilePopup : BaseUI
     // kqz gốc.
     private void OnClickDiscord()
     {
+        if (string.IsNullOrEmpty(DISCORD_APP_URL))
+            return;
         discordOpenTime = Time.time;
         isWaitingDiscordApp = true;
         Application.OpenURL(DISCORD_APP_URL);

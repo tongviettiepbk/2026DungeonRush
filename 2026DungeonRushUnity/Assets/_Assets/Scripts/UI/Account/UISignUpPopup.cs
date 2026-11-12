@@ -8,6 +8,7 @@ public class UISignUpPopup : BaseUI
 
     public TMP_InputField inputEmail;
     public TMP_InputField inputPassword;
+    public TMP_InputField inputConfirmPassword; // nhập lại mật khẩu (gốc chỉ 1 ô) để người chơi không gõ nhầm
     public Button btSignUp;
     public Button btSwitchToSignIn;
     public Button btClose;
@@ -49,6 +50,7 @@ public class UISignUpPopup : BaseUI
     {
         base.OnEnable();
         inputPassword.text = string.Empty;
+        inputConfirmPassword.text = string.Empty;
         SetBusy(false);
     }
 
@@ -70,6 +72,11 @@ public class UISignUpPopup : BaseUI
         if (password.Length < MIN_PASSWORD_LENGTH)
         {
             UIManager.Instance.ShowToastMessage(Loc.L("Popup.SignUp.Error.PasswordTooShort"), isLocalize: false);
+            return;
+        }
+        if (password != inputConfirmPassword.text)
+        {
+            UIManager.Instance.ShowToastMessage(Loc.L("Popup.SignUp.Error.PasswordMismatch"), isLocalize: false);
             return;
         }
 

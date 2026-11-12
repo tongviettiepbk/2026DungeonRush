@@ -16,3 +16,5 @@ Bấm ô avatar ở lobby (`UIMainLobby.btProfile`) → `UIProfilePopup` (UIKey.
 **Language (2026-10-17):** nút Language mở UILanguageSelectPopup, hiện cờ + tên ngôn ngữ đang dùng — [[dungonrush-localization]].
 Xem [[dungonrush-boss-rush-model]] (popup xem người khác + avatar), [[dungonrush-uinew-prefab-folder]].
 **Reskin (2026-10-18):** 4 popup Profile/Avatar/Nickname/Player đã reskin theo mockup — [[dungonrush-reskin-plan]]. KHÔNG chạy lại ProfilePrefabBuilder (ghi đè reskin).
+**2026-11-12:** dòng Discord + Country ẨN trong prefab (link Discord gốc là game khác → const URL để trắng); quốc gia mặc định VN (`PvPController.DEFAULT_COUNTRY_CODE`, chat cũng gửi VN), cờ nút Country = Art/2_Icons/Flags/VN.png. Khung Content căn giữa (pos 0) + `UIFitInParent` (Scripts/UI/Common) tự thu nhỏ cho vừa màn thấp (iPad 4:3 → ×0.80), không phóng to.
+**Tên ở lobby (2026-11-12):** UIMainLobby.txtNamePlayer trước đó KHÔNG được ghi (hiện chữ mẫu "Nicknames") → thêm LoadName() lúc Start + nghe EventID.NicknameChanged. UserData.Load cấp "PlayerXXXXXX" cho MỌI save có userName rỗng (save Editor từng có userName null sau Sign Out, chưa rõ gốc rễ).
