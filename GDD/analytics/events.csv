@@ -1,6 +1,6 @@
 event,params,hook,question
 (context on every event),"plv · stage · day_n · session_n · payer",Analytics.AppendContext,cắt lớp mọi event theo tiến trình
-boot_step,"step(user_load/account/server_time/tap_to_play) · sec",Login.cs,boot chậm ở đâu · dừng ở nút Tap To Play bao nhiêu; người chưa qua màn nào tự vào nên sec gần 0
+boot_step,"step(user_load/account/server_time/tap_to_play) · sec",Login.cs,boot chậm ở đâu; từ 2026-11-12 bỏ nút Tap To Play, tap_to_play = lúc bắt đầu tự vào MainGame (giữ tên cho query 06)
 boot_complete,sec_total,Login.OnLoadDone,chờ boot bao lâu
 session_begin,"resume · offline_sec · days_since_last · from_push(offline_full/daily/comeback) · version",AnalyticsTracker,nhịp quay lại
 session_end,"duration_sec · screens_opened · matches · ads_watched · last_screen",AnalyticsTracker,phiên dài bao lâu · thoát ở màn nào
