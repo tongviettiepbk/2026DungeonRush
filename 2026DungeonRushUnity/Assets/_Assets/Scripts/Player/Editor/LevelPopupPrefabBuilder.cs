@@ -78,7 +78,7 @@ public static class LevelPopupPrefabBuilder
         CanvasScaler scaler = root.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1080f, 2160f);
-        scaler.matchWidthOrHeight = 0f;
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;   // màn dài thì giữ rộng 1080, màn thấp (16:9, iPad) thì giữ cao 2160 → không bị cắt
 
         GameObject darkBackground = new GameObject("DarkBackground", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
         darkBackground.layer = root.layer;
