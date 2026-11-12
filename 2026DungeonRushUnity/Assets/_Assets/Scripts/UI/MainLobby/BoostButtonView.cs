@@ -10,12 +10,11 @@ using UnityEngine;
 // Hiệu ứng ấn/nhả dùng ForgeButtonView (cùng kiểu nút với Loot gốc).
 public class BoostButtonView : MonoBehaviour
 {
-    // jwf: chiều rộng Overlay = tỉ lệ còn lại × 220.838 + 13.712 (ykx / ykw gốc).
-    private const float OVERLAY_MIN_WIDTH = 13.712f;
-    private const float OVERLAY_RANGE_WIDTH = 220.838f;
-    // Reskin (mockup lobby): icon tia sét nằm trên, nhãn 1 dòng "Boost x2 +5m", bỏ icon quảng cáo đầu nhãn.
+    // jwf gốc: chiều rộng Overlay = tỉ lệ còn lại × 220.838 + 13.712 (hộp đen bo góc riêng, vỡ hình khi nút reskin to hơn).
+    // Reskin (mockup lobby): icon tia sét nằm trên, nhãn 1 dòng "Boost x2 +5m".
+    // Icon quảng cáo đầu nhãn (sprite 0 = IsAd) chỉ hiện khi chưa mua No Ads — mua rồi bấm là boost ngay.
+    private const string AD_ICON = "<sprite=0>";
     private const string LABEL_FORMAT = "Boost x{0} <size=75%>+{1}</size>"; // UI.Boost.Label (EN) gốc: "Boost x{0}\n+{1}"
-    private const float ORIGINAL_TOP_WIDTH = 228f; // bề ngang nắp nút gốc mà 2 hằng Overlay ở trên tính theo
 
     public ForgeButtonView pressView;
     public TMP_Text txtLabel;
@@ -25,6 +24,7 @@ public class BoostButtonView : MonoBehaviour
     private bool isWaitingAd;
     private float lastMultiplier = -1f;
     private int lastDuration = -1;
+    private bool lastNoAds;
     private long lastRemaining = -1;
 
     private void Awake()
@@ -78,12 +78,15 @@ public class BoostButtonView : MonoBehaviour
         // Nhãn chỉ đổi khi Mastery AdBoostWorth / AdBoostDuration nâng cấp.
         float multiplier = ShopService.GetAdBoostMultiplier();
         int duration = ShopService.GetAdBoostDuration();
-        if (multiplier != lastMultiplier || duration != lastDuration)
+        bool isNoAds = GameData.userData.shop.isNoAdsBought;
+        if (multiplier != lastMultiplier || duration != lastDuration || isNoAds != lastNoAds)
         {
             lastMultiplier = multiplier;
             lastDuration = duration;
+            lastNoAds = isNoAds;
             if (txtLabel != null)
-                txtLabel.text = string.Format(LABEL_FORMAT, FormatMultiplier(multiplier), ShopUIUtil.FormatDuration(duration));
+                txtLabel.text = (isNoAds ? string.Empty : AD_ICON)
+                    + string.Format(LABEL_FORMAT, FormatMultiplier(multiplier), ShopUIUtil.FormatDuration(duration));
         }
 
         long remaining = ShopService.GetAdBoostRemaining();
@@ -103,10 +106,11 @@ public class BoostButtonView : MonoBehaviour
         ShopUIUtil.SetText(txtRemainingTime, ShopUIUtil.FormatDuration(remaining));
         if (overlay != null)
         {
+            // Reskin: Overlay là khung RectMask2D cắt lớp Fill (cùng hình nắp nút) → vùng tối luôn đúng hình nút, dài theo phần còn lại.
             float fill = Mathf.Clamp01((float)remaining / ShopService.GetAdBoostMaxDuration());
             RectTransform top = overlay.parent as RectTransform;
-            float scale = top != null ? top.rect.width / ORIGINAL_TOP_WIDTH : 1f;
-            overlay.sizeDelta = new Vector2((fill * OVERLAY_RANGE_WIDTH + OVERLAY_MIN_WIDTH) * scale, overlay.sizeDelta.y);
+            float topWidth = top != null ? top.rect.width : overlay.sizeDelta.x;
+            overlay.sizeDelta = new Vector2(fill * topWidth, overlay.sizeDelta.y);
         }
     }
 

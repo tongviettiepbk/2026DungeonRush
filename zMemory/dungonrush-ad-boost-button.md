@@ -11,4 +11,6 @@ Nút Boost ở ForgeUI lobby = **xem quảng cáo → EXP ×AdBoostWorth trong A
 - Nhãn gốc runtime: "<sprite=0>Boost x{0}\n+{1}" (thời lượng format kiểu "5m"; "+5 min" trong scene rip chỉ là chữ đặt sẵn).
 - **Icon mặt cười** = TMP rơi về EmojiOne vì ButtonText spriteAsset null → gốc gán `IsAd` (Art/2_Icons/Currency/IsAd.asset).
 - Code: ShopService.AdBoost* + UserShopData.adBoostEndTime + UI/MainLobby/BoostButtonView (dùng ForgeButtonView cho hiệu ứng ấn, màu xanh gốc). UIMainLobby.boostButton thay btBoost.
+- Overlay (vùng tối = thời gian còn lại / trần 12 lượt): 2026-11-12 đổi thành RectMask2D + con Fill (btn_blue sliced, đen a0.3) rộng = tỉ lệ × bề ngang nắp — hộp đen gốc vỡ hình (mẩu đen méo) sau reskin.
+- Icon ads ▶ (<sprite=0> IsAd) đầu nhãn: reskin từng bỏ, 2026-11-12 thêm lại CHỈ khi chưa mua No Ads (giống popup rương/summon pet); nhãn margin trái 22/phải 12 vì glyph bearing -8.5 làm icon tràn mép. Đã mua No Ads: nút vẫn hiện, bấm boost ngay (MaxAdController bỏ qua ads).
 - Test Play OK (Editor ads trả Finished). Chưa commit. Liên quan [[dungonrush-mastery-feature]], [[dungonrush-shop-system]], [[dungonrush-mediation-ads]].
