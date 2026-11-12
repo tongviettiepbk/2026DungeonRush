@@ -124,4 +124,4 @@
 - [Icon app Android](dungonrush-app-icon.md) — vịt cầm búa mẫu 4, Art/AppIcon, adaptive chỉ lớp nền thu 72/108; commit 30239c1c 2026-11-10; iOS chưa gán
 - [Build Android Product/Dev](dungonrush-android-release-build.md) — BuildRelease APK+AAB không cheat; BuildDev APK define DEV_BUILD: cheat + mua/ads luôn thành công; tool mới bọc `UNITY_EDITOR || DEV_BUILD`
 - [Nút bị nuốt click lúc chuyển màn](dungonrush-ui-click-blocked-shield.md) — ShieldUI Overlay 1000 bật khi campaign fade vùng map → Sell/Equip không ăn; đã sửa 2026-11-11 (commit d9bec3d1) + cách dò raycast
-- [Nhạc nền AI](dungonrush-bgm-ai-music.md) — 2026-11-12 ACE-Step tạo DR_BGM_Mystic (user chọn, đang gán) + DR_BGM_Playful (không dùng); script ở /Volumes/Work/_AISound/music_dungeonrush; chưa commit
+- [Nhạc nền AI](dungonrush-bgm-ai-music.md) — 2026-11-12 ACE-Step tạo DR_BGM_Mystic (user chọn, đang gán), Playful đã xoá; script ở /Volumes/Work/_AISound/music_dungeonrush; commit da141a52
