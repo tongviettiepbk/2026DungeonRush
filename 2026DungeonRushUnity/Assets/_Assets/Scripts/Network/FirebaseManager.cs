@@ -322,7 +322,9 @@ public class FirebaseManager : Singleton<FirebaseManager>
         string body = JsonConvert.SerializeObject(new { idToken = token, email, password, returnSecureToken = true });
         JObject json = null;
         string error = null;
-        yield return PostAuth(FirebaseSettings.AuthUpdateUrl, body, "application/json", (j, e) => { json = j; error = e; });
+        // Dùng accounts:signUp kèm idToken (như Firebase SDK linkWithCredential). accounts:update bị server thật từ chối
+        // "OPERATION_NOT_ALLOWED: Please verify the new email" vì project bật Email enumeration protection.
+        yield return PostAuth(FirebaseSettings.AuthSignUpUrl, body, "application/json", (j, e) => { json = j; error = e; });
         if (json == null || json["idToken"] == null)
         {
             callback(false, ToAuthError(error), null);

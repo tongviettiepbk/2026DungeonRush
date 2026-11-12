@@ -37,8 +37,7 @@ public static class FirebaseSettings
     // Auth REST (Identity Toolkit). Emulator nhận mọi key.
     public static string AuthSignUpUrl => AuthHost + "identitytoolkit.googleapis.com/v1/accounts:signUp?key=" + ApiKey;
     public static string AuthRefreshUrl => SecureTokenHost + "securetoken.googleapis.com/v1/token?key=" + ApiKey;
-    // Tài khoản email: gắn email vào tài khoản khách / đăng nhập / gửi thư đặt lại mật khẩu.
-    public static string AuthUpdateUrl => AuthHost + "identitytoolkit.googleapis.com/v1/accounts:update?key=" + ApiKey;
+    // Tài khoản email: đăng nhập / gửi thư đặt lại mật khẩu (gắn email vào khách dùng AuthSignUpUrl kèm idToken).
     public static string AuthSignInPasswordUrl => AuthHost + "identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + ApiKey;
     public static string AuthSendOobCodeUrl => AuthHost + "identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=" + ApiKey;
 
